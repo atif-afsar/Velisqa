@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;500;600&family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+@import "tailwindcss";
+
+:root {
+  --primary: #3d0a21;
+  --gold: #d4af37;
+  --surface: #f9f5f0;
+  --surface-container: #ebe8e3;
+  --on-surface: #130006;
+  --on-surface-variant: #514347;
+  --outline: #847377;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--surface);
+  scroll-behavior: auto;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  overflow-x: hidden;
+  background: var(--surface);
+  color: var(--on-surface);
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-weight: 400;
+}
+
+button,
+a {
+  font: inherit;
+}
+
+::selection {
+  background: var(--gold);
+  color: #ffffff;
+}
+
+.font-serif {
+  font-family: 'Bodoni Moda', serif;
+}
+
+.font-sans {
+  font-family: 'Hanken Grotesk', sans-serif;
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
+}
+
+.luxury-arch {
+  border-top-left-radius: 1000px;
+  border-top-right-radius: 1000px;
+  overflow: hidden;
+}
+
+.container-stitch {
+  width: min(100% - 48px, 1440px);
+  margin-inline: auto;
+}
+
+.label-stitch {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.15em;
+}
+
+.body-stitch {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.section-gap {
+  padding-block: 128px;
+}
+
+.text-gold {
+  color: var(--gold);
+}
+
+.bg-plum {
+  background-color: var(--primary);
+}
+
+.border-gold {
+  border-color: var(--gold);
+}
+
+@media (max-width: 767px) {
+  .container-stitch {
+    width: min(100% - 32px, 1440px);
+  }
+
+  .section-gap {
+    padding-block: 88px;
+  }
+}

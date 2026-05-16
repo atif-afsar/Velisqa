@@ -1,0 +1,32 @@
+import Icon from "./Icon";
+import { icons } from "./homeData";
+
+export default function IconsOfElegance() {
+  return (
+    <section className="bg-[#f9f5f0] py-24">
+      <div className="container-stitch">
+        <div className="mb-12 flex items-end justify-between">
+          <div>
+            <p className="mb-3 text-[10px] uppercase tracking-[0.3em] text-[#847377]">Curated Selection</p>
+            <h2 className="font-serif text-4xl text-[#130006] md:text-5xl">Icons of Elegance</h2>
+          </div>
+          <div className="hidden gap-3 md:flex">
+            <button className="grid h-9 w-9 place-items-center border border-[#847377]/30 text-[#514347]"><Icon className="text-[18px]">chevron_left</Icon></button>
+            <button className="grid h-9 w-9 place-items-center border border-[#847377]/30 text-[#514347]"><Icon className="text-[18px]">chevron_right</Icon></button>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-6 md:grid-cols-5">
+          {icons.map(([name, type, image]) => (
+            <article key={name} className="text-center">
+              <div className="luxury-arch mb-5 aspect-[3/4.3] overflow-hidden bg-[#eae3db]">
+                <img src={image} alt={name} className="h-full w-full object-cover transition duration-700 hover:scale-105" />
+              </div>
+              <h3 className="font-serif text-lg text-[#130006]">{name}</h3>
+              <p className="mt-1 text-[10px] uppercase tracking-[0.24em] text-[#847377]">{type}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
