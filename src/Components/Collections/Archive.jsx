@@ -1,18 +1,19 @@
 import brooch from "../../assets/collection-lumina-brooch.png";
 import { archiveLinks } from "./collectionsData";
+import WhatsAppCTA from "../WhatsApp/WhatsAppCTA";
 
 export default function Archive() {
   return (
-    <section id="archive" className="container-stitch my-32">
-      <div className="flex flex-col items-center gap-16 md:flex-row">
-        <div className="md:w-1/2">
-          <div className="arched-window relative h-[800px] w-full overflow-hidden bg-[#f1ede8]">
-            <img className="h-full w-full object-cover" alt="Celestial diamond brooch in an arched niche" src={brooch} />
+    <section id="archive" className="container-stitch my-20 md:my-32">
+      <div className="flex flex-col items-center gap-12 md:flex-row md:gap-16">
+        <div className="w-full md:w-1/2">
+          <div className="arched-window relative h-[460px] w-full overflow-hidden bg-[#f1ede8] sm:h-[620px] lg:h-[800px]">
+            <img className="h-full w-full object-cover" alt="Celestial diamond brooch in an arched niche" src={brooch} loading="lazy" decoding="async" />
           </div>
         </div>
         <div className="space-y-8 md:w-1/2">
-          <span className="label-stitch uppercase tracking-[0.4em] text-[#130006]">Masterpieces</span>
-          <h2 className="font-serif text-6xl font-semibold leading-[1.1] tracking-[-0.02em] text-[#130006] md:text-7xl">The High Jewellery Archive</h2>
+          <span className="type-label text-[#130006]">Masterpieces</span>
+          <h2 className="type-display text-[#130006]">The High Jewellery Archive</h2>
           <p className="body-stitch max-w-lg text-[#514347]">
             Each piece in our High Jewellery collection is a singular creation, born from hundreds of hours of meticulous hand-craftsmanship. Using only the rarest D-color diamonds and ethically sourced emeralds, we sculpt light into wearable art.
           </p>
@@ -25,9 +26,9 @@ export default function Archive() {
             ))}
           </div>
           <div className="pt-8">
-            <button className="bg-[#130006] px-12 py-4 label-stitch uppercase tracking-[0.2em] text-[#ffe088] transition-all duration-300 hover:bg-[#6f334a]">
+            <WhatsAppCTA intent="consult" className="bg-[#130006] px-8 py-4 text-[#ffe088] transition-all duration-300 hover:bg-[#6f334a] sm:px-12">
               Book Private Viewing
-            </button>
+            </WhatsAppCTA>
           </div>
         </div>
       </div>

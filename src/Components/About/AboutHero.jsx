@@ -3,8 +3,8 @@ import SilkCorners from "./SilkCorners";
 
 export default function AboutHero() {
   return (
-    <section className="relative flex min-h-[630px] items-center justify-center overflow-hidden text-center">
-      <img src={silk} alt="Deep plum silk" className="absolute inset-0 h-full w-full object-cover" />
+    <section className="relative flex min-h-[calc(100svh-68px)] items-center justify-center overflow-hidden px-4 py-20 text-center md:min-h-[630px]">
+      <img src={silk} alt="Deep plum silk" className="absolute inset-0 h-full w-full object-cover" decoding="async" />
       <div className="absolute inset-0 bg-[#130006]/15" />
       <SilkCorners />
       <div className="relative z-10 px-6">

@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 
 export default function HomeFooter() {
   return (
-    <footer id="contact" className="bg-[#3d0a21] py-16 text-[#f9f5f0]">
-      <div className="container-stitch grid gap-12 md:grid-cols-4">
+    <footer id="contact" className="bg-[#3d0a21] pb-28 pt-14 text-[#f9f5f0] md:pb-16">
+      <div className="container-stitch grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <h2 className="font-serif text-3xl tracking-[0.25em] text-[#d4af37]">VELISQA</h2>
           <p className="mt-6 text-sm leading-7 text-white/55">A heritage of elegance, crafted for the modern visionary.</p>
@@ -24,7 +24,7 @@ export default function HomeFooter() {
           <input className="w-full border-0 border-b border-[#d4af37]/30 bg-transparent py-3 text-sm outline-none placeholder:text-white/30" placeholder="EMAIL ADDRESS" />
         </div>
       </div>
-      <div className="container-stitch mt-12 border-t border-[#d4af37]/10 pt-6 text-[10px] uppercase tracking-[0.2em] text-white/35">
+      <div className="container-stitch mt-12 border-t border-[#d4af37]/10 pt-6 text-[10px] uppercase tracking-[0.14em] text-white/35 sm:tracking-[0.2em]">
         Copyright 2026 VELISQA JEWELLERY. All rights reserved.
       </div>
     </footer>

@@ -1,5 +1,6 @@
 import SmoothScroll from './Components/SmoothScroll'
 import Navbar from './Components/Navbar'
+// import FloatingWhatsApp from './Components/WhatsApp/FloatingWhatsApp'
 import Home from './Pages/Home'
 import About from './Pages/About'
 import Collections from './Pages/Collections'
@@ -23,13 +24,16 @@ function App() {
       <SmoothScroll />
       <ScrollToTop />
       <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/models" element={<Models />} />
-        <Route path="/collections" element={<Collections />} />
-        <Route path="/contact" element={<Contact />} />
-      </Routes>
+      <div className="pt-[68px] md:pt-[84px]">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/models" element={<Models />} />
+          <Route path="/collections" element={<Collections />} />
+          <Route path="/contact" element={<Contact />} />
+        </Routes>
+      </div>
+      {/* <FloatingWhatsApp /> */}
     </>
   )
 }
