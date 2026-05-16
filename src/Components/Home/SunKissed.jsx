@@ -10,8 +10,8 @@ export default function SunKissed() {
       <div className="absolute inset-0 bg-[#3d0a21]/25" />
       <SilkCorners />
       <div className="container-stitch relative z-10">
-        <p className="mb-5 text-[10px] uppercase tracking-[0.45em] text-[#d4af37]/80">Seasonal Edit</p>
-        <h2 className="mb-16 font-serif text-4xl uppercase text-[#d4af37] md:text-5xl">The Sun-Kissed Series</h2>
+        <p className="mb-5 type-label text-[#d4af37]/80">Seasonal Edit</p>
+        <h2 className="mb-16 type-section uppercase text-[#d4af37]">The Sun-Kissed Series</h2>
         <div className="mx-auto grid max-w-5xl gap-8 md:grid-cols-3">
           {seasonal.map(([name, image], index) => (
             <article key={name} className={index === 1 ? "md:translate-y-12" : ""}>
@@ -23,7 +23,7 @@ export default function SunKissed() {
           ))}
         </div>
         <div className="pt-24">
-          <Link to="/collections" className="inline-block border border-[#d4af37] px-10 py-4 text-[11px] font-semibold uppercase tracking-[0.28em] text-[#d4af37] transition hover:bg-[#d4af37] hover:text-white">
+          <Link to="/collections" className="inline-block border border-[#d4af37] px-10 py-4 type-button text-[#d4af37] transition hover:bg-[#d4af37] hover:text-white">
             Discover the Series
           </Link>
         </div>

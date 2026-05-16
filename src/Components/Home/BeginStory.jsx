@@ -9,11 +9,11 @@ export default function BeginStory() {
       <div className="absolute inset-0 bg-[#3d0a21]/30" />
       <SilkCorners />
       <div className="relative z-10 mx-auto max-w-3xl px-6">
-        <h2 className="font-serif text-5xl font-semibold uppercase leading-tight text-[#d4af37] md:text-7xl">Begin Your<br />Story</h2>
+        <h2 className="type-display uppercase text-[#d4af37] luxury-text-shadow">Begin Your<br />Story</h2>
         <p className="mx-auto mt-7 max-w-lg text-sm leading-7 text-white/85">
           From timeless icons to modern masterworks, find the piece that resonates with your unique radiance.
         </p>
-        <Link to="/collections" className="mt-10 inline-block bg-[#d4af37] px-12 py-4 text-[11px] font-semibold uppercase tracking-[0.28em] text-[#3d0a21] transition hover:bg-white">
+        <Link to="/collections" className="mt-10 inline-block bg-[#d4af37] px-12 py-4 type-button text-[#3d0a21] transition hover:bg-white">
           Explore Full Collection
         </Link>
       </div>

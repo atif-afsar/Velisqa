@@ -8,8 +8,8 @@ export default function Ethos() {
       <div className="container-stitch grid items-center gap-16 lg:grid-cols-12">
         <div className="space-y-12 lg:col-span-5">
           <div>
-            <h2 className="font-serif text-5xl leading-tight text-[#130006]">The Velisqa<br />Ethos</h2>
-            <p className="mt-7 max-w-md text-sm leading-7 text-[#514347]">
+            <h2 className="type-section text-[#130006]">The Velisqa<br />Ethos</h2>
+            <p className="mt-7 max-w-md type-body-luxury text-[#514347]">
               Our pieces are more than adornments; they are milestones of the feminine journey, crafted with soul and precision.
             </p>
           </div>
@@ -32,7 +32,7 @@ export default function Ethos() {
           <div className="right-0 bottom-0 bg-[#3d0a21] p-9 text-white shadow-2xl md:absolute md:w-[360px] md:translate-x-2 md:translate-y-1/4">
             <Icon className="mb-5 block text-4xl text-[#d4af37]">format_quote</Icon>
             <blockquote className="font-serif text-2xl italic leading-snug">Jewellery is the punctuation mark of personality. Velisqa creates the conversation.</blockquote>
-            <p className="mt-6 text-[10px] uppercase tracking-[0.25em] text-[#d4af37]">Ananya V., Founder</p>
+            <p className="mt-6 type-label text-[#d4af37]">Ananya V., Founder</p>
           </div>
         </div>
       </div>

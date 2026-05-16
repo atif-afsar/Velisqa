@@ -7,7 +7,6 @@ import Contact from './Pages/Contact'
 import Models from './Pages/Models'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
-
 function ScrollToTop() {
   const { pathname } = useLocation()
 

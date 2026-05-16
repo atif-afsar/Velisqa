@@ -8,8 +8,8 @@ export default function FounderStory() {
           <img src={model} alt="Ananya, VELISQA founder" className="aspect-[4/5] w-full object-cover" />
         </div>
         <div className="max-w-2xl">
-          <p className="mb-4 text-[10px] uppercase tracking-[0.35em] text-[#d4af37]">The Visionary</p>
-          <h2 className="font-serif text-5xl leading-tight text-[#130006] md:text-6xl">Modern Femininity<br />Through Authentic<br />Origin</h2>
+          <p className="mb-4 type-label text-[#d4af37]">The Visionary</p>
+          <h2 className="type-section text-[#130006]">Modern Femininity<br />Through Authentic<br />Origin</h2>
           <blockquote className="mt-8 border-l border-[#d4af37] pl-7 text-base italic leading-8 text-[#514347]">
             "Jewellery is more than an adornment; it is a silent narrative of one's journey, heritage, and the quiet strength of modern femininity. At VELISQA, we don't just craft gems; we preserve stories."
           </blockquote>

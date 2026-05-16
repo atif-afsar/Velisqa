@@ -1,15 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;500;600&family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 @import "tailwindcss";
 
 :root {
+  --font-luxury-serif: "Canela", "Cormorant Garamond", "Times New Roman", serif;
+  --font-modern-sans: "Montserrat", "Helvetica Neue", Arial, sans-serif;
   --primary: #3d0a21;
   --gold: #d4af37;
+  --champagne-gold: #e9c349;
+  --ivory: #fdf9f4;
+  --soft-ivory: #f9f5f0;
+  --satin-beige: #f1ede8;
   --surface: #f9f5f0;
   --surface-container: #ebe8e3;
   --on-surface: #130006;
   --on-surface-variant: #514347;
   --outline: #847377;
+  --type-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 * {
@@ -27,12 +32,21 @@ body {
   overflow-x: hidden;
   background: var(--surface);
   color: var(--on-surface);
-  font-family: 'Hanken Grotesk', sans-serif;
+  font-family: var(--font-modern-sans);
   font-weight: 400;
+  font-size: 16px;
+  line-height: 1.72;
+  letter-spacing: 0.005em;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 button,
-a {
+a,
+input,
+select,
+textarea {
   font: inherit;
 }
 
@@ -42,11 +56,20 @@ a {
 }
 
 .font-serif {
-  font-family: 'Bodoni Moda', serif;
+  font-family: var(--font-luxury-serif);
+  font-optical-sizing: auto;
 }
 
 .font-sans {
-  font-family: 'Hanken Grotesk', sans-serif;
+  font-family: var(--font-modern-sans);
+}
+
+.font-luxury-serif {
+  font-family: var(--font-luxury-serif);
+}
+
+.font-modern-sans {
+  font-family: var(--font-modern-sans);
 }
 
 .material-symbols-outlined {
@@ -79,16 +102,134 @@ a {
 }
 
 .label-stitch {
-  font-size: 12px;
+  font-family: var(--font-modern-sans);
+  font-size: clamp(0.66rem, 0.62rem + 0.12vw, 0.75rem);
   font-weight: 600;
   line-height: 1.4;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.18em;
 }
 
 .body-stitch {
-  font-size: 18px;
+  font-family: var(--font-modern-sans);
+  font-size: clamp(1rem, 0.95rem + 0.22vw, 1.125rem);
   font-weight: 400;
   line-height: 1.6;
+}
+
+.type-hero {
+  font-family: var(--font-luxury-serif);
+  font-size: clamp(3.5rem, 9vw, 8.75rem);
+  font-weight: 600;
+  line-height: 0.92;
+  letter-spacing: 0.025em;
+}
+
+.type-display {
+  font-family: var(--font-luxury-serif);
+  font-size: clamp(3rem, 6vw, 6rem);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: 0.015em;
+}
+
+.type-section {
+  font-family: var(--font-luxury-serif);
+  font-size: clamp(2.25rem, 4vw, 4.5rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: 0.01em;
+}
+
+.type-card-title {
+  font-family: var(--font-luxury-serif);
+  font-size: clamp(1.45rem, 1.2rem + 1vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.18;
+  letter-spacing: 0.015em;
+}
+
+.type-quote {
+  font-family: var(--font-luxury-serif);
+  font-size: clamp(1.75rem, 3vw, 4rem);
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.16;
+  letter-spacing: 0.005em;
+}
+
+.type-body-luxury {
+  font-family: var(--font-modern-sans);
+  font-size: clamp(0.95rem, 0.88rem + 0.24vw, 1.125rem);
+  font-weight: 400;
+  line-height: 1.78;
+  letter-spacing: 0.01em;
+}
+
+.type-label {
+  font-family: var(--font-modern-sans);
+  font-size: clamp(0.62rem, 0.58rem + 0.12vw, 0.75rem);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.type-button {
+  font-family: var(--font-modern-sans);
+  font-size: clamp(0.68rem, 0.65rem + 0.08vw, 0.75rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.type-price,
+.type-ui {
+  font-family: var(--font-modern-sans);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+.text-champagne {
+  color: #f7ead0;
+}
+
+.text-soft-gold {
+  color: var(--champagne-gold);
+}
+
+.luxury-text-shadow {
+  text-shadow: 0 18px 42px rgba(19, 0, 6, 0.28);
+}
+
+.luxury-hover-text {
+  transition: color 320ms var(--type-ease), opacity 320ms var(--type-ease), letter-spacing 320ms var(--type-ease);
+}
+
+.luxury-hover-text:hover {
+  letter-spacing: 0.26em;
+}
+
+.text-reveal {
+  animation: textReveal 900ms var(--type-ease) both;
+}
+
+.text-reveal-delay {
+  animation: textReveal 1000ms var(--type-ease) 120ms both;
+}
+
+@keyframes textReveal {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+    filter: blur(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
 }
 
 .section-gap {
@@ -114,5 +255,16 @@ a {
 
   .section-gap {
     padding-block: 88px;
+  }
+
+  .type-hero {
+    line-height: 1;
+    letter-spacing: 0.012em;
+  }
+
+  .type-label,
+  .type-button,
+  .label-stitch {
+    letter-spacing: 0.14em;
   }
 }

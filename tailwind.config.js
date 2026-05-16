@@ -13,8 +13,8 @@ export default {
         },
       },
       fontFamily: {
-        serif: ['Cormorant Garamond', 'serif'],
-        sans: ['Jost', 'sans-serif'],
+        serif: ['Canela', 'Cormorant Garamond', 'Times New Roman', 'serif'],
+        sans: ['Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif'],
       },
     },
   },

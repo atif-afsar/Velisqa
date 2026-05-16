@@ -1,17 +1,14 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import SilkCorners from "./SilkCorners";
+import WhatsAppCTA from "../WhatsApp/WhatsAppCTA";
 
-import heroMain from "../../assets/hero/image.png";
-import hero0 from "../../assets/hero/image0.png";
-import hero1 from "../../assets/hero/image1.png";
-import hero2 from "../../assets/hero/image2.png";
-import hero3 from "../../assets/hero/image3.png";
-import hero4 from "../../assets/hero/image4.png";
-import hero5 from "../../assets/hero/image5.png";
-
-const images = [heroMain, hero0, hero1, hero2, hero3, hero4, hero5];
+// Dynamically import all hero images in the folder so new files render automatically
+// Use the portable form supported by Vite: import.meta.glob with { eager: true }
+const modules = import.meta.glob('../../assets/hero/*.png', { eager: true });
+const images = Object.keys(modules)
+  .sort()
+  .map((k) => modules[k].default);
 
 export default function Hero() {
   const [index, setIndex] = useState(0);
@@ -39,24 +36,31 @@ export default function Hero() {
         ))}
       </div>
 
-      <div className="absolute inset-0 bg-[#3d0a21]/10" />
-      <SilkCorners />
+      <div className="absolute inset-0 bg-[#130006]/40" />
+      <div
+        className="absolute inset-0"
+        style={{
+          background: 'linear-gradient(to top, rgba(19,0,6,0.85), rgba(19,0,6,0.25) 35%, transparent 70%)',
+        }}
+      />
       <motion.div
-        className="relative z-10 mx-auto max-w-4xl space-y-8"
+        className="relative z-30 mx-auto max-w-4xl space-y-8"
         initial={{ opacity: 0, y: 28 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9 }}
       >
-        <h1 className="font-serif text-5xl font-semibold uppercase leading-tight tracking-[-0.02em] text-[white] md:text-7xl">
+        <h1 className="type-hero text-reveal uppercase text-white luxury-text-shadow">
           VELISQA JEWELLERY
         </h1>
-        <p className="text-sm font-semibold uppercase tracking-[0.45em] text-[#d4af37]/80">Crafted to Captivate</p>
-        <p className="mx-auto max-w-xl text-sm leading-7 text-white/90">
-          Designed for modern femininity. Fine jewellery for those who need no introduction.
-        </p>
-        <Link to="/collections" className="inline-block bg-white px-10 py-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#3d0a21] shadow-xl transition hover:bg-[#d4af37] hover:text-white">
-          View Collection
-        </Link>
+        <p className="type-label text-reveal-delay text-[#d4af37] drop-shadow-sm">Crafted to Captivate</p>
+        <div className="mx-auto flex flex-col items-center justify-center gap-4">
+          <div className="flex gap-4">
+            <WhatsAppCTA intent="consult" className="px-8 py-4 text-sm">Book a Private Consultation</WhatsAppCTA>
+            <Link to="/collections" className="inline-flex items-center gap-3 rounded-full bg-white/95 px-6 py-3 type-button text-[#130006] shadow-lg transition hover:bg-[#e9e1d6]">
+              Explore Collection
+            </Link>
+          </div>
+        </div>
       </motion.div>
     </section>
   );

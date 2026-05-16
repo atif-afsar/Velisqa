@@ -13,12 +13,12 @@ export default function CollectionsHero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, ease: "easeOut" }}
       >
-        <span className="label-stitch uppercase tracking-[0.3em] text-[#1c1c19]">The 2026 Collection</span>
-        <h1 className="mx-auto max-w-4xl font-serif text-6xl font-semibold leading-[1.1] tracking-[-0.02em] text-[#130006] md:text-7xl">
+        <span className="type-label text-[#1c1c19]">The 2026 Collection</span>
+        <h1 className="mx-auto max-w-4xl type-display text-[#130006]">
           Architectural Opulence
         </h1>
         <div className="pt-8">
-          <a href="#signature" className="inline-block bg-[#130006] px-12 py-4 label-stitch uppercase tracking-[0.2em] text-[#ffe088] transition-all duration-300 hover:bg-[#6f334a]">
+          <a href="#signature" className="inline-block bg-[#130006] px-12 py-4 type-button text-[#ffe088] transition-all duration-300 hover:bg-[#6f334a]">
             Explore High Jewellery
           </a>
         </div>

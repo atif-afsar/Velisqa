@@ -1,4 +1,4 @@
-import modelPortrait from "../../assets/velisqa-model.png";
+import modelPortrait from "../../assets/image4.png";
 import collectionHero from "../../assets/collection-hero.png";
 import velvetService from "../../assets/contact-velvet-service.png";
 import boutique from "../../assets/contact-boutique.png";
