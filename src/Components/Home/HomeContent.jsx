@@ -1,7 +1,7 @@
 import Hero from "./Hero";
 import IconsOfElegance from "./IconsOfElegance";
 import Ethos from "./Ethos";
-import Legacy from "./Legacy";
+import PremiumImageSlider from "./PremiumImageSlider";
 import SunKissed from "./SunKissed";
 import Atelier from "./Atelier";
 import Testimonial from "./Testimonial";
@@ -14,7 +14,7 @@ export default function HomeContent() {
       <Hero />
       <IconsOfElegance />
       <Ethos />
-      <Legacy />
+      <PremiumImageSlider />
       <SunKissed />
       <Atelier />
       <Testimonial />

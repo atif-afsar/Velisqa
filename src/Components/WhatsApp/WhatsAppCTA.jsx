@@ -17,13 +17,13 @@ export default function WhatsAppCTA({ productName, productUrl, children, intent 
     "tap-target inline-flex max-w-full min-w-0 items-center justify-center gap-3 rounded-full px-4 py-2 text-center font-medium transition-all";
 
   const visual =
-    "bg-transparent text-[#130006] border border-transparent shadow-none";
+    "bg-[#3d0a21] text-[#d4af37] border border-[#d4af37]/20 shadow-none";
 
   const premiumStyles =
-    "bg-clip-padding backdrop-blur-sm bg-gradient-to-b from-[rgba(19,0,6,0.02)] to-[rgba(255,255,255,0.02)] text-[#130006] ring-transparent";
+    "bg-clip-padding backdrop-blur-sm bg-gradient-to-b from-[#3d0a21] via-[#4c172f] to-[#2a0712] text-[#d4af37] ring-transparent";
 
   const accent =
-    "relative before:absolute before:inset-0 before:-z-10 before:rounded-full before:bg-gradient-to-r before:from-[#fff9f2] before:via-[#fff6ea] before:to-[rgba(255,255,255,0.01)]";
+    "relative before:absolute before:inset-0 before:-z-10 before:rounded-full before:bg-gradient-to-r before:from-[#3d0a21]/95 before:via-[#4c172f]/60 before:to-[#3d0a21]/95";
 
   return (
     <motion.a

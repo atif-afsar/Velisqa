@@ -11,8 +11,7 @@ export const icons = [
   ["Aurelia Knot", "Bracelet", bracelet],
   ["Luna Pendant", "Necklace", pendant],
   ["Veridia Hoops", "Earrings", earrings],
-  ["Eterna Stack", "Ring", rings],
-  ["Gifting Suite", "Experience", stationery],
+  ["Eterna Stack", "Rings", rings],
 ];
 
 export const values = [
