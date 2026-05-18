@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   build: {
     cssCodeSplit: true,
-    minify: 'esbuild',
+    minify: 'oxc',
     modulePreload: {
       polyfill: false,
     },
