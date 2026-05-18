@@ -1,4 +1,4 @@
-import model from "../../assets/image2.png";
+import model from "../../assets/image2.webp";
 
 export default function FounderStory() {
   return (

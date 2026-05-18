@@ -1,6 +1,6 @@
-import ruby from "../../assets/collection-ruby-sovereign.png";
-import tiara from "../../assets/collection-azure-tiara.png";
-import pearls from "../../assets/collection-celestial-pearls.png";
+import ruby from "../../assets/collection-ruby-sovereign.webp";
+import tiara from "../../assets/collection-azure-tiara.webp";
+import pearls from "../../assets/collection-celestial-pearls.webp";
 
 export const rareFinds = [
   {

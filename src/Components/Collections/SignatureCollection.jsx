@@ -1,14 +1,14 @@
 import { useState } from "react";
-import aethelgard from "../../assets/collection-aethelgard-earrings.png";
-import solitaire from "../../assets/collection-solitaire-pendant.png";
-import bangle from "../../assets/collection-obsidian-bangle.png";
-import ruby from "../../assets/collection-ruby-sovereign.png";
-import pearls from "../../assets/collection-celestial-pearls.png";
-import lumina from "../../assets/collection-lumina-brooch.png";
-import solarisNecklace from "../../assets/velisqa-solaris-necklace.png";
-import solarisRing from "../../assets/velisqa-solaris-ring.png";
-import bracelet from "../../assets/velisqa-bracelet.png";
-import earrings from "../../assets/velisqa-earrings.png";
+import aethelgard from "../../assets/collection-aethelgard-earrings.webp";
+import solitaire from "../../assets/collection-solitaire-pendant.webp";
+import bangle from "../../assets/collection-obsidian-bangle.webp";
+import ruby from "../../assets/collection-ruby-sovereign.webp";
+import pearls from "../../assets/collection-celestial-pearls.webp";
+import lumina from "../../assets/collection-lumina-brooch.webp";
+import solarisNecklace from "../../assets/velisqa-solaris-necklace.webp";
+import solarisRing from "../../assets/velisqa-solaris-ring.webp";
+import bracelet from "../../assets/Bracelet/image1.png";
+import earrings from "../../assets/Earrings/image.png";
 import WhatsAppCTA from "../WhatsApp/WhatsAppCTA";
 
 const signatureCategories = [

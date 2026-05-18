@@ -1,4 +1,4 @@
-import brooch from "../../assets/collection-lumina-brooch.png";
+import brooch from "../../assets/collection-lumina-brooch.webp";
 import { archiveLinks } from "./collectionsData";
 import WhatsAppCTA from "../WhatsApp/WhatsAppCTA";
 

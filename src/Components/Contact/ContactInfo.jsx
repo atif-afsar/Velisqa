@@ -19,14 +19,17 @@ export default function ContactInfo() {
   return (
     <aside className="space-y-12 lg:col-span-4">
       <div>
-        <h3 className="mb-4 label-stitch uppercase tracking-[0.2em] text-[#514347]">The Atelier</h3>
-        <p className="mb-2 font-serif text-3xl leading-[1.3] text-[#130006]">Heritage House</p>
+        <h3 className="mb-4 label-stitch uppercase tracking-[0.2em] text-[#514347]">Mumbai Atelier</h3>
+        <p className="mb-2 font-serif text-3xl leading-[1.3] text-[#130006]">We operate in Mumbai</p>
         <p className="text-base leading-relaxed text-[#514347]">
           Colaba Arts District,<br />
           Mumbai, Maharashtra 400001<br />
           India
         </p>
-        <div className="mt-4 w-12 border-t border-[#e9c349]/30 pt-4" />
+        <p className="mt-4 text-sm leading-relaxed text-[#514347]/90">
+          Our atelier is rooted in Mumbai’s creative heart, welcoming private appointments and bespoke consultations.
+        </p>
+        <div className="mt-6 w-12 border-t border-[#e9c349]/30 pt-4" />
       </div>
 
       <div>

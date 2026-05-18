@@ -37,8 +37,10 @@ export default function Ethos() {
           <div className="absolute -bottom-5 -left-5 hidden h-28 w-28 rounded-full bg-[#d4af37]/22 blur-2xl md:block" />
           <div className="relative mx-auto max-w-[760px] overflow-hidden rounded-[1.75rem] shadow-[0_28px_80px_rgba(19,0,6,0.24)] lg:ml-auto">
             <img
-              src="/images/img1.png"
+              src="/images/img1.webp"
               alt="VELISQA premium jewellery showcase"
+              width="1535"
+              height="1024"
               loading="lazy"
               decoding="async"
               className="aspect-[3/2] w-full object-cover"

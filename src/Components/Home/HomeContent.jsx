@@ -1,25 +1,42 @@
+import { lazy } from "react";
 import Hero from "./Hero";
 import IconsOfElegance from "./IconsOfElegance";
-import Ethos from "./Ethos";
-import PremiumImageSlider from "./PremiumImageSlider";
-import SunKissed from "./SunKissed";
-import Atelier from "./Atelier";
-import Testimonial from "./Testimonial";
-import BeginStory from "./BeginStory";
-import HomeFooter from "./HomeFooter";
+import LazySection from "../Performance/LazySection";
+
+const Ethos = lazy(() => import("./Ethos"));
+const PremiumImageSlider = lazy(() => import("./PremiumImageSlider"));
+const SunKissed = lazy(() => import("./SunKissed"));
+const Atelier = lazy(() => import("./Atelier"));
+const Testimonial = lazy(() => import("./Testimonial"));
+const BeginStory = lazy(() => import("./BeginStory"));
+const HomeFooter = lazy(() => import("./HomeFooter"));
 
 export default function HomeContent() {
   return (
     <main className="bg-[#f9f5f0] text-[#130006]">
       <Hero />
       <IconsOfElegance />
-      <Ethos />
-      <PremiumImageSlider />
-      <SunKissed />
-      <Atelier />
-      <Testimonial />
-      <BeginStory />
-      <HomeFooter />
+      <LazySection minHeight="620px">
+        <Ethos />
+      </LazySection>
+      <LazySection minHeight="520px">
+        <PremiumImageSlider />
+      </LazySection>
+      <LazySection minHeight="760px">
+        <SunKissed />
+      </LazySection>
+      <LazySection minHeight="520px">
+        <Atelier />
+      </LazySection>
+      <LazySection minHeight="420px">
+        <Testimonial />
+      </LazySection>
+      <LazySection minHeight="480px">
+        <BeginStory />
+      </LazySection>
+      <LazySection minHeight="280px">
+        <HomeFooter />
+      </LazySection>
     </main>
   );
 }

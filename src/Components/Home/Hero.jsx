@@ -5,7 +5,7 @@ import WhatsAppCTA from "../WhatsApp/WhatsAppCTA";
 
 // Dynamically import all hero images in the folder so new files render automatically
 // Use the portable form supported by Vite: import.meta.glob with { eager: true }
-const modules = import.meta.glob('../../assets/hero/*.png', { eager: true });
+const modules = import.meta.glob("../../assets/hero/*.webp", { eager: true });
 const images = Object.keys(modules)
   .sort()
   .map((k) => modules[k].default);

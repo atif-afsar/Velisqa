@@ -1,7 +1,7 @@
-import craftsmanship from "../../assets/velisqa-craftsmanship.png";
-import brooch from "../../assets/collection-lumina-brooch.png";
-import necklace from "../../assets/velisqa-solaris-necklace.png";
-import sketch from "../../assets/velisqa-stationery.png";
+import craftsmanship from "../../assets/velisqa-craftsmanship.webp";
+import brooch from "../../assets/collection-lumina-brooch.webp";
+import necklace from "../../assets/velisqa-solaris-necklace.webp";
+import sketch from "../../assets/velisqa-stationery.webp";
 import { process } from "./aboutData";
 
 export default function Artistry() {

@@ -1,11 +1,11 @@
-import bracelet from "../../assets/velisqa-bracelet.png";
-import pendant from "../../assets/velisqa-pendant.png";
-import earrings from "../../assets/velisqa-earrings.png";
-import rings from "../../assets/velisqa-rings.png";
-import stationery from "../../assets/velisqa-stationery.png";
-import solarisNecklace from "../../assets/velisqa-solaris-necklace.png";
-import solarisRing from "../../assets/velisqa-solaris-ring.png";
-import solarisEarrings from "../../assets/velisqa-solaris-earrings.png";
+import bracelet from "../../assets/Bracelet/IMG_3442.PNG";
+import pendant from "../../assets/Necklace/IMG_3430.PNG";
+import earrings from "../../assets/Earrings/image.png";
+import rings from "../../assets/Rings/image.png";
+import seasonalBracelet from "../../assets/Bracelet/image1.png";
+import seasonalRing from "../../assets/Rings/image1.png";
+import seasonalEarrings from "../../assets/Earrings/IMG_3463.PNG";
+import seasonalHero from "../../assets/hero/image8.webp";
 
 export const icons = [
   ["Aurelia Knot", "Bracelet", bracelet],
@@ -21,7 +21,8 @@ export const values = [
 ];
 
 export const seasonal = [
-  ["Solaris Bloom", solarisNecklace],
-  ["Golden Horizon", solarisRing],
-  ["Aurora Drops", solarisEarrings],
+  ["Golden Horizon", seasonalBracelet],
+  ["Solaris Bloom", seasonalRing],
+  ["Aurora Drops", seasonalEarrings],
+  ["Sunlit Silhouette", seasonalHero],
 ];

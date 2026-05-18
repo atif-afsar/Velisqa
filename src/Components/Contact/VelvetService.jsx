@@ -1,4 +1,4 @@
-import serviceImage from "../../assets/contact-velvet-service.png";
+import serviceImage from "../../assets/contact-velvet-service.webp";
 
 export default function VelvetService() {
   return (

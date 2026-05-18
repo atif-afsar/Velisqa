@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
-import silk from "../../assets/velisqa-silk.png";
+import silk from "../../assets/velisqa-silk.webp";
 import SilkCorners from "./SilkCorners";
 
 export default function BeginStory() {
   return (
     <section className="relative overflow-hidden py-28 text-center">
-      <img src={silk} alt="Plum satin texture" className="absolute inset-0 h-full w-full object-cover" />
+      <img src={silk} alt="Plum satin texture" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
       <div className="absolute inset-0 bg-[#3d0a21]/30" />
       <SilkCorners />
       <div className="relative z-10 mx-auto max-w-3xl px-6">

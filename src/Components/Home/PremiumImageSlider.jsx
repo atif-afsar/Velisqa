@@ -1,12 +1,12 @@
 const sliderImages = [
-  "/images/img2.png",
-  "/images/img3.png",
-  "/images/img4.png",
-  "/images/img5.png",
-  "/images/img6.png",
-  "/images/img7.png",
-  "/images/img8.png",
-  "/images/img9.png",
+  { src: "/images/img2.webp", width: 800, height: 800 },
+  { src: "/images/img3.webp", width: 798, height: 798 },
+  { src: "/images/img4.webp", width: 800, height: 793 },
+  { src: "/images/img5.webp", width: 642, height: 796 },
+  { src: "/images/img6.webp", width: 792, height: 795 },
+  { src: "/images/img7.webp", width: 640, height: 798 },
+  { src: "/images/img8.webp", width: 795, height: 791 },
+  { src: "/images/img9.webp", width: 798, height: 788 },
 ];
 
 export default function PremiumImageSlider() {
@@ -16,13 +16,15 @@ export default function PremiumImageSlider() {
         <div className="mx-auto grid max-w-[420px] grid-cols-1 gap-5 sm:max-w-none sm:grid-cols-2 md:gap-6 xl:grid-cols-4">
           {sliderImages.map((image, index) => (
             <figure
-              key={image}
+              key={image.src}
               className="group relative flex aspect-[4/5] w-full items-center justify-center overflow-hidden rounded-[1.25rem] bg-[#f1ede8] p-2 shadow-[0_18px_46px_rgba(19,0,6,0.10)] transition duration-500 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(19,0,6,0.16)] sm:p-3"
             >
               <img
-                src={image}
+                src={image.src}
                 alt={`VELISQA gallery image ${index + 1}`}
-                loading={index < 4 ? "eager" : "lazy"}
+                width={image.width}
+                height={image.height}
+                loading="lazy"
                 decoding="async"
                 className="h-full w-full object-contain transition duration-700 group-hover:scale-[1.015]"
               />

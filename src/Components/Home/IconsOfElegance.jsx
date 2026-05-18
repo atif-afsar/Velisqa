@@ -15,7 +15,11 @@ export default function IconsOfElegance() {
         <div className="mx-auto grid max-w-[560px] grid-cols-2 gap-4 sm:max-w-none sm:gap-7 lg:grid-cols-4 lg:gap-6 xl:gap-8">
           {icons.map(([name, type, image]) => (
             <article key={name} className="group text-center">
-              <div className="mb-6 aspect-[4/5] overflow-hidden rounded-[1.4rem] bg-[#eee8df] shadow-[0_18px_48px_rgba(19,0,6,0.10)] transition duration-500 group-hover:-translate-y-1 group-hover:shadow-[0_24px_64px_rgba(19,0,6,0.16)]">
+              <Link
+                to={`/collections?category=${type.toLowerCase()}`}
+                aria-label={`View ${name} in collections`}
+                className="mb-6 block aspect-[4/5] overflow-hidden rounded-[1.4rem] bg-[#eee8df] shadow-[0_18px_48px_rgba(19,0,6,0.10)] transition duration-500 group-hover:-translate-y-1 group-hover:shadow-[0_24px_64px_rgba(19,0,6,0.16)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#d4af37] focus-visible:ring-offset-4 focus-visible:ring-offset-[#f9f5f0]"
+              >
                 <img
                   src={image}
                   alt={name}
@@ -23,7 +27,7 @@ export default function IconsOfElegance() {
                   decoding="async"
                   className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
                 />
-              </div>
+              </Link>
               <h3 className="font-serif text-[clamp(1.55rem,3.8vw,2.1rem)] leading-tight text-[#130006]">{name}</h3>
               <p className="mt-1 type-label text-[#847377]">{type}</p>
             </article>

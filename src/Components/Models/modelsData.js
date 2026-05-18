@@ -1,18 +1,18 @@
-import modelPortrait from "../../assets/image4.png";
-import collectionHero from "../../assets/collection-hero.png";
-import velvetService from "../../assets/contact-velvet-service.png";
-import boutique from "../../assets/contact-boutique.png";
-import craftsmanship from "../../assets/velisqa-craftsmanship.png";
-import aethelgard from "../../assets/collection-aethelgard-earrings.png";
-import solitaire from "../../assets/collection-solitaire-pendant.png";
-import bangle from "../../assets/collection-obsidian-bangle.png";
-import brooch from "../../assets/collection-lumina-brooch.png";
-import ruby from "../../assets/collection-ruby-sovereign.png";
-import tiara from "../../assets/collection-azure-tiara.png";
-import pearls from "../../assets/collection-celestial-pearls.png";
-import solarisNecklace from "../../assets/velisqa-solaris-necklace.png";
-import solarisRing from "../../assets/velisqa-solaris-ring.png";
-import solarisEarrings from "../../assets/velisqa-solaris-earrings.png";
+import modelPortrait from "../../assets/image4.webp";
+import collectionHero from "../../assets/hero/image.webp";
+import velvetService from "../../assets/contact-velvet-service.webp";
+import boutique from "../../assets/contact-boutique.webp";
+import craftsmanship from "../../assets/velisqa-craftsmanship.webp";
+import aethelgard from "../../assets/collection-aethelgard-earrings.webp";
+import solitaire from "../../assets/collection-solitaire-pendant.webp";
+import bangle from "../../assets/collection-obsidian-bangle.webp";
+import brooch from "../../assets/collection-lumina-brooch.webp";
+import ruby from "../../assets/collection-ruby-sovereign.webp";
+import tiara from "../../assets/collection-azure-tiara.webp";
+import pearls from "../../assets/collection-celestial-pearls.webp";
+import solarisNecklace from "../../assets/velisqa-solaris-necklace.webp";
+import solarisRing from "../../assets/velisqa-solaris-ring.webp";
+import solarisEarrings from "../../assets/velisqa-solaris-earrings.webp";
 
 export const editorialModels = [
   {

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import silk from "../../assets/velisqa-silk.png";
+import silk from "../../assets/velisqa-silk.webp";
 import SilkCorners from "./SilkCorners";
 import { seasonal } from "./homeData";
 
@@ -12,9 +12,9 @@ export default function SunKissed() {
       <div className="container-stitch relative z-10">
         <p className="mb-5 type-label text-[#d4af37]/80">Seasonal Edit</p>
         <h2 className="mb-12 type-section uppercase text-[#d4af37] md:mb-16">The Sun-Kissed Series</h2>
-        <div className="mx-auto grid max-w-5xl gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mx-auto grid max-w-5xl gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {seasonal.map(([name, image], index) => (
-            <article key={name} className={index === 1 ? "lg:translate-y-12" : ""}>
+            <article key={name} className={index % 2 === 1 ? "lg:translate-y-10" : ""}>
               <div className="luxury-arch aspect-[3/4] overflow-hidden border border-[#d4af37]/25 bg-[#3d0a21]/30">
                 <img src={image} alt={name} loading="lazy" decoding="async" className="h-full w-full object-cover" />
               </div>
