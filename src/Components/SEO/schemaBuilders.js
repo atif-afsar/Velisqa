@@ -12,6 +12,14 @@ export function buildOrganizationSchema() {
     logo: DEFAULT_IMAGE,
     image: DEFAULT_IMAGE,
     sameAs: ["https://www.instagram.com/velisqa.in/"],
+    telephone: "+919336072590",
+    contactPoint: {
+      "@type": "ContactPoint",
+      telephone: "+919336072590",
+      contactType: "customer service",
+      areaServed: "IN",
+      availableLanguage: ["en", "hi"],
+    },
     areaServed: [
       { "@type": "City", name: "Aligarh" },
       { "@type": "AdministrativeArea", name: "Uttar Pradesh" },

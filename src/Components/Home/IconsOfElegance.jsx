@@ -16,7 +16,7 @@ export default function IconsOfElegance() {
           {icons.map(([name, type, image]) => (
             <article key={name} className="group text-center">
               <Link
-                to={`/collections?category=${type.toLowerCase()}`}
+                to={`/collections?category=${type.toLowerCase()}#signature`}
                 aria-label={`View ${name} in collections`}
                 className="mb-6 block aspect-[4/5] overflow-hidden rounded-[1.4rem] bg-[#eee8df] shadow-[0_18px_48px_rgba(19,0,6,0.10)] transition duration-500 group-hover:-translate-y-1 group-hover:shadow-[0_24px_64px_rgba(19,0,6,0.16)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#d4af37] focus-visible:ring-offset-4 focus-visible:ring-offset-[#f9f5f0]"
               >

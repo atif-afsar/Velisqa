@@ -1,18 +1,8 @@
 import { motion } from "framer-motion";
-
-function buildWhatsAppLink({ productName, productUrl, intent = "inquiry" }) {
-  const base = "https://wa.me/?text="; // opens WhatsApp with prefilled message
-  let message = "Hello VELISQA, I’m interested in this jewellery piece. Please assist me with pricing and delivery.";
-  if (intent === "consult") {
-    message = "Hello VELISQA, I’d like to book a private consultation. Please assist me with scheduling and pricing.";
-  }
-  if (productName) message = `Hello VELISQA, I’m interested in **${productName}**. Please assist me with pricing and delivery.`;
-  if (productUrl) message += `\n\n${productUrl}`;
-  return base + encodeURIComponent(message);
-}
+import { buildWhatsAppMessage, createWhatsAppLink } from "./whatsapp";
 
 export default function WhatsAppCTA({ productName, productUrl, children, intent = "inquiry", className = "" }) {
-  const href = buildWhatsAppLink({ productName, productUrl, intent });
+  const href = createWhatsAppLink(buildWhatsAppMessage({ productName, productUrl, intent }));
   const baseStyles =
     "tap-target inline-flex max-w-full min-w-0 items-center justify-center gap-3 rounded-full px-4 py-2 text-center font-medium transition-all";
 

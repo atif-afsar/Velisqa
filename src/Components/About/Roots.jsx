@@ -6,9 +6,9 @@ export default function Roots() {
     <section className="bg-[#4a0821] py-20 text-center text-white md:py-24">
       <div className="container-stitch">
         <p className="mb-5 type-label text-[#d4af37]">Three Generations</p>
-        <h2 className="type-section text-white">Our Mumbai Roots</h2>
+        <h2 className="type-section text-white">Our Aligarh Roots</h2>
         <p className="mx-auto mt-6 max-w-2xl text-sm leading-7 text-white/85">
-          In the heart of Mumbai, our story began in a small atelier. Today, that legacy of intricate hand-carving and gemstone selection continues to define the VELISQA signature.
+          In the heart of Aligarh, our story began with a love for refined occasion jewellery. Today, that eye for polish, styling and detail continues to define the VELISQA signature.
         </p>
         <div className="mt-14 grid gap-8 md:mt-20 md:grid-cols-3">
           {roots.map(([icon, title, copy]) => (

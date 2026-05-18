@@ -1,9 +1,10 @@
-import { readdir, readFile, stat } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const assetsDir = path.join(root, "src", "assets");
+const imageExt = /\.(webp|avif|png|jpe?g)$/i;
 
 async function walk(dir) {
   const entries = await readdir(dir, { withFileTypes: true });
@@ -21,20 +22,20 @@ async function collectSourceFiles(dir) {
   const files = await Promise.all(
     entries.map(async (entry) => {
       const resolved = path.join(dir, entry.name);
+
       if (entry.isDirectory()) {
-        if (entry.name === "node_modules" || entry.name === "assets") return [];
+        if (entry.name === "node_modules" || entry.name === "assets" || entry.name === "dist") return [];
         return collectSourceFiles(resolved);
       }
-      if (/\.(jsx?|tsx?|html|css|mjs)$/.test(entry.name)) return [resolved];
-      return [];
+
+      return /\.(jsx?|tsx?|html|css|mjs)$/.test(entry.name) ? [resolved] : [];
     })
   );
+
   return files.flat();
 }
 
-const imageExt = /\.(webp|avif|png|jpe?g)$/i;
-const allAssets = (await walk(assetsDir)).filter((f) => imageExt.test(f));
-
+const allAssets = (await walk(assetsDir)).filter((file) => imageExt.test(file));
 const srcFiles = [
   ...(await collectSourceFiles(path.join(root, "src"))),
   path.join(root, "index.html"),
@@ -46,90 +47,59 @@ for (const file of srcFiles) {
   try {
     content += `${await readFile(file, "utf8")}\n`;
   } catch {
-    /* ignore */
+    // Ignore missing optional files.
   }
 }
 
 const used = new Set();
 
+function toAssetRel(file) {
+  return path.relative(assetsDir, file).replace(/\\/g, "/");
+}
+
 function markUsed(relativePath) {
   const normalized = relativePath.replace(/\\/g, "/");
   for (const asset of allAssets) {
-    const rel = path.relative(assetsDir, asset).replace(/\\/g, "/");
-    if (rel === normalized || rel.endsWith(`/${normalized}`) || asset.replace(/\\/g, "/").endsWith(normalized)) {
+    if (toAssetRel(asset) === normalized) used.add(asset);
+  }
+}
+
+function markGlobUsed(globPattern) {
+  const normalized = globPattern.replace(/\\/g, "/");
+  const assetsIndex = normalized.indexOf("assets/");
+  if (assetsIndex === -1 || !normalized.includes("*")) return;
+
+  const pattern = normalized.slice(assetsIndex + "assets/".length);
+  const slash = pattern.lastIndexOf("/");
+  if (slash === -1) return;
+
+  const dir = pattern.slice(0, slash);
+  const filePattern = pattern.slice(slash + 1);
+  const extensionMatch = filePattern.match(/\.([a-z0-9]+)$/i);
+  if (!extensionMatch) return;
+
+  const extension = `.${extensionMatch[1].toLowerCase()}`;
+  for (const asset of allAssets) {
+    const rel = toAssetRel(asset);
+    const assetDir = path.posix.dirname(rel);
+    if (assetDir === dir && path.posix.extname(rel).toLowerCase() === extension) {
       used.add(asset);
     }
   }
 }
 
-// Explicit imports gathered from the codebase
-const knownImports = [
-  "image2.webp",
-  "image4.webp",
-  "velisqa-silk.webp",
-  "collection-ruby-sovereign.webp",
-  "collection-azure-tiara.webp",
-  "collection-celestial-pearls.webp",
-  "collection-hero.webp",
-  "contact-velvet-service.webp",
-  "contact-boutique.webp",
-  "velisqa-craftsmanship.webp",
-  "collection-aethelgard-earrings.webp",
-  "collection-solitaire-pendant.webp",
-  "collection-obsidian-bangle.webp",
-  "collection-lumina-brooch.webp",
-  "velisqa-solaris-necklace.webp",
-  "velisqa-solaris-ring.webp",
-  "velisqa-solaris-earrings.webp",
-  "velisqa-stationery.webp",
-  "Bracelet/IMG_3442.PNG",
-  "Bracelet/IMG_3443.PNG",
-  "Bracelet/IMG_3445.PNG",
-  "Bracelet/image1.png",
-  "Bracelet/image2.png",
-  "Bracelet/image3.png",
-  "Bracelet/image4.png",
-  "Necklace/IMG_3430.PNG",
-  "Necklace/IMG_3440.PNG",
-  "Necklace/IMG_3465.PNG",
-  "Necklace/Screenshot 2026-05-18 142215.png",
-  "Necklace/image1.png",
-  "Earrings/image.png",
-  "Earrings/image1.png",
-  "Earrings/image2.png",
-  "Earrings/image3.png",
-  "Earrings/IMG_3463.PNG",
-  "Earrings/IMG_3464.PNG",
-  "Earrings/WhatsApp Image 2026-05-18 at 1.48.23 PM.jpeg",
-  "Rings/image.png",
-  "Rings/IMG_3468.PNG",
-  "Rings/IMG_3469.PNG",
-  "Rings/image1.png",
-  "Rings/image2.png",
-  "Rings/image3.png",
-];
-
-for (const rel of knownImports) markUsed(rel);
-
-// Hero glob: hero/*.webp at root only
-const heroDir = path.join(assetsDir, "hero");
-for (const asset of allAssets) {
-  const rel = path.relative(assetsDir, asset).replace(/\\/g, "/");
-  if (rel.startsWith("hero/") && rel.endsWith(".webp") && !rel.includes("/responsive/")) {
-    used.add(asset);
+for (const match of content.matchAll(/["'][^"']*assets\/([^"']+)["']/g)) {
+  const assetPath = match[1];
+  if (assetPath.includes("*")) {
+    markGlobUsed(match[0].slice(1, -1));
+  } else {
+    markUsed(assetPath);
   }
 }
 
-// Match any assets/ path in source
-const importMatches = content.matchAll(/assets\/[^'"\s)]+/g);
-for (const match of importMatches) {
-  const fragment = match[0].replace(/assets\//, "");
-  markUsed(fragment);
-}
-
-const unused = allAssets.filter((a) => !used.has(a)).sort();
+const unused = allAssets.filter((asset) => !used.has(asset)).sort();
 
 console.log(`Total: ${allAssets.length}, Used: ${used.size}, Unused: ${unused.length}\n`);
 for (const file of unused) {
-  console.log(path.relative(assetsDir, file).replace(/\\/g, "/"));
+  console.log(toAssetRel(file));
 }

@@ -19,15 +19,15 @@ export default function ContactInfo() {
   return (
     <aside className="space-y-12 lg:col-span-4">
       <div>
-        <h3 className="mb-4 label-stitch uppercase tracking-[0.2em] text-[#514347]">Mumbai Atelier</h3>
-        <p className="mb-2 font-serif text-3xl leading-[1.3] text-[#130006]">We operate in Mumbai</p>
+        <h3 className="mb-4 label-stitch uppercase tracking-[0.2em] text-[#514347]">Aligarh Atelier</h3>
+        <p className="mb-2 font-serif text-3xl leading-[1.3] text-[#130006]">We operate in Aligarh</p>
         <p className="text-base leading-relaxed text-[#514347]">
-          Colaba Arts District,<br />
-          Mumbai, Maharashtra 400001<br />
+          Aligarh,<br />
+          Uttar Pradesh<br />
           India
         </p>
         <p className="mt-4 text-sm leading-relaxed text-[#514347]/90">
-          Our atelier is rooted in Mumbai’s creative heart, welcoming private appointments and bespoke consultations.
+          Our atelier is rooted in Aligarh, welcoming private appointments and bespoke jewellery consultations across India.
         </p>
         <div className="mt-6 w-12 border-t border-[#e9c349]/30 pt-4" />
       </div>
@@ -35,9 +35,9 @@ export default function ContactInfo() {
       <div>
         <h3 className="mb-4 label-stitch uppercase tracking-[0.2em] text-[#514347]">Direct Communication</h3>
         <div className="space-y-4">
-          <a className="flex items-center gap-4 text-[#130006] transition hover:opacity-70" href="tel:+912288880000">
+          <a className="flex items-center gap-4 text-[#130006] transition hover:opacity-70" href="tel:+919336072590">
             <PhoneIcon />
-            <span className="body-stitch">+91 (22) 8888 0000</span>
+            <span className="body-stitch">+91 93360 72590</span>
           </a>
           <a className="flex items-center gap-4 text-[#130006] transition hover:opacity-70" href="mailto:private@velisqa.com">
             <MailIcon />

@@ -1,10 +1,10 @@
-import bracelet from "../../assets/Bracelet/IMG_3442.PNG";
-import pendant from "../../assets/Necklace/IMG_3430.PNG";
-import earrings from "../../assets/Earrings/image.png";
-import rings from "../../assets/Rings/image.png";
-import seasonalBracelet from "../../assets/Bracelet/image1.png";
-import seasonalRing from "../../assets/Rings/image1.png";
-import seasonalEarrings from "../../assets/Earrings/IMG_3463.PNG";
+import bracelet from "../../assets/Bracelet/IMG_3442.webp";
+import pendant from "../../assets/Necklace/IMG_3430.webp";
+import earrings from "../../assets/Earrings/image.webp";
+import rings from "../../assets/Rings/image.webp";
+import seasonalBracelet from "../../assets/Bracelet/image1.webp";
+import seasonalRing from "../../assets/Rings/image1.webp";
+import seasonalEarrings from "../../assets/Earrings/IMG_3463.webp";
 import seasonalHero from "../../assets/hero/image8.webp";
 
 export const icons = [

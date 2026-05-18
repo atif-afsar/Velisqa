@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { createWhatsAppLink } from "./whatsapp";
 
 export default function FloatingWhatsApp() {
   return (
@@ -11,7 +12,7 @@ export default function FloatingWhatsApp() {
           className="pointer-events-auto hidden md:flex"
         >
           <a
-            href={"https://wa.me/?text=" + encodeURIComponent("Hello VELISQA, I'd like private assistance with a purchase.")}
+            href={createWhatsAppLink("Hello VELISQA, I'd like private assistance with a purchase.")}
             target="_blank"
             rel="noreferrer"
             className="group relative flex items-center gap-3 rounded-full bg-[#130006]/85 px-4 py-3 shadow-2xl ring-1 ring-[#d4af37]/20 backdrop-blur-md"
@@ -32,7 +33,7 @@ export default function FloatingWhatsApp() {
 
       <div className="fixed bottom-5 left-1/2 z-50 flex w-full -translate-x-1/2 justify-center px-4 md:hidden">
         <a
-          href={"https://wa.me/?text=" + encodeURIComponent("Hello VELISQA, I'm interested in a piece and would like private assistance.")}
+          href={createWhatsAppLink("Hello VELISQA, I'm interested in a piece and would like private assistance.")}
           className="tap-target flex w-full max-w-sm items-center justify-center gap-3 rounded-full bg-[#130006] px-5 py-3 shadow-2xl ring-1 ring-[#d4af37]/25"
           target="_blank"
           rel="noreferrer"

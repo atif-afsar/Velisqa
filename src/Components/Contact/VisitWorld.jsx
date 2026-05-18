@@ -11,8 +11,8 @@ export default function VisitWorld() {
       <div className="flex flex-col items-center justify-center border border-[#847377]/5 bg-[#f1ede8] p-8 text-center md:p-12">
         <Icon className="mb-6 text-4xl text-[#130006]">location_on</Icon>
         <h4 className="mb-4 font-serif text-3xl leading-[1.3] text-[#130006]">Visit Our World</h4>
-        <p className="mb-8 max-w-md text-base leading-[1.6] text-[#514347]">Guided tours of our Mumbai atelier are available by appointment. Experience the boutique ambience and craftsmanship first-hand.</p>
-        <a className="tap-target inline-flex items-center border-b border-[#130006] pb-1 label-stitch uppercase tracking-widest text-[#130006] transition hover:opacity-50" href="https://www.velisqa.com">
+        <p className="mb-8 max-w-md text-base leading-[1.6] text-[#514347]">Private viewings and styling assistance from our Aligarh atelier are available by appointment across India.</p>
+        <a className="tap-target inline-flex items-center border-b border-[#130006] pb-1 label-stitch uppercase tracking-widest text-[#130006] transition hover:opacity-50" href="https://www.google.com/maps/search/?api=1&query=Aligarh%2C%20Uttar%20Pradesh%2C%20India" target="_blank" rel="noreferrer">
           View Map Location
         </a>
       </div>
