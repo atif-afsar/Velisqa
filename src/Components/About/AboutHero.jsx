@@ -2,7 +2,7 @@ import silk from "../../assets/velisqa-silk.webp";
 
 export default function AboutHero() {
   return (
-    <section className="relative flex min-h-svh items-center justify-center overflow-hidden px-4 py-20 text-center md:min-h-[630px]">
+    <section className="relative flex min-h-svh items-center justify-center overflow-hidden px-4 py-20 text-center md:px-6 md:py-24">
       <img
         src={silk}
         alt="Deep plum silk"
@@ -15,8 +15,7 @@ export default function AboutHero() {
       />
       <div className="absolute inset-0 bg-[#130006]/15" />
       <div className="relative z-10 px-6">
-        <p className="mb-5 type-label text-[#d4af37]">Established 1998</p>
-        <h1 className="type-display text-white luxury-text-shadow">A Legacy of Radiance</h1>
+        <h1 className="type-display text-white luxury-text-shadow">About Velisqa Jewellery</h1>
         <div className="mx-auto mt-7 h-px w-20 bg-[#d4af37]" />
       </div>
     </section>

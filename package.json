@@ -10,6 +10,7 @@
     "dev": "vite",
     "build": "vite build",
     "optimize:images": "node scripts/optimize-images.mjs",
+    "sitemap": "node scripts/generate-sitemap.mjs",
     "lint": "eslint .",
     "preview": "vite preview"
   },

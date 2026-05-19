@@ -140,9 +140,98 @@ export const legalPages = {
       },
     ],
   },
+  shipping: {
+    path: "/shipping-returns",
+    title: "Shipping & Returns",
+    eyebrow: "Delivery & Care",
+    description:
+      "Velisqa shipping timelines, pan-India delivery, packaging standards, returns, and exchange guidance for jewellery orders.",
+    updated: "May 2026",
+    sections: [
+      {
+        id: "shipping",
+        title: "Shipping Across India",
+        body: [
+          "Velisqa fulfils orders across India through trusted courier partners. Dispatch timelines are confirmed on WhatsApp once your piece is reserved and payment terms are agreed.",
+          "Standard delivery typically ranges from 5–12 business days depending on your city, piece complexity, and festive-season volume. Express options may be available on request.",
+        ],
+      },
+      {
+        id: "packaging",
+        title: "Premium Packaging",
+        body: [
+          "Every Velisqa piece is secured in protective inner packaging and an outer presentation box suitable for gifting. Bridal and high-value orders receive additional cushioning and discretion on request.",
+        ],
+      },
+      {
+        id: "returns",
+        title: "Returns & Exchanges",
+        body: [
+          "Because many pieces are made or reserved to order, returns are accepted only for manufacturing defects or transit damage reported within 48 hours of delivery with unboxing photos or video.",
+          "Exchange requests for sizing or styling preferences are reviewed case-by-case before production begins. Contact our concierge on WhatsApp to initiate a return or exchange conversation.",
+        ],
+      },
+      {
+        id: "care",
+        title: "Care After Delivery",
+        body: [
+          "Store jewellery in a dry pouch, avoid water and perfume contact, and clean gently with a soft cloth. Detailed care guidance is available on our Authenticity page and FAQ.",
+        ],
+      },
+    ],
+  },
+  faq: {
+    path: "/faq",
+    title: "Frequently Asked Questions",
+    eyebrow: "Jewellery Concierge",
+    description:
+      "Common questions about buying Velisqa artificial jewellery, WhatsApp orders, sizing, care, shipping, and authenticity.",
+    updated: "May 2026",
+    sections: [],
+    faqItems: [
+      [
+        "What is Velisqa Jewellery?",
+        "Velisqa is a premium artificial jewellery and fashion jewellery brand offering necklaces, rings, bangles, and earrings for women across India, with private WhatsApp ordering and salon appointments in Mumbai.",
+      ],
+      [
+        "How do I order Velisqa jewellery?",
+        "Browse our Collections, select a piece, and tap Buy or WhatsApp on any product card. You can also visit our Order page to message our concierge directly for styling and purchase assistance.",
+      ],
+      [
+        "Does Velisqa sell real gold or diamond jewellery?",
+        "Velisqa specialises in luxury artificial jewellery and fashion jewellery with premium finishing. Materials and care guidance are described on each product enquiry and on our Authenticity page.",
+      ],
+      [
+        "Can I visit a Velisqa store?",
+        "Yes. Our flagship salon is at Palladium Mall, Lower Parel, Mumbai — by appointment. Contact us via WhatsApp or the Contact page to schedule a private viewing.",
+      ],
+      [
+        "How long does shipping take?",
+        "Delivery across India typically takes 5–12 business days after order confirmation. Timelines are shared on WhatsApp and detailed on our Shipping & Returns page.",
+      ],
+      [
+        "What is your return policy?",
+        "Returns are accepted for manufacturing defects or shipping damage reported within 48 hours of delivery with photo or video proof. See Shipping & Returns for full terms.",
+      ],
+      [
+        "How should I care for artificial jewellery?",
+        "Avoid moisture and perfume, store pieces separately in a dry pouch, and wipe with a soft cloth after wear. Bridal pieces benefit from dedicated storage between events.",
+      ],
+      [
+        "Is Velisqa jewellery suitable for weddings?",
+        "Yes. Many clients choose Velisqa for bridal artificial jewellery, sangeet, reception, and festive styling. Our concierge can suggest coordinated necklace, earring, and bangle sets.",
+      ],
+      [
+        "How do I verify a Velisqa piece is genuine?",
+        "Purchase through velisqa.com, official WhatsApp concierge, or our Mumbai salon. Selected pieces include certificates — see our Authenticity page for verification support.",
+      ],
+    ],
+  },
 };
 
 export const legalNav = [
+  { key: "faq", label: "FAQ", path: legalPages.faq.path },
+  { key: "shipping", label: "Shipping", path: legalPages.shipping.path },
   { key: "privacy", label: "Privacy", path: legalPages.privacy.path },
   { key: "terms", label: "Terms", path: legalPages.terms.path },
   { key: "authenticity", label: "Authenticity", path: legalPages.authenticity.path },

@@ -1,4 +1,4 @@
-import WhatsAppCTA from "../WhatsApp/WhatsAppCTA";
+import BuyNowButton from "../WhatsApp/BuyNowButton";
 
 export default function ProductCaption({ name, price, large = false }) {
   return (
@@ -6,7 +6,9 @@ export default function ProductCaption({ name, price, large = false }) {
       <p className={`font-serif text-[#130006] ${large ? "text-3xl leading-[1.3]" : "text-2xl"}`}>{name}</p>
       <p className="type-price text-sm leading-[1.6] text-[#514347]">{price}</p>
       <div className="mt-3 flex items-center justify-center">
-        <WhatsAppCTA productName={name} className="px-4 py-2 text-sm">Order via WhatsApp</WhatsAppCTA>
+        <BuyNowButton productName={name} className="px-4 py-2 text-sm">
+          Buy Now
+        </BuyNowButton>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import bracelet from "../../assets/Bracelet/IMG_3442.webp";
+import bracelet from "../../assets/Bracelet/IMG_3445.webp";
 import pendant from "../../assets/Necklace/IMG_3430.webp";
 import earrings from "../../assets/Earrings/image.webp";
 import rings from "../../assets/Rings/image.webp";

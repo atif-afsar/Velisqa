@@ -1,22 +1,30 @@
-import solitaire from "../../assets/collection-solitaire-pendant.webp";
-import solarisNecklace from "../../assets/velisqa-solaris-necklace.webp";
-import bangle from "../../assets/collection-obsidian-bangle.webp";
-import ruby from "../../assets/collection-ruby-sovereign.webp";
-import aethelgard from "../../assets/collection-aethelgard-earrings.webp";
+import { SITE_URL } from "./siteConfig";
+
+const BRAND_KEYWORDS = [
+  "Velisqa",
+  "Velisqa Jewellery",
+  "VELISQA",
+  "velisqa.com",
+  "modern jewellery",
+  "artificial jewellery",
+  "premium jewellery",
+  "women's jewellery",
+  "luxury jewellery India",
+];
 
 export const pageSeo = {
   home: {
-    title: "VELISQA Jewellery | Luxury Artificial Jewellery Brand in India",
+    title: "Velisqa Jewellery | Premium Artificial & Modern Jewellery India",
     description:
-      "Discover VELISQA, a luxury artificial jewellery and fashion jewellery brand from Aligarh serving India-wide buyers with premium necklaces, bracelets, rings, earrings and bridal pieces.",
+      "Velisqa Jewellery — luxury artificial jewellery for women. Shop premium rings, necklaces, bangles & earrings. Order on WhatsApp. Crafted to Captivate.",
     keywords: [
-      "Velisqa",
-      "Velisqa Jewellery",
-      "luxury jewellery brand in India",
-      "premium artificial jewellery India",
-      "best jewellery in Aligarh",
-      "best artificial jewellery in Aligarh",
-      "women's luxury jewellery",
+      ...BRAND_KEYWORDS,
+      "rings",
+      "necklaces",
+      "bangles",
+      "earrings",
+      "fashion jewellery India",
+      "bridal artificial jewellery",
     ],
     canonicalPath: "/",
   },
@@ -75,38 +83,59 @@ export const pageSeo = {
     keywords: ["luxury fashion jewellery India", "women's luxury jewellery", "modern jewellery brand India"],
     canonicalPath: "/models",
   },
+  shipping: {
+    title: "Shipping & Returns | Velisqa Jewellery",
+    description:
+      "Velisqa shipping, delivery timelines, returns and care guidance for premium artificial jewellery orders across India.",
+    keywords: ["Velisqa shipping", "jewellery returns India", "artificial jewellery delivery"],
+    canonicalPath: "/shipping-returns",
+  },
+  faq: {
+    title: "FAQ | Velisqa Jewellery — Buying & Care",
+    description:
+      "Answers about ordering Velisqa jewellery on WhatsApp, sizing, artificial jewellery care, shipping, returns, and authenticity.",
+    keywords: ["Velisqa FAQ", "buy artificial jewellery", "Velisqa WhatsApp order"],
+    canonicalPath: "/faq",
+  },
+  order: {
+    title: "Order on WhatsApp | Velisqa Jewellery",
+    description:
+      "Place your Velisqa jewellery order via WhatsApp. Private concierge for rings, necklaces, bangles, earrings and bespoke styling.",
+    keywords: ["Velisqa order", "buy Velisqa jewellery", "WhatsApp jewellery order"],
+    canonicalPath: "/order",
+  },
 };
 
 export const seoProducts = [
   {
     name: "Solitaire Pendant",
     category: "Necklace",
-    image: solitaire,
-    description: "A refined VELISQA necklace for premium artificial jewellery buyers seeking modern luxury styling.",
+    image: `${SITE_URL}/images/img2.webp`,
+    description: "Velisqa solitaire pendant necklace — premium artificial jewellery with modern luxury styling.",
   },
   {
     name: "Solaris Necklace",
     category: "Necklace",
-    image: solarisNecklace,
-    description: "A statement necklace designed for women who prefer elegant fashion jewellery with a luxury finish.",
+    image: `${SITE_URL}/images/img3.webp`,
+    description: "Velisqa Solaris necklace — statement fashion jewellery for women in India.",
   },
   {
     name: "Obsidian Bangle",
     category: "Bracelet",
-    image: bangle,
-    description: "A premium bracelet from VELISQA for occasion styling, festive looks and elevated everyday jewellery.",
+    image: `${SITE_URL}/images/img4.webp`,
+    description: "Velisqa Obsidian bangle — luxury artificial bracelet for festive and occasion wear.",
   },
   {
-    name: "The Ruby Sovereign",
+    name: "Ruby Sovereign Ring",
     category: "Rings",
-    image: ruby,
-    description: "A luxury artificial ring crafted for women seeking bold, regal fashion jewellery in India.",
+    image: `${SITE_URL}/images/img5.webp`,
+    description: "Velisqa Ruby Sovereign ring — premium artificial ring for bold women's jewellery looks.",
   },
   {
     name: "Aethelgard Earrings",
     category: "Earrings",
-    image: aethelgard,
-    description: "Premium earrings for bridal, party and editorial fashion jewellery styling by VELISQA.",
+    image: `${SITE_URL}/images/img6.webp`,
+    description: "Velisqa Aethelgard earrings — bridal and occasion artificial jewellery by Velisqa.",
   },
 ];
 

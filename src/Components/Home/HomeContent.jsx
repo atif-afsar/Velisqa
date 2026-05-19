@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import Hero from "./Hero";
+import HomeBrandSeo from "./HomeBrandSeo";
 import IconsOfElegance from "./IconsOfElegance";
 import LazySection from "../Performance/LazySection";
 
@@ -34,6 +35,7 @@ export default function HomeContent() {
       <LazySection minHeight="480px">
         <BeginStory />
       </LazySection>
+      <HomeBrandSeo />
       <LazySection minHeight="280px">
         <HomeFooter />
       </LazySection>

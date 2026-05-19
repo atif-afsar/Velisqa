@@ -1,5 +1,5 @@
 import { rareFinds } from "./collectionsData";
-import WhatsAppCTA from "../WhatsApp/WhatsAppCTA";
+import BuyNowButton from "../WhatsApp/BuyNowButton";
 
 export default function RareFinds() {
   return (
@@ -29,9 +29,9 @@ export default function RareFinds() {
               <div className="text-center">
                 <h3 className="mb-2 font-serif text-[28px] leading-[1.3] text-white">{item.name}</h3>
                 <p className="mb-4 text-base italic text-[#b97189] opacity-70">{item.meta}</p>
-                <WhatsAppCTA productName={item.name} className="w-full border border-[#ffe088] bg-transparent py-3 text-[#ffe088] shadow-none transition-all hover:bg-[#ffe088] hover:text-[#130006]">
-                  Enquire Now
-                </WhatsAppCTA>
+                <BuyNowButton productName={item.name} className="w-full py-3">
+                  Buy Now
+                </BuyNowButton>
               </div>
             </div>
           ))}

@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { buildOrganizationSchema, buildWebsiteSchema } from "./schemaBuilders";
+import { DEFAULT_OG_IMAGE, SITE_URL } from "./siteConfig";
 
-const SITE_URL = "https://www.velisqa.com";
-const DEFAULT_IMAGE = `${SITE_URL}/images/logo.png`;
+const DEFAULT_IMAGE = DEFAULT_OG_IMAGE;
 
 function upsertMeta(selector, createMeta, attrs) {
   let node = document.head.querySelector(selector);
@@ -113,6 +113,18 @@ export default function SEOHead({
     upsertMeta('meta[name="twitter:image"]', () => document.createElement("meta"), {
       name: "twitter:image",
       content: image,
+    });
+    upsertMeta('meta[name="twitter:site"]', () => document.createElement("meta"), {
+      name: "twitter:site",
+      content: "@velisqa.in",
+    });
+    upsertMeta('meta[property="og:image:alt"]', () => document.createElement("meta"), {
+      property: "og:image:alt",
+      content: "Velisqa Jewellery logo",
+    });
+    upsertMeta('meta[name="author"]', () => document.createElement("meta"), {
+      name: "author",
+      content: "Velisqa Jewellery",
     });
 
     upsertJsonLd("velisqa-organization-schema", buildOrganizationSchema());

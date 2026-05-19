@@ -1,31 +1,41 @@
 import Lenis from "lenis";
 import { useEffect } from "react";
+import { setLenis } from "../lib/smoothScrollState";
+
+/** Premium ease — soft deceleration, no harsh stop */
+const LUXURY_EASE = (t) => 1 - (1 - t) ** 4;
 
 export default function SmoothScroll() {
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
-
-    if (prefersReducedMotion || isCoarsePointer) return undefined;
+    if (prefersReducedMotion) return undefined;
 
     const lenis = new Lenis({
-      duration: 0.95,
+      lerp: 0.055,
       smoothWheel: true,
-      wheelMultiplier: 0.9,
-      touchMultiplier: 1,
+      wheelMultiplier: 0.85,
+      touchMultiplier: 1.05,
+      syncTouch: true,
+      syncTouchLerp: 0.07,
+      autoRaf: true,
+      anchors: {
+        offset: 88,
+        duration: 1.35,
+        easing: LUXURY_EASE,
+      },
     });
 
-    let frameId;
-    function raf(time) {
-      lenis.raf(time);
-      frameId = requestAnimationFrame(raf);
-    }
+    setLenis(lenis);
 
-    frameId = requestAnimationFrame(raf);
+    const onScroll = () => {
+      window.dispatchEvent(new CustomEvent("velisqa:scroll"));
+    };
+    lenis.on("scroll", onScroll);
 
     return () => {
-      cancelAnimationFrame(frameId);
+      lenis.off("scroll", onScroll);
       lenis.destroy();
+      setLenis(null);
     };
   }, []);
 

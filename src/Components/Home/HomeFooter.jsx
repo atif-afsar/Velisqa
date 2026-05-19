@@ -9,6 +9,7 @@ const collections = [
 ];
 
 const concierge = [
+  { label: "WhatsApp Orders", value: "Order on WhatsApp", href: "/order", internal: true },
   { label: "Email", value: "velisqa.in@gmail.com", href: "mailto:velisqa.in@gmail.com" },
   { label: "Instagram", value: "@velisqa.in", href: "https://instagram.com/velisqa.in" },
   { label: "Salon Hours", value: "Mon – Sat, 11am – 8pm" },
@@ -23,6 +24,8 @@ const address = [
 const legal = [
   { label: "Privacy", to: "/privacy" },
   { label: "Terms", to: "/terms" },
+  { label: "Shipping", to: "/shipping-returns" },
+  { label: "FAQ", to: "/faq" },
   { label: "Authenticity", to: "/authenticity" },
 ];
 
@@ -92,12 +95,19 @@ export default function HomeFooter() {
           <div className="lg:col-span-3">
             <ColHeading>Concierge</ColHeading>
             <ul className="space-y-2.5 sm:space-y-3">
-              {concierge.map(({ label, value, href }) => (
+              {concierge.map(({ label, value, href, internal }) => (
                 <li key={label}>
                   <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#d4af37]/75 sm:text-[10px]">
                     {label}
                   </p>
-                  {href ? (
+                  {href && internal ? (
+                    <Link
+                      to={href}
+                      className="mt-0.5 inline-block text-[11px] font-bold tracking-wide text-white/60 transition-colors hover:text-[#d4af37] sm:text-xs"
+                    >
+                      {value}
+                    </Link>
+                  ) : href ? (
                     <a
                       href={href}
                       className="mt-0.5 inline-block text-[11px] font-bold tracking-wide text-white/60 transition-colors hover:text-[#d4af37] sm:text-xs"

@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
+import BuyNowButton from "../WhatsApp/BuyNowButton";
 import WhatsAppCTA from "../WhatsApp/WhatsAppCTA";
 import Icon from "./Icon";
 
@@ -14,7 +15,14 @@ const products = Object.entries(bestSellerModules)
   .map(([path, module], index) => ({
     id: path,
     image: module.default,
-    name: `Velisqa Signature ${index + 1}`,
+    name: [
+      "Velisqa premium necklace",
+      "Velisqa statement earrings",
+      "Velisqa gold-tone bangle",
+      "Velisqa cocktail ring",
+      "Velisqa bridal necklace set",
+      "Velisqa layered jewellery edit",
+    ][index] ?? `Velisqa signature piece ${index + 1}`,
     tag: index === 0 ? "Bestseller" : index < 3 ? "Most Loved" : "Signature Edit",
   }));
 
@@ -23,7 +31,7 @@ const fadeUp = {
   visible: (i = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.65, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.85, delay: i * 0.09, ease: [0.16, 1, 0.3, 1] },
   }),
 };
 
@@ -45,14 +53,16 @@ function ProductCard({ product, className = "", layout = "standard", index = 0 }
           isFeatured
             ? "rounded-[1.75rem] shadow-[0_28px_80px_rgba(19,0,6,0.14)]"
             : "rounded-[1.25rem] shadow-[0_18px_48px_rgba(19,0,6,0.10)]"
-        } ring-1 ring-[#d4af37]/10 transition duration-500 group-hover:-translate-y-1 group-hover:shadow-[0_26px_64px_rgba(61,10,33,0.18)] group-hover:ring-[#d4af37]/30`}
+        } ring-1 ring-[#d4af37]/10 transition-[transform,box-shadow] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1.5 group-hover:shadow-[0_26px_64px_rgba(61,10,33,0.18)] group-hover:ring-[#d4af37]/30`}
       >
         <img
           src={product.image}
-          alt={`${product.name} — VELISQA best seller`}
+          alt={`${product.name} — Velisqa Jewellery best seller`}
+          width={800}
+          height={1000}
           loading="lazy"
           decoding="async"
-          className={`h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.04] ${
+          className={`h-full w-full object-cover transition-[transform] duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05] ${
             isFeatured ? "min-h-[320px] sm:min-h-[420px] lg:min-h-full" : "aspect-[4/5]"
           }`}
         />
@@ -73,12 +83,12 @@ function ProductCard({ product, className = "", layout = "standard", index = 0 }
           </h3>
           <p className="mt-1 type-price text-[10px] text-[#d4af37]/90 sm:text-[11px]">Price on request</p>
           <div className="mt-3 flex flex-wrap items-center gap-2 opacity-100 transition duration-300 sm:mt-4 sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100">
-            <WhatsAppCTA
+            <BuyNowButton
               productName={product.name}
               className="px-3 py-1.5 text-[0.62rem] sm:px-4 sm:py-2 sm:text-[0.68rem]"
             >
-              Enquire
-            </WhatsAppCTA>
+              Buy Now
+            </BuyNowButton>
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import WhatsAppCTA from "./WhatsApp/WhatsAppCTA";
+import BuyNowButton from "./WhatsApp/BuyNowButton";
 import TrustBadge from "./TrustBadge";
 
 export default function CheckoutReplacement({ productName, productUrl }) {
@@ -11,7 +11,9 @@ export default function CheckoutReplacement({ productName, productUrl }) {
         </div>
 
         <div className="flex flex-col items-center gap-3 md:flex-row">
-          <WhatsAppCTA productName={productName} productUrl={productUrl} className="px-8 py-3" children={"Order via WhatsApp"} />
+          <BuyNowButton productName={productName} productUrl={productUrl} className="px-8 py-3">
+            Buy Now
+          </BuyNowButton>
           <div className="flex gap-3">
             <TrustBadge text="Direct Brand Support" />
             <TrustBadge text="Secure Manual Verification" />

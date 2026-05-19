@@ -1,0 +1,18 @@
+{
+  "name": "Velisqa Jewellery",
+  "short_name": "Velisqa",
+  "description": "Premium artificial jewellery — rings, necklaces, bangles & earrings. Crafted to Captivate.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f9f5f0",
+  "theme_color": "#3d0a21",
+  "lang": "en-IN",
+  "icons": [
+    {
+      "src": "/images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

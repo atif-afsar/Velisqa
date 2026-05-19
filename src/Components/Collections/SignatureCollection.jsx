@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import WhatsAppCTA from "../WhatsApp/WhatsAppCTA";
+import { getLenis } from "../../lib/smoothScrollState";
+import BuyNowButton from "../WhatsApp/BuyNowButton";
 
 const necklaceImages = import.meta.glob("../../assets/Necklace/*.webp", { eager: true });
 const braceletImages = import.meta.glob("../../assets/Bracelet/*.webp", { eager: true });
@@ -77,9 +78,9 @@ function ProductCard({ product, onSelect }) {
         </button>
         <p className="type-price mt-1 text-[11px] leading-[1.6] text-[#514347] sm:text-sm">{product.price}</p>
         <div className="mt-3 flex w-full justify-center sm:mt-4">
-          <WhatsAppCTA productName={product.name} className="w-full px-3 py-2 sm:w-auto sm:px-5 sm:py-2.5">
+          <BuyNowButton productName={product.name} className="w-full px-3 py-2 sm:w-auto sm:px-5 sm:py-2.5">
             Buy
-          </WhatsAppCTA>
+          </BuyNowButton>
         </div>
       </div>
     </article>
@@ -138,9 +139,9 @@ function ProductPreviewModal({ product, onClose }) {
             </p>
           </div>
 
-          <WhatsAppCTA productName={product.name} className="w-full px-6 py-4">
+          <BuyNowButton productName={product.name} className="w-full px-6 py-4">
             Buy Now
-          </WhatsAppCTA>
+          </BuyNowButton>
         </div>
       </div>
     </div>
@@ -158,7 +159,14 @@ export default function SignatureCollection() {
 
     if (categoryFromUrl) {
       requestAnimationFrame(() => {
-        document.getElementById("signature")?.scrollIntoView({ block: "start" });
+        const target = document.getElementById("signature");
+        if (!target) return;
+        const lenis = getLenis();
+        if (lenis) {
+          lenis.scrollTo(target, { offset: -88, duration: 1.35 });
+        } else {
+          target.scrollIntoView({ block: "start", behavior: "smooth" });
+        }
       });
     }
   }, [searchParams]);

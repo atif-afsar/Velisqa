@@ -1,25 +1,10 @@
 import { Link, Navigate, useParams } from "react-router-dom";
 import SEOHead from "../Components/SEO/SEOHead";
-import { buildBreadcrumbSchema } from "../Components/SEO/schemaBuilders";
+import { buildBreadcrumbSchema, buildFaqSchema } from "../Components/SEO/schemaBuilders";
 import { landingPages } from "../Components/SEO/seoData";
 import WhatsAppCTA from "../Components/WhatsApp/WhatsAppCTA";
 
 const SITE_URL = "https://www.velisqa.com";
-
-function buildFaqSchema(faqs) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqs.map(([question, answer]) => ({
-      "@type": "Question",
-      name: question,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: answer,
-      },
-    })),
-  };
-}
 
 function buildLandingPageSchema(page) {
   return {
