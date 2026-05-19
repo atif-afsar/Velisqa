@@ -21,7 +21,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative flex min-h-[calc(100svh-68px)] items-center justify-center overflow-hidden px-4 py-20 text-center text-white md:min-h-[calc(100vh-84px)] md:px-6 md:py-24">
+    <section className="relative flex min-h-svh items-center justify-center overflow-hidden px-4 py-20 text-center text-white md:px-6 md:py-24">
       <div className="absolute inset-0 h-full w-full">
         {images.map((src, i) => (
           <img

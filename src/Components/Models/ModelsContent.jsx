@@ -4,7 +4,7 @@ import ProductModels from "./ProductModels";
 
 export default function ModelsContent() {
   return (
-    <main className="bg-[#fdf9f4] text-[#130006]">
+    <main className="page-offset-nav bg-[#fdf9f4] text-[#130006]">
       <ModelsHero />
       <CampaignModels />
       <ProductModels />

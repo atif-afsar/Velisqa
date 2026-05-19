@@ -2,7 +2,7 @@ import silk from "../../assets/velisqa-silk.webp";
 
 export default function AboutHero() {
   return (
-    <section className="relative flex min-h-[calc(100svh-68px)] items-center justify-center overflow-hidden px-4 py-20 text-center md:min-h-[630px]">
+    <section className="relative flex min-h-svh items-center justify-center overflow-hidden px-4 py-20 text-center md:min-h-[630px]">
       <img
         src={silk}
         alt="Deep plum silk"

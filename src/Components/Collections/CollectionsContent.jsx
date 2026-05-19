@@ -9,7 +9,7 @@ const CollectionsFooter = lazy(() => import("./CollectionsFooter"));
 
 export default function CollectionsContent() {
   return (
-    <main className="bg-[#fdf9f4] text-[#1c1c19]">
+    <main className="page-offset-nav bg-[#fdf9f4] text-[#1c1c19]">
       <SignatureCollection />
       <LazySection minHeight="760px">
         <RareFinds />

@@ -47,6 +47,27 @@ export const pageSeo = {
     keywords: ["jewellery shop near me", "best jewellery in Aligarh", "artificial jewellery Aligarh", "Velisqa contact"],
     canonicalPath: "/contact",
   },
+  privacy: {
+    title: "Privacy Policy | VELISQA Jewellery",
+    description:
+      "Read how VELISQA protects your personal information, marketing preferences, and salon appointment data.",
+    keywords: ["Velisqa privacy", "jewellery privacy policy", "VELISQA data"],
+    canonicalPath: "/privacy",
+  },
+  terms: {
+    title: "Terms of Service | VELISQA Jewellery",
+    description:
+      "Terms governing use of the VELISQA website, concierge services, appointments, and product purchases.",
+    keywords: ["Velisqa terms", "jewellery terms of service"],
+    canonicalPath: "/terms",
+  },
+  authenticity: {
+    title: "Authenticity & Craft | VELISQA Jewellery",
+    description:
+      "VELISQA commitment to material integrity, finishing standards, certificates, and concierge verification.",
+    keywords: ["Velisqa authenticity", "luxury artificial jewellery quality"],
+    canonicalPath: "/authenticity",
+  },
   models: {
     title: "VELISQA Editorial Jewellery Models | Luxury Fashion Jewellery India",
     description:

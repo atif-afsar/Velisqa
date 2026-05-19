@@ -169,8 +169,11 @@ export default function SignatureCollection() {
   }
 
   return (
-    <section id="signature" className="container-stitch mb-20 md:mb-32">
-      <div className="mb-12 flex flex-col items-center text-center md:mb-16">
+    <section
+      id="signature"
+      className="container-stitch mb-20 scroll-mt-[calc(var(--nav-height)+1rem)] md:mb-32"
+    >
+      <div className="mb-10 flex flex-col items-center px-2 text-center md:mb-14">
         <h2 className="mb-2 type-section italic text-[#130006]">The Signature Collection</h2>
         <div className="h-px w-24 bg-[#e9c349]" />
       </div>

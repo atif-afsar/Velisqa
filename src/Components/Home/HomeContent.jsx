@@ -4,7 +4,7 @@ import IconsOfElegance from "./IconsOfElegance";
 import LazySection from "../Performance/LazySection";
 
 const Ethos = lazy(() => import("./Ethos"));
-const PremiumImageSlider = lazy(() => import("./PremiumImageSlider"));
+const BestSellers = lazy(() => import("./BestSellers"));
 const SunKissed = lazy(() => import("./SunKissed"));
 const Atelier = lazy(() => import("./Atelier"));
 const Testimonial = lazy(() => import("./Testimonial"));
@@ -19,8 +19,8 @@ export default function HomeContent() {
       <LazySection minHeight="620px">
         <Ethos />
       </LazySection>
-      <LazySection minHeight="520px">
-        <PremiumImageSlider />
+      <LazySection minHeight="720px">
+        <BestSellers />
       </LazySection>
       <LazySection minHeight="760px">
         <SunKissed />
