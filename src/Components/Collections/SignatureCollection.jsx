@@ -8,9 +8,6 @@ const braceletImages = import.meta.glob("../../assets/Bracelet/*.webp", { eager:
 const ringImages = import.meta.glob("../../assets/Rings/*.webp", { eager: true });
 const earringImages = import.meta.glob("../../assets/Earrings/*.webp", { eager: true });
 
-/** Set to false when signature pieces are available for immediate checkout */
-const SIGNATURE_COLLECTION_SOLD_OUT = true;
-
 /** INR prices by piece order (N1–N5, B1/B3–B5, R1–R6, E1–E6) */
 const SIGNATURE_PRICES_INR = {
   Necklace: [499, 399, 499, 519, 519],
@@ -37,7 +34,6 @@ function buildProducts(category, modules, priceKey) {
         image: module.default,
         alt: `${category} jewellery piece from the Velisqa signature collection`,
         source: path,
-        soldOut: SIGNATURE_COLLECTION_SOLD_OUT,
       };
     });
 }
@@ -116,10 +112,9 @@ function ProductCard({ product, onSelect }) {
         <div className="mt-3 flex w-full justify-center sm:mt-4">
           <BuyNowButton
             productName={product.name}
-            soldOut={product.soldOut}
             className="w-full px-3 py-2 sm:w-auto sm:px-5 sm:py-2.5"
           >
-            Buy
+            Buy Now
           </BuyNowButton>
         </div>
       </div>
@@ -175,20 +170,11 @@ function ProductPreviewModal({ product, onClose }) {
             <h3 className="font-serif text-3xl leading-tight text-[#130006] sm:text-4xl">{product.name}</h3>
             <ProductPrice price={product.price} large />
             <p className="mt-4 text-sm leading-7 text-[#514347]">
-              {SIGNATURE_COLLECTION_SOLD_OUT ? (
-                <>
-                  These signature pieces are sold out for immediate purchase online. Enquire to join the waitlist, ask about restock, or discuss a bespoke commission. Fine jewellery is made to order;
-                  delivery is scheduled with our team and is not same-day.
-                </>
-              ) : (
-                <>
-                  View the piece in full detail, then connect with our concierge for availability, pricing, and delivery.
-                </>
-              )}
+              View the piece in full detail, then connect with our concierge for availability, pricing, and delivery.
             </p>
           </div>
 
-          <BuyNowButton productName={product.name} soldOut={SIGNATURE_COLLECTION_SOLD_OUT} className="w-full px-6 py-4">
+          <BuyNowButton productName={product.name} className="w-full px-6 py-4">
             Buy Now
           </BuyNowButton>
         </div>
@@ -258,11 +244,18 @@ export default function SignatureCollection() {
       </div>
 
       <div>
-        <div className="mb-7 flex items-end justify-between gap-5 border-b border-[#d4af37]/30 pb-3">
-          <h3 className="font-serif text-3xl italic leading-tight text-[#130006] md:text-4xl">
+        <div className="mb-7 flex flex-col gap-3 border-b border-[#d4af37]/30 pb-3 sm:flex-row sm:items-end sm:justify-between sm:gap-5">
+          <h3 className="min-w-0 break-words font-serif text-2xl italic leading-tight text-[#130006] sm:text-3xl md:text-4xl">
             {selectedCategory.title}
           </h3>
-          <p className="label-stitch text-right text-[#847377]">{selectedCategory.products.length} pieces</p>
+          <div className="min-w-0 w-full text-left sm:w-auto sm:max-w-[min(100%,16rem)] sm:shrink-0 sm:text-right md:max-w-none">
+            <p className="text-[9px] font-bold uppercase leading-snug tracking-[0.16em] text-[#6f334a] sm:text-[10px] sm:tracking-[0.22em] md:text-[11px]">
+              Limited release — this edit only
+            </p>
+            <p className="mt-1 font-serif text-lg font-bold tabular-nums leading-none text-[#130006] sm:text-xl md:text-2xl">
+              Only {selectedCategory.products.length} pieces
+            </p>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-7 sm:gap-y-12 lg:grid-cols-3">
