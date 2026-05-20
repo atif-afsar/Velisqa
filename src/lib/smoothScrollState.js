@@ -9,7 +9,7 @@ export function isTouchViewport() {
   return window.matchMedia(TOUCH_VIEW_MQ).matches;
 }
 
-/** Only skip Lenis for accessibility */
+/** Only skip Lenis for accessibility (smooth scroll stays on for mobile + desktop) */
 export function prefersNativeScroll() {
   if (typeof window === "undefined") return false;
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;

@@ -25,6 +25,13 @@
   }
 }
 
+/* Narrow viewports use native scroll — comfortable anchor offsets under fixed nav */
+@media (max-width: 767px) {
+  html {
+    scroll-padding-top: calc(var(--nav-height) + 0.5rem + env(safe-area-inset-top, 0px));
+  }
+}
+
 /* Clears fixed navbar on pages without a full-bleed hero */
 .page-offset-nav {
   padding-top: calc(var(--nav-height) + env(safe-area-inset-top, 0px));
@@ -126,6 +133,7 @@ button,
 a[role="button"],
 .tap-target {
   min-height: 44px;
+  touch-action: manipulation;
 }
 
 ::selection {

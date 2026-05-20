@@ -25,21 +25,21 @@ function buildLenisOptions() {
 
   if (touchView) {
     return {
-      lerp: 0.11,
+      lerp: 0.095,
       smoothWheel: true,
       syncTouch: true,
-      syncTouchLerp: 0.14,
-      touchMultiplier: 1,
-      touchInertiaExponent: 1.85,
+      syncTouchLerp: 0.11,
+      touchMultiplier: 1.05,
+      touchInertiaExponent: 1.8,
       autoRaf: true,
       anchors,
     };
   }
 
   return {
-    lerp: 0.08,
+    lerp: 0.075,
     smoothWheel: true,
-    wheelMultiplier: 0.85,
+    wheelMultiplier: 0.88,
     syncTouch: false,
     autoRaf: true,
     anchors,
