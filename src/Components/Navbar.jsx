@@ -2,6 +2,7 @@ import { NavLink, Link, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import WhatsAppCTA from "./WhatsApp/WhatsAppCTA";
+import { useAuth } from "../context/AuthContext";
 
 const DARK_HERO_ROUTES = ["/", "/about"];
 const BG_FADE_RANGE = 56;
@@ -102,6 +103,7 @@ export default function Navbar() {
   const scrolledRef = useRef(false);
   const { pathname } = useLocation();
   const closeMenu = () => setIsOpen(false);
+  const { user, profile, loading: authLoading, logout } = useAuth();
 
   const isDarkHeroRoute = DARK_HERO_ROUTES.includes(pathname);
   const onDarkHero = isDarkHeroRoute && !scrolled;
@@ -147,7 +149,9 @@ export default function Navbar() {
 
   useEffect(() => {
     const el = headerRef.current;
-    setIsOpen(false);
+    queueMicrotask(() => {
+      setIsOpen(false);
+    });
 
     if (isDarkHeroRoute) {
       scrolledRef.current = window.scrollY > SCROLL_SOLID_AT;
@@ -252,7 +256,55 @@ export default function Navbar() {
           })}
         </nav>
 
-        <div className="hidden items-center md:flex">
+        <div className={`hidden items-center md:flex ${scrolled ? "gap-3" : "gap-4"}`}>
+          {!authLoading &&
+            (user ? (
+              <>
+                {profile?.role === "admin" && (
+                  <Link
+                    to="/admin/panel"
+                    className={`py-0.5 font-medium transition-colors duration-200 ${
+                      scrolled ? "text-[0.62rem] tracking-[0.1em]" : "text-[0.72rem] tracking-[0.12em]"
+                    } ${
+                      onDarkHero
+                        ? "text-[#f7ead0]/85 hover:text-[#d4af37]"
+                        : "text-[#514347]/80 hover:text-[#130006]"
+                    }`}
+                  >
+                    Admin
+                  </Link>
+                )}
+                <button
+                  type="button"
+                  onClick={() => {
+                    void logout();
+                    closeMenu();
+                  }}
+                  className={`py-0.5 font-medium transition-colors duration-200 ${
+                    scrolled ? "text-[0.62rem] tracking-[0.1em]" : "text-[0.72rem] tracking-[0.12em]"
+                  } ${
+                    onDarkHero
+                      ? "text-white/70 hover:text-[#f7ead0]"
+                      : "text-[#514347]/80 hover:text-[#130006]"
+                  }`}
+                >
+                  Sign out
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/login"
+                className={`py-0.5 font-medium transition-colors duration-200 ${
+                  scrolled ? "text-[0.62rem] tracking-[0.1em]" : "text-[0.72rem] tracking-[0.12em]"
+                } ${
+                  onDarkHero
+                    ? "text-white/75 hover:text-[#d4af37]"
+                    : "text-[#514347]/80 hover:text-[#130006]"
+                }`}
+              >
+                Sign in
+              </Link>
+            ))}
           <WhatsAppCTA
             className={`hidden md:inline-flex [&_svg]:shrink-0 ${
               scrolled
@@ -347,7 +399,53 @@ export default function Navbar() {
                 </motion.div>
               ))}
 
-              <motion.div variants={linkVariants} className="mt-5">
+              <motion.div variants={linkVariants} className="mt-5 flex flex-col gap-2">
+                {!authLoading &&
+                  (user ? (
+                    <>
+                      {profile?.role === "admin" && (
+                        <Link
+                          to="/admin/panel"
+                          onClick={closeMenu}
+                          className={`flex min-h-[48px] items-center justify-center rounded-full border text-[0.72rem] font-semibold uppercase tracking-[0.12em] transition ${
+                            scrolled
+                              ? "border-[#3d0a21]/20 bg-[#3d0a21] text-[#fdf9f4] hover:bg-[#2a0718]"
+                              : "border-[#d4af37]/35 bg-white/10 text-[#f7ead0] hover:bg-white/15"
+                          }`}
+                        >
+                          Admin dashboard
+                        </Link>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          void logout();
+                          closeMenu();
+                        }}
+                        className={`flex min-h-[48px] w-full items-center justify-center rounded-full border text-[0.72rem] font-semibold uppercase tracking-[0.12em] transition ${
+                          scrolled
+                            ? "border-[#847377]/25 text-[#130006] hover:border-[#130006]/30"
+                            : "border-white/20 text-white/90 hover:border-white/40"
+                        }`}
+                      >
+                        Sign out
+                      </button>
+                    </>
+                  ) : (
+                    <Link
+                      to="/login"
+                      onClick={closeMenu}
+                      className={`flex min-h-[48px] items-center justify-center rounded-full border text-[0.72rem] font-semibold uppercase tracking-[0.12em] transition ${
+                        scrolled
+                          ? "border-[#3d0a21]/20 text-[#130006] hover:border-[#3d0a21]/40"
+                          : "border-white/25 text-white hover:border-white/45"
+                      }`}
+                    >
+                      Sign in
+                    </Link>
+                  ))}
+              </motion.div>
+              <motion.div variants={linkVariants} className="mt-3">
                 <WhatsAppCTA className="w-full justify-center py-2.5 text-xs shadow-sm" intent="consult">
                   Concierge
                 </WhatsAppCTA>

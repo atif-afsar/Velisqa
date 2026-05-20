@@ -1,10 +1,11 @@
 import SmoothScroll from './Components/SmoothScroll'
+import AdminRoute from './Components/AdminRoute'
 import { scrollToTop } from './lib/smoothScrollState'
 import Navbar from './Components/Navbar'
 import VelisqaLoader from './Components/Common/VelisqaLoader'
 // import FloatingWhatsApp from './Components/WhatsApp/FloatingWhatsApp'
 import { AnimatePresence } from 'framer-motion'
-import { Route, Routes, useLocation } from 'react-router-dom'
+import { Route, Routes, useLocation, Navigate } from 'react-router-dom'
 import { Suspense, lazy, useEffect, useState } from 'react'
 
 const Home = lazy(() => import('./Pages/Home'))
@@ -19,6 +20,10 @@ const Authenticity = lazy(() => import('./Pages/Authenticity'))
 const Shipping = lazy(() => import('./Pages/Shipping'))
 const FAQ = lazy(() => import('./Pages/FAQ'))
 const Order = lazy(() => import('./Pages/Order'))
+const Login = lazy(() => import('./Pages/Login'))
+const AdminLogin = lazy(() => import('./Pages/AdminLogin'))
+const AdminDashboard = lazy(() => import('./Pages/AdminDashboard'))
+
 function ScrollToTop() {
   const { pathname } = useLocation()
 
@@ -66,6 +71,18 @@ function App() {
           <Route path="/shipping-returns" element={<Shipping />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/order" element={<Order />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/admin-login" element={<Navigate to="/admin" replace />} />
+          <Route
+            path="/admin/panel"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            }
+          />
+          <Route path="/admin/dashboard" element={<Navigate to="/admin/panel" replace />} />
           <Route path="/:slug" element={<SEOLanding />} />
         </Routes>
       </Suspense>
