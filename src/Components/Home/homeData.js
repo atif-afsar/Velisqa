@@ -8,10 +8,10 @@ import seasonalEarrings from "../../assets/Earrings/IMG_3463.webp";
 import seasonalHero from "../../assets/hero/image8.webp";
 
 export const icons = [
-  ["Aurelia Knot", "Bracelet", bracelet],
-  ["Luna Pendant", "Necklace", pendant],
-  ["Veridia Hoops", "Earrings", earrings],
-  ["Eterna Stack", "Rings", rings],
+  { name: "Aurelia Knot", type: "Bracelet", image: bracelet, startingAt: 440 },
+  { name: "Luna Pendant", type: "Necklace", image: pendant, startingAt: 499 },
+  { name: "Veridia Hoops", type: "Earrings", image: earrings, startingAt: 297 },
+  { name: "Eterna Stack", type: "Rings", image: rings, startingAt: 399 },
 ];
 
 export const values = [

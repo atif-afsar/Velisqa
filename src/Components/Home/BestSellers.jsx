@@ -1,4 +1,3 @@
-import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
 import BuyNowButton from "../WhatsApp/BuyNowButton";
 import WhatsAppCTA from "../WhatsApp/WhatsAppCTA";
@@ -8,83 +7,100 @@ const bestSellerModules = import.meta.glob("../../assets/BestSeller/*.png", {
   eager: true,
 });
 
+/** Toggle off when these edits are back in stock for immediate purchase */
+const BEST_SELLERS_SOLD_OUT = true;
+
+/** Names match each asset filename (see `src/assets/BestSeller/*.png`). */
+const BEST_SELLER_NAMES = {
+  "image1.png": "Velisqa Eternal Knot Cuff",
+  "image2.png": "Velisqa Rose Quartz Pendant",
+  "image3.png": "Velisqa Solitaire Necklace & Stud Set",
+  "image4.png": "Velisqa Gold Bangle Trio",
+  "image5.png": "Velisqa Split-Shank Solitaire Ring",
+  "image6.png": "Velisqa Classic Silver Hoops",
+  "image7.png": "Velisqa Dewdrop Teardrop Necklace",
+  "image8.png": "Velisqa Five-Stack Bangle Edit",
+};
+
+function fileNameFromGlobPath(path) {
+  const normalized = path.replace(/\\/g, "/");
+  return normalized.split("/").pop() ?? path;
+}
+
 const products = Object.entries(bestSellerModules)
   .sort(([a], [b]) =>
     a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" }),
   )
-  .map(([path, module], index) => ({
-    id: path,
-    image: module.default,
-    name: [
-      "Velisqa premium necklace",
-      "Velisqa statement earrings",
-      "Velisqa gold-tone bangle",
-      "Velisqa cocktail ring",
-      "Velisqa bridal necklace set",
-      "Velisqa layered jewellery edit",
-    ][index] ?? `Velisqa signature piece ${index + 1}`,
-    tag: index === 0 ? "Bestseller" : index < 3 ? "Most Loved" : "Signature Edit",
-  }));
+  .map(([path, module], index) => {
+    const file = fileNameFromGlobPath(path);
+    const name =
+      BEST_SELLER_NAMES[file] ?? `Velisqa signature piece ${index + 1}`;
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
-  visible: (i = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.85, delay: i * 0.09, ease: [0.16, 1, 0.3, 1] },
-  }),
-};
+    return {
+      id: path,
+      image: module.default,
+      name,
+      tag: index === 0 ? "Bestseller" : index < 3 ? "Most Loved" : "Signature Edit",
+      soldOut: BEST_SELLERS_SOLD_OUT,
+    };
+  });
 
-function ProductCard({ product, className = "", layout = "standard", index = 0 }) {
-  const reduceMotion = useReducedMotion();
+function ProductCard({ product, className = "", layout = "standard" }) {
   const isFeatured = layout === "featured";
 
   return (
-    <motion.article
-      custom={index}
-      variants={fadeUp}
-      initial={reduceMotion ? false : "hidden"}
-      whileInView="visible"
-      viewport={{ once: true, margin: "-40px" }}
-      className={`group relative overflow-hidden ${className}`}
-    >
+    <article className={`group relative isolate h-full min-h-0 ${className}`}>
       <div
-        className={`relative h-full w-full overflow-hidden bg-[#f1ede8] ${
+        className={`relative w-full max-sm:flex max-sm:flex-col max-sm:min-h-0 overflow-hidden rounded-lg max-sm:bg-[#e8e3dc] sm:bg-transparent sm:rounded-xl ${
           isFeatured
-            ? "rounded-[1.75rem] shadow-[0_28px_80px_rgba(19,0,6,0.14)]"
-            : "rounded-[1.25rem] shadow-[0_18px_48px_rgba(19,0,6,0.10)]"
-        } ring-1 ring-[#d4af37]/10 transition-[transform,box-shadow] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1.5 group-hover:shadow-[0_26px_64px_rgba(61,10,33,0.18)] group-hover:ring-[#d4af37]/30`}
+            ? "sm:min-h-[420px] md:min-h-[480px] lg:h-full lg:min-h-[520px]"
+            : "sm:aspect-[4/5] sm:w-full"
+        }`}
       >
-        <img
-          src={product.image}
-          alt={`${product.name} — Velisqa Jewellery best seller`}
-          width={800}
-          height={1000}
-          loading="lazy"
-          decoding="async"
-          className={`h-full w-full object-cover transition-[transform] duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05] ${
-            isFeatured ? "min-h-[320px] sm:min-h-[420px] lg:min-h-full" : "aspect-[4/5]"
-          }`}
-        />
+        {/* Mobile: padded frame + cover (unchanged). Desktop: full-bleed cover — no cream letterboxing. */}
         <div
-          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#130006]/72 via-[#130006]/12 to-transparent opacity-80 transition duration-500 group-hover:opacity-95"
-          aria-hidden
-        />
-        <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
-          <span className="mb-2 inline-block rounded-full border border-[#d4af37]/35 bg-[#3d0a21]/55 px-2.5 py-0.5 text-[9px] font-medium uppercase tracking-[0.22em] text-[#f7ead0] backdrop-blur-sm sm:text-[10px]">
+          className={`relative w-full shrink-0 overflow-hidden sm:absolute sm:inset-0 ${
+            isFeatured
+              ? "aspect-[5/6] max-h-[min(70vh,520px)] sm:max-h-none sm:aspect-auto"
+              : "aspect-[4/5] sm:aspect-auto"
+          }`}
+        >
+          <div className="max-sm:flex max-sm:h-full max-sm:min-h-0 max-sm:w-full max-sm:items-center max-sm:justify-center max-sm:p-1 sm:contents">
+            <img
+              src={product.image}
+              alt={`${product.name} — Velisqa Jewellery best seller`}
+              width={800}
+              height={1000}
+              loading="lazy"
+              decoding="async"
+              className="max-h-full max-w-full object-cover object-center max-sm:h-full max-sm:w-full sm:absolute sm:inset-0 sm:h-full sm:w-full sm:max-h-none sm:max-w-none sm:object-cover sm:object-center"
+            />
+          </div>
+          {/* Lighter gradient only on lower third so product stays visible */}
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-[min(40%,16rem)] bg-gradient-to-t from-[#130006]/75 to-transparent sm:block"
+            aria-hidden
+          />
+        </div>
+
+        <div className="relative z-20 flex flex-col gap-1 max-sm:border-t max-sm:border-[#130006]/10 max-sm:bg-[#fbf7f1] max-sm:p-3 sm:pointer-events-none sm:absolute sm:inset-x-0 sm:bottom-0 sm:border-0 sm:bg-gradient-to-t sm:from-[#130006]/92 sm:via-[#130006]/55 sm:via-50% sm:to-transparent sm:p-4 sm:pb-4 sm:pt-14 md:pt-16 [&_a]:pointer-events-auto [&_button]:pointer-events-auto">
+          <span className="mb-0.5 inline-block w-fit rounded-full border border-[#d4af37]/40 bg-[#3d0a21]/12 px-2.5 py-0.5 text-[9px] font-medium uppercase tracking-[0.22em] text-[#3d0a21] backdrop-blur-[2px] sm:mb-1 sm:border-[#d4af37]/35 sm:bg-[#3d0a21]/60 sm:text-[#f7ead0] sm:text-[10px]">
             {product.tag}
           </span>
           <h3
-            className={`font-serif leading-tight text-[#fdf9f4] ${
-              isFeatured ? "text-2xl sm:text-3xl" : "text-lg sm:text-xl"
+            className={`font-serif leading-snug text-[#130006] sm:text-[#fdf9f4] sm:drop-shadow-[0_2px_14px_rgba(19,0,6,0.75)] ${
+              isFeatured ? "text-lg sm:text-2xl md:text-3xl" : "text-base sm:text-lg md:text-xl"
             }`}
           >
             {product.name}
           </h3>
-          <p className="mt-1 type-price text-[10px] text-[#d4af37]/90 sm:text-[11px]">Price on request</p>
-          <div className="mt-3 flex flex-wrap items-center gap-2 opacity-100 transition duration-300 sm:mt-4 sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100">
+          <p className="type-price text-[10px] text-[#514347] sm:mt-0.5 sm:text-[#f0e6d2] sm:text-[11px] sm:drop-shadow-[0_1px_8px_rgba(19,0,6,0.7)]">
+            Price on request
+          </p>
+          <div className="mt-2 flex flex-wrap items-center gap-2 opacity-100 max-sm:mt-2 sm:mt-2">
             <BuyNowButton
               productName={product.name}
+              soldOut={product.soldOut}
               className="px-3 py-1.5 text-[0.62rem] sm:px-4 sm:py-2 sm:text-[0.68rem]"
             >
               Buy Now
@@ -92,12 +108,11 @@ function ProductCard({ product, className = "", layout = "standard", index = 0 }
           </div>
         </div>
       </div>
-    </motion.article>
+    </article>
   );
 }
 
 export default function BestSellers() {
-  const reduceMotion = useReducedMotion();
   const [featured, ...rest] = products;
 
   if (!featured) return null;
@@ -107,84 +122,62 @@ export default function BestSellers() {
       className="relative overflow-hidden bg-[#f9f5f0] py-16 md:py-24"
       aria-labelledby="best-sellers-heading"
     >
-      <motion.div
-        className="pointer-events-none absolute -left-24 top-8 h-56 w-56 rounded-full bg-[#afa0d1]/20 blur-3xl"
+      {/* Static accents — no continuous animation (saves main-thread + composite cost while scrolling) */}
+      <div
+        className="pointer-events-none absolute -left-24 top-8 h-56 w-56 rounded-full bg-[#afa0d1]/15 blur-3xl"
         aria-hidden
-        animate={reduceMotion ? undefined : { opacity: [0.35, 0.55, 0.35], scale: [1, 1.08, 1] }}
-        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
       />
-      <motion.div
-        className="pointer-events-none absolute -right-20 bottom-0 h-64 w-64 rounded-full bg-[#d4af37]/12 blur-3xl"
+      <div
+        className="pointer-events-none absolute -right-20 bottom-0 h-64 w-64 rounded-full bg-[#d4af37]/10 blur-3xl"
         aria-hidden
-        animate={reduceMotion ? undefined : { opacity: [0.25, 0.45, 0.25], x: [0, -12, 0] }}
-        transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
       />
 
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#d4af37]/35 to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#d4af37]/30 to-transparent"
         aria-hidden
       />
 
       <div className="container-stitch relative">
-        <motion.div
-          className="mx-auto mb-10 max-w-2xl text-center md:mb-14"
-          variants={fadeUp}
-          initial={reduceMotion ? false : "hidden"}
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
+        <div className="mx-auto mb-10 max-w-2xl text-center md:mb-14">
           <p className="mb-3 type-label text-[#847377]">Client Favourites</p>
           <h2 id="best-sellers-heading" className="type-section text-[#130006]">
             Best Sellers
           </h2>
           <p className="mx-auto mt-5 max-w-lg type-body-luxury text-[#514347]">
             The pieces our collectors return for — refined silhouettes, luminous stones, and the quiet confidence of true luxury.
+            {BEST_SELLERS_SOLD_OUT && (
+              <span className="mt-3 block text-sm text-[#6f334a]">
+                These edits are currently sold out online; use Enquire to purchase for waitlist, restock, or bespoke options. Dispatch is made to order and not same-day.
+              </span>
+            )}
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-5 lg:grid-cols-12 lg:grid-rows-[auto_auto_auto] lg:gap-5">
           <ProductCard
             product={featured}
             layout="featured"
-            index={0}
             className="col-span-2 min-h-[340px] lg:col-span-6 lg:row-span-2 lg:min-h-[520px]"
           />
 
-          {rest.slice(0, 2).map((product, i) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              index={i + 1}
-              className="lg:col-span-3 lg:row-span-1"
-            />
+          {rest.slice(0, 2).map((product) => (
+            <ProductCard key={product.id} product={product} className="lg:col-span-3 lg:row-span-1" />
           ))}
 
-          {rest.slice(2, 6).map((product, i) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              index={i + 3}
-              className="lg:col-span-3"
-            />
+          {rest.slice(2, 6).map((product) => (
+            <ProductCard key={product.id} product={product} className="lg:col-span-3" />
           ))}
 
-          {rest.slice(6, 7).map((product, i) => (
+          {rest.slice(6, 7).map((product) => (
             <ProductCard
               key={product.id}
               product={product}
-              index={i + 7}
               className="col-span-2 lg:col-span-6"
             />
           ))}
         </div>
 
-        <motion.div
-          className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row md:mt-16"
-          variants={fadeUp}
-          initial={reduceMotion ? false : "hidden"}
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
+        <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row md:mt-16">
           <Link
             to="/collections"
             className="tap-target group inline-flex items-center justify-center gap-3 rounded-full bg-[#3d0a21] px-8 py-4 type-button text-[#f7ead0] shadow-[0_18px_42px_rgba(61,10,33,0.22)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#130006] sm:px-10"
@@ -195,7 +188,7 @@ export default function BestSellers() {
           <WhatsAppCTA intent="consult" className="px-6 py-3 text-sm">
             Private Consultation
           </WhatsAppCTA>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

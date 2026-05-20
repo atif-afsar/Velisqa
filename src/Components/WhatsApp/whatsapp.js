@@ -16,9 +16,18 @@ export function buildOrderWhatsAppMessage({
   locationLabel,
   locationMapsUrl,
   notes,
+  enquiryType = "order",
 } = {}) {
+  const isEnquiry = enquiryType === "enquiry";
+
   const lines = [
-    "🛍️ *New Velisqa Order*",
+    isEnquiry
+      ? "✨ *Velisqa — Sold out / register interest*"
+      : "🛍️ *New Velisqa Order*",
+    "",
+    isEnquiry
+      ? "*This piece is marked sold out or made to order online — please advise on waitlist, restock, or bespoke options. Delivery is not same-day; timelines to be confirmed.*"
+      : null,
     "",
     `*Product:* ${productName || "Not specified"}`,
     productUrl ? `*Page:* ${productUrl}` : null,
@@ -40,7 +49,9 @@ export function buildOrderWhatsAppMessage({
         : null,
     notes ? `\n*Notes:* ${notes}` : null,
     "",
-    "Please confirm availability, price, and delivery timeline. Thank you!",
+    isEnquiry
+      ? "Please confirm next steps, lead time, and delivery — thank you!"
+      : "Please confirm availability, price, and delivery timeline. Thank you!",
   ].filter(Boolean);
 
   return lines.join("\n");

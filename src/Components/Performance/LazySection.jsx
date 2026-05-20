@@ -40,8 +40,8 @@ export default function LazySection({ children, minHeight = "420px", rootMargin 
     <div
       ref={ref}
       style={{ minHeight: shouldRender ? undefined : minHeight }}
-      className={`transition-[opacity,transform] duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[opacity,transform] ${
-        visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+      className={`transition-opacity duration-500 ease-out ${
+        visible ? "opacity-100" : "opacity-0"
       }`}
     >
       {shouldRender ? <Suspense fallback={null}>{children}</Suspense> : null}

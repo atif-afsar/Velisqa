@@ -15,7 +15,7 @@ const links = [
   { label: "CONTACT", to: "/contact" },
 ];
 
-const menuVariants = {
+const menuVariantsDesktop = {
   hidden: { opacity: 0, y: -10 },
   visible: {
     opacity: 1,
@@ -34,9 +34,30 @@ const menuVariants = {
   },
 };
 
-const linkVariants = {
+const menuVariantsMobile = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.22,
+      ease: [0.16, 1, 0.3, 1],
+      when: "beforeChildren",
+    },
+  },
+  exit: {
+    opacity: 0,
+    transition: { duration: 0.18, ease: [0.7, 0, 0.84, 0] },
+  },
+};
+
+const linkVariantsDesktop = {
   hidden: { opacity: 0, x: -8 },
   visible: { opacity: 1, x: 0, transition: { duration: 0.3, ease: "easeOut" } },
+};
+
+const linkVariantsMobile = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.18, ease: "easeOut" } },
 };
 
 function applyNavScrollVars(el, isDarkHeroRoute) {
@@ -54,9 +75,29 @@ function applyNavScrollVars(el, isDarkHeroRoute) {
   el.style.setProperty("--nav-hero", String(1 - progress));
 }
 
+function useCompactNavMotion() {
+  const [compact, setCompact] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return window.matchMedia("(max-width: 767px), (prefers-reduced-motion: reduce)").matches;
+  });
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px), (prefers-reduced-motion: reduce)");
+    const onChange = () => setCompact(mq.matches);
+    onChange();
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  return compact;
+}
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const compactMotion = useCompactNavMotion();
+  const menuVariants = compactMotion ? menuVariantsMobile : menuVariantsDesktop;
+  const linkVariants = compactMotion ? linkVariantsMobile : linkVariantsDesktop;
   const headerRef = useRef(null);
   const scrolledRef = useRef(false);
   const { pathname } = useLocation();
@@ -125,7 +166,7 @@ export default function Navbar() {
       initial={{ y: -6, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className={`fixed left-0 right-0 top-0 z-50 isolate border-b will-change-[border-color] ${
+      className={`fixed left-0 right-0 top-0 z-50 isolate border-b ${
         onDarkHero ? "border-white/10" : "border-[#847377]/12 shadow-[0_8px_32px_-12px_rgba(19,0,6,0.08)]"
       }`}
       style={{
@@ -135,14 +176,14 @@ export default function Navbar() {
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 bg-[#fdf9f4] will-change-[opacity]"
+        className="pointer-events-none absolute inset-0 -z-10 bg-[#fdf9f4] md:will-change-[opacity]"
         style={{ opacity: "var(--nav-bg)" }}
       />
 
       {isDarkHeroRoute && (
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 -z-[5] h-28 bg-gradient-to-b from-[#130006]/45 to-transparent will-change-[opacity]"
+          className="pointer-events-none absolute inset-x-0 top-0 -z-[5] h-28 bg-gradient-to-b from-[#130006]/45 to-transparent md:will-change-[opacity]"
           style={{ opacity: "var(--nav-hero)" }}
         />
       )}
@@ -264,10 +305,10 @@ export default function Navbar() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className={`absolute left-0 right-0 border-t px-6 pb-6 pt-3 backdrop-blur-xl md:hidden ${
+            className={`absolute left-0 right-0 border-t px-6 pb-6 pt-3 md:hidden ${
               scrolled
-                ? "border-[#847377]/10 bg-[#fdf9f4]/98 shadow-[0_20px_48px_rgba(19,0,6,0.08)]"
-                : "border-white/10 bg-[#130006]/88 shadow-[0_24px_48px_rgba(19,0,6,0.35)]"
+                ? "border-[#847377]/10 bg-[#fdf9f4] shadow-[0_20px_48px_rgba(19,0,6,0.08)]"
+                : "border-white/10 bg-[#130006]/95 shadow-[0_24px_48px_rgba(19,0,6,0.35)]"
             }`}
           >
             <nav className="mx-auto flex max-w-md flex-col">

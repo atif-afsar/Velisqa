@@ -7,8 +7,10 @@ export default function BuyNowButton({
   productUrl,
   children = "Buy Now",
   className = "",
+  soldOut = false,
 }) {
   const [open, setOpen] = useState(false);
+  const label = soldOut ? "Enquire to purchase" : children;
 
   const baseStyles =
     "tap-target inline-flex max-w-full min-w-0 items-center justify-center gap-3 rounded-full px-4 py-2 text-center font-medium transition-all";
@@ -20,7 +22,12 @@ export default function BuyNowButton({
     "relative before:absolute before:inset-0 before:-z-10 before:rounded-full before:bg-gradient-to-r before:from-[#3d0a21]/95 before:via-[#4c172f]/60 before:to-[#3d0a21]/95";
 
   return (
-    <>
+    <div className="flex w-full max-w-full flex-col items-center">
+      {soldOut && (
+        <p className="mb-1.5 text-[9px] font-semibold uppercase tracking-[0.2em] text-[#c9a75a] sm:text-[10px]">
+          Sold out
+        </p>
+      )}
       <motion.button
         type="button"
         onClick={(e) => {
@@ -31,6 +38,7 @@ export default function BuyNowButton({
         whileHover={{ y: -2, scale: 1.01 }}
         whileTap={{ scale: 0.985 }}
         className={`${baseStyles} ${visual} ${premiumStyles} ${accent} ${className}`}
+        aria-label={soldOut ? `Sold out — ${label} for ${productName || "this piece"}` : undefined}
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
           <path
@@ -38,7 +46,7 @@ export default function BuyNowButton({
             fill="#c9a75a"
           />
         </svg>
-        <span className="label-stitch min-w-0 text-sm leading-snug tracking-[0.12em]">{children}</span>
+        <span className="label-stitch min-w-0 text-sm leading-snug tracking-[0.12em]">{label}</span>
       </motion.button>
 
       <OrderFormModal
@@ -46,7 +54,8 @@ export default function BuyNowButton({
         onClose={() => setOpen(false)}
         productName={productName}
         productUrl={productUrl}
+        variant={soldOut ? "enquiry" : "order"}
       />
-    </>
+    </div>
   );
 }

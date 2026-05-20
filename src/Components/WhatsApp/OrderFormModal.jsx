@@ -11,7 +11,8 @@ function mapsLink(lat, lng) {
   return `https://www.google.com/maps?q=${lat},${lng}`;
 }
 
-export default function OrderFormModal({ open, onClose, productName, productUrl }) {
+export default function OrderFormModal({ open, onClose, productName, productUrl, variant = "order" }) {
+  const isEnquiry = variant === "enquiry";
   const titleId = useId();
   const [mounted, setMounted] = useState(false);
   const [locationStatus, setLocationStatus] = useState("idle");
@@ -85,6 +86,7 @@ export default function OrderFormModal({ open, onClose, productName, productUrl 
       locationLabel: locationNote.trim() || (coords ? "GPS coordinates shared" : ""),
       locationMapsUrl: coords ? mapsLink(coords.lat, coords.lng) : "",
       notes: String(form.get("notes") || "").trim(),
+      enquiryType: isEnquiry ? "enquiry" : "order",
     });
 
     window.open(createWhatsAppLink(message), "_blank", "noopener,noreferrer");
@@ -127,10 +129,10 @@ export default function OrderFormModal({ open, onClose, productName, productUrl 
             <div className="flex shrink-0 items-start justify-between gap-3 border-b border-[#d4af37]/15 px-4 py-3.5 sm:gap-4 sm:px-6 sm:py-4">
               <div className="min-w-0 flex-1 pr-2">
                 <p className="label-stitch text-[9px] uppercase tracking-[0.18em] text-[#847377] sm:text-[10px]">
-                  Complete your order
+                  {isEnquiry ? "Register interest" : "Complete your order"}
                 </p>
                 <h2 id={titleId} className="mt-1 font-serif text-lg leading-tight text-[#130006] sm:text-2xl">
-                  Buy on WhatsApp
+                  {isEnquiry ? "Enquire on WhatsApp" : "Buy on WhatsApp"}
                 </h2>
                 {productName && (
                   <p className="mt-1 line-clamp-2 text-xs font-medium text-[#6f334a] sm:text-sm">{productName}</p>
@@ -149,6 +151,16 @@ export default function OrderFormModal({ open, onClose, productName, productUrl 
             <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
               <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 sm:px-6 sm:py-5">
                 <div className="space-y-4">
+                  {isEnquiry && (
+                    <div className="rounded-xl border border-[#d4af37]/30 bg-[#3d0a21]/[0.06] px-3.5 py-3 text-left sm:px-4 sm:py-3.5">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#6f334a]">
+                        Made to order · not same-day delivery
+                      </p>
+                      <p className="mt-1.5 text-xs leading-relaxed text-[#514347]">
+                        Share your details and our concierge will confirm availability, lead time, and dispatch — fine jewellery is prepared and shipped on an agreed timeline.
+                      </p>
+                    </div>
+                  )}
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <label className="flex flex-col gap-1.5 sm:col-span-2">
                       <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#514347]">
@@ -286,10 +298,12 @@ export default function OrderFormModal({ open, onClose, productName, productUrl 
                   className="tap-target inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3.5 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-[0_12px_32px_rgba(37,211,102,0.35)] transition hover:bg-[#1fb855] sm:px-6 sm:text-sm sm:tracking-[0.14em]"
                 >
                   <WhatsAppIcon />
-                  Send order on WhatsApp
+                  {isEnquiry ? "Send enquiry on WhatsApp" : "Send order on WhatsApp"}
                 </button>
                 <p className="mt-2 text-center text-[10px] leading-relaxed text-[#847377]">
-                  Opens WhatsApp with your details pre-filled for Velisqa concierge.
+                  {isEnquiry
+                    ? "Opens WhatsApp with your enquiry — our team will respond with timelines (delivery is not same-day)."
+                    : "Opens WhatsApp with your details pre-filled for Velisqa concierge."}
                 </p>
               </div>
             </form>

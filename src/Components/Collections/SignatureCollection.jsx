@@ -8,34 +8,70 @@ const braceletImages = import.meta.glob("../../assets/Bracelet/*.webp", { eager:
 const ringImages = import.meta.glob("../../assets/Rings/*.webp", { eager: true });
 const earringImages = import.meta.glob("../../assets/Earrings/*.webp", { eager: true });
 
-function buildProducts(category, modules) {
+/** Set to false when signature pieces are available for immediate checkout */
+const SIGNATURE_COLLECTION_SOLD_OUT = true;
+
+/** INR prices by piece order (N1–N5, B1/B3–B5, R1–R6, E1–E6) */
+const SIGNATURE_PRICES_INR = {
+  Necklace: [499, 399, 499, 519, 519],
+  Bracelet: [449, 399, 549, 549, 549],
+  Ring: [329, 329, 329, 419, 419, 1699],
+  Earrings: [297, 299, 299, 369, 299, 299, 299],
+};
+
+function formatInr(amount) {
+  return `₹${amount.toLocaleString("en-IN")}`;
+}
+
+function buildProducts(category, modules, priceKey) {
+  const prices = SIGNATURE_PRICES_INR[priceKey] ?? [];
+
   return Object.entries(modules)
     .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" }))
-    .map(([path, module], index) => ({
-      name: `Velisqa ${category} ${index + 1}`,
-      price: "Price on request",
-      image: module.default,
-      alt: `${category} jewellery piece from the Velisqa signature collection`,
-      source: path,
-    }));
+    .map(([path, module], index) => {
+      const priceAmount = prices[index] ?? prices[prices.length - 1];
+      return {
+        name: `Velisqa ${category} ${index + 1}`,
+        price: priceAmount != null ? formatInr(priceAmount) : "Price on request",
+        priceAmount,
+        image: module.default,
+        alt: `${category} jewellery piece from the Velisqa signature collection`,
+        source: path,
+        soldOut: SIGNATURE_COLLECTION_SOLD_OUT,
+      };
+    });
+}
+
+function ProductPrice({ price, large = false }) {
+  return (
+    <p
+      className={`type-price font-medium tabular-nums ${
+        large
+          ? "mt-4 font-serif text-2xl tracking-[0.02em] text-[#3d0a21] sm:text-3xl"
+          : "mt-2 text-[0.95rem] tracking-[0.04em] text-[#6f334a] sm:mt-2.5 sm:text-lg"
+      }`}
+    >
+      {price}
+    </p>
+  );
 }
 
 const signatureCategories = [
   {
     title: "Necklace",
-    products: buildProducts("Necklace", necklaceImages),
+    products: buildProducts("Necklace", necklaceImages, "Necklace"),
   },
   {
     title: "Bracelet",
-    products: buildProducts("Bracelet", braceletImages),
+    products: buildProducts("Bracelet", braceletImages, "Bracelet"),
   },
   {
     title: "Rings",
-    products: buildProducts("Ring", ringImages),
+    products: buildProducts("Ring", ringImages, "Ring"),
   },
   {
     title: "Earrings",
-    products: buildProducts("Earrings", earringImages),
+    products: buildProducts("Earrings", earringImages, "Earrings"),
   },
 ];
 
@@ -76,9 +112,13 @@ function ProductCard({ product, onSelect }) {
         <button type="button" onClick={() => onSelect(product)} className="text-center">
           <h4 className="font-serif text-[1.05rem] leading-tight text-[#130006] transition hover:text-[#6f334a] sm:text-2xl">{product.name}</h4>
         </button>
-        <p className="type-price mt-1 text-[11px] leading-[1.6] text-[#514347] sm:text-sm">{product.price}</p>
+        <ProductPrice price={product.price} />
         <div className="mt-3 flex w-full justify-center sm:mt-4">
-          <BuyNowButton productName={product.name} className="w-full px-3 py-2 sm:w-auto sm:px-5 sm:py-2.5">
+          <BuyNowButton
+            productName={product.name}
+            soldOut={product.soldOut}
+            className="w-full px-3 py-2 sm:w-auto sm:px-5 sm:py-2.5"
+          >
             Buy
           </BuyNowButton>
         </div>
@@ -133,13 +173,22 @@ function ProductPreviewModal({ product, onClose }) {
           <div>
             <p className="label-stitch mb-3 text-xs uppercase tracking-[0.18em] text-[#847377]">Signature Collection</p>
             <h3 className="font-serif text-3xl leading-tight text-[#130006] sm:text-4xl">{product.name}</h3>
-            <p className="type-price mt-3 text-sm leading-[1.6] text-[#514347]">{product.price}</p>
+            <ProductPrice price={product.price} large />
             <p className="mt-4 text-sm leading-7 text-[#514347]">
-              View the piece in full detail, then connect with our concierge for availability, pricing, and delivery.
+              {SIGNATURE_COLLECTION_SOLD_OUT ? (
+                <>
+                  These signature pieces are sold out for immediate purchase online. Enquire to join the waitlist, ask about restock, or discuss a bespoke commission. Fine jewellery is made to order;
+                  delivery is scheduled with our team and is not same-day.
+                </>
+              ) : (
+                <>
+                  View the piece in full detail, then connect with our concierge for availability, pricing, and delivery.
+                </>
+              )}
             </p>
           </div>
 
-          <BuyNowButton productName={product.name} className="w-full px-6 py-4">
+          <BuyNowButton productName={product.name} soldOut={SIGNATURE_COLLECTION_SOLD_OUT} className="w-full px-6 py-4">
             Buy Now
           </BuyNowButton>
         </div>
@@ -163,9 +212,9 @@ export default function SignatureCollection() {
         if (!target) return;
         const lenis = getLenis();
         if (lenis) {
-          lenis.scrollTo(target, { offset: -88, duration: 1.35 });
+          lenis.scrollTo(target, { offset: -88, duration: 1.05 });
         } else {
-          target.scrollIntoView({ block: "start", behavior: "smooth" });
+          target.scrollIntoView({ block: "start", behavior: "instant" });
         }
       });
     }

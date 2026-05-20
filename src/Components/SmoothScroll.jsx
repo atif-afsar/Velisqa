@@ -1,41 +1,128 @@
-import Lenis from "lenis";
 import { useEffect } from "react";
-import { setLenis } from "../lib/smoothScrollState";
+import {
+  cleanupLenisDom,
+  isTouchViewport,
+  prefersNativeScroll,
+  setLenis,
+  TOUCH_VIEW_MQ,
+} from "../lib/smoothScrollState";
 
 /** Premium ease — soft deceleration, no harsh stop */
 const LUXURY_EASE = (t) => 1 - (1 - t) ** 4;
 
+function dispatchVelisqaScroll() {
+  window.dispatchEvent(new CustomEvent("velisqa:scroll"));
+}
+
+function buildLenisOptions() {
+  const touchView = isTouchViewport();
+
+  const anchors = {
+    offset: 88,
+    duration: touchView ? 1.05 : 1.35,
+    easing: LUXURY_EASE,
+  };
+
+  if (touchView) {
+    return {
+      lerp: 0.11,
+      smoothWheel: true,
+      syncTouch: true,
+      syncTouchLerp: 0.14,
+      touchMultiplier: 1,
+      touchInertiaExponent: 1.85,
+      autoRaf: true,
+      anchors,
+    };
+  }
+
+  return {
+    lerp: 0.08,
+    smoothWheel: true,
+    wheelMultiplier: 0.85,
+    syncTouch: false,
+    autoRaf: true,
+    anchors,
+  };
+}
+
 export default function SmoothScroll() {
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) return undefined;
+    const reducedMotionMq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const touchViewMq = window.matchMedia(TOUCH_VIEW_MQ);
 
-    const lenis = new Lenis({
-      lerp: 0.055,
-      smoothWheel: true,
-      wheelMultiplier: 0.85,
-      touchMultiplier: 1.05,
-      syncTouch: true,
-      syncTouchLerp: 0.07,
-      autoRaf: true,
-      anchors: {
-        offset: 88,
-        duration: 1.35,
-        easing: LUXURY_EASE,
-      },
-    });
+    let lenis = null;
+    let rafId = 0;
+    let cancelled = false;
 
-    setLenis(lenis);
+    const emitScroll = () => dispatchVelisqaScroll();
 
-    const onScroll = () => {
-      window.dispatchEvent(new CustomEvent("velisqa:scroll"));
+    const enableNativeScroll = () => {
+      window.removeEventListener("scroll", emitScroll);
+
+      if (lenis) {
+        lenis.off("scroll", emitScroll);
+        lenis.destroy();
+        lenis = null;
+        setLenis(null);
+      }
+
+      cleanupLenisDom();
+      window.addEventListener("scroll", emitScroll, { passive: true });
+      emitScroll();
     };
-    lenis.on("scroll", onScroll);
+
+    const enableLenis = async () => {
+      window.removeEventListener("scroll", emitScroll);
+
+      if (lenis) {
+        lenis.off("scroll", emitScroll);
+        lenis.destroy();
+        lenis = null;
+        setLenis(null);
+      }
+
+      cleanupLenisDom();
+
+      const { default: Lenis } = await import("lenis");
+      if (cancelled || prefersNativeScroll()) return;
+
+      lenis = new Lenis(buildLenisOptions());
+
+      setLenis(lenis);
+      lenis.on("scroll", emitScroll);
+      emitScroll();
+    };
+
+    const syncMode = () => {
+      if (prefersNativeScroll()) {
+        enableNativeScroll();
+      } else {
+        enableLenis();
+      }
+    };
+
+    const onMqChange = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(syncMode);
+    };
+
+    syncMode();
+    reducedMotionMq.addEventListener("change", onMqChange);
+    touchViewMq.addEventListener("change", onMqChange);
 
     return () => {
-      lenis.off("scroll", onScroll);
-      lenis.destroy();
-      setLenis(null);
+      cancelled = true;
+      cancelAnimationFrame(rafId);
+      reducedMotionMq.removeEventListener("change", onMqChange);
+      touchViewMq.removeEventListener("change", onMqChange);
+      window.removeEventListener("scroll", emitScroll);
+      if (lenis) {
+        lenis.off("scroll", emitScroll);
+        lenis.destroy();
+        setLenis(null);
+      }
+      cleanupLenisDom();
     };
   }, []);
 
