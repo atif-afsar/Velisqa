@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import {
   cleanupLenisDom,
+  COARSE_POINTER_MQ,
   isTouchViewport,
   prefersNativeScroll,
   setLenis,
@@ -110,12 +111,15 @@ export default function SmoothScroll() {
     syncMode();
     reducedMotionMq.addEventListener("change", onMqChange);
     touchViewMq.addEventListener("change", onMqChange);
+    const coarsePointerMq = window.matchMedia(COARSE_POINTER_MQ);
+    coarsePointerMq.addEventListener("change", onMqChange);
 
     return () => {
       cancelled = true;
       cancelAnimationFrame(rafId);
       reducedMotionMq.removeEventListener("change", onMqChange);
       touchViewMq.removeEventListener("change", onMqChange);
+      coarsePointerMq.removeEventListener("change", onMqChange);
       window.removeEventListener("scroll", emitScroll);
       if (lenis) {
         lenis.off("scroll", emitScroll);

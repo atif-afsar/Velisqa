@@ -1,18 +1,25 @@
 /** @type {import('lenis').default | null} */
 let lenisInstance = null;
 
-/** Mobile / touch viewports — used for Lenis touch tuning */
+/** Used for anchor duration tuning (narrow viewports scroll faster in Lenis) */
 export const TOUCH_VIEW_MQ = "(max-width: 767px), (pointer: coarse)";
+
+/**
+ * Coarse pointer = touch / stylus primary. Lenis syncTouch fights OS momentum → feels “sticky”.
+ * Native scroll keeps phone/tablet scrolling natural; Lenis stays for mouse/trackpad.
+ */
+export const COARSE_POINTER_MQ = "(pointer: coarse)";
 
 export function isTouchViewport() {
   if (typeof window === "undefined") return false;
   return window.matchMedia(TOUCH_VIEW_MQ).matches;
 }
 
-/** Only skip Lenis for accessibility (smooth scroll stays on for mobile + desktop) */
+/** Use native document scroll (no Lenis): accessibility, or touch-primary devices */
 export function prefersNativeScroll() {
   if (typeof window === "undefined") return false;
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return true;
+  return window.matchMedia(COARSE_POINTER_MQ).matches;
 }
 
 export function setLenis(instance) {
