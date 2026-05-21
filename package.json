@@ -11,6 +11,8 @@
     "build": "vite build",
     "optimize:images": "node scripts/optimize-images.mjs",
     "sitemap": "node scripts/generate-sitemap.mjs",
+    "seed:catalog": "node scripts/seed-signature-products.mjs",
+    "check:google": "node scripts/check-google-provider.mjs",
     "lint": "eslint .",
     "preview": "vite preview"
   },

@@ -8,10 +8,11 @@ export function AuthProvider({ children }) {
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  async function loadProfile(userId) {
+  async function loadProfile(sessionUser) {
+    const userId = typeof sessionUser === 'string' ? sessionUser : sessionUser.id
     const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single()
 
-    if (!error) {
+    if (!error && data) {
       setProfile(data)
     } else {
       setProfile(null)
@@ -31,7 +32,7 @@ export function AuthProvider({ children }) {
 
         if (session?.user) {
           setUser(session.user)
-          void loadProfile(session.user.id)
+          void loadProfile(session.user)
         }
       } finally {
         if (!cancelled) {
@@ -47,7 +48,7 @@ export function AuthProvider({ children }) {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
         setUser(session.user)
-        void loadProfile(session.user.id)
+        void loadProfile(session.user)
       } else {
         setUser(null)
         setProfile(null)

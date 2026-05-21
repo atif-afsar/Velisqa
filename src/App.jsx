@@ -21,8 +21,10 @@ const Shipping = lazy(() => import('./Pages/Shipping'))
 const FAQ = lazy(() => import('./Pages/FAQ'))
 const Order = lazy(() => import('./Pages/Order'))
 const Login = lazy(() => import('./Pages/Login'))
+const AuthCallback = lazy(() => import('./Pages/AuthCallback'))
 const AdminLogin = lazy(() => import('./Pages/AdminLogin'))
 const AdminDashboard = lazy(() => import('./Pages/AdminDashboard'))
+const ProductDetail = lazy(() => import('./Pages/ProductDetail'))
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -64,6 +66,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/models" element={<Models />} />
           <Route path="/collections" element={<Collections />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
@@ -72,6 +75,7 @@ function App() {
           <Route path="/faq" element={<FAQ />} />
           <Route path="/order" element={<Order />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin-login" element={<Navigate to="/admin" replace />} />
           <Route

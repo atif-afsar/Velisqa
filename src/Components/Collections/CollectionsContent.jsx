@@ -1,6 +1,5 @@
 import { lazy } from "react";
 import { Link } from "react-router-dom";
-import CatalogProducts from "./CatalogProducts";
 import SignatureCollection from "./SignatureCollection";
 import LazySection from "../Performance/LazySection";
 
@@ -23,7 +22,6 @@ export default function CollectionsContent() {
           .
         </p>
       </header>
-      <CatalogProducts />
       <SignatureCollection />
       <LazySection minHeight="760px">
         <RareFinds />

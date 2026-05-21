@@ -1,15 +1,26 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
+import { enrichAuthError, signInWithGoogle } from '../lib/auth'
+import GoogleProviderStatus from '../Components/Auth/GoogleProviderStatus'
+import GoogleSignInButton from '../Components/Auth/GoogleSignInButton'
+import { useAuth } from '../context/AuthContext'
 
 export default function Login() {
   const navigate = useNavigate()
+  const { user, loading: authLoading } = useAuth()
 
   const [isSignup, setIsSignup] = useState(false)
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [busy, setBusy] = useState(false)
+
+  useEffect(() => {
+    if (!authLoading && user) {
+      navigate('/', { replace: true })
+    }
+  }, [user, authLoading, navigate])
 
   async function handleEmailAuth(e) {
     e.preventDefault()
@@ -58,23 +69,24 @@ export default function Login() {
   async function handleGoogleLogin() {
     setBusy(true)
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/`,
-        },
-      })
-
-      if (error) {
-        alert(error.message)
-      }
-    } finally {
+      await signInWithGoogle()
+    } catch (err) {
+      const friendly = enrichAuthError(err)
+      alert(friendly.message)
       setBusy(false)
     }
   }
 
   const inputClass =
     'w-full rounded-xl border border-[#847377]/25 bg-white/80 px-4 py-3 text-[#130006] shadow-sm outline-none transition placeholder:text-[#847377]/60 focus:border-[#3d0a21]/40 focus:ring-2 focus:ring-[#d4af37]/25'
+
+  if (authLoading) {
+    return (
+      <main className="min-h-screen bg-[#f9f5f0] px-4 py-20 text-center text-sm text-[#847377]">
+        Loading…
+      </main>
+    )
+  }
 
   return (
     <main className="min-h-screen bg-[#f9f5f0] text-[#130006]">
@@ -93,10 +105,26 @@ export default function Login() {
               {isSignup ? 'Create your account' : 'Sign in'}
             </h1>
             <p className="mt-2 text-sm text-[#514347]">
-              {isSignup ? 'Join the atelier list for orders and updates.' : 'Welcome back.'}
+              {isSignup
+                ? 'Join with Google or email for orders and updates.'
+                : 'Sign in with Google or your email.'}
             </p>
 
-            <form onSubmit={handleEmailAuth} className="mt-8 grid gap-4">
+            <GoogleProviderStatus />
+
+            <div className="mt-8">
+              <GoogleSignInButton onClick={handleGoogleLogin} disabled={busy} />
+            </div>
+
+            <div className="my-6 flex items-center gap-3">
+              <span className="h-px flex-1 bg-[#d4af37]/25" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#847377]">
+                or use email
+              </span>
+              <span className="h-px flex-1 bg-[#d4af37]/25" />
+            </div>
+
+            <form onSubmit={handleEmailAuth} className="grid gap-4">
               {isSignup && (
                 <input
                   className={inputClass}
@@ -134,18 +162,9 @@ export default function Login() {
                 disabled={busy}
                 className="rounded-xl bg-[#3d0a21] px-4 py-3 text-sm font-semibold uppercase tracking-[0.12em] text-[#fdf9f4] transition hover:bg-[#2a0718] disabled:opacity-60"
               >
-                {busy ? 'Please wait…' : isSignup ? 'Sign up' : 'Sign in'}
+                {busy ? 'Please wait…' : isSignup ? 'Sign up with email' : 'Sign in with email'}
               </button>
             </form>
-
-            <button
-              type="button"
-              disabled={busy}
-              onClick={handleGoogleLogin}
-              className="mt-4 w-full rounded-xl border border-[#847377]/25 bg-white/90 py-3 text-sm font-medium text-[#130006] transition hover:border-[#3d0a21]/25 disabled:opacity-60"
-            >
-              Continue with Google
-            </button>
 
             <p className="mt-6 text-center text-sm text-[#514347]">
               {isSignup ? 'Already have an account?' : 'New here?'}{' '}

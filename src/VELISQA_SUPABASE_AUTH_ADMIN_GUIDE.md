@@ -293,30 +293,43 @@ For production, turn it ON.
 
 ## 12. Enable Google Login
 
-Go to:
+If sign-in shows **`Unsupported provider: provider is not enabled`**, Google is still **OFF** in Supabase. Fix that first (steps below).
 
-```txt
-Supabase Dashboard → Authentication → Providers → Google
-```
+### A. Turn on Google in Supabase (required)
+
+1. Open [Supabase Dashboard](https://supabase.com/dashboard) → your **Velisqa** project.
+2. Go to **Authentication** → **Providers** (or **Sign In / Providers**).
+3. Find **Google** in the list.
+4. Toggle **Enable** to **ON** (green).
+5. Leave this page open — you will paste Google credentials in step C.
+
+Until **Enable** is ON, the app cannot use Google sign-in (error 400 `validation_failed`).
+
+### B. Create Google OAuth credentials
+
+1. Open [Google Cloud Console](https://console.cloud.google.com/) → create or select a project.
+2. **APIs & Services** → **OAuth consent screen** → configure (External is fine for testing; add your email as test user if in Testing mode).
+3. **APIs & Services** → **Credentials** → **Create credentials** → **OAuth client ID**.
+4. Application type: **Web application**.
+5. **Authorized redirect URIs** — copy the exact callback URL from Supabase:
+   - In Supabase: **Authentication** → **Providers** → **Google** → copy **Callback URL** (looks like `https://YOUR_PROJECT_REF.supabase.co/auth/v1/callback`).
+   - Paste that URL into Google **Authorized redirect URIs** → **Create**.
+6. Copy the **Client ID** and **Client Secret**.
+
+### C. Paste into Supabase and save
+
+1. Back in Supabase → **Authentication** → **Providers** → **Google**.
+2. Paste **Client ID** and **Client Secret**.
+3. Confirm **Enable** is still **ON**.
+4. Click **Save**.
 
 You need:
 
 ```txt
 Google Client ID
 Google Client Secret
+Enable = ON
 ```
-
-Steps:
-
-1. Open Google Cloud Console.
-2. Create a project.
-3. Go to APIs & Services → Credentials.
-4. Create OAuth Client ID.
-5. Select Web Application.
-6. Add Authorized Redirect URI from Supabase Google Provider page.
-7. Copy Client ID and Client Secret.
-8. Paste them into Supabase Google Provider.
-9. Save.
 
 Also add your website URL in Supabase:
 
@@ -325,8 +338,21 @@ Authentication → URL Configuration
 Site URL: https://www.velisqa.com
 Redirect URLs:
 http://localhost:5173/**
+http://localhost:5173/auth/callback
 https://www.velisqa.com/**
+https://www.velisqa.com/auth/callback
 ```
+
+The app uses `/auth/callback` after Google sign-in (see `src/lib/auth.js`).
+
+### Google login troubleshooting
+
+| Error | Fix |
+|--------|-----|
+| `provider is not enabled` | Supabase → Providers → **Google** → **Enable ON** → Save |
+| Redirect URI mismatch | Google Console redirect URI must match Supabase **Callback URL** exactly |
+| `redirect_uri_mismatch` (Google) | Same as above — no trailing slash mismatch |
+| Stuck after Google | Supabase → URL Configuration → add `http://localhost:5173/auth/callback` |
 
 ---
 

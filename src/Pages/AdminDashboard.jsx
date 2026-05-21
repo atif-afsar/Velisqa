@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 import { deleteProductImage, uploadProductImage } from '../lib/productStorage'
 import { useAuth } from '../context/AuthContext'
+import { useCatalog } from '../context/CatalogContext'
+import { normalizeProductCategory, PRODUCT_CATEGORIES } from '../lib/productCategories'
 
 const emptyForm = {
   name: '',
   price: '',
   description: '',
-  category: '',
+  category: PRODUCT_CATEGORIES[0],
   image_url: '',
   stock: '1',
 }
@@ -21,6 +23,7 @@ async function fetchProductsFromDb() {
 
 export default function AdminDashboard() {
   const { user, logout } = useAuth()
+  const { notifyCatalogChange } = useCatalog()
 
   const [products, setProducts] = useState([])
   const [fetchError, setFetchError] = useState(null)
@@ -36,10 +39,10 @@ export default function AdminDashboard() {
       if (cancelled) return
       if (error) {
         setFetchError(error.message)
-        return
+      } else {
+        setFetchError(null)
+        setProducts(data ?? [])
       }
-      setFetchError(null)
-      setProducts(data ?? [])
     })
     return () => {
       cancelled = true
@@ -84,7 +87,7 @@ export default function AdminDashboard() {
       name: product.name ?? '',
       price: String(product.price ?? ''),
       description: product.description ?? '',
-      category: product.category ?? '',
+      category: normalizeProductCategory(product.category) ?? PRODUCT_CATEGORIES[0],
       image_url: product.image_url ?? '',
       stock: String(product.stock ?? 1),
     })
@@ -127,6 +130,11 @@ export default function AdminDashboard() {
       return
     }
 
+    if (!form.category) {
+      alert('Please choose a category.')
+      return
+    }
+
     setBusy(true)
 
     let imageUrl = form.image_url.trim() || null
@@ -144,7 +152,7 @@ export default function AdminDashboard() {
         name: form.name.trim(),
         price: Number(form.price),
         description: form.description.trim() || null,
-        category: form.category.trim() || null,
+        category: normalizeProductCategory(form.category),
         image_url: imageUrl,
         stock: Number(form.stock) || 0,
       }
@@ -175,6 +183,7 @@ export default function AdminDashboard() {
 
       resetForm()
       await refreshProducts()
+      notifyCatalogChange()
     } catch (err) {
       alert(err.message ?? 'Could not upload image. Run supabase/storage-setup.sql in Supabase first.')
     } finally {
@@ -183,14 +192,25 @@ export default function AdminDashboard() {
   }
 
   async function deleteProduct(id) {
-    if (!window.confirm('Remove this product from the catalogue?')) return
+    if (!window.confirm('Delete this product? It will be removed from the website immediately.')) return
 
     const product = products.find((item) => item.id === id)
 
-    const { error } = await supabase.from('products').delete().eq('id', id)
+    const { data: deletedRows, error } = await supabase
+      .from('products')
+      .delete()
+      .eq('id', id)
+      .select('id')
 
     if (error) {
       alert(error.message)
+      return
+    }
+
+    if (!deletedRows?.length) {
+      alert(
+        'Product was not removed from the database. Sign in as an admin account, then try again.',
+      )
       return
     }
 
@@ -202,6 +222,7 @@ export default function AdminDashboard() {
       resetForm()
     }
     await refreshProducts()
+    notifyCatalogChange()
   }
 
   const inputClass =
@@ -214,8 +235,11 @@ export default function AdminDashboard() {
           <div className="mb-8 flex flex-col gap-4 border-b border-[#d4af37]/15 pb-8 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#847377]">Velisqa</p>
-              <h1 className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">Product catalogue</h1>
-              <p className="mt-1 text-sm text-[#514347]">Upload images and manage pieces shown on Collections.</p>
+              <h1 className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">Admin — Products</h1>
+              <p className="mt-1 max-w-lg text-sm leading-relaxed text-[#514347]">
+                Add, edit, or delete shop items. Each product needs an image, price, category, and
+                description. Changes go live on the Collections page right away.
+              </p>
             </div>
             <div className="flex flex-wrap gap-2">
               <Link
@@ -242,8 +266,13 @@ export default function AdminDashboard() {
 
           <section className="mb-10 rounded-2xl border border-[#d4af37]/15 bg-white/80 p-5 shadow-[0_16px_48px_rgba(19,0,6,0.05)] sm:p-6">
             <h2 className="font-serif text-lg font-semibold">
-              {editingId ? 'Edit product' : 'Add product'}
+              {editingId ? 'Edit product' : 'Add a new product'}
             </h2>
+            <p className="mt-1 text-sm text-[#847377]">
+              {editingId
+                ? 'Update the fields below, then save. The shop page updates automatically.'
+                : 'Fill in every field, upload a photo, then tap Add product.'}
+            </p>
 
             <form onSubmit={handleSubmit} className="mt-4 grid gap-4 sm:grid-cols-2">
               <label className="sm:col-span-2">
@@ -292,12 +321,21 @@ export default function AdminDashboard() {
                 <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
                   Category
                 </span>
-                <input
+                <select
                   className={inputClass}
-                  placeholder="Necklace, Ring, Bracelet…"
                   value={form.category}
                   onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
-                />
+                  required
+                >
+                  {PRODUCT_CATEGORIES.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+                <p className="mt-1 text-xs text-[#847377]">
+                  Shown on Collections under this category (e.g. Necklace, Rings).
+                </p>
               </label>
 
               <div className="sm:col-span-2">
@@ -342,6 +380,7 @@ export default function AdminDashboard() {
                   value={form.description}
                   onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
                   rows={4}
+                  placeholder="Materials, finish, occasion, sizing… Shown on the product page."
                 />
               </label>
 
@@ -367,8 +406,12 @@ export default function AdminDashboard() {
           </section>
 
           <section>
-            <h2 className="font-serif text-lg font-semibold">All products</h2>
-            <p className="mt-1 text-sm text-[#514347]">{products.length} record(s)</p>
+            <h2 className="font-serif text-lg font-semibold">Your products</h2>
+            <p className="mt-1 text-sm text-[#514347]">
+              {products.length === 0
+                ? 'No products yet — use the form above to add your first piece.'
+                : `${products.length} product${products.length === 1 ? '' : 's'} on the website.`}
+            </p>
 
             <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {products.map((product) => (
@@ -404,6 +447,14 @@ export default function AdminDashboard() {
                       <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-[#514347]/90">{product.description}</p>
                     )}
                     <div className="mt-4 flex flex-wrap gap-2">
+                      <Link
+                        to={`/product/${product.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full rounded-full border border-[#847377]/25 py-2 text-center text-[11px] font-semibold uppercase tracking-[0.12em] text-[#514347] transition hover:bg-[#f9f5f0]"
+                      >
+                        View on site
+                      </Link>
                       <button
                         type="button"
                         onClick={() => startEdit(product)}
