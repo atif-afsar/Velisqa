@@ -1,5 +1,4 @@
 import { supabase } from './supabaseClient'
-import { getSupabaseProvidersUrl, getSupabaseProjectRef } from './supabaseProject'
 
 /** Where Supabase redirects after Google OAuth (must be listed in Supabase → URL Configuration). */
 export function getAuthCallbackUrl() {
@@ -33,10 +32,8 @@ export function enrichAuthError(error) {
     code === 'validation_failed' ||
     msg.includes('Unsupported provider')
   ) {
-    const ref = getSupabaseProjectRef()
-    const link = getSupabaseProvidersUrl()
     return new Error(
-      `Google is OFF in Supabase project "${ref}". Open Supabase → Providers → Google, Enable ON, add Client ID & Secret, click Save.${link ? ` ${link}` : ''}`,
+      'Google sign-in is not available right now. Please try again later or sign in with email.',
     )
   }
 

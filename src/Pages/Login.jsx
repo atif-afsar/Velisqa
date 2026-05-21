@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 import { enrichAuthError, signInWithGoogle } from '../lib/auth'
-import GoogleProviderStatus from '../Components/Auth/GoogleProviderStatus'
 import GoogleSignInButton from '../Components/Auth/GoogleSignInButton'
 import { useAuth } from '../context/AuthContext'
 
@@ -109,8 +108,6 @@ export default function Login() {
                 ? 'Join with Google or email for orders and updates.'
                 : 'Sign in with Google or your email.'}
             </p>
-
-            <GoogleProviderStatus />
 
             <div className="mt-8">
               <GoogleSignInButton onClick={handleGoogleLogin} disabled={busy} />
