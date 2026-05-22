@@ -6,6 +6,12 @@ import { buildWhatsAppMessage, createWhatsAppLink } from "../WhatsApp/whatsapp";
 
 const EASE = [0.16, 1, 0.3, 1];
 
+/** Time between slide changes (ms) — lower = faster rotation */
+const SLIDE_INTERVAL_MS = 2000;
+/** Crossfade length (ms) — long + soft ease = smooth; keep under ~40% of interval */
+const CROSSFADE_MS = 1100;
+const CROSSFADE_EASE = "cubic-bezier(0.33, 0, 0.2, 1)";
+
 const ctaStack = {
   hidden: {},
   visible: {
@@ -28,8 +34,6 @@ const images = Object.keys(modules)
   .sort()
   .map((k) => modules[k].default);
 
-const SLIDE_MS = 5500;
-
 export default function Hero() {
   const [index, setIndex] = useState(0);
   const reduceMotion = useReducedMotion();
@@ -38,22 +42,28 @@ export default function Hero() {
     [],
   );
 
+  const fadeMs = reduceMotion ? 0 : CROSSFADE_MS;
+
+  useEffect(() => {
+    images.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
+
   useEffect(() => {
     if (reduceMotion || images.length < 2) return undefined;
-    const id = setInterval(() => {
+
+    const id = window.setInterval(() => {
       setIndex((i) => (i + 1) % images.length);
-    }, SLIDE_MS);
-    return () => clearInterval(id);
-  }, [reduceMotion]);
+    }, SLIDE_INTERVAL_MS);
+
+    return () => window.clearInterval(id);
+  }, [reduceMotion, images.length, SLIDE_INTERVAL_MS]);
 
   return (
     <section className="relative flex min-h-svh items-center justify-center overflow-hidden px-4 py-20 text-center text-white md:px-6 md:py-24">
-      <motion.div
-        className="absolute inset-0 h-full w-full"
-        initial={reduceMotion ? false : { scale: 1.03 }}
-        animate={{ scale: 1 }}
-        transition={{ duration: 2.2, ease: [0.16, 1, 0.3, 1] }}
-      >
+      <div className="absolute inset-0 isolate overflow-hidden bg-[#130006]">
         {images.map((src, i) => (
           <img
             key={src}
@@ -65,21 +75,25 @@ export default function Hero() {
             }
             aria-hidden={i !== index}
             loading={i === 0 ? "eager" : "lazy"}
+            fetchPriority={i === 0 ? "high" : "low"}
             decoding="async"
-            className={`absolute inset-0 h-full w-full object-cover object-center will-change-[opacity,transform] transition-[opacity,transform] ease-[cubic-bezier(0.4,0,0.2,1)] sm:object-[center_45%] ${
-              i === index
-                ? "scale-100 opacity-100 duration-[1600ms]"
-                : "scale-[1.04] opacity-0 duration-[1600ms]"
-            }`}
+            draggable={false}
+            className="absolute inset-0 h-full w-full object-cover object-center [backface-visibility:hidden] [transform:translateZ(0)] sm:object-[center_45%]"
+            style={{
+              opacity: i === index ? 1 : 0,
+              zIndex: i === index ? 2 : 1,
+              willChange: fadeMs ? "opacity" : undefined,
+              transition: fadeMs ? `opacity ${fadeMs}ms ${CROSSFADE_EASE}` : "none",
+            }}
           />
         ))}
-      </motion.div>
+      </div>
 
       <motion.div
         className="absolute inset-0 bg-[#130006]/40"
         initial={reduceMotion ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 1.2, ease: EASE }}
       />
       <motion.div
         className="absolute inset-0"
@@ -89,13 +103,13 @@ export default function Hero() {
         }}
         initial={reduceMotion ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1.4, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 1.4, delay: 0.1, ease: EASE }}
       />
       <motion.div
         className="relative z-30 mx-auto max-w-4xl space-y-5 sm:space-y-8"
         initial={reduceMotion ? false : { opacity: 0, y: 32 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.1, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 1.1, delay: 0.15, ease: EASE }}
       >
         <h1 className="type-hero mx-auto max-w-full text-reveal uppercase text-white luxury-text-shadow">
           Velisqa Jewellery
