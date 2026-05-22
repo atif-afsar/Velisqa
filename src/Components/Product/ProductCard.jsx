@@ -2,10 +2,8 @@ import { Link } from 'react-router-dom'
 import BuyNowButton from '../WhatsApp/BuyNowButton'
 import { SITE_URL } from '../SEO/siteConfig'
 import { getPrimaryImageUrl } from '../../lib/productImages'
-
-function formatInr(amount) {
-  return `₹${Number(amount).toLocaleString('en-IN')}`
-}
+import ProductPromoBadge from './ProductPromoBadge'
+import ProductPriceDisplay from './ProductPriceDisplay'
 
 export default function ProductCard({ product }) {
   const detailPath = `/product/${product.id}`
@@ -17,9 +15,10 @@ export default function ProductCard({ product }) {
     <article className="group flex h-full flex-col rounded-lg border border-[#d4af37]/15 bg-[#fbf7f1] p-2 shadow-[0_18px_44px_-28px_rgba(19,0,6,0.35)] transition duration-300 hover:-translate-y-1 hover:border-[#d4af37]/35 sm:p-3">
       <Link
         to={detailPath}
-        className="aspect-[4/5] overflow-hidden rounded-md bg-[#f1ede8]"
+        className="relative aspect-[4/5] overflow-hidden rounded-md bg-[#f1ede8]"
         aria-label={`View ${product.name}`}
       >
+        <ProductPromoBadge />
         {imageUrl ? (
           <img
             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -39,9 +38,9 @@ export default function ProductCard({ product }) {
             {product.name}
           </h4>
         </Link>
-        <p className="type-price mt-2 text-[0.95rem] font-medium tabular-nums tracking-[0.04em] text-[#6f334a] sm:mt-2.5 sm:text-lg">
-          {formatInr(product.price)}
-        </p>
+        <div className="mt-2 sm:mt-2.5">
+          <ProductPriceDisplay price={product.price} size="card" />
+        </div>
         {soldOut && (
           <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.16em] text-[#c9a75a]">Sold out</p>
         )}

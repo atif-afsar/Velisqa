@@ -10,10 +10,8 @@ import { useCatalog } from '../context/CatalogContext'
 import { normalizeProductCategory, getCategoryParamSlug } from '../lib/productCategories'
 import { getPrimaryImageUrl, getProductImageUrls } from '../lib/productImages'
 import ProductImageGallery from '../Components/Product/ProductImageGallery'
-
-function formatInr(amount) {
-  return `₹${Number(amount).toLocaleString('en-IN')}`
-}
+import ProductPromoBadge from '../Components/Product/ProductPromoBadge'
+import ProductPriceDisplay from '../Components/Product/ProductPriceDisplay'
 
 function ProductDetailSkeleton() {
   return (
@@ -136,7 +134,8 @@ export default function ProductDetail() {
             {/* Image */}
             <div className="relative lg:sticky lg:top-[calc(var(--nav-height)+1.25rem)]">
               <div className="pointer-events-none absolute inset-3 rounded-2xl border border-[#d4af37]/25 sm:inset-4" aria-hidden />
-              <div className="shadow-[0_28px_72px_-24px_rgba(19,0,6,0.28)] ring-1 ring-[#130006]/5">
+              <div className="relative shadow-[0_28px_72px_-24px_rgba(19,0,6,0.28)] ring-1 ring-[#130006]/5">
+                <ProductPromoBadge className="left-4 top-4 z-20 sm:left-5 sm:top-5" />
                 <ProductImageGallery
                   key={product.id}
                   images={productImages}
@@ -163,9 +162,7 @@ export default function ProductDetail() {
               </h1>
 
               <div className="mt-5 flex flex-wrap items-end justify-between gap-4 border-b border-[#d4af37]/25 pb-6 sm:mt-6">
-                <p className="font-serif text-3xl font-medium tabular-nums tracking-[0.02em] text-[#3d0a21] sm:text-4xl">
-                  {formatInr(product.price)}
-                </p>
+                <ProductPriceDisplay price={product.price} size="detail" />
                 {soldOut ? (
                   <span className="rounded-full border border-[#c9a75a]/40 bg-[#c9a75a]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#8a6b1f]">
                     Sold out
