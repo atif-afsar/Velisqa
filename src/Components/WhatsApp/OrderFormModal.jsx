@@ -2,7 +2,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useId, useState } from "react";
 import { createPortal } from "react-dom";
 import { getLenis } from "../../lib/smoothScrollState";
-import { buildOrderWhatsAppMessage, createWhatsAppLink } from "./whatsapp";
+import { buildCartOrderWhatsAppMessage, buildOrderWhatsAppMessage, createWhatsAppLink } from "./whatsapp";
+import { formatInr, getCartTotal } from "../../lib/cartStock";
 
 const fieldClass =
   "w-full min-w-0 border border-[#130006]/20 bg-white/80 px-3 py-2.5 text-base text-[#130006] outline-none transition placeholder:text-[#847377]/50 focus:border-[#6f334a] focus:ring-1 focus:ring-[#6f334a]/25 sm:text-sm";
@@ -11,8 +12,18 @@ function mapsLink(lat, lng) {
   return `https://www.google.com/maps?q=${lat},${lng}`;
 }
 
-export default function OrderFormModal({ open, onClose, productName, productUrl, variant = "order" }) {
+export default function OrderFormModal({
+  open,
+  onClose,
+  productName,
+  productUrl,
+  variant = "order",
+  cartItems = null,
+  stockWarnings = [],
+  onCheckoutSuccess,
+}) {
   const isEnquiry = variant === "enquiry";
+  const isCart = Array.isArray(cartItems) && cartItems.length > 0;
   const titleId = useId();
   const [mounted, setMounted] = useState(false);
   const [locationStatus, setLocationStatus] = useState("idle");
@@ -74,9 +85,7 @@ export default function OrderFormModal({ open, onClose, productName, productUrl,
     event.preventDefault();
     const form = new FormData(event.currentTarget);
 
-    const message = buildOrderWhatsAppMessage({
-      productName,
-      productUrl: productUrl || window.location.href,
+    const customer = {
       name: String(form.get("name") || "").trim(),
       phone: String(form.get("phone") || "").trim(),
       email: String(form.get("email") || "").trim(),
@@ -86,10 +95,23 @@ export default function OrderFormModal({ open, onClose, productName, productUrl,
       locationLabel: locationNote.trim() || (coords ? "GPS coordinates shared" : ""),
       locationMapsUrl: coords ? mapsLink(coords.lat, coords.lng) : "",
       notes: String(form.get("notes") || "").trim(),
-      enquiryType: isEnquiry ? "enquiry" : "order",
-    });
+    };
+
+    const message = isCart
+      ? buildCartOrderWhatsAppMessage({
+          cartItems,
+          stockWarnings,
+          ...customer,
+        })
+      : buildOrderWhatsAppMessage({
+          productName,
+          productUrl: productUrl || window.location.href,
+          ...customer,
+          enquiryType: isEnquiry ? "enquiry" : "order",
+        });
 
     window.open(createWhatsAppLink(message), "_blank", "noopener,noreferrer");
+    onCheckoutSuccess?.();
     onClose();
   }
 
@@ -132,10 +154,16 @@ export default function OrderFormModal({ open, onClose, productName, productUrl,
                   {isEnquiry ? "Register interest" : "Complete your order"}
                 </p>
                 <h2 id={titleId} className="mt-1 font-serif text-lg leading-tight text-[#130006] sm:text-2xl">
-                  {isEnquiry ? "Enquire on WhatsApp" : "Buy on WhatsApp"}
+                  {isCart ? "Checkout on WhatsApp" : isEnquiry ? "Enquire on WhatsApp" : "Buy on WhatsApp"}
                 </h2>
-                {productName && (
-                  <p className="mt-1 line-clamp-2 text-xs font-medium text-[#6f334a] sm:text-sm">{productName}</p>
+                {isCart ? (
+                  <p className="mt-1 text-xs font-medium text-[#6f334a] sm:text-sm">
+                    {cartItems.length} product{cartItems.length === 1 ? "" : "s"} · {formatInr(getCartTotal(cartItems))}
+                  </p>
+                ) : (
+                  productName && (
+                    <p className="mt-1 line-clamp-2 text-xs font-medium text-[#6f334a] sm:text-sm">{productName}</p>
+                  )
                 )}
               </div>
               <button
@@ -151,6 +179,35 @@ export default function OrderFormModal({ open, onClose, productName, productUrl,
             <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
               <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 sm:px-6 sm:py-5">
                 <div className="space-y-4">
+                  {isCart && (
+                    <div className="rounded-xl border border-[#d4af37]/25 bg-white/60 p-3.5 sm:p-4">
+                      <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#514347]">Your cart</p>
+                      <ul className="mt-2 space-y-2">
+                        {cartItems.map((item) => (
+                          <li
+                            key={item.productId}
+                            className="flex justify-between gap-3 text-xs text-[#514347] sm:text-sm"
+                          >
+                            <span className="min-w-0 truncate font-medium text-[#130006]">
+                              {item.name} × {item.quantity}
+                            </span>
+                            <span className="shrink-0 tabular-nums">
+                              {formatInr((Number(item.price) || 0) * item.quantity)}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                      {stockWarnings.length > 0 && (
+                        <div className="mt-3 rounded-lg border border-amber-200/80 bg-amber-50 px-3 py-2 text-xs text-amber-950">
+                          {stockWarnings.map((w) => (
+                            <p key={w} className="leading-snug">
+                              {w}
+                            </p>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
                   {isEnquiry && (
                     <div className="rounded-xl border border-[#d4af37]/30 bg-[#3d0a21]/[0.06] px-3.5 py-3 text-left sm:px-4 sm:py-3.5">
                       <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#6f334a]">
@@ -298,7 +355,7 @@ export default function OrderFormModal({ open, onClose, productName, productUrl,
                   className="tap-target inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3.5 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-[0_12px_32px_rgba(37,211,102,0.35)] transition hover:bg-[#1fb855] sm:px-6 sm:text-sm sm:tracking-[0.14em]"
                 >
                   <WhatsAppIcon />
-                  {isEnquiry ? "Send enquiry on WhatsApp" : "Send order on WhatsApp"}
+                  {isCart ? "Send cart order on WhatsApp" : isEnquiry ? "Send enquiry on WhatsApp" : "Send order on WhatsApp"}
                 </button>
                 <p className="mt-2 text-center text-[10px] leading-relaxed text-[#847377]">
                   {isEnquiry

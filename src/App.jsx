@@ -2,6 +2,7 @@ import SmoothScroll from './Components/SmoothScroll'
 import AdminRoute from './Components/AdminRoute'
 import { scrollToTop } from './lib/smoothScrollState'
 import Navbar from './Components/Navbar'
+import CartToast from './Components/Cart/CartToast'
 import VelisqaLoader from './Components/Common/VelisqaLoader'
 // import FloatingWhatsApp from './Components/WhatsApp/FloatingWhatsApp'
 import { AnimatePresence } from 'framer-motion'
@@ -25,6 +26,7 @@ const AuthCallback = lazy(() => import('./Pages/AuthCallback'))
 const AdminLogin = lazy(() => import('./Pages/AdminLogin'))
 const AdminDashboard = lazy(() => import('./Pages/AdminDashboard'))
 const ProductDetail = lazy(() => import('./Pages/ProductDetail'))
+const Cart = lazy(() => import('./Pages/Cart'))
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -60,6 +62,7 @@ function App() {
       <SmoothScroll />
       <ScrollToTop />
       <Navbar />
+      <CartToast />
       <Suspense fallback={<div className="min-h-[60vh] bg-[#fdf9f4]" aria-label="Loading page" />}>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -67,6 +70,7 @@ function App() {
           <Route path="/models" element={<Models />} />
           <Route path="/collections" element={<Collections />} />
           <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/cart" element={<Cart />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />

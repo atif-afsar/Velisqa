@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import AddToCartButton from '../Components/Cart/AddToCartButton'
+import QuantityStepper from '../Components/Cart/QuantityStepper'
 import { Link, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 import BuyNowButton from '../Components/WhatsApp/BuyNowButton'
@@ -37,6 +39,7 @@ export default function ProductDetail() {
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
+  const [quantity, setQuantity] = useState(1)
 
   useEffect(() => {
     let cancelled = false
@@ -55,6 +58,7 @@ export default function ProductDetail() {
           setProduct(null)
         } else {
           setProduct(data)
+          setQuantity(1)
         }
         setLoading(false)
       })
@@ -197,23 +201,44 @@ export default function ProductDetail() {
               </ul>
 
               {/* CTA */}
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-stretch">
-                <div className="flex-1 sm:min-w-[200px]">
-                  <BuyNowButton
-                    productName={product.name}
-                    productUrl={productUrl}
-                    soldOut={soldOut}
-                    className="w-full px-8 py-4"
-                  >
-                    {soldOut ? 'Enquire to purchase' : 'Buy Now'}
-                  </BuyNowButton>
+              {!soldOut && (
+                <div className="mt-6 flex flex-wrap items-center gap-3">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#847377]">
+                    Quantity
+                  </span>
+                  <QuantityStepper
+                    value={quantity}
+                    max={Number(product.stock) || 1}
+                    onChange={setQuantity}
+                  />
                 </div>
-                <Link
-                  to={collectionsLink}
-                  className="tap-target inline-flex flex-1 items-center justify-center rounded-full border border-[#847377]/35 bg-white/60 px-6 py-3.5 text-center text-xs font-semibold uppercase tracking-[0.14em] text-[#514347] transition hover:border-[#3d0a21]/40 hover:bg-white sm:flex-none sm:px-8"
-                >
-                  Back to collection
-                </Link>
+              )}
+              <div className="mt-6 flex flex-col gap-3 sm:mt-8">
+                <AddToCartButton
+                  product={product}
+                  quantity={quantity}
+                  size="lg"
+                  showViewCartLink
+                  className="w-full"
+                />
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch">
+                  <div className="flex-1 sm:min-w-[200px]">
+                    <BuyNowButton
+                      productName={product.name}
+                      productUrl={productUrl}
+                      soldOut={soldOut}
+                      className="w-full px-8 py-4"
+                    >
+                      {soldOut ? 'Enquire to purchase' : 'Buy Now'}
+                    </BuyNowButton>
+                  </div>
+                  <Link
+                    to={collectionsLink}
+                    className="tap-target inline-flex flex-1 items-center justify-center rounded-full border border-[#847377]/35 bg-white/60 px-6 py-3.5 text-center text-xs font-semibold uppercase tracking-[0.14em] text-[#514347] transition hover:border-[#3d0a21]/40 hover:bg-white sm:flex-none sm:px-8"
+                  >
+                    Back to collection
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

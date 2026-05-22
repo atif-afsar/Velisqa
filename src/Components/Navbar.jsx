@@ -2,6 +2,7 @@ import { NavLink, Link, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import WhatsAppCTA from "./WhatsApp/WhatsAppCTA";
+import CartNavLink from "./Cart/CartNavLink";
 import { useAuth } from "../context/AuthContext";
 
 const DARK_HERO_ROUTES = ["/", "/about"];
@@ -305,6 +306,7 @@ export default function Navbar() {
                 Sign in
               </Link>
             ))}
+          <CartNavLink onDarkHero={onDarkHero} scrolled={scrolled} />
           <WhatsAppCTA
             className={`hidden md:inline-flex [&_svg]:shrink-0 ${
               scrolled
@@ -445,7 +447,13 @@ export default function Navbar() {
                     </Link>
                   ))}
               </motion.div>
-              <motion.div variants={linkVariants} className="mt-3">
+              <motion.div variants={linkVariants} className="mt-3 flex flex-col gap-2">
+                <CartNavLink
+                  onDarkHero={onDarkHero}
+                  scrolled={scrolled}
+                  onClick={closeMenu}
+                  className="min-h-[48px] justify-center rounded-full border border-[#d4af37]/25"
+                />
                 <WhatsAppCTA className="w-full justify-center py-2.5 text-xs shadow-sm" intent="consult">
                   Concierge
                 </WhatsAppCTA>

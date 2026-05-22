@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import BuyNowButton from '../WhatsApp/BuyNowButton'
+import AddToCartButton from '../Cart/AddToCartButton'
 import { SITE_URL } from '../SEO/siteConfig'
 import { getPrimaryImageUrl } from '../../lib/productImages'
 import ProductPromoBadge from './ProductPromoBadge'
@@ -44,7 +45,8 @@ export default function ProductCard({ product }) {
         {soldOut && (
           <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.16em] text-[#c9a75a]">Sold out</p>
         )}
-        <div className="mt-3 flex w-full justify-center sm:mt-4">
+        <div className="mt-3 flex w-full flex-col gap-2 sm:mt-4">
+          <AddToCartButton product={product} className="w-full" />
           <BuyNowButton
             productName={product.name}
             productUrl={productUrl}
