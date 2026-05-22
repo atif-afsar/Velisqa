@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import QuantityStepper from '../Components/Cart/QuantityStepper'
 import OrderFormModal from '../Components/WhatsApp/OrderFormModal'
 import SEOHead from '../Components/SEO/SEOHead'
+import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 import { formatInr, getCartLineSubtotal, getProductStock } from '../lib/cartStock'
 import ProductPriceDisplay from '../Components/Product/ProductPriceDisplay'
@@ -18,6 +19,7 @@ export default function Cart() {
     clearCart,
     syncStockFromServer,
   } = useCart()
+  const { requireSignIn } = useAuth()
 
   const [checkoutOpen, setCheckoutOpen] = useState(false)
   const [localIssues, setLocalIssues] = useState([])
@@ -40,7 +42,7 @@ export default function Cart() {
 
   function handleCheckoutClick() {
     if (issues.length > 0) return
-    setCheckoutOpen(true)
+    requireSignIn(() => setCheckoutOpen(true))
   }
 
   return (

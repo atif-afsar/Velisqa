@@ -1,4 +1,5 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
+import SignInRequiredModal from '../Components/Auth/SignInRequiredModal'
 import { supabase } from '../lib/supabaseClient'
 
 const AuthContext = createContext(null)
@@ -7,6 +8,8 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [signInOpen, setSignInOpen] = useState(false)
+  const pendingActionRef = useRef(null)
 
   async function loadProfile(sessionUser) {
     const userId = typeof sessionUser === 'string' ? sessionUser : sessionUser.id
@@ -62,23 +65,52 @@ export function AuthProvider({ children }) {
     }
   }, [])
 
+  useEffect(() => {
+    if (!user || !pendingActionRef.current) return
+
+    const action = pendingActionRef.current
+    pendingActionRef.current = null
+    setSignInOpen(false)
+    queueMicrotask(() => action())
+  }, [user])
+
+  const closeSignInModal = useCallback(() => {
+    pendingActionRef.current = null
+    setSignInOpen(false)
+  }, [])
+
+  const requireSignIn = useCallback(
+    (action) => {
+      if (loading) return false
+      if (user) {
+        action()
+        return true
+      }
+      pendingActionRef.current = action
+      setSignInOpen(true)
+      return false
+    },
+    [user, loading],
+  )
+
   async function logout() {
     await supabase.auth.signOut()
     setUser(null)
     setProfile(null)
+    pendingActionRef.current = null
+    setSignInOpen(false)
   }
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading, logout }}>
+    <AuthContext.Provider
+      value={{ user, profile, loading, logout, requireSignIn, signInOpen, closeSignInModal }}
+    >
       {children}
+      <SignInRequiredModal open={signInOpen} onClose={closeSignInModal} />
     </AuthContext.Provider>
   )
 }
 
-/**
- * Provider + hook are intentionally in one module for a small app.
- * @see https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/react-refresh-only-export-components.md
- */
 // eslint-disable-next-line react-refresh/only-export-components -- colocated useAuth
 export function useAuth() {
   const ctx = useContext(AuthContext)
