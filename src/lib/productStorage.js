@@ -1,4 +1,5 @@
 import { supabase } from './supabaseClient'
+import { optimizeImageFile } from './imageOptimize'
 
 export const PRODUCT_IMAGES_BUCKET = 'product-images'
 
@@ -11,16 +12,19 @@ export function getStoragePathFromPublicUrl(url) {
 }
 
 export async function uploadProductImage(file, userId) {
-  const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg'
-  const safeExt = ext.replace(/[^a-z0-9]/g, '') || 'jpg'
-  const filePath = `products/${userId ?? 'anon'}/${Date.now()}-${crypto.randomUUID()}.${safeExt}`
+  const optimized = await optimizeImageFile(file)
+  const ext =
+    optimized.type === 'image/webp'
+      ? 'webp'
+      : optimized.name.split('.').pop()?.toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg'
+  const filePath = `products/${userId ?? 'anon'}/${Date.now()}-${crypto.randomUUID()}.${ext}`
 
   const { error: uploadError } = await supabase.storage
     .from(PRODUCT_IMAGES_BUCKET)
-    .upload(filePath, file, {
-      cacheControl: '3600',
+    .upload(filePath, optimized, {
+      cacheControl: '31536000',
       upsert: false,
-      contentType: file.type || undefined,
+      contentType: optimized.type || undefined,
     })
 
   if (uploadError) {
@@ -31,6 +35,14 @@ export async function uploadProductImage(file, userId) {
   return data.publicUrl
 }
 
+export async function uploadProductImages(files, userId) {
+  const urls = []
+  for (const file of files) {
+    urls.push(await uploadProductImage(file, userId))
+  }
+  return urls
+}
+
 export async function deleteProductImage(publicUrl) {
   const path = getStoragePathFromPublicUrl(publicUrl)
   if (!path) return
@@ -38,5 +50,17 @@ export async function deleteProductImage(publicUrl) {
   const { error } = await supabase.storage.from(PRODUCT_IMAGES_BUCKET).remove([path])
   if (error) {
     console.warn('[Velisqa] Could not delete product image:', error.message)
+  }
+}
+
+export async function deleteProductImages(publicUrls) {
+  const paths = publicUrls
+    .map(getStoragePathFromPublicUrl)
+    .filter(Boolean)
+  if (!paths.length) return
+
+  const { error } = await supabase.storage.from(PRODUCT_IMAGES_BUCKET).remove(paths)
+  if (error) {
+    console.warn('[Velisqa] Could not delete product images:', error.message)
   }
 }

@@ -1,7 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
-import { deleteProductImage, uploadProductImage } from '../lib/productStorage'
+import {
+  deleteProductImage,
+  deleteProductImages,
+  uploadProductImages,
+} from '../lib/productStorage'
+import { getProductImageUrls } from '../lib/productImages'
 import { useAuth } from '../context/AuthContext'
 import { useCatalog } from '../context/CatalogContext'
 import { normalizeProductCategory, PRODUCT_CATEGORIES } from '../lib/productCategories'
@@ -11,25 +16,46 @@ const emptyForm = {
   price: '',
   description: '',
   category: PRODUCT_CATEGORIES[0],
-  image_url: '',
   stock: '1',
 }
 
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+const MAX_IMAGES_PER_PRODUCT = 10
+const MAX_ORIGINAL_FILE_BYTES = 15 * 1024 * 1024
 
 async function fetchProductsFromDb() {
   return supabase.from('products').select('*').order('created_at', { ascending: false })
 }
 
+function makeGalleryItemFromUrl(url) {
+  return { id: `url-${url}`, kind: 'existing', url }
+}
+
+function makeGalleryItemFromFile(file) {
+  return {
+    id: `file-${file.name}-${file.size}-${file.lastModified}`,
+    kind: 'new',
+    file,
+    preview: URL.createObjectURL(file),
+  }
+}
+
+function revokeNewItemPreview(item) {
+  if (item.kind === 'new' && item.preview?.startsWith('blob:')) {
+    URL.revokeObjectURL(item.preview)
+  }
+}
+
 export default function AdminDashboard() {
   const { user, logout } = useAuth()
   const { notifyCatalogChange } = useCatalog()
+  const fileInputId = useId()
 
   const [products, setProducts] = useState([])
   const [fetchError, setFetchError] = useState(null)
   const [form, setForm] = useState(emptyForm)
-  const [imageFile, setImageFile] = useState(null)
-  const [imagePreview, setImagePreview] = useState(null)
+  const [galleryItems, setGalleryItems] = useState([])
+  const [originalImageUrls, setOriginalImageUrls] = useState([])
   const [editingId, setEditingId] = useState(null)
   const [busy, setBusy] = useState(false)
 
@@ -51,11 +77,9 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     return () => {
-      if (imagePreview?.startsWith('blob:')) {
-        URL.revokeObjectURL(imagePreview)
-      }
+      galleryItems.forEach(revokeNewItemPreview)
     }
-  }, [imagePreview])
+  }, [galleryItems])
 
   async function refreshProducts() {
     setFetchError(null)
@@ -67,17 +91,17 @@ export default function AdminDashboard() {
     setProducts(data ?? [])
   }
 
-  function clearImageSelection() {
-    if (imagePreview?.startsWith('blob:')) {
-      URL.revokeObjectURL(imagePreview)
-    }
-    setImageFile(null)
-    setImagePreview(null)
+  function clearGalleryItems() {
+    setGalleryItems((items) => {
+      items.forEach(revokeNewItemPreview)
+      return []
+    })
+    setOriginalImageUrls([])
   }
 
   function resetForm() {
     setForm(emptyForm)
-    clearImageSelection()
+    clearGalleryItems()
     setEditingId(null)
   }
 
@@ -88,45 +112,73 @@ export default function AdminDashboard() {
       price: String(product.price ?? ''),
       description: product.description ?? '',
       category: normalizeProductCategory(product.category) ?? PRODUCT_CATEGORIES[0],
-      image_url: product.image_url ?? '',
       stock: String(product.stock ?? 1),
     })
-    clearImageSelection()
-    setImagePreview(product.image_url ?? null)
+    const urls = getProductImageUrls(product)
+    setOriginalImageUrls(urls)
+    setGalleryItems(urls.map(makeGalleryItemFromUrl))
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  function handleImageChange(e) {
-    const file = e.target.files?.[0]
-    if (!file) return
-
-    if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
-      alert('Please upload a JPG, PNG, WebP, or GIF image.')
-      e.target.value = ''
-      return
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      alert('Image must be 5 MB or smaller.')
-      e.target.value = ''
-      return
-    }
-
-    if (imagePreview?.startsWith('blob:')) {
-      URL.revokeObjectURL(imagePreview)
-    }
-
-    setImageFile(file)
-    setImagePreview(URL.createObjectURL(file))
+  function handleImagesChange(e) {
+    const files = Array.from(e.target.files ?? [])
     e.target.value = ''
+    if (!files.length) return
+
+    const validFiles = []
+    for (const file of files) {
+      if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+        alert(`${file.name}: use JPG, PNG, WebP, or GIF.`)
+        continue
+      }
+      if (file.size > MAX_ORIGINAL_FILE_BYTES) {
+        alert(`${file.name} is too large (max 15 MB before compression).`)
+        continue
+      }
+      validFiles.push(file)
+    }
+
+    if (!validFiles.length) return
+
+    const slotsLeft = MAX_IMAGES_PER_PRODUCT - galleryItems.length
+    if (slotsLeft <= 0) {
+      alert(`You can add up to ${MAX_IMAGES_PER_PRODUCT} images per product.`)
+      return
+    }
+
+    const toAdd = validFiles.slice(0, slotsLeft)
+    if (toAdd.length < validFiles.length) {
+      alert(`Only ${toAdd.length} more image(s) added (max ${MAX_IMAGES_PER_PRODUCT} per product).`)
+    }
+
+    setGalleryItems((items) => [...items, ...toAdd.map(makeGalleryItemFromFile)])
+  }
+
+  function removeGalleryItem(id) {
+    setGalleryItems((items) => {
+      const removed = items.find((item) => item.id === id)
+      if (removed) revokeNewItemPreview(removed)
+      return items.filter((item) => item.id !== id)
+    })
+  }
+
+  function moveGalleryItem(id, direction) {
+    setGalleryItems((items) => {
+      const idx = items.findIndex((item) => item.id === id)
+      if (idx === -1) return items
+      const next = idx + direction
+      if (next < 0 || next >= items.length) return items
+      const copy = [...items]
+      ;[copy[idx], copy[next]] = [copy[next], copy[idx]]
+      return copy
+    })
   }
 
   async function handleSubmit(e) {
     e.preventDefault()
 
-    const hasExistingImage = Boolean(form.image_url)
-    if (!imageFile && !hasExistingImage) {
-      alert('Please upload a product image.')
+    if (galleryItems.length === 0) {
+      alert('Please add at least one product image.')
       return
     }
 
@@ -137,37 +189,39 @@ export default function AdminDashboard() {
 
     setBusy(true)
 
-    let imageUrl = form.image_url.trim() || null
-    let previousImageUrl = null
-
     try {
-      if (imageFile) {
-        imageUrl = await uploadProductImage(imageFile, user?.id)
-        if (editingId && form.image_url) {
-          previousImageUrl = form.image_url
-        }
-      }
+      const keptUrls = galleryItems.filter((item) => item.kind === 'existing').map((item) => item.url)
+      const newFiles = galleryItems.filter((item) => item.kind === 'new').map((item) => item.file)
+
+      const uploadedUrls = newFiles.length ? await uploadProductImages(newFiles, user?.id) : []
+      const allUrls = [...keptUrls, ...uploadedUrls]
 
       const row = {
         name: form.name.trim(),
         price: Number(form.price),
         description: form.description.trim() || null,
         category: normalizeProductCategory(form.category),
-        image_url: imageUrl,
+        image_url: allUrls[0] ?? null,
+        gallery_urls: allUrls,
         stock: Number(form.stock) || 0,
       }
+
+      const removedUrls = originalImageUrls.filter((url) => !allUrls.includes(url))
 
       if (editingId) {
         const { error } = await supabase.from('products').update(row).eq('id', editingId)
 
         if (error) {
-          alert(error.message)
+          if (uploadedUrls.length) await deleteProductImages(uploadedUrls)
+          alert(
+            error.message.includes('gallery_urls')
+              ? `${error.message}\n\nRun supabase/add-product-gallery.sql in the Supabase SQL Editor, then try again.`
+              : error.message,
+          )
           return
         }
 
-        if (previousImageUrl && previousImageUrl !== imageUrl) {
-          await deleteProductImage(previousImageUrl)
-        }
+        if (removedUrls.length) await deleteProductImages(removedUrls)
       } else {
         const { error } = await supabase.from('products').insert({
           ...row,
@@ -175,8 +229,12 @@ export default function AdminDashboard() {
         })
 
         if (error) {
-          alert(error.message)
-          if (imageUrl) await deleteProductImage(imageUrl)
+          if (uploadedUrls.length) await deleteProductImages(uploadedUrls)
+          alert(
+            error.message.includes('gallery_urls')
+              ? `${error.message}\n\nRun supabase/add-product-gallery.sql in the Supabase SQL Editor, then try again.`
+              : error.message,
+          )
           return
         }
       }
@@ -185,7 +243,7 @@ export default function AdminDashboard() {
       await refreshProducts()
       notifyCatalogChange()
     } catch (err) {
-      alert(err.message ?? 'Could not upload image. Run supabase/storage-setup.sql in Supabase first.')
+      alert(err.message ?? 'Could not upload images. Check Supabase storage and env vars.')
     } finally {
       setBusy(false)
     }
@@ -214,7 +272,10 @@ export default function AdminDashboard() {
       return
     }
 
-    if (product?.image_url) {
+    const urls = getProductImageUrls(product)
+    if (urls.length) {
+      await deleteProductImages(urls)
+    } else if (product?.image_url) {
       await deleteProductImage(product.image_url)
     }
 
@@ -237,8 +298,8 @@ export default function AdminDashboard() {
               <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#847377]">Velisqa</p>
               <h1 className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">Admin — Products</h1>
               <p className="mt-1 max-w-lg text-sm leading-relaxed text-[#514347]">
-                Add, edit, or delete shop items. Each product needs an image, price, category, and
-                description. Changes go live on the Collections page right away.
+                Add, edit, or delete shop items. Upload several photos per product — they are compressed
+                automatically and shown as a swipe gallery on the product page.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -270,8 +331,8 @@ export default function AdminDashboard() {
             </h2>
             <p className="mt-1 text-sm text-[#847377]">
               {editingId
-                ? 'Update the fields below, then save. The shop page updates automatically.'
-                : 'Fill in every field, upload a photo, then tap Add product.'}
+                ? 'Update fields and images, then save. First image is the shop thumbnail.'
+                : 'Add up to 10 images. They are resized to WebP before upload.'}
             </p>
 
             <form onSubmit={handleSubmit} className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -340,34 +401,78 @@ export default function AdminDashboard() {
 
               <div className="sm:col-span-2">
                 <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
-                  Product image
+                  Product images ({galleryItems.length}/{MAX_IMAGES_PER_PRODUCT})
                 </span>
-                <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-[#847377]/35 bg-[#fdf9f4] px-4 py-8 text-center transition hover:border-[#3d0a21]/35 hover:bg-white">
+                <label
+                  htmlFor={fileInputId}
+                  className={`flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-[#847377]/35 bg-[#fdf9f4] px-4 py-8 text-center transition hover:border-[#3d0a21]/35 hover:bg-white ${
+                    galleryItems.length >= MAX_IMAGES_PER_PRODUCT ? 'pointer-events-none opacity-50' : ''
+                  }`}
+                >
                   <input
+                    id={fileInputId}
                     type="file"
                     accept="image/jpeg,image/png,image/webp,image/gif"
+                    multiple
                     className="sr-only"
-                    onChange={handleImageChange}
+                    disabled={galleryItems.length >= MAX_IMAGES_PER_PRODUCT}
+                    onChange={handleImagesChange}
                   />
-                  <span className="text-sm font-medium text-[#130006]">Click to upload image</span>
-                  <span className="mt-1 text-xs text-[#847377]">JPG, PNG, WebP or GIF · max 5 MB</span>
+                  <span className="text-sm font-medium text-[#130006]">Click to add images</span>
+                  <span className="mt-1 text-xs text-[#847377]">
+                    JPG, PNG, WebP or GIF · up to 15 MB each · auto-compressed to WebP
+                  </span>
                 </label>
-                {imagePreview && (
-                  <div className="mt-4 overflow-hidden rounded-xl border border-[#847377]/15 bg-[#f1ede8]">
-                    <img src={imagePreview} alt="Preview" className="max-h-56 w-full object-contain" />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        clearImageSelection()
-                        if (editingId) {
-                          setForm((f) => ({ ...f, image_url: '' }))
-                        }
-                      }}
-                      className="w-full border-t border-[#847377]/15 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-[#514347] hover:bg-white"
-                    >
-                      Remove image
-                    </button>
-                  </div>
+
+                {galleryItems.length > 0 && (
+                  <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                    {galleryItems.map((item, idx) => (
+                      <li
+                        key={item.id}
+                        className="overflow-hidden rounded-xl border border-[#847377]/15 bg-[#f1ede8]"
+                      >
+                        <div className="relative">
+                          <img
+                            src={item.kind === 'existing' ? item.url : item.preview}
+                            alt=""
+                            className="aspect-[4/3] w-full object-cover"
+                          />
+                          {idx === 0 && (
+                            <span className="absolute left-2 top-2 rounded-full bg-[#3d0a21] px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] text-[#e9c349]">
+                              Cover
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex border-t border-[#847377]/15">
+                          <button
+                            type="button"
+                            disabled={idx === 0}
+                            onClick={() => moveGalleryItem(item.id, -1)}
+                            className="flex-1 py-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-[#514347] hover:bg-white disabled:opacity-30"
+                            aria-label="Move image earlier"
+                          >
+                            ←
+                          </button>
+                          <button
+                            type="button"
+                            disabled={idx === galleryItems.length - 1}
+                            onClick={() => moveGalleryItem(item.id, 1)}
+                            className="flex-1 border-x border-[#847377]/15 py-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-[#514347] hover:bg-white disabled:opacity-30"
+                            aria-label="Move image later"
+                          >
+                            →
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => removeGalleryItem(item.id)}
+                            className="flex-1 py-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-red-800 hover:bg-red-50"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
                 )}
               </div>
 
@@ -414,65 +519,72 @@ export default function AdminDashboard() {
             </p>
 
             <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {products.map((product) => (
-                <article
-                  key={product.id}
-                  className="flex flex-col overflow-hidden rounded-2xl border border-[#847377]/15 bg-white shadow-[0_12px_36px_rgba(19,0,6,0.04)]"
-                >
-                  {product.image_url ? (
-                    <div className="aspect-[4/3] w-full overflow-hidden bg-[#f1ede8]">
-                      <img
-                        src={product.image_url}
-                        alt=""
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-                  ) : (
-                    <div className="flex aspect-[4/3] items-center justify-center bg-[#f1ede8] text-xs text-[#847377]">
-                      No image
-                    </div>
-                  )}
-                  <div className="flex flex-1 flex-col p-4">
-                    <h3 className="font-serif text-base font-semibold">{product.name}</h3>
-                    {product.category && (
-                      <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-[#847377]">
-                        {product.category}
+              {products.map((product) => {
+                const thumb = getProductImageUrls(product)[0]
+                const imageCount = getProductImageUrls(product).length
+                return (
+                  <article
+                    key={product.id}
+                    className="flex flex-col overflow-hidden rounded-2xl border border-[#847377]/15 bg-white shadow-[0_12px_36px_rgba(19,0,6,0.04)]"
+                  >
+                    {thumb ? (
+                      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#f1ede8]">
+                        <img src={thumb} alt="" className="h-full w-full object-cover" />
+                        {imageCount > 1 && (
+                          <span className="absolute bottom-2 right-2 rounded-full bg-[#130006]/55 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.1em] text-[#fdf9f4]">
+                            {imageCount} photos
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="flex aspect-[4/3] items-center justify-center bg-[#f1ede8] text-xs text-[#847377]">
+                        No image
+                      </div>
+                    )}
+                    <div className="flex flex-1 flex-col p-4">
+                      <h3 className="font-serif text-base font-semibold">{product.name}</h3>
+                      {product.category && (
+                        <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-[#847377]">
+                          {product.category}
+                        </p>
+                      )}
+                      <p className="mt-2 text-sm text-[#514347]">
+                        ₹{Number(product.price).toLocaleString('en-IN')}
+                        <span className="text-[#847377]"> · Stock {product.stock}</span>
                       </p>
-                    )}
-                    <p className="mt-2 text-sm text-[#514347]">
-                      ₹{Number(product.price).toLocaleString('en-IN')}
-                      <span className="text-[#847377]"> · Stock {product.stock}</span>
-                    </p>
-                    {product.description && (
-                      <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-[#514347]/90">{product.description}</p>
-                    )}
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      <Link
-                        to={`/product/${product.id}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full rounded-full border border-[#847377]/25 py-2 text-center text-[11px] font-semibold uppercase tracking-[0.12em] text-[#514347] transition hover:bg-[#f9f5f0]"
-                      >
-                        View on site
-                      </Link>
-                      <button
-                        type="button"
-                        onClick={() => startEdit(product)}
-                        className="flex-1 rounded-full border border-[#3d0a21]/25 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#3d0a21] transition hover:bg-[#3d0a21]/5"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => deleteProduct(product.id)}
-                        className="flex-1 rounded-full border border-red-200 bg-red-50 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-red-800 transition hover:bg-red-100"
-                      >
-                        Delete
-                      </button>
+                      {product.description && (
+                        <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-[#514347]/90">
+                          {product.description}
+                        </p>
+                      )}
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        <Link
+                          to={`/product/${product.id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full rounded-full border border-[#847377]/25 py-2 text-center text-[11px] font-semibold uppercase tracking-[0.12em] text-[#514347] transition hover:bg-[#f9f5f0]"
+                        >
+                          View on site
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => startEdit(product)}
+                          className="flex-1 rounded-full border border-[#3d0a21]/25 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#3d0a21] transition hover:bg-[#3d0a21]/5"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => deleteProduct(product.id)}
+                          className="flex-1 rounded-full border border-red-200 bg-red-50 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-red-800 transition hover:bg-red-100"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                </article>
-              ))}
+                  </article>
+                )
+              })}
             </div>
 
             {products.length === 0 && !fetchError && (

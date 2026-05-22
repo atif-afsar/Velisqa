@@ -8,6 +8,8 @@ import { SITE_URL } from '../Components/SEO/siteConfig'
 import { PRODUCT_POLICY_SECTIONS } from '../lib/productPolicies'
 import { useCatalog } from '../context/CatalogContext'
 import { normalizeProductCategory, getCategoryParamSlug } from '../lib/productCategories'
+import { getPrimaryImageUrl, getProductImageUrls } from '../lib/productImages'
+import ProductImageGallery from '../Components/Product/ProductImageGallery'
 
 function formatInr(amount) {
   return `₹${Number(amount).toLocaleString('en-IN')}`
@@ -70,6 +72,8 @@ export default function ProductDetail() {
     ? `/collections?category=${getCategoryParamSlug(category)}#signature`
     : '/collections#signature'
   const soldOut = product ? Number(product.stock) <= 0 : false
+  const productImages = product ? getProductImageUrls(product) : []
+  const primaryImage = product ? getPrimaryImageUrl(product) : null
 
   if (loading) {
     return <ProductDetailSkeleton />
@@ -99,7 +103,7 @@ export default function ProductDetail() {
         title={`${product.name} | Velisqa`}
         description={description.slice(0, 155)}
         canonicalPath={`/product/${product.id}`}
-        image={product.image_url || undefined}
+        image={primaryImage || undefined}
       />
       <main className="page-offset-nav bg-[#fdf9f4] text-[#130006]">
         <div className="container-stitch mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10 lg:py-12">
@@ -132,19 +136,12 @@ export default function ProductDetail() {
             {/* Image */}
             <div className="relative lg:sticky lg:top-[calc(var(--nav-height)+1.25rem)]">
               <div className="pointer-events-none absolute inset-3 rounded-2xl border border-[#d4af37]/25 sm:inset-4" aria-hidden />
-              <div className="overflow-hidden rounded-2xl bg-[#f1ede8] shadow-[0_28px_72px_-24px_rgba(19,0,6,0.28)] ring-1 ring-[#130006]/5">
-                {product.image_url ? (
-                  <img
-                    src={product.image_url}
-                    alt={product.name}
-                    className="aspect-[4/5] w-full object-cover object-center"
-                    decoding="async"
-                  />
-                ) : (
-                  <div className="flex aspect-[4/5] items-center justify-center text-sm text-[#847377]">
-                    No image
-                  </div>
-                )}
+              <div className="shadow-[0_28px_72px_-24px_rgba(19,0,6,0.28)] ring-1 ring-[#130006]/5">
+                <ProductImageGallery
+                  key={product.id}
+                  images={productImages}
+                  alt={product.name}
+                />
               </div>
             </div>
 

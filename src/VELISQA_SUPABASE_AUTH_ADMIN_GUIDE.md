@@ -122,11 +122,14 @@ create table if not exists public.products (
   description text,
   category text,
   image_url text,
+  gallery_urls jsonb not null default '[]'::jsonb,
   stock integer default 1,
   created_by uuid references auth.users(id),
   created_at timestamp with time zone default now()
 );
 ```
+
+**Already created the `products` table?** Run `supabase/add-product-gallery.sql` in the SQL Editor to add multiple images per product (`gallery_urls`).
 
 ---
 

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import BuyNowButton from '../WhatsApp/BuyNowButton'
 import { SITE_URL } from '../SEO/siteConfig'
+import { getPrimaryImageUrl } from '../../lib/productImages'
 
 function formatInr(amount) {
   return `₹${Number(amount).toLocaleString('en-IN')}`
@@ -10,6 +11,7 @@ export default function ProductCard({ product }) {
   const detailPath = `/product/${product.id}`
   const productUrl = `${SITE_URL}${detailPath}`
   const soldOut = Number(product.stock) <= 0
+  const imageUrl = getPrimaryImageUrl(product)
 
   return (
     <article className="group flex h-full flex-col rounded-lg border border-[#d4af37]/15 bg-[#fbf7f1] p-2 shadow-[0_18px_44px_-28px_rgba(19,0,6,0.35)] transition duration-300 hover:-translate-y-1 hover:border-[#d4af37]/35 sm:p-3">
@@ -18,10 +20,10 @@ export default function ProductCard({ product }) {
         className="aspect-[4/5] overflow-hidden rounded-md bg-[#f1ede8]"
         aria-label={`View ${product.name}`}
       >
-        {product.image_url ? (
+        {imageUrl ? (
           <img
             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-            src={product.image_url}
+            src={imageUrl}
             alt={product.name}
             loading="lazy"
             decoding="async"
