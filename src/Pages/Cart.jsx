@@ -46,15 +46,16 @@ export default function Cart() {
   return (
     <>
       <SEOHead
-        title="Your cart | Velisqa"
-        description="Review your Velisqa jewellery cart and complete your order on WhatsApp."
+        title="Your bag | Velisqa"
+        description="Review your Velisqa bag and complete your order on WhatsApp."
         canonicalPath="/cart"
       />
       <main className="page-offset-nav min-h-[60vh] bg-[#fdf9f4] text-[#130006]">
         <div className="container-stitch mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
-          <h1 className="font-serif text-2xl font-semibold sm:text-3xl">Your cart</h1>
-          <p className="mt-2 text-sm text-[#514347]">
-            Adjust quantities, then checkout on WhatsApp. We confirm stock before dispatch.
+          <h1 className="font-serif text-2xl font-semibold sm:text-3xl">Your bag</h1>
+          <p className="mt-2 text-sm leading-relaxed text-[#514347]">
+            Review items below, then tap <span className="font-semibold text-[#130006]">Checkout on WhatsApp</span>.
+            We confirm stock and delivery before dispatch.
           </p>
 
           {syncing && items.length > 0 && (

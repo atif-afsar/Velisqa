@@ -1,22 +1,18 @@
 import { Link } from 'react-router-dom'
-import BuyNowButton from '../WhatsApp/BuyNowButton'
-import AddToCartButton from '../Cart/AddToCartButton'
-import { SITE_URL } from '../SEO/siteConfig'
 import { getPrimaryImageUrl } from '../../lib/productImages'
 import ProductPromoBadge from './ProductPromoBadge'
 import ProductPriceDisplay from './ProductPriceDisplay'
+import ProductCardActions from './ProductCardActions'
 
 export default function ProductCard({ product }) {
   const detailPath = `/product/${product.id}`
-  const productUrl = `${SITE_URL}${detailPath}`
-  const soldOut = Number(product.stock) <= 0
   const imageUrl = getPrimaryImageUrl(product)
 
   return (
-    <article className="group flex h-full flex-col rounded-lg border border-[#d4af37]/15 bg-[#fbf7f1] p-2 shadow-[0_18px_44px_-28px_rgba(19,0,6,0.35)] transition duration-300 hover:-translate-y-1 hover:border-[#d4af37]/35 sm:p-3">
+    <article className="group flex h-full min-h-0 flex-col rounded-lg border border-[#d4af37]/15 bg-[#fbf7f1] p-2 shadow-[0_18px_44px_-28px_rgba(19,0,6,0.35)] transition duration-300 hover:-translate-y-1 hover:border-[#d4af37]/35 sm:p-3">
       <Link
         to={detailPath}
-        className="relative aspect-[4/5] overflow-hidden rounded-md bg-[#f1ede8]"
+        className="relative aspect-[4/5] shrink-0 overflow-hidden rounded-md bg-[#f1ede8]"
         aria-label={`View ${product.name}`}
       >
         <ProductPromoBadge />
@@ -33,28 +29,19 @@ export default function ProductCard({ product }) {
         )}
       </Link>
 
-      <div className="flex flex-1 flex-col items-center px-1 pb-1 pt-3 text-center sm:pt-5">
-        <Link to={detailPath} className="text-center">
-          <h4 className="font-serif text-[1.05rem] leading-tight text-[#130006] transition hover:text-[#6f334a] sm:text-2xl">
+      <div className="flex min-h-0 flex-1 flex-col items-stretch px-0.5 pb-0.5 pt-2.5 text-center sm:px-1 sm:pt-4">
+        <Link to={detailPath} className="block w-full">
+          <h4 className="line-clamp-2 min-h-[2.5rem] font-serif text-[0.9rem] leading-tight text-[#130006] transition hover:text-[#6f334a] sm:min-h-[2.75rem] sm:text-xl lg:text-2xl">
             {product.name}
           </h4>
         </Link>
-        <div className="mt-2 sm:mt-2.5">
+
+        <div className="mt-1.5 flex min-h-[2.35rem] items-center justify-center sm:min-h-[2.5rem]">
           <ProductPriceDisplay price={product.price} size="card" />
         </div>
-        {soldOut && (
-          <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.16em] text-[#c9a75a]">Sold out</p>
-        )}
-        <div className="mt-3 flex w-full flex-col gap-2 sm:mt-4">
-          <AddToCartButton product={product} className="w-full" />
-          <BuyNowButton
-            productName={product.name}
-            productUrl={productUrl}
-            soldOut={soldOut}
-            className="w-full px-3 py-2 sm:w-auto sm:px-5 sm:py-2.5"
-          >
-            Buy Now
-          </BuyNowButton>
+
+        <div className="mt-auto w-full pt-2 sm:pt-2.5">
+          <ProductCardActions product={product} />
         </div>
       </div>
     </article>

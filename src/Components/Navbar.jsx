@@ -319,19 +319,26 @@ export default function Navbar() {
           </WhatsAppCTA>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setIsOpen((open) => !open)}
-          className={`grid place-items-center rounded-full border transition-colors duration-200 md:hidden focus:outline-none ${
-            scrolled ? "h-8 w-8" : "h-9 w-9"
-          } ${
-            onDarkHero
-              ? "border-white/25 text-white hover:border-white/45 hover:bg-white/5"
-              : "border-[#130006]/10 text-[#130006] hover:border-[#130006]/25"
-          }`}
-          aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
-          aria-expanded={isOpen}
-        >
+        <div className="flex items-center gap-2 md:hidden">
+          <CartNavLink
+            variant="icon"
+            onDarkHero={onDarkHero}
+            scrolled={scrolled}
+            onClick={closeMenu}
+          />
+          <button
+            type="button"
+            onClick={() => setIsOpen((open) => !open)}
+            className={`grid place-items-center rounded-full border transition-colors duration-200 focus:outline-none ${
+              scrolled ? "h-8 w-8" : "h-9 w-9"
+            } ${
+              onDarkHero
+                ? "border-white/25 text-white hover:border-white/45 hover:bg-white/5"
+                : "border-[#130006]/10 text-[#130006] hover:border-[#130006]/25"
+            }`}
+            aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={isOpen}
+          >
           <motion.div className="relative flex h-2.5 w-4 flex-col justify-between" aria-hidden="true">
             <motion.span
               className="h-[1px] w-4 bg-current"
@@ -349,7 +356,8 @@ export default function Navbar() {
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             />
           </motion.div>
-        </button>
+          </button>
+        </div>
       </div>
 
       <AnimatePresence>
@@ -447,13 +455,7 @@ export default function Navbar() {
                     </Link>
                   ))}
               </motion.div>
-              <motion.div variants={linkVariants} className="mt-3 flex flex-col gap-2">
-                <CartNavLink
-                  onDarkHero={onDarkHero}
-                  scrolled={scrolled}
-                  onClick={closeMenu}
-                  className="min-h-[48px] justify-center rounded-full border border-[#d4af37]/25"
-                />
+              <motion.div variants={linkVariants} className="mt-3">
                 <WhatsAppCTA className="w-full justify-center py-2.5 text-xs shadow-sm" intent="consult">
                   Concierge
                 </WhatsAppCTA>

@@ -57,7 +57,7 @@ export function CartProvider({ children }) {
         persist([...items, line])
       }
 
-      showToast(`Added “${product.name}” to cart`, 'success')
+      showToast(`“${product.name}” added to your bag`, 'success')
       return { ok: true }
     },
     [items, persist, showToast],

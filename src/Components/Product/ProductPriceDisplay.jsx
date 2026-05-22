@@ -9,7 +9,7 @@ export default function ProductPriceDisplay({ price, size = 'card' }) {
         className={
           size === 'detail'
             ? 'font-serif text-3xl font-medium tabular-nums tracking-[0.02em] text-[#3d0a21] sm:text-4xl'
-            : 'type-price text-[0.95rem] font-medium tabular-nums tracking-[0.04em] text-[#6f334a] sm:text-lg'
+            : 'text-[0.8rem] font-semibold tabular-nums leading-none tracking-[0.02em] text-[#3d0a21] sm:text-base lg:text-lg'
         }
       >
         {formatInr(sale)}
@@ -31,11 +31,11 @@ export default function ProductPriceDisplay({ price, size = 'card' }) {
   }
 
   return (
-    <div className="flex flex-col items-center gap-0.5">
-      <p className="text-[0.7rem] font-medium tabular-nums tracking-[0.02em] text-[#847377] line-through decoration-[#847377]/60 sm:text-xs">
+    <div className="flex flex-col items-center justify-center gap-0.5 leading-none">
+      <p className="text-[0.65rem] font-medium tabular-nums text-[#847377] line-through decoration-[#847377]/60 sm:text-[0.7rem]">
         {formatInr(compare)}
       </p>
-      <p className="type-price text-[0.95rem] font-semibold tabular-nums tracking-[0.04em] text-[#3d0a21] sm:text-lg">
+      <p className="text-[0.8rem] font-semibold tabular-nums tracking-[0.02em] text-[#3d0a21] sm:text-base lg:text-lg">
         {formatInr(sale)}
       </p>
     </div>
