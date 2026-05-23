@@ -77,10 +77,15 @@ export const pageSeo = {
     canonicalPath: "/authenticity",
   },
   models: {
-    title: "VELISQA Editorial Jewellery Models | Luxury Fashion Jewellery India",
+    title: "VELISQA Creator Program | UGC & Brand Collaborations India",
     description:
-      "Explore VELISQA editorial jewellery styling, campaign visuals and premium fashion jewellery inspiration for modern Indian women.",
-    keywords: ["luxury fashion jewellery India", "women's luxury jewellery", "modern jewellery brand India"],
+      "Join the VELISQA creator program. Register to make UGC videos, earn free jewellery, tier-based discounts, and grow with India's luxury fashion jewellery brand.",
+    keywords: [
+      "Velisqa creator program",
+      "UGC jewellery brand India",
+      "influencer collaboration jewellery",
+      "content creator freebies",
+    ],
     canonicalPath: "/models",
   },
   shipping: {

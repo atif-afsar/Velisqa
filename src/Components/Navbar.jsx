@@ -13,7 +13,7 @@ const links = [
   { label: "HOME", to: "/" },
   { label: "COLLECTIONS", to: "/collections" },
   { label: "ABOUT", to: "/about" },
-  { label: "MODELS", to: "/models" },
+  { label: "CREATORS", to: "/models" },
   { label: "CONTACT", to: "/contact" },
 ];
 
@@ -315,7 +315,7 @@ export default function Navbar() {
             }`}
             intent="consult"
           >
-            Concierge
+            Get Support
           </WhatsAppCTA>
         </div>
 
@@ -457,7 +457,7 @@ export default function Navbar() {
               </motion.div>
               <motion.div variants={linkVariants} className="mt-3">
                 <WhatsAppCTA className="w-full justify-center py-2.5 text-xs shadow-sm" intent="consult">
-                  Concierge
+                  Get Support
                 </WhatsAppCTA>
               </motion.div>
             </nav>

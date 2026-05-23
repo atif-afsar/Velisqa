@@ -11,7 +11,7 @@ export default function Models() {
         schema={[
           buildBreadcrumbSchema([
             { name: "Home", path: "/" },
-            { name: "Models", path: "/models" },
+            { name: "Creator Program", path: "/models" },
           ]),
         ]}
       />

@@ -1,13 +1,15 @@
-import ModelsHero from "./ModelsHero";
-import CampaignModels from "./CampaignModels";
-import ProductModels from "./ProductModels";
+import CreatorHero from "./CreatorHero";
+import CreatorPerks from "./CreatorPerks";
+import CreatorRegistrationForm from "./CreatorRegistrationForm";
+import CreatorTierCards from "./CreatorTierCards";
 
 export default function ModelsContent() {
   return (
     <main className="page-offset-nav bg-[#fdf9f4] text-[#130006]">
-      <ModelsHero />
-      <CampaignModels />
-      <ProductModels />
+      <CreatorHero />
+      <CreatorTierCards />
+      <CreatorPerks />
+      <CreatorRegistrationForm />
     </main>
   );
 }
