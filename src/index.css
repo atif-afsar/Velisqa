@@ -297,6 +297,20 @@ a[role="button"],
   text-shadow: 0 18px 42px rgba(19, 0, 6, 0.28);
 }
 
+.hero-tagline-divider {
+  width: min(5rem, 28vw);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(212, 175, 55, 0.25) 15%,
+    rgba(232, 201, 106, 0.9) 50%,
+    rgba(212, 175, 55, 0.25) 85%,
+    transparent
+  );
+  transform-origin: center;
+}
+
 .luxury-hover-text {
   transition: color 320ms var(--type-ease), opacity 320ms var(--type-ease), letter-spacing 320ms var(--type-ease);
 }

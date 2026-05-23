@@ -179,7 +179,7 @@ export default function Cart() {
                     type="button"
                     onClick={handleCheckoutClick}
                     disabled={!canCheckout}
-                    className="rounded-full bg-[#25D366] px-6 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-[0_12px_32px_rgba(37,211,102,0.35)] transition hover:bg-[#1fb855] disabled:cursor-not-allowed disabled:opacity-50"
+                    className="rounded-full border border-[#d4af37]/20 bg-[#2A0718] px-6 py-3 text-xs font-bold uppercase tracking-[0.12em] text-[#f7ead0] shadow-[0_12px_32px_rgba(42,7,24,0.35)] transition hover:bg-[#3d0a21] disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     Checkout on WhatsApp
                   </button>
