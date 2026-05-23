@@ -2,6 +2,7 @@ import { lazy } from "react";
 import Hero from "./Hero";
 import HomeBrandSeo from "./HomeBrandSeo";
 import IconsOfElegance from "./IconsOfElegance";
+import HomeShopGrid from "./HomeShopGrid";
 import LazySection from "../Performance/LazySection";
 
 const Ethos = lazy(() => import("./Ethos"));
@@ -17,6 +18,7 @@ export default function HomeContent() {
     <main className="bg-[#f9f5f0] text-[#130006]">
       <Hero />
       <IconsOfElegance />
+      <HomeShopGrid />
       <LazySection minHeight="620px">
         <Ethos />
       </LazySection>

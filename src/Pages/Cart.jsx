@@ -77,7 +77,7 @@ export default function Cart() {
               </ul>
               <p className="mt-2 text-xs">
                 Reduce quantities or{' '}
-                <Link to="/contact" className="font-medium underline-offset-2 hover:underline">
+                <Link to="/order" className="font-medium underline-offset-2 hover:underline">
                   request out-of-stock pieces
                 </Link>
                 .

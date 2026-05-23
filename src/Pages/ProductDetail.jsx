@@ -3,6 +3,9 @@ import { Link, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 import ProductAccordion from '../Components/Product/ProductAccordion'
 import ProductPurchasePanel from '../Components/Product/ProductPurchasePanel'
+import ProductDetailPrice from '../Components/Product/ProductDetailPrice'
+import ProductDetailTrust from '../Components/Product/ProductDetailTrust'
+import ProductStickyBar from '../Components/Product/ProductStickyBar'
 import SEOHead from '../Components/SEO/SEOHead'
 import { SITE_URL } from '../Components/SEO/siteConfig'
 import { PRODUCT_POLICY_SECTIONS } from '../lib/productPolicies'
@@ -11,19 +14,20 @@ import { normalizeProductCategory, getCategoryParamSlug } from '../lib/productCa
 import { getPrimaryImageUrl, getProductImageUrls } from '../lib/productImages'
 import ProductImageGallery from '../Components/Product/ProductImageGallery'
 import ProductPromoBadge from '../Components/Product/ProductPromoBadge'
-import ProductPriceDisplay from '../Components/Product/ProductPriceDisplay'
+import ProductRating from '../Components/Product/ProductRating'
+import ProductBadgeLabel from '../Components/Product/ProductBadgeLabel'
 
 function ProductDetailSkeleton() {
   return (
-    <main className="page-offset-nav bg-[#fdf9f4]">
-      <div className="container-stitch mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
-        <div className="mb-8 h-4 w-48 animate-pulse rounded bg-[#e8e2db]" />
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-12 lg:items-start">
-          <div className="aspect-[4/5] animate-pulse rounded-2xl bg-[#ebe6df]" />
+    <main className="page-offset-nav bg-white">
+      <div className="container-stitch mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
+        <div className="mb-6 h-3 w-40 animate-pulse rounded bg-[#ebe6df]" />
+        <div className="grid gap-8 lg:grid-cols-2 lg:gap-10">
+          <div className="aspect-[4/5] animate-pulse rounded-lg bg-[#ebe6df]" />
           <div className="space-y-4">
-            <div className="h-3 w-20 animate-pulse rounded bg-[#e8e2db]" />
-            <div className="h-10 w-4/5 animate-pulse rounded bg-[#e8e2db]" />
-            <div className="h-8 w-32 animate-pulse rounded bg-[#e8e2db]" />
+            <div className="h-8 w-3/4 animate-pulse rounded bg-[#ebe6df]" />
+            <div className="h-6 w-32 animate-pulse rounded bg-[#ebe6df]" />
+            <div className="h-12 w-full animate-pulse rounded-full bg-[#ebe6df]" />
           </div>
         </div>
       </div>
@@ -79,13 +83,13 @@ export default function ProductDetail() {
 
   if (notFound || !product) {
     return (
-      <main className="page-offset-nav bg-[#fdf9f4] px-4 py-20 text-center">
+      <main className="page-offset-nav bg-white px-4 py-20 text-center">
         <h1 className="font-serif text-2xl text-[#130006]">Product not found</h1>
         <Link
           to="/collections"
-          className="mt-6 inline-flex rounded-full border border-[#847377]/35 px-6 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-[#514347] hover:border-[#3d0a21]/40"
+          className="mt-6 inline-flex rounded-full bg-[#3d0a21] px-6 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-[#f7ead0]"
         >
-          Back to collections
+          Back to shop
         </Link>
       </main>
     )
@@ -93,7 +97,7 @@ export default function ProductDetail() {
 
   const description =
     product.description?.trim() ||
-    `Handpicked ${category ? category.toLowerCase() : 'artificial'} jewellery from Velisqa. Order on WhatsApp for availability and delivery in Aligarh or pan-India.`
+    `Handpicked ${category ? category.toLowerCase() : 'artificial'} jewellery from Velisqa. Premium finish, made for everyday wear.`
 
   return (
     <>
@@ -103,39 +107,31 @@ export default function ProductDetail() {
         canonicalPath={`/product/${product.id}`}
         image={primaryImage || undefined}
       />
-      <main className="page-offset-nav bg-[#fdf9f4] text-[#130006]">
-        <div className="container-stitch mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10 lg:py-12">
-          {/* Breadcrumb */}
+      <main className="page-offset-nav bg-white text-[#130006] pb-24 lg:pb-12">
+        <div className="container-stitch mx-auto max-w-6xl px-4 py-4 sm:px-6 sm:py-6">
           <nav
-            className="mb-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#847377] sm:mb-8 sm:text-[11px]"
+            className="mb-5 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[11px] text-[#847377]"
             aria-label="Breadcrumb"
           >
-            <Link to="/" className="transition hover:text-[#6f334a]">
+            <Link to="/" className="hover:text-[#130006]">
               Home
             </Link>
-            <span className="text-[#d4af37]/80" aria-hidden>
-              /
-            </span>
-            <Link to={collectionsLink} className="transition hover:text-[#6f334a]">
-              Collections
+            <span aria-hidden>/</span>
+            <Link to={collectionsLink} className="hover:text-[#130006]">
+              Shop
             </Link>
             {category && (
               <>
-                <span className="text-[#d4af37]/80" aria-hidden>
-                  /
-                </span>
-                <span className="text-[#514347]">{category}</span>
+                <span aria-hidden>/</span>
+                <span>{category}</span>
               </>
             )}
           </nav>
 
-          {/* Hero */}
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-12 xl:gap-16 lg:items-start">
-            {/* Image */}
-            <div className="relative lg:sticky lg:top-[calc(var(--nav-height)+1.25rem)]">
-              <div className="pointer-events-none absolute inset-3 rounded-2xl border border-[#d4af37]/25 sm:inset-4" aria-hidden />
-              <div className="relative shadow-[0_28px_72px_-24px_rgba(19,0,6,0.28)] ring-1 ring-[#130006]/5">
-                <ProductPromoBadge className="left-4 top-4 z-20 sm:left-5 sm:top-5" />
+          <div className="grid gap-8 lg:grid-cols-2 lg:gap-10 xl:gap-14">
+            <div className="lg:sticky lg:top-[calc(var(--nav-height)+1rem)] lg:self-start">
+              <div className="relative overflow-hidden rounded-lg bg-[#f7f4ef]">
+                <ProductPromoBadge className="left-3 top-3 z-20 sm:left-4 sm:top-4" />
                 <ProductImageGallery
                   key={product.id}
                   images={productImages}
@@ -144,99 +140,58 @@ export default function ProductDetail() {
               </div>
             </div>
 
-            {/* Product info */}
-            <div className="flex flex-col lg:pt-1">
-              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <div className="flex flex-col">
+              <div className="flex flex-wrap items-center gap-2">
                 {category && (
-                  <span className="inline-flex rounded-full border border-[#3d0a21]/15 bg-[#3d0a21] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[#e9c349]">
+                  <Link
+                    to={collectionsLink}
+                    className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#6f334a] hover:underline"
+                  >
                     {category}
-                  </span>
+                  </Link>
                 )}
-                <span className="inline-flex rounded-full border border-[#d4af37]/35 bg-[#fbf7f1] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-[#6f334a]">
-                  Signature collection
-                </span>
+                <ProductBadgeLabel product={product} placement="inline" />
               </div>
 
-              <h1 className="mt-4 font-serif text-[1.75rem] leading-[1.15] text-[#130006] sm:mt-5 sm:text-4xl lg:text-[2.75rem]">
+              <h1 className="mt-2 font-serif text-2xl leading-snug text-[#130006] sm:text-3xl">
                 {product.name}
               </h1>
 
-              <div className="mt-5 flex flex-wrap items-end justify-between gap-4 border-b border-[#d4af37]/25 pb-6 sm:mt-6">
-                <ProductPriceDisplay price={product.price} size="detail" />
-                {soldOut ? (
-                  <span className="rounded-full border border-[#c9a75a]/40 bg-[#c9a75a]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#8a6b1f]">
-                    Sold out
-                  </span>
-                ) : (
-                  <span className="rounded-full border border-[#3d0a21]/10 bg-white/80 px-3 py-1 text-xs font-medium text-[#514347]">
-                    {Number(product.stock) === 1 ? 'Last piece in stock' : `${product.stock} in stock`}
-                  </span>
-                )}
+              <ProductRating product={product} size="detail" className="mt-2 justify-start" />
+
+              <div className="mt-4">
+                <ProductDetailPrice price={product.price} />
               </div>
 
-              {/* Quick highlights */}
-              <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-                <li className="flex gap-3 rounded-xl border border-[#d4af37]/18 bg-[#fbf7f1] p-3.5 sm:p-4">
-                  <span className="text-lg leading-none text-[#d4af37]" aria-hidden>
-                    ◆
-                  </span>
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">Aligarh</p>
-                    <p className="mt-0.5 text-sm leading-snug text-[#514347]">Same-day delivery before 4 PM</p>
-                  </div>
-                </li>
-                <li className="flex gap-3 rounded-xl border border-[#d4af37]/18 bg-[#fbf7f1] p-3.5 sm:p-4">
-                  <span className="text-lg leading-none text-[#d4af37]" aria-hidden>
-                    ◆
-                  </span>
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">At your door</p>
-                    <p className="mt-0.5 text-sm leading-snug text-[#514347]">Inspect with delivery partner</p>
-                  </div>
-                </li>
-              </ul>
+              <ProductDetailTrust soldOut={soldOut} />
 
               <ProductPurchasePanel product={product} productUrl={productUrl} soldOut={soldOut} />
 
+              <ProductAccordion
+                compact
+                description={description}
+                policySections={PRODUCT_POLICY_SECTIONS}
+                footerLink={
+                  <Link
+                    to="/shipping-returns"
+                    className="text-xs font-medium text-[#6f334a] underline-offset-2 hover:underline"
+                  >
+                    Full shipping &amp; returns policy
+                  </Link>
+                }
+              />
+
               <Link
                 to={collectionsLink}
-                className="tap-target mt-6 inline-flex w-full items-center justify-center rounded-full border border-[#847377]/35 bg-white/60 px-6 py-3.5 text-center text-xs font-semibold uppercase tracking-[0.14em] text-[#514347] transition hover:border-[#3d0a21]/40 hover:bg-white sm:mt-8"
+                className="tap-target mt-8 inline-flex text-sm font-medium text-[#6f334a] underline-offset-2 hover:underline"
               >
-                Back to collection
+                ← Continue shopping
               </Link>
             </div>
           </div>
-
-          {/* Accordions — full width below hero */}
-          <section className="mt-12 sm:mt-14 lg:mt-16" aria-labelledby="product-details-heading">
-            <div className="mb-6 flex flex-col items-center text-center sm:mb-8">
-              <p id="product-details-heading" className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#847377]">
-                The fine print
-              </p>
-              <h2 className="mt-2 font-serif text-2xl italic text-[#130006] sm:text-3xl">
-                Delivery, returns &amp; care
-              </h2>
-              <div className="mt-3 h-px w-16 bg-[#e9c349]" />
-            </div>
-
-            <ProductAccordion
-              description={description}
-              policySections={PRODUCT_POLICY_SECTIONS}
-              footerLink={
-                <p className="text-xs leading-relaxed text-[#847377]">
-                  Full terms on{' '}
-                  <Link
-                    to="/shipping-returns"
-                    className="font-medium text-[#6f334a] underline-offset-2 hover:underline"
-                  >
-                    Shipping &amp; Returns
-                  </Link>
-                  .
-                </p>
-              }
-            />
-          </section>
         </div>
+
+        <ProductStickyBar product={product} soldOut={soldOut} />
       </main>
     </>
   )

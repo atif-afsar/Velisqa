@@ -43,9 +43,9 @@ export default function ProductImageGallery({ images, alt }) {
   const currentSrc = images[safeIndex]
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-2 sm:gap-3">
       <div
-        className="relative overflow-hidden rounded-2xl bg-[#f1ede8]"
+        className="relative overflow-hidden bg-[#f7f4ef]"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >

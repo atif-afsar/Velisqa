@@ -2,15 +2,19 @@ import { useState } from 'react'
 import { useCart } from '../../context/CartContext'
 import { getProductStock } from '../../lib/cartStock'
 
-const BTN_CLASS =
+const FOOTER_BTN =
   'tap-target flex w-full max-w-full min-h-[2.375rem] shrink-0 items-center justify-center gap-1.5 overflow-visible rounded-full border-0 px-3 py-2 text-[10px] font-bold uppercase leading-normal tracking-[0.06em] transition disabled:opacity-60 sm:min-h-[2.5rem] sm:gap-2 sm:px-4 sm:text-[11px] sm:tracking-[0.08em]'
 
-/** Collection card: compact, equal-height actions aligned across the grid. */
-export default function ProductCardActions({ product }) {
+const OVERLAY_BTN =
+  'tap-target flex w-full items-center justify-center gap-1.5 rounded-full border-0 px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.1em] transition disabled:opacity-60 sm:text-[11px]'
+
+/** Collection card: add to bag (footer always; overlay on image hover for sm+). */
+export default function ProductCardActions({ product, variant = 'footer' }) {
   const { addToCart } = useCart()
   const [adding, setAdding] = useState(false)
   const stock = getProductStock(product)
   const soldOut = stock <= 0
+  const isOverlay = variant === 'overlay'
 
   function handleAdd(e) {
     e.preventDefault()
@@ -18,18 +22,32 @@ export default function ProductCardActions({ product }) {
     if (adding || soldOut) return
     setAdding(true)
     addToCart(product, 1)
-    setAdding(false)
+    window.setTimeout(() => setAdding(false), 400)
   }
 
   if (soldOut) {
+    const soldClass = isOverlay
+      ? `${OVERLAY_BTN} cursor-default border border-[#c9a75a]/50 bg-[#130006]/75 text-[#e9c349]`
+      : `${FOOTER_BTN} cursor-default border border-[#c9a75a]/35 bg-[#c9a75a]/10 text-[#8a6b1f]`
+
     return (
-      <div className="w-full shrink-0">
-        <p
-          className={`${BTN_CLASS} cursor-default border border-[#c9a75a]/35 bg-[#c9a75a]/10 text-[#8a6b1f]`}
-        >
-          Sold out
-        </p>
+      <div className={isOverlay ? 'w-full' : 'w-full shrink-0'}>
+        <p className={soldClass}>Sold out</p>
       </div>
+    )
+  }
+
+  if (isOverlay) {
+    return (
+      <button
+        type="button"
+        onClick={handleAdd}
+        disabled={adding}
+        className={`${OVERLAY_BTN} bg-[#3d0a21] text-[#e9c349] shadow-[0_8px_24px_rgba(19,0,6,0.45)] hover:bg-[#2a0718]`}
+      >
+        <CartPlusIcon />
+        <span className="whitespace-nowrap">{adding ? 'Adding…' : 'Add to bag'}</span>
+      </button>
     )
   }
 
@@ -39,7 +57,7 @@ export default function ProductCardActions({ product }) {
         type="button"
         onClick={handleAdd}
         disabled={adding}
-        className={`${BTN_CLASS} bg-[#3d0a21] text-[#e9c349] shadow-[0_6px_18px_-8px_rgba(19,0,6,0.35)] hover:bg-[#2a0718]`}
+        className={`${FOOTER_BTN} bg-[#3d0a21] text-[#e9c349] shadow-[0_6px_18px_-8px_rgba(19,0,6,0.35)] hover:bg-[#2a0718]`}
       >
         <CartPlusIcon />
         <span className="whitespace-nowrap">

@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import WhatsAppCTA from "./WhatsApp/WhatsAppCTA";
 import CartNavLink from "./Cart/CartNavLink";
+import WishlistNavLink from "./Wishlist/WishlistNavLink";
 import { useAuth } from "../context/AuthContext";
 
 const DARK_HERO_ROUTES = ["/", "/about"];
@@ -14,7 +15,6 @@ const links = [
   { label: "COLLECTIONS", to: "/collections" },
   { label: "ABOUT", to: "/about" },
   { label: "CREATORS", to: "/models" },
-  { label: "CONTACT", to: "/contact" },
 ];
 
 const menuVariantsDesktop = {
@@ -94,6 +94,29 @@ function useCompactNavMotion() {
   return compact;
 }
 
+function navTextClass({ scrolled, onDarkHero, isActive = false }) {
+  const size = scrolled
+    ? "text-[0.62rem] tracking-[0.1em]"
+    : "text-[0.72rem] tracking-[0.12em]";
+
+  if (onDarkHero) {
+    return `${size} ${isActive ? "text-[#d4af37]" : "text-white/75 hover:text-[#f7ead0]"}`;
+  }
+
+  return `${size} ${isActive ? "text-[#130006]" : "text-[#514347]/80 hover:text-[#130006]"}`;
+}
+
+function NavActionDivider({ onDarkHero }) {
+  return (
+    <span
+      aria-hidden
+      className={`mx-0.5 hidden h-5 w-px shrink-0 md:block ${
+        onDarkHero ? "bg-white/25" : "bg-[#130006]/15"
+      }`}
+    />
+  );
+}
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -171,7 +194,9 @@ export default function Navbar() {
       initial={{ y: -6, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className={`fixed left-0 right-0 top-0 z-50 isolate border-b ${
+      className={`fixed left-0 right-0 z-50 isolate border-b ${
+        pathname.startsWith("/admin") ? "top-0" : "top-[var(--announcement-height)]"
+      } ${
         onDarkHero ? "border-white/10" : "border-[#847377]/12 shadow-[0_8px_32px_-12px_rgba(19,0,6,0.08)]"
       }`}
       style={{
@@ -194,14 +219,14 @@ export default function Navbar() {
       )}
 
       <div
-        className={`container-stitch relative flex items-center justify-between ${
+        className={`container-stitch relative grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 md:gap-4 ${
           scrolled ? "min-h-[44px] py-1 md:min-h-[52px]" : "min-h-[56px] py-2.5 md:min-h-[72px]"
         }`}
       >
         <Link
           to="/"
           onClick={closeMenu}
-          className={`font-serif font-medium leading-none tracking-[0.06em] transition-colors duration-200 hover:opacity-80 ${
+          className={`inline-flex min-h-9 shrink-0 items-center justify-self-start font-serif font-medium leading-none tracking-[0.06em] transition-colors duration-200 hover:opacity-80 ${
             scrolled
               ? "text-[1.1rem] sm:text-xl md:text-[1.35rem]"
               : "text-[1.25rem] sm:text-2xl md:text-3xl"
@@ -215,8 +240,8 @@ export default function Navbar() {
         </Link>
 
         <nav
-          className={`hidden items-center md:flex md:absolute md:left-[52%] md:-translate-x-1/2 md:z-20 ${
-            scrolled ? "gap-4 lg:gap-5" : "gap-5 lg:gap-8"
+          className={`hidden min-h-9 items-center justify-center justify-self-center md:flex ${
+            scrolled ? "gap-4 lg:gap-6" : "gap-5 lg:gap-8"
           }`}
         >
           {links.map((link) => {
@@ -227,26 +252,16 @@ export default function Navbar() {
                 to={link.to}
                 end={isHome}
                 className={({ isActive }) =>
-                  `relative py-0.5 font-medium transition-colors duration-200 ${
-                    scrolled ? "text-[0.62rem] tracking-[0.1em]" : "text-[0.72rem] tracking-[0.12em]"
-                  } ${
-                    onDarkHero
-                      ? isActive
-                        ? "text-[#d4af37]"
-                        : "text-white/75 hover:text-[#f7ead0]"
-                      : isActive
-                        ? "text-[#130006]"
-                        : "text-[#514347]/80 hover:text-[#130006]"
-                  }`
+                  `relative inline-flex min-h-9 items-center whitespace-nowrap font-medium transition-colors duration-200 ${navTextClass({ scrolled, onDarkHero, isActive })}`
                 }
               >
                 {({ isActive }) => (
                   <>
-                    <span className="relative z-10 inline-block">{link.label}</span>
+                    <span className="relative z-10">{link.label}</span>
                     {isActive && (
                       <motion.div
                         layoutId="desktop-active-underline"
-                        className={`absolute bottom-0 left-0 w-full ${scrolled ? "h-[1.5px]" : "h-[2px]"} ${onDarkHero ? "bg-[#d4af37]" : "bg-[#afa0d1]"}`}
+                        className={`absolute bottom-1 left-0 right-0 ${scrolled ? "h-[1.5px]" : "h-[2px]"} ${onDarkHero ? "bg-[#d4af37]" : "bg-[#afa0d1]"}`}
                         transition={{ type: "spring", stiffness: 380, damping: 30 }}
                       />
                     )}
@@ -257,61 +272,67 @@ export default function Navbar() {
           })}
         </nav>
 
-        <div className={`hidden items-center md:flex ${scrolled ? "gap-3" : "gap-4"}`}>
-          {!authLoading &&
-            (user ? (
-              <>
-                {profile?.role === "admin" && (
-                  <Link
-                    to="/admin/panel"
-                    className={`py-0.5 font-medium transition-colors duration-200 ${
-                      scrolled ? "text-[0.62rem] tracking-[0.1em]" : "text-[0.72rem] tracking-[0.12em]"
-                    } ${
-                      onDarkHero
-                        ? "text-[#f7ead0]/85 hover:text-[#d4af37]"
-                        : "text-[#514347]/80 hover:text-[#130006]"
-                    }`}
+        <div
+          className={`col-start-3 hidden min-h-9 items-center justify-end justify-self-end md:flex ${
+            scrolled ? "gap-1.5 lg:gap-2" : "gap-2 lg:gap-2.5"
+          }`}
+        >
+          {!authLoading && (
+            <div className="flex items-center gap-2 lg:gap-2.5">
+              {user ? (
+                <>
+                  {profile?.role === "admin" && (
+                    <Link
+                      to="/admin/panel"
+                      className={`inline-flex min-h-9 items-center whitespace-nowrap font-medium transition-colors duration-200 ${navTextClass({ scrolled, onDarkHero })} ${onDarkHero ? "text-[#f7ead0]/85 hover:text-[#d4af37]" : ""}`}
+                    >
+                      Admin
+                    </Link>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      void logout();
+                      closeMenu();
+                    }}
+                    className={`inline-flex min-h-9 items-center whitespace-nowrap font-medium transition-colors duration-200 ${navTextClass({ scrolled, onDarkHero })}`}
                   >
-                    Admin
-                  </Link>
-                )}
-                <button
-                  type="button"
-                  onClick={() => {
-                    void logout();
-                    closeMenu();
-                  }}
-                  className={`py-0.5 font-medium transition-colors duration-200 ${
-                    scrolled ? "text-[0.62rem] tracking-[0.1em]" : "text-[0.72rem] tracking-[0.12em]"
-                  } ${
-                    onDarkHero
-                      ? "text-white/70 hover:text-[#f7ead0]"
-                      : "text-[#514347]/80 hover:text-[#130006]"
-                  }`}
+                    Sign out
+                  </button>
+                </>
+              ) : (
+                <Link
+                  to="/login"
+                  className={`inline-flex min-h-9 items-center whitespace-nowrap font-medium transition-colors duration-200 ${navTextClass({ scrolled, onDarkHero })}`}
                 >
-                  Sign out
-                </button>
-              </>
-            ) : (
-              <Link
-                to="/login"
-                className={`py-0.5 font-medium transition-colors duration-200 ${
-                  scrolled ? "text-[0.62rem] tracking-[0.1em]" : "text-[0.72rem] tracking-[0.12em]"
-                } ${
-                  onDarkHero
-                    ? "text-white/75 hover:text-[#d4af37]"
-                    : "text-[#514347]/80 hover:text-[#130006]"
-                }`}
-              >
-                Sign in
-              </Link>
-            ))}
-          <CartNavLink onDarkHero={onDarkHero} scrolled={scrolled} />
+                  Sign in
+                </Link>
+              )}
+            </div>
+          )}
+
+          <NavActionDivider onDarkHero={onDarkHero} />
+
+          <div className="flex items-center gap-1">
+            <WishlistNavLink
+              variant="icon"
+              onDarkHero={onDarkHero}
+              scrolled={scrolled}
+              className={scrolled ? "!h-8 !w-8" : ""}
+            />
+            <CartNavLink
+              variant="icon"
+              onDarkHero={onDarkHero}
+              scrolled={scrolled}
+              className={scrolled ? "!h-8 !w-8" : ""}
+            />
+          </div>
+
           <WhatsAppCTA
-            className={`hidden md:inline-flex [&_svg]:shrink-0 ${
+            className={`hidden shrink-0 items-center md:inline-flex [&_svg]:shrink-0 ${
               scrolled
-                ? "gap-1.5 px-3 py-1.5 text-[0.62rem] [&_svg]:h-3.5 [&_svg]:w-3.5 [&_span]:tracking-[0.14em]"
-                : "gap-2 px-3.5 py-1.5 text-[0.68rem] [&_svg]:h-3.5 [&_svg]:w-3.5 [&_span]:tracking-[0.12em]"
+                ? "h-8 gap-1.5 px-3 py-0 text-[0.62rem] [&_svg]:h-3.5 [&_svg]:w-3.5 [&_span]:tracking-[0.14em]"
+                : "h-9 gap-2 px-3.5 py-0 text-[0.68rem] [&_svg]:h-3.5 [&_svg]:w-3.5 [&_span]:tracking-[0.12em]"
             }`}
             intent="consult"
           >
@@ -319,7 +340,13 @@ export default function Navbar() {
           </WhatsAppCTA>
         </div>
 
-        <div className="flex items-center gap-2 md:hidden">
+        <div className="col-start-3 flex items-center justify-end gap-2 justify-self-end md:hidden">
+          <WishlistNavLink
+            variant="icon"
+            onDarkHero={onDarkHero}
+            scrolled={scrolled}
+            onClick={closeMenu}
+          />
           <CartNavLink
             variant="icon"
             onDarkHero={onDarkHero}

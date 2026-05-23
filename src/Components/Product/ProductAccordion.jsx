@@ -45,7 +45,7 @@ export function AccordionItem({ id, title, icon, children, defaultOpen = false }
         <button
           id={buttonId}
           type="button"
-          className="flex w-full items-center gap-3 py-4 text-left transition-colors hover:text-[#6f334a] sm:gap-4 sm:py-5"
+          className="flex w-full items-center gap-3 py-3.5 text-left transition-colors hover:text-[#6f334a] sm:py-4"
           aria-expanded={open}
           aria-controls={panelId}
           onClick={() => setOpen((v) => !v)}
@@ -72,16 +72,24 @@ export function AccordionItem({ id, title, icon, children, defaultOpen = false }
   )
 }
 
-export default function ProductAccordion({ description, policySections, footerLink }) {
+export default function ProductAccordion({ description, policySections, footerLink, compact = false }) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-[#d4af37]/22 bg-[#fbf7f1] shadow-[0_24px_64px_-32px_rgba(19,0,6,0.18)]">
-      <div className="border-b border-[#d4af37]/18 bg-gradient-to-r from-[#3d0a21]/[0.04] via-transparent to-[#d4af37]/[0.06] px-4 py-4 sm:px-6 sm:py-5">
-        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#847377]">Product information</p>
-        <p className="mt-1 font-serif text-lg italic text-[#130006] sm:text-xl">Details &amp; policies</p>
-      </div>
+    <div
+      className={
+        compact
+          ? 'mt-6 border-t border-[#130006]/8'
+          : 'overflow-hidden rounded-2xl border border-[#d4af37]/22 bg-[#fbf7f1] shadow-[0_24px_64px_-32px_rgba(19,0,6,0.18)]'
+      }
+    >
+      {!compact && (
+        <div className="border-b border-[#d4af37]/18 bg-gradient-to-r from-[#3d0a21]/[0.04] via-transparent to-[#d4af37]/[0.06] px-4 py-4 sm:px-6 sm:py-5">
+          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#847377]">Product information</p>
+          <p className="mt-1 font-serif text-lg italic text-[#130006] sm:text-xl">Details &amp; policies</p>
+        </div>
+      )}
 
-      <div className="px-4 sm:px-6">
-        <AccordionItem id="about" title="About this piece" icon="document" defaultOpen>
+      <div className={compact ? '' : 'px-4 sm:px-6'}>
+        <AccordionItem id="about" title="Description" icon={compact ? null : 'document'} defaultOpen>
           <p className="text-sm leading-[1.75] text-[#514347] sm:text-[0.9375rem]">{description}</p>
         </AccordionItem>
 
@@ -90,7 +98,7 @@ export default function ProductAccordion({ description, policySections, footerLi
             key={section.id}
             id={section.id}
             title={section.title}
-            icon={section.icon}
+            icon={compact ? null : section.icon}
             defaultOpen={false}
           >
             <ul className="space-y-3 text-sm leading-[1.7] text-[#514347]">

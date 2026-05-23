@@ -2,7 +2,9 @@ import SmoothScroll from './Components/SmoothScroll'
 import AdminRoute from './Components/AdminRoute'
 import { scrollToTop } from './lib/smoothScrollState'
 import Navbar from './Components/Navbar'
+import PromoAnnouncementBar from './Components/Common/PromoAnnouncementBar'
 import CartToast from './Components/Cart/CartToast'
+import WishlistToast from './Components/Wishlist/WishlistToast'
 import VelisqaLoader from './Components/Common/VelisqaLoader'
 // import FloatingWhatsApp from './Components/WhatsApp/FloatingWhatsApp'
 import { AnimatePresence } from 'framer-motion'
@@ -12,7 +14,6 @@ import { Suspense, lazy, useEffect, useState } from 'react'
 const Home = lazy(() => import('./Pages/Home'))
 const About = lazy(() => import('./Pages/About'))
 const Collections = lazy(() => import('./Pages/Collections'))
-const Contact = lazy(() => import('./Pages/Contact'))
 const Models = lazy(() => import('./Pages/Models'))
 const SEOLanding = lazy(() => import('./Pages/SEOLanding'))
 const Privacy = lazy(() => import('./Pages/Privacy'))
@@ -27,6 +28,7 @@ const AdminLogin = lazy(() => import('./Pages/AdminLogin'))
 const AdminDashboard = lazy(() => import('./Pages/AdminDashboard'))
 const ProductDetail = lazy(() => import('./Pages/ProductDetail'))
 const Cart = lazy(() => import('./Pages/Cart'))
+const Wishlist = lazy(() => import('./Pages/Wishlist'))
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -61,8 +63,10 @@ function App() {
       </AnimatePresence>
       <SmoothScroll />
       <ScrollToTop />
+      <PromoAnnouncementBar />
       <Navbar />
       <CartToast />
+      <WishlistToast />
       <Suspense fallback={<div className="min-h-[60vh] bg-[#fdf9f4]" aria-label="Loading page" />}>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -71,7 +75,7 @@ function App() {
           <Route path="/collections" element={<Collections />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/contact" element={<Contact />} />
+          <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/authenticity" element={<Authenticity />} />

@@ -11,12 +11,21 @@ import { useAuth } from '../context/AuthContext'
 import { useCatalog } from '../context/CatalogContext'
 import { normalizeProductCategory, PRODUCT_CATEGORIES } from '../lib/productCategories'
 
+const BADGE_OPTIONS = [
+  { value: '', label: 'Auto (new / bestseller rules)' },
+  { value: 'bestseller', label: 'Bestseller' },
+  { value: 'new', label: 'New' },
+]
+
 const emptyForm = {
   name: '',
   price: '',
   description: '',
   category: PRODUCT_CATEGORIES[0],
   stock: '1',
+  rating: '',
+  review_count: '',
+  badge: '',
 }
 
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
@@ -44,6 +53,16 @@ function revokeNewItemPreview(item) {
   if (item.kind === 'new' && item.preview?.startsWith('blob:')) {
     URL.revokeObjectURL(item.preview)
   }
+}
+
+function formatProductSaveError(message) {
+  if (message.includes('gallery_urls')) {
+    return `${message}\n\nRun supabase/add-product-gallery.sql in the Supabase SQL Editor, then try again.`
+  }
+  if (message.includes('rating') || message.includes('review_count') || message.includes('badge')) {
+    return `${message}\n\nRun supabase/add-product-display-fields.sql in the Supabase SQL Editor, then try again.`
+  }
+  return message
 }
 
 export default function AdminDashboard() {
@@ -113,6 +132,9 @@ export default function AdminDashboard() {
       description: product.description ?? '',
       category: normalizeProductCategory(product.category) ?? PRODUCT_CATEGORIES[0],
       stock: String(product.stock ?? 1),
+      rating: product.rating != null ? String(product.rating) : '',
+      review_count: product.review_count != null ? String(product.review_count) : '',
+      badge: product.badge ?? '',
     })
     const urls = getProductImageUrls(product)
     setOriginalImageUrls(urls)
@@ -196,6 +218,10 @@ export default function AdminDashboard() {
       const uploadedUrls = newFiles.length ? await uploadProductImages(newFiles, user?.id) : []
       const allUrls = [...keptUrls, ...uploadedUrls]
 
+      const ratingRaw = form.rating.trim()
+      const reviewRaw = form.review_count.trim()
+      const badgeRaw = form.badge.trim()
+
       const row = {
         name: form.name.trim(),
         price: Number(form.price),
@@ -204,6 +230,9 @@ export default function AdminDashboard() {
         image_url: allUrls[0] ?? null,
         gallery_urls: allUrls,
         stock: Number(form.stock) || 0,
+        rating: ratingRaw ? Number(ratingRaw) : null,
+        review_count: reviewRaw ? Math.max(0, Math.floor(Number(reviewRaw))) : null,
+        badge: badgeRaw === 'bestseller' || badgeRaw === 'new' ? badgeRaw : null,
       }
 
       const removedUrls = originalImageUrls.filter((url) => !allUrls.includes(url))
@@ -213,11 +242,7 @@ export default function AdminDashboard() {
 
         if (error) {
           if (uploadedUrls.length) await deleteProductImages(uploadedUrls)
-          alert(
-            error.message.includes('gallery_urls')
-              ? `${error.message}\n\nRun supabase/add-product-gallery.sql in the Supabase SQL Editor, then try again.`
-              : error.message,
-          )
+          alert(formatProductSaveError(error.message))
           return
         }
 
@@ -230,11 +255,7 @@ export default function AdminDashboard() {
 
         if (error) {
           if (uploadedUrls.length) await deleteProductImages(uploadedUrls)
-          alert(
-            error.message.includes('gallery_urls')
-              ? `${error.message}\n\nRun supabase/add-product-gallery.sql in the Supabase SQL Editor, then try again.`
-              : error.message,
-          )
+          alert(formatProductSaveError(error.message))
           return
         }
       }
@@ -376,6 +397,58 @@ export default function AdminDashboard() {
                   onChange={(e) => setForm((f) => ({ ...f, stock: e.target.value }))}
                   required
                 />
+              </label>
+
+              <label>
+                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+                  Rating (0–5)
+                </span>
+                <input
+                  className={inputClass}
+                  type="number"
+                  min="0"
+                  max="5"
+                  step="0.1"
+                  placeholder="Auto"
+                  value={form.rating}
+                  onChange={(e) => setForm((f) => ({ ...f, rating: e.target.value }))}
+                />
+              </label>
+
+              <label>
+                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+                  Review count
+                </span>
+                <input
+                  className={inputClass}
+                  type="number"
+                  min="0"
+                  step="1"
+                  placeholder="Auto"
+                  value={form.review_count}
+                  onChange={(e) => setForm((f) => ({ ...f, review_count: e.target.value }))}
+                />
+              </label>
+
+              <label className="sm:col-span-2">
+                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+                  Badge
+                </span>
+                <select
+                  className={inputClass}
+                  value={form.badge}
+                  onChange={(e) => setForm((f) => ({ ...f, badge: e.target.value }))}
+                >
+                  {BADGE_OPTIONS.map((opt) => (
+                    <option key={opt.value || 'auto'} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+                <p className="mt-1 text-xs text-[#847377]">
+                  Leave rating/reviews empty for stable auto values. Auto badge: New (30 days) or
+                  Bestseller (80+ reviews).
+                </p>
               </label>
 
               <label className="sm:col-span-2">

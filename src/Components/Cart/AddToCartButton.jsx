@@ -42,8 +42,8 @@ export default function AddToCartButton({
         </button>
         <p className="text-center text-[9px] leading-snug text-[#847377] sm:text-[10px]">
           Request this product —{' '}
-          <Link to="/contact" className="font-medium text-[#6f334a] underline-offset-2 hover:underline">
-            contact us
+          <Link to="/order" className="font-medium text-[#6f334a] underline-offset-2 hover:underline">
+            order on WhatsApp
           </Link>
         </p>
       </div>

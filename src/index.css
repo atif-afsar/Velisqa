@@ -16,12 +16,23 @@
   --outline: #847377;
   --type-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --luxury-ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --nav-height: 4.75rem;
+  --announcement-height: 3.125rem;
+  --nav-bar-height: 4.75rem;
+  --nav-height: calc(var(--announcement-height) + var(--nav-bar-height));
+}
+
+@media (min-width: 640px) {
+  :root {
+    --announcement-height: 2.25rem;
+    --nav-bar-height: 4.75rem;
+    --nav-height: calc(var(--announcement-height) + var(--nav-bar-height));
+  }
 }
 
 @media (min-width: 768px) {
   :root {
-    --nav-height: 5.75rem;
+    --nav-bar-height: 5.75rem;
+    --nav-height: calc(var(--announcement-height) + var(--nav-bar-height));
   }
 }
 

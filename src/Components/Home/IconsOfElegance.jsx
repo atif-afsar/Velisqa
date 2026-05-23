@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
 import Icon from "./Icon";
 import { icons } from "./homeData";
+import { getCategoryParamSlug } from "../../lib/productCategories";
 
 const EASE = [0.16, 1, 0.3, 1];
 
@@ -48,7 +49,11 @@ export default function IconsOfElegance() {
           {icons.map(({ name, type, image, startingAt }) => (
             <motion.article key={name} variants={item} className="group text-center">
               <Link
-                to={`/collections?category=${type.toLowerCase()}#signature`}
+                to={{
+                  pathname: "/",
+                  search: `?category=${getCategoryParamSlug(type)}`,
+                  hash: "#home-shop",
+                }}
                 aria-label={`${type} starting at ${formatInr(startingAt)} — view ${name} in collections`}
                 className="relative mb-4 block aspect-[4/5] overflow-hidden rounded-[1.4rem] bg-[#130006]/8 shadow-[0_22px_56px_rgba(19,0,6,0.18)] ring-1 ring-[#130006]/8 transition-[transform,box-shadow] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform group-hover:-translate-y-1.5 group-hover:shadow-[0_32px_72px_rgba(19,0,6,0.28)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#d4af37] focus-visible:ring-offset-4 focus-visible:ring-offset-[#f9f5f0] sm:mb-5"
               >

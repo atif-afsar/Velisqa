@@ -48,13 +48,6 @@ export const pageSeo = {
     keywords: ["Aligarh jewellery brand", "Indian jewellery brand", "modern jewellery brand India", "luxury artificial jewellery"],
     canonicalPath: "/about",
   },
-  contact: {
-    title: "Contact VELISQA | Luxury Jewellery in Aligarh, Uttar Pradesh",
-    description:
-      "Contact VELISQA for luxury artificial jewellery, bridal jewellery styling and private purchase assistance in Aligarh, Uttar Pradesh and across India.",
-    keywords: ["jewellery shop near me", "best jewellery in Aligarh", "artificial jewellery Aligarh", "Velisqa contact"],
-    canonicalPath: "/contact",
-  },
   privacy: {
     title: "Privacy Policy | VELISQA Jewellery",
     description:

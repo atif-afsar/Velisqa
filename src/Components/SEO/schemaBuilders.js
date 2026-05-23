@@ -54,7 +54,7 @@ export function buildOrganizationSchema() {
       contactType: "customer service",
       areaServed: "IN",
       availableLanguage: ["English", "Hindi"],
-      url: `${SITE_URL}/contact`,
+      url: `${SITE_URL}/order`,
     },
     brand: { "@type": "Brand", name: "VELISQA" },
   };

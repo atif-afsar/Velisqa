@@ -203,7 +203,7 @@ export const legalPages = {
       ],
       [
         "Can I visit a Velisqa store?",
-        "Yes. Our flagship salon is at Palladium Mall, Lower Parel, Mumbai — by appointment. Contact us via WhatsApp or the Contact page to schedule a private viewing.",
+        "Yes. Our flagship salon is at Palladium Mall, Lower Parel, Mumbai — by appointment. Contact us via WhatsApp or the Order page to schedule a private viewing.",
       ],
       [
         "How long does shipping take?",

@@ -119,10 +119,10 @@ export default function LegalPageLayout({ page }) {
                 </p>
               </div>
               <Link
-                to="/contact"
+                to="/order"
                 className="tap-target inline-flex shrink-0 items-center justify-center rounded-full border border-[#d4af37]/50 bg-transparent px-6 py-3 text-[11px] font-bold uppercase tracking-[0.16em] text-[#d4af37] transition hover:bg-[#d4af37] hover:text-[#130006] sm:text-xs"
               >
-                Contact Us
+                Order on WhatsApp
               </Link>
             </motion.div>
           </article>
