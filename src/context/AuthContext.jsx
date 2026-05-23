@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import SignInRequiredModal from '../Components/Auth/SignInRequiredModal'
 import { supabase } from '../lib/supabaseClient'
 
@@ -93,18 +93,29 @@ export function AuthProvider({ children }) {
     [user, loading],
   )
 
-  async function logout() {
+  const logout = useCallback(async () => {
     await supabase.auth.signOut()
     setUser(null)
     setProfile(null)
     pendingActionRef.current = null
     setSignInOpen(false)
-  }
+  }, [])
+
+  const value = useMemo(
+    () => ({
+      user,
+      profile,
+      loading,
+      logout,
+      requireSignIn,
+      signInOpen,
+      closeSignInModal,
+    }),
+    [user, profile, loading, logout, requireSignIn, signInOpen, closeSignInModal],
+  )
 
   return (
-    <AuthContext.Provider
-      value={{ user, profile, loading, logout, requireSignIn, signInOpen, closeSignInModal }}
-    >
+    <AuthContext.Provider value={value}>
       {children}
       <SignInRequiredModal open={signInOpen} onClose={closeSignInModal} />
     </AuthContext.Provider>

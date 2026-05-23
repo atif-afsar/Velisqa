@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Link } from 'react-router-dom'
 import { getPrimaryImageUrl } from '../../lib/productImages'
 import ProductPromoBadge from './ProductPromoBadge'
@@ -7,7 +8,7 @@ import ProductRating from './ProductRating'
 import ProductBadgeLabel from './ProductBadgeLabel'
 import ProductWishlistButton from './ProductWishlistButton'
 
-export default function ProductCard({ product }) {
+function ProductCard({ product }) {
   const detailPath = `/product/${product.id}`
   const imageUrl = getPrimaryImageUrl(product)
 
@@ -81,3 +82,5 @@ export default function ProductCard({ product }) {
     </article>
   )
 }
+
+export default memo(ProductCard)

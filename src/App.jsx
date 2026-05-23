@@ -11,6 +11,8 @@ import { AnimatePresence } from 'framer-motion'
 import { Route, Routes, useLocation, Navigate } from 'react-router-dom'
 import { Suspense, lazy, useEffect, useState } from 'react'
 
+const BOOT_KEY = 'velisqa_booted_v1'
+
 const Home = lazy(() => import('./Pages/Home'))
 const About = lazy(() => import('./Pages/About'))
 const Collections = lazy(() => import('./Pages/Collections'))
@@ -41,7 +43,14 @@ function ScrollToTop() {
 }
 
 function App() {
-  const [showLoader, setShowLoader] = useState(true)
+  const [showLoader, setShowLoader] = useState(() => {
+    if (typeof window === 'undefined') return true
+    try {
+      return !sessionStorage.getItem(BOOT_KEY)
+    } catch {
+      return true
+    }
+  })
 
   useEffect(() => {
     if (showLoader) {
@@ -54,11 +63,20 @@ function App() {
     return undefined
   }, [showLoader])
 
+  const handleLoaderComplete = () => {
+    try {
+      sessionStorage.setItem(BOOT_KEY, '1')
+    } catch {
+      /* ignore */
+    }
+    setShowLoader(false)
+  }
+
   return (
     <>
       <AnimatePresence mode="wait">
         {showLoader && (
-          <VelisqaLoader fullScreen onComplete={() => setShowLoader(false)} />
+          <VelisqaLoader fullScreen onComplete={handleLoaderComplete} />
         )}
       </AnimatePresence>
       <SmoothScroll />

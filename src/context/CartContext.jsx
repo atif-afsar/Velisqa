@@ -150,13 +150,17 @@ export function CartProvider({ children }) {
     }
   }, [items, persist])
 
+  const itemCount = useMemo(() => getCartItemCount(items), [items])
+  const cartTotal = useMemo(() => getCartTotal(items), [items])
+  const stockIssues = useMemo(() => findCartStockIssues(items), [items])
+
   const value = useMemo(
     () => ({
       items,
-      itemCount: getCartItemCount(items),
-      cartTotal: getCartTotal(items),
-      stockIssues: findCartStockIssues(items),
-      hasStockIssues: findCartStockIssues(items).length > 0,
+      itemCount,
+      cartTotal,
+      stockIssues,
+      hasStockIssues: stockIssues.length > 0,
       syncing,
       toast,
       dismissToast,
@@ -168,6 +172,9 @@ export function CartProvider({ children }) {
     }),
     [
       items,
+      itemCount,
+      cartTotal,
+      stockIssues,
       syncing,
       toast,
       dismissToast,

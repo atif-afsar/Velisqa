@@ -22,6 +22,8 @@ export default defineConfig({
           if (id.includes('react') || id.includes('react-router-dom')) return 'react'
           if (id.includes('framer-motion')) return 'motion'
           if (id.includes('lenis')) return 'scroll'
+          if (id.includes('gsap')) return 'gsap'
+          if (id.includes('@supabase')) return 'supabase'
           return 'vendor'
         },
       },

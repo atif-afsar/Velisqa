@@ -3,23 +3,23 @@ import BuyNowButton from "../WhatsApp/BuyNowButton";
 import WhatsAppCTA from "../WhatsApp/WhatsAppCTA";
 import Icon from "./Icon";
 
-const bestSellerModules = import.meta.glob("../../assets/BestSeller/*.png", {
+const bestSellerModules = import.meta.glob("../../assets/BestSeller/*.webp", {
   eager: true,
 });
 
 /** Toggle off when these edits are back in stock for immediate purchase */
 const BEST_SELLERS_SOLD_OUT = true;
 
-/** Names match each asset filename (see `src/assets/BestSeller/*.png`). */
+/** Names match each asset filename (see `src/assets/BestSeller/*.webp`). */
 const BEST_SELLER_NAMES = {
-  "image1.png": "Velisqa Eternal Knot Cuff",
-  "image2.png": "Velisqa Rose Quartz Pendant",
-  "image3.png": "Velisqa Solitaire Necklace & Stud Set",
-  "image4.png": "Velisqa Gold Bangle Trio",
-  "image5.png": "Velisqa Split-Shank Solitaire Ring",
-  "image6.png": "Velisqa Classic Silver Hoops",
-  "image7.png": "Velisqa Dewdrop Teardrop Necklace",
-  "image8.png": "Velisqa Five-Stack Bangle Edit",
+  "image1.webp": "Velisqa Eternal Knot Cuff",
+  "image2.webp": "Velisqa Rose Quartz Pendant",
+  "image3.webp": "Velisqa Solitaire Necklace & Stud Set",
+  "image4.webp": "Velisqa Gold Bangle Trio",
+  "image5.webp": "Velisqa Split-Shank Solitaire Ring",
+  "image6.webp": "Velisqa Classic Silver Hoops",
+  "image7.webp": "Velisqa Dewdrop Teardrop Necklace",
+  "image8.webp": "Velisqa Five-Stack Bangle Edit",
 };
 
 function fileNameFromGlobPath(path) {

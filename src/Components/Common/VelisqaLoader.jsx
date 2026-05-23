@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { gsap } from "gsap";
 import { useEffect, useMemo, useRef } from "react";
 
 const SUFFIX = "ELISQA";
@@ -7,6 +6,7 @@ const BRAND_PLUM_SOFT = "rgba(77, 49, 72, 0.12)";
 
 /**
  * Minimal luxury loader — centred “V” smoothly expands into VELISQA.
+ * GSAP is loaded on demand so it does not inflate the initial JS bundle.
  */
 export default function VelisqaLoader({
   fullScreen = false,
@@ -39,63 +39,73 @@ export default function VelisqaLoader({
 
     if (!root || !word || !vLetter || !suffix) return undefined;
 
-    gsap.set(word, { letterSpacing: "0.06em", force3D: true });
-    gsap.set(vLetter, {
-      opacity: 0,
-      scale: 0.88,
-      transformOrigin: "right center",
-      force3D: true,
-    });
-    gsap.set(suffix, {
-      opacity: 0,
-      scaleX: 0,
-      transformOrigin: "left center",
-      force3D: true,
-    });
-    if (glow) {
-      gsap.set(glow, { opacity: 0, scale: 0.92, transformOrigin: "center center", force3D: true });
+    let cancelled = false;
+
+    async function run() {
+      const { gsap } = await import("gsap");
+      if (cancelled) return;
+
+      gsap.set(word, { letterSpacing: "0.06em", force3D: true });
+      gsap.set(vLetter, {
+        opacity: 0,
+        scale: 0.88,
+        transformOrigin: "right center",
+        force3D: true,
+      });
+      gsap.set(suffix, {
+        opacity: 0,
+        scaleX: 0,
+        transformOrigin: "left center",
+        force3D: true,
+      });
+      if (glow) {
+        gsap.set(glow, { opacity: 0, scale: 0.92, transformOrigin: "center center", force3D: true });
+      }
+
+      gsapCtx.current = gsap.context(() => {
+        const tl = gsap.timeline({
+          defaults: { ease: "power3.out" },
+          onComplete: () => onComplete?.(),
+        });
+
+        tl.to(vLetter, {
+          opacity: 1,
+          scale: 1,
+          duration: 0.65,
+          ease: "power4.out",
+        })
+          .to(
+            glow,
+            { opacity: 1, scale: 1, duration: 0.8, ease: "sine.out" },
+            0.12,
+          )
+          .to(
+            suffix,
+            {
+              scaleX: 1,
+              opacity: 1,
+              duration: 0.85,
+              ease: "power2.inOut",
+            },
+            0.22,
+          )
+          .to(
+            word,
+            {
+              letterSpacing: "0.3em",
+              duration: 0.85,
+              ease: "power2.inOut",
+            },
+            0.22,
+          )
+          .to({}, { duration: 0.2 });
+      }, root);
     }
 
-    gsapCtx.current = gsap.context(() => {
-      const tl = gsap.timeline({
-        defaults: { ease: "power3.out" },
-        onComplete: () => onComplete?.(),
-      });
-
-      tl.to(vLetter, {
-        opacity: 1,
-        scale: 1,
-        duration: 0.65,
-        ease: "power4.out",
-      })
-        .to(
-          glow,
-          { opacity: 1, scale: 1, duration: 0.8, ease: "sine.out" },
-          0.12,
-        )
-        .to(
-          suffix,
-          {
-            scaleX: 1,
-            opacity: 1,
-            duration: 0.85,
-            ease: "power2.inOut",
-          },
-          0.22,
-        )
-        .to(
-          word,
-          {
-            letterSpacing: "0.3em",
-            duration: 0.85,
-            ease: "power2.inOut",
-          },
-          0.22,
-        )
-        .to({}, { duration: 0.2 });
-    }, root);
+    run();
 
     return () => {
+      cancelled = true;
       gsapCtx.current?.revert();
       gsapCtx.current = null;
     };
@@ -122,7 +132,7 @@ export default function VelisqaLoader({
 
       <p
         ref={wordRef}
-        className="relative z-10 flex items-baseline justify-center px-6 text-[clamp(2.5rem,10vw,4.5rem)] font-medium leading-none text-[#4d3148] will-change-[transform,letter-spacing]"
+        className="relative z-10 flex items-baseline justify-center px-6 text-[clamp(2.5rem,10vw,4.5rem)] font-medium leading-none text-[#4d3148] will-change-[letter-spacing]"
         style={{
           fontFamily: '"Playfair Display", "Cormorant Garamond", var(--font-luxury-serif), serif',
         }}

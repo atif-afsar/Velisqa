@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
-import heroImage from "../../assets/creator-program-hero.png";
+import heroImage from "../../assets/creator-program-hero.webp";
 
 const EASE = [0.16, 1, 0.3, 1];
 

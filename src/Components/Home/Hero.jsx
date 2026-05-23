@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const EASE = [0.16, 1, 0.3, 1];
 
@@ -19,12 +19,19 @@ export default function Hero() {
   const reduceMotion = useReducedMotion();
   const fadeMs = reduceMotion ? 0 : CROSSFADE_MS;
 
+  const visibleSlideIndices = useMemo(() => {
+    if (images.length <= 1) return [0];
+    const prev = (index - 1 + images.length) % images.length;
+    return [prev, index];
+  }, [index]);
+
   useEffect(() => {
-    images.forEach((src) => {
-      const img = new Image();
-      img.src = src;
-    });
-  }, []);
+    if (images.length === 0) return undefined;
+    const next = (index + 1) % images.length;
+    const preload = new Image();
+    preload.src = images[next];
+    return undefined;
+  }, [index]);
 
   useEffect(() => {
     if (reduceMotion || images.length < 2) return undefined;
@@ -34,34 +41,38 @@ export default function Hero() {
     }, SLIDE_INTERVAL_MS);
 
     return () => window.clearInterval(id);
-  }, [reduceMotion, images.length, SLIDE_INTERVAL_MS]);
+  }, [reduceMotion]);
 
   return (
     <section className="relative flex min-h-svh items-center justify-center overflow-hidden px-4 py-20 text-center text-white md:px-6 md:py-24">
       <div className="absolute inset-0 isolate overflow-hidden bg-[#130006]">
-        {images.map((src, i) => (
-          <img
-            key={src}
-            src={src}
-            alt={
-              i === index
-                ? "Velisqa Jewellery — premium artificial necklaces, rings, bangles and earrings"
-                : ""
-            }
-            aria-hidden={i !== index}
-            loading={i === 0 ? "eager" : "lazy"}
-            fetchPriority={i === 0 ? "high" : "low"}
-            decoding="async"
-            draggable={false}
-            className="absolute inset-0 h-full w-full object-cover object-center [backface-visibility:hidden] [transform:translateZ(0)] sm:object-[center_45%]"
-            style={{
-              opacity: i === index ? 1 : 0,
-              zIndex: i === index ? 2 : 1,
-              willChange: fadeMs ? "opacity" : undefined,
-              transition: fadeMs ? `opacity ${fadeMs}ms ${CROSSFADE_EASE}` : "none",
-            }}
-          />
-        ))}
+        {images.map((src, i) => {
+          if (!visibleSlideIndices.includes(i)) return null;
+
+          const isActive = i === index;
+          return (
+            <img
+              key={src}
+              src={src}
+              alt={
+                isActive
+                  ? "Velisqa Jewellery — premium artificial necklaces, rings, bangles and earrings"
+                  : ""
+              }
+              aria-hidden={!isActive}
+              loading={i === 0 ? "eager" : "lazy"}
+              fetchPriority={isActive && i === 0 ? "high" : "low"}
+              decoding="async"
+              draggable={false}
+              className="absolute inset-0 h-full w-full object-cover object-center [backface-visibility:hidden] [transform:translateZ(0)] sm:object-[center_45%]"
+              style={{
+                opacity: isActive ? 1 : 0,
+                zIndex: isActive ? 2 : 1,
+                transition: fadeMs ? `opacity ${fadeMs}ms ${CROSSFADE_EASE}` : "none",
+              }}
+            />
+          );
+        })}
       </div>
 
       <motion.div

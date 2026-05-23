@@ -1,20 +1,22 @@
-import { useCallback, useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useCatalog } from '../context/CatalogContext'
+import { PRODUCT_LIST_SELECT } from '../lib/productQuery'
 import { supabase } from '../lib/supabaseClient'
+
+const FOCUS_REFRESH_MS = 60_000
 
 export function useProducts() {
   const { catalogVersion } = useCatalog()
-  const location = useLocation()
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const lastFetchRef = useRef(0)
 
   const refresh = useCallback(async () => {
     setError(null)
     const { data, error: fetchError } = await supabase
       .from('products')
-      .select('*')
+      .select(PRODUCT_LIST_SELECT)
       .order('created_at', { ascending: false })
 
     if (fetchError) {
@@ -23,6 +25,7 @@ export function useProducts() {
     } else {
       setProducts(data ?? [])
     }
+    lastFetchRef.current = Date.now()
     setLoading(false)
     return { data: data ?? [], error: fetchError }
   }, [])
@@ -38,20 +41,20 @@ export function useProducts() {
     return () => {
       cancelled = true
     }
-  }, [catalogVersion, location.pathname, refresh])
+  }, [catalogVersion, refresh])
 
   useEffect(() => {
-    function onVisible() {
-      if (document.visibilityState === 'visible') {
-        refresh()
-      }
+    function maybeRefresh() {
+      if (document.visibilityState !== 'visible') return
+      if (Date.now() - lastFetchRef.current < FOCUS_REFRESH_MS) return
+      refresh()
     }
 
-    window.addEventListener('focus', refresh)
-    document.addEventListener('visibilitychange', onVisible)
+    window.addEventListener('focus', maybeRefresh)
+    document.addEventListener('visibilitychange', maybeRefresh)
     return () => {
-      window.removeEventListener('focus', refresh)
-      document.removeEventListener('visibilitychange', onVisible)
+      window.removeEventListener('focus', maybeRefresh)
+      document.removeEventListener('visibilitychange', maybeRefresh)
     }
   }, [refresh])
 

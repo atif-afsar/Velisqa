@@ -85,6 +85,7 @@ export default function SmoothScroll() {
 
       cleanupLenisDom();
 
+      await import("lenis/dist/lenis.css");
       const { default: Lenis } = await import("lenis");
       if (cancelled || prefersNativeScroll()) return;
 
