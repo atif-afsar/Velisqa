@@ -73,10 +73,10 @@ export default function SignInRequiredModal({ open, onClose }) {
                   Velisqa
                 </p>
                 <h2 id={titleId} className="mt-1 font-serif text-lg leading-tight text-[#130006] sm:text-2xl">
-                  Sign in to continue
+                  Sign in to your account
                 </h2>
                 <p className="mt-1 text-xs leading-relaxed text-[#514347] sm:text-sm">
-                  Create a free account or sign in before adding to your bag or placing an order.
+                  Optional — create a free account or sign in to save your details for next time. You can still shop and order on WhatsApp without signing in.
                 </p>
               </div>
               <button

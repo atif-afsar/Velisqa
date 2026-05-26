@@ -9,12 +9,10 @@ import {
 } from '../lib/cartStock'
 import { supabase } from '../lib/supabaseClient'
 import { getPrimaryImageUrl } from '../lib/productImages'
-import { useAuth } from './AuthContext'
 
 const CartContext = createContext(null)
 
 export function CartProvider({ children }) {
-  const { user, requireSignIn } = useAuth()
   const [items, setItems] = useState(() => loadCartItems())
   const [toast, setToast] = useState(null)
   const [syncing, setSyncing] = useState(false)
@@ -66,16 +64,8 @@ export function CartProvider({ children }) {
   )
 
   const addToCart = useCallback(
-    (product, quantity = 1) => {
-      if (user) {
-        return addToCartInternal(product, quantity)
-      }
-      requireSignIn(() => {
-        addToCartInternal(product, quantity)
-      })
-      return { ok: false, reason: 'sign_in_required' }
-    },
-    [user, requireSignIn, addToCartInternal],
+    (product, quantity = 1) => addToCartInternal(product, quantity),
+    [addToCartInternal],
   )
 
   const setQuantity = useCallback(

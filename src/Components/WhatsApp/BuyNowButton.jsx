@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { useAuth } from "../../context/AuthContext";
 import OrderFormModal from "./OrderFormModal";
 
 export default function BuyNowButton({
@@ -11,11 +10,10 @@ export default function BuyNowButton({
   soldOut = false,
 }) {
   const [open, setOpen] = useState(false);
-  const { requireSignIn } = useAuth();
   const label = soldOut ? "Enquire to purchase" : children;
 
   function openOrderModal() {
-    requireSignIn(() => setOpen(true));
+    setOpen(true);
   }
 
   const baseStyles =
