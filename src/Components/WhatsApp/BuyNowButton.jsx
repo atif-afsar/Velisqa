@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
-import OrderFormModal from "./OrderFormModal";
+import { buildWhatsAppMessage, createWhatsAppLink } from "./whatsapp";
 
 export default function BuyNowButton({
   productName,
@@ -9,11 +8,15 @@ export default function BuyNowButton({
   className = "",
   soldOut = false,
 }) {
-  const [open, setOpen] = useState(false);
   const label = soldOut ? "Enquire to purchase" : children;
 
-  function openOrderModal() {
-    setOpen(true);
+  function openWhatsApp() {
+    const message = buildWhatsAppMessage({
+      productName,
+      productUrl: productUrl || (typeof window !== "undefined" ? window.location.href : ""),
+      intent: soldOut ? "enquiry" : "inquiry",
+    });
+    window.open(createWhatsAppLink(message), "_blank", "noopener,noreferrer");
   }
 
   const baseStyles =
@@ -37,7 +40,7 @@ export default function BuyNowButton({
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          openOrderModal();
+          openWhatsApp();
         }}
         whileHover={{ y: -2, scale: 1.01 }}
         whileTap={{ scale: 0.985 }}
@@ -52,14 +55,6 @@ export default function BuyNowButton({
         </svg>
         <span className="label-stitch min-w-0 text-sm leading-snug tracking-[0.12em]">{label}</span>
       </motion.button>
-
-      <OrderFormModal
-        open={open}
-        onClose={() => setOpen(false)}
-        productName={productName}
-        productUrl={productUrl}
-        variant={soldOut ? "enquiry" : "order"}
-      />
     </div>
   );
 }

@@ -160,8 +160,10 @@ export function buildWhatsAppMessage({ productName, productUrl, intent = "inquir
     message = "Hello VELISQA, I'd like to book a private consultation. Please assist me with scheduling and pricing.";
   }
 
-  if (productName) {
-    message = `Hello VELISQA, I'm interested in ${productName}. Please assist me with pricing and delivery.`;
+  if (intent === "enquiry" && productName) {
+    message = `Hello VELISQA, I have a query about ${productName} (sold out / made to order). Please advise on availability, pricing, and delivery.`;
+  } else if (productName) {
+    message = `Hello VELISQA, I have a query about ${productName}. Please assist me with pricing and delivery.`;
   }
 
   if (productUrl) {
