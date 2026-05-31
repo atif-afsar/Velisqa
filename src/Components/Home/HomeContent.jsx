@@ -1,4 +1,5 @@
 import { lazy } from "react";
+import { useHomeShopPreload } from "../../hooks/useHomeShopPreload";
 import Hero from "./Hero";
 import HomeBrandSeo from "./HomeBrandSeo";
 import IconsOfElegance from "./IconsOfElegance";
@@ -14,12 +15,18 @@ const BeginStory = lazy(() => import("./BeginStory"));
 const HomeFooter = lazy(() => import("./HomeFooter"));
 
 export default function HomeContent() {
+  const homeShopCatalog = useHomeShopPreload();
+
   return (
     <main className="bg-[#f9f5f0] text-[#130006]">
       <Hero />
       <IconsOfElegance />
-      <LazySection minHeight="520px">
-        <HomeShopGrid />
+      <LazySection minHeight="520px" rootMargin="900px">
+        <HomeShopGrid
+          products={homeShopCatalog.products}
+          loading={homeShopCatalog.loading}
+          error={homeShopCatalog.error}
+        />
       </LazySection>
       <LazySection minHeight="620px">
         <Ethos />

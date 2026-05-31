@@ -7,16 +7,13 @@ import {
   getCategoryParamSlug,
   groupProductsByCategory,
 } from '../../lib/productCategories'
-import { useProducts } from '../../hooks/useProducts'
+import { HOME_SHOP_PRODUCT_LIMIT } from '../../lib/preloadImages'
 import ProductCard from '../Product/ProductCard'
 import Icon from './Icon'
 
-const HOME_PRODUCT_LIMIT = 8
-
-export default function HomeShopGrid() {
+export default function HomeShopGrid({ products, loading, error: fetchError }) {
   const { hash } = useLocation()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { products, loading, error: fetchError } = useProducts()
 
   const grouped = useMemo(
     () => groupProductsByCategory(products, SIGNATURE_CATEGORIES),
@@ -56,8 +53,8 @@ export default function HomeShopGrid() {
   }, [loading, categoryFromUrl, grouped, defaultCategory])
 
   const allInCategory = grouped[activeCategory] ?? []
-  const categoryProducts = allInCategory.slice(0, HOME_PRODUCT_LIMIT)
-  const hasMore = allInCategory.length > HOME_PRODUCT_LIMIT
+  const categoryProducts = allInCategory.slice(0, HOME_SHOP_PRODUCT_LIMIT)
+  const hasMore = allInCategory.length > HOME_SHOP_PRODUCT_LIMIT
   const totalPieces = SIGNATURE_CATEGORIES.reduce((sum, cat) => sum + (grouped[cat]?.length ?? 0), 0)
 
   function handleCategoryChange(categoryTitle) {
@@ -179,8 +176,8 @@ export default function HomeShopGrid() {
         {!loading && categoryProducts.length > 0 && (
           <>
             <div className="grid grid-cols-2 items-stretch gap-x-3 gap-y-6 sm:gap-x-5 sm:gap-y-8 lg:grid-cols-4">
-              {categoryProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
+              {categoryProducts.map((product, i) => (
+                <ProductCard key={product.id} product={product} priority={i < 4} />
               ))}
             </div>
 

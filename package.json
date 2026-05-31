@@ -10,6 +10,7 @@
     "dev": "vite",
     "build": "vite build",
     "optimize:images": "node scripts/optimize-images.mjs",
+    "thumbnails": "node scripts/generate-thumbnails.mjs",
     "sitemap": "node scripts/generate-sitemap.mjs",
     "seed:catalog": "node scripts/seed-signature-products.mjs",
     "check:google": "node scripts/check-google-provider.mjs",

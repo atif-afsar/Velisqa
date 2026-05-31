@@ -5,13 +5,9 @@ import Navbar from './Components/Navbar'
 import PromoAnnouncementBar from './Components/Common/PromoAnnouncementBar'
 import CartToast from './Components/Cart/CartToast'
 import WishlistToast from './Components/Wishlist/WishlistToast'
-import VelisqaLoader from './Components/Common/VelisqaLoader'
 // import FloatingWhatsApp from './Components/WhatsApp/FloatingWhatsApp'
-import { AnimatePresence } from 'framer-motion'
 import { Route, Routes, useLocation, Navigate } from 'react-router-dom'
-import { Suspense, lazy, useEffect, useState } from 'react'
-
-const BOOT_KEY = 'velisqa_booted_v1'
+import { Suspense, lazy, useEffect } from 'react'
 
 const Home = lazy(() => import('./Pages/Home'))
 const About = lazy(() => import('./Pages/About'))
@@ -43,42 +39,8 @@ function ScrollToTop() {
 }
 
 function App() {
-  const [showLoader, setShowLoader] = useState(() => {
-    if (typeof window === 'undefined') return true
-    try {
-      return !sessionStorage.getItem(BOOT_KEY)
-    } catch {
-      return true
-    }
-  })
-
-  useEffect(() => {
-    if (showLoader) {
-      document.body.style.overflow = 'hidden'
-      return () => {
-        document.body.style.overflow = ''
-      }
-    }
-    document.body.style.overflow = ''
-    return undefined
-  }, [showLoader])
-
-  const handleLoaderComplete = () => {
-    try {
-      sessionStorage.setItem(BOOT_KEY, '1')
-    } catch {
-      /* ignore */
-    }
-    setShowLoader(false)
-  }
-
   return (
     <>
-      <AnimatePresence mode="wait">
-        {showLoader && (
-          <VelisqaLoader fullScreen onComplete={handleLoaderComplete} />
-        )}
-      </AnimatePresence>
       <SmoothScroll />
       <ScrollToTop />
       <PromoAnnouncementBar />

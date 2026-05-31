@@ -1,6 +1,7 @@
 import { memo } from 'react'
 import { Link } from 'react-router-dom'
 import { getPrimaryImageUrl } from '../../lib/productImages'
+import ProductImage from '../Common/ProductImage'
 import ProductPromoBadge from './ProductPromoBadge'
 import ProductPriceDisplay from './ProductPriceDisplay'
 import ProductCardActions from './ProductCardActions'
@@ -8,7 +9,7 @@ import ProductRating from './ProductRating'
 import ProductBadgeLabel from './ProductBadgeLabel'
 import ProductWishlistButton from './ProductWishlistButton'
 
-function ProductCard({ product }) {
+function ProductCard({ product, priority = false }) {
   const detailPath = `/product/${product.id}`
   const imageUrl = getPrimaryImageUrl(product)
 
@@ -22,17 +23,17 @@ function ProductCard({ product }) {
         >
           <ProductPromoBadge />
           <ProductBadgeLabel product={product} placement="image" />
-          {imageUrl ? (
-            <img
-              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-              src={imageUrl}
-              alt={product.name}
-              loading="lazy"
-              decoding="async"
-            />
-          ) : (
-            <div className="flex h-full items-center justify-center text-xs text-[#847377]">No image</div>
-          )}
+          <ProductImage
+            src={imageUrl}
+            alt={product.name}
+            width={520}
+            responsiveWidths={[320, 520, 720]}
+            sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 50vw"
+            aspect="4 / 5"
+            priority={priority}
+            className="h-full w-full rounded-md"
+            imgClassName="group-hover:scale-105"
+          />
           <div
             className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#130006]/55 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-sm:hidden"
             aria-hidden

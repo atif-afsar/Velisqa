@@ -53,7 +53,7 @@ export const SIGNATURE_CATALOG_ITEMS = [
   // —— Bracelet (6) ——
   {
     category: 'Bracelet',
-    file: 'IMG_3443.png',
+    file: 'IMG_3443.webp',
     name: 'Obsidian Cuff Bracelet',
     price: 449,
     stock: 5,

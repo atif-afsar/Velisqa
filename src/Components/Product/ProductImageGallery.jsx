@@ -1,4 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
+import ProductImage from '../Common/ProductImage'
+import { buildImageUrl } from '../../lib/imageCdn'
 
 const SWIPE_THRESHOLD_PX = 48
 
@@ -49,12 +51,17 @@ export default function ProductImageGallery({ images, alt }) {
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        <img
+        <ProductImage
           key={currentSrc}
           src={currentSrc}
           alt={count > 1 ? `${alt} — image ${safeIndex + 1} of ${count}` : alt}
-          className="aspect-[4/5] w-full object-cover object-center select-none"
-          decoding="async"
+          width={900}
+          responsiveWidths={[480, 720, 960]}
+          sizes="(min-width: 1024px) 45vw, 100vw"
+          quality={78}
+          aspect="4 / 5"
+          priority
+          className="w-full select-none"
           draggable={false}
         />
 
@@ -107,7 +114,13 @@ export default function ProductImageGallery({ images, alt }) {
                   : 'border-transparent opacity-70 hover:opacity-100'
               }`}
             >
-              <img src={src} alt="" className="h-full w-full object-cover" loading="lazy" decoding="async" />
+              <img
+                src={buildImageUrl(src, { width: 140 })}
+                alt=""
+                className="h-full w-full object-cover"
+                loading="lazy"
+                decoding="async"
+              />
             </button>
           ))}
         </div>
