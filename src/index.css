@@ -362,6 +362,39 @@ a[role="button"],
   }
 }
 
+.hero-overlay-fade {
+  animation: heroFade 1.2s var(--luxury-ease) both;
+}
+
+.hero-gradient-fade {
+  animation: heroFade 1.4s var(--luxury-ease) 0.1s both;
+}
+
+.hero-title-rise {
+  animation: textReveal 1.1s var(--luxury-ease) 0.2s both;
+}
+
+.hero-divider-rise {
+  animation: heroDividerReveal 0.8s var(--luxury-ease) 0.45s both;
+  transform-origin: center;
+}
+
+.hero-tagline-rise {
+  animation: textReveal 0.9s var(--luxury-ease) 0.55s both;
+}
+
+@keyframes heroDividerReveal {
+  from {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
 .section-gap {
   padding-block: 128px;
 }

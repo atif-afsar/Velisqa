@@ -6,6 +6,7 @@ import { SIGNATURE_CATEGORIES, groupProductsByCategory } from './productCategori
 export const HOME_SHOP_PRODUCT_LIMIT = 8
 
 const GRID_DELIVERY_WIDTH = 520
+const PRELOAD_BATCH_SIZE = 4
 const preloaded = new Set()
 
 /**
@@ -31,25 +32,37 @@ export function collectHomeShopImageUrls(products) {
   return urls
 }
 
-/** Warm the browser cache for image URLs after the hero has painted. */
+function preloadOne(src) {
+  if (!src || preloaded.has(src)) return
+  preloaded.add(src)
+  const img = new Image()
+  img.decoding = 'async'
+  img.src = src
+}
+
+/** Warm the browser cache in small batches so preloads do not block the main thread. */
 export function preloadImageUrls(urls) {
   if (typeof window === 'undefined' || !urls?.length) return
 
   const pending = urls.filter((url) => url && !preloaded.has(url))
   if (!pending.length) return
 
-  const run = () => {
-    for (const src of pending) {
-      preloaded.add(src)
-      const img = new Image()
-      img.decoding = 'async'
-      img.src = src
+  let index = 0
+
+  const runBatch = () => {
+    const slice = pending.slice(index, index + PRELOAD_BATCH_SIZE)
+    index += PRELOAD_BATCH_SIZE
+    for (const src of slice) preloadOne(src)
+    if (index < pending.length) scheduleNextBatch()
+  }
+
+  const scheduleNextBatch = () => {
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(runBatch, { timeout: 3000 })
+    } else {
+      window.setTimeout(runBatch, 120)
     }
   }
 
-  if ('requestIdleCallback' in window) {
-    requestIdleCallback(run, { timeout: 2500 })
-  } else {
-    window.setTimeout(run, 400)
-  }
+  scheduleNextBatch()
 }
