@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useCart } from '../../context/CartContext'
 import { formatInr, getPromoPriceDisplay } from '../../lib/promoPricing'
+import { SITE_URL } from '../SEO/siteConfig'
+import BuyNowButton from '../WhatsApp/BuyNowButton'
 
 /** Mobile-only sticky add-to-bag bar (Palmonas-style) */
 export default function ProductStickyBar({ product, soldOut }) {
@@ -16,7 +18,21 @@ export default function ProductStickyBar({ product, soldOut }) {
     window.setTimeout(() => setAdding(false), 400)
   }
 
-  if (soldOut) return null
+  if (soldOut) {
+    const productUrl = product.id ? `${SITE_URL}/product/${product.id}` : null
+    return (
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#130006]/10 bg-[#fdf9f4]/95 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-md lg:hidden">
+        <div className="mx-auto max-w-lg">
+          <BuyNowButton
+            productName={product.name}
+            productUrl={productUrl}
+            soldOut
+            className="w-full px-5 py-3 text-[11px]"
+          />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#130006]/10 bg-[#fdf9f4]/95 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-md lg:hidden">

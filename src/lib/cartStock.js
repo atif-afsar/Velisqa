@@ -9,6 +9,13 @@ export function getProductStock(product) {
   return Math.max(0, Math.floor(Number(product?.stock) || 0))
 }
 
+/** Admin flag or zero stock — product stays visible, bag add blocked. */
+export function isProductSoldOut(product) {
+  if (!product) return false
+  if (product.out_of_stock === true) return true
+  return getProductStock(product) <= 0
+}
+
 export function productToCartLine(product, quantity = 1) {
   return {
     productId: product.id,
@@ -17,13 +24,15 @@ export function productToCartLine(product, quantity = 1) {
     imageUrl: getPrimaryImageUrl(product),
     productUrl: product.id ? `${SITE_URL}/product/${product.id}` : null,
     stock: getProductStock(product),
+    outOfStock: isProductSoldOut(product),
     quantity: Math.max(1, Math.floor(quantity)),
   }
 }
 
 /** @returns {{ ok: boolean, reason?: string, maxAllowed?: number, message?: string }} */
-export function validateCartQuantity(stock, requestedQty, currentInCart = 0) {
-  const available = getProductStock({ stock })
+export function validateCartQuantity(stock, requestedQty, currentInCart = 0, options = {}) {
+  const soldOut = options.soldOut ?? false
+  const available = soldOut ? 0 : getProductStock({ stock })
   const qty = Math.floor(Number(requestedQty) || 0)
 
   if (available <= 0) {
@@ -71,10 +80,10 @@ export function getCartItemCount(lines) {
 export function findCartStockIssues(lines) {
   return lines
     .map((line) => {
-      const stock = getProductStock({ stock: line.stock })
-      if (stock <= 0) {
+      if (line.outOfStock || isProductSoldOut({ stock: line.stock, out_of_stock: line.outOfStock })) {
         return { line, issue: 'out_of_stock', message: `${line.name} is out of stock.` }
       }
+      const stock = getProductStock({ stock: line.stock })
       if (line.quantity > stock) {
         return {
           line,

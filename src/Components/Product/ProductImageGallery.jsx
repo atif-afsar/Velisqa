@@ -1,6 +1,37 @@
 import { useCallback, useRef, useState } from 'react'
 import ProductImage from '../Common/ProductImage'
-import { buildImageUrl } from '../../lib/imageCdn'
+import { buildImageUrl, masterImageUrl } from '../../lib/imageCdn'
+
+function GalleryThumb({ src, selected, index, onSelect }) {
+  const master = masterImageUrl(src)
+  const [thumbSrc, setThumbSrc] = useState(() => buildImageUrl(master, { width: 140 }))
+
+  return (
+    <button
+      type="button"
+      role="tab"
+      aria-selected={selected}
+      aria-label={`Show image ${index + 1}`}
+      onClick={onSelect}
+      className={`h-16 w-14 shrink-0 overflow-hidden rounded-lg border-2 transition sm:h-[4.5rem] sm:w-[3.25rem] ${
+        selected
+          ? 'border-[#3d0a21] ring-1 ring-[#d4af37]/40'
+          : 'border-transparent opacity-70 hover:opacity-100'
+      }`}
+    >
+      <img
+        src={thumbSrc}
+        alt=""
+        className="h-full w-full object-cover"
+        loading="lazy"
+        decoding="async"
+        onError={() => {
+          if (thumbSrc !== master) setThumbSrc(master)
+        }}
+      />
+    </button>
+  )
+}
 
 const SWIPE_THRESHOLD_PX = 48
 
@@ -101,27 +132,13 @@ export default function ProductImageGallery({ images, alt }) {
           aria-label="Product images"
         >
           {images.map((src, i) => (
-            <button
-              key={src}
-              type="button"
-              role="tab"
-              aria-selected={i === safeIndex}
-              aria-label={`Show image ${i + 1}`}
-              onClick={() => setIndex(i)}
-              className={`h-16 w-14 shrink-0 overflow-hidden rounded-lg border-2 transition sm:h-[4.5rem] sm:w-[3.25rem] ${
-                i === safeIndex
-                  ? 'border-[#3d0a21] ring-1 ring-[#d4af37]/40'
-                  : 'border-transparent opacity-70 hover:opacity-100'
-              }`}
-            >
-              <img
-                src={buildImageUrl(src, { width: 140 })}
-                alt=""
-                className="h-full w-full object-cover"
-                loading="lazy"
-                decoding="async"
-              />
-            </button>
+            <GalleryThumb
+              key={`${src}-${i}`}
+              src={src}
+              index={i}
+              selected={i === safeIndex}
+              onSelect={() => setIndex(i)}
+            />
           ))}
         </div>
       )}

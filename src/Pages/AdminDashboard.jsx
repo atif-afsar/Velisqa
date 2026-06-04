@@ -10,6 +10,12 @@ import { getProductImageUrls } from '../lib/productImages'
 import { useAuth } from '../context/AuthContext'
 import { useCatalog } from '../context/CatalogContext'
 import { normalizeProductCategory, PRODUCT_CATEGORIES } from '../lib/productCategories'
+import { isProductSoldOut } from '../lib/cartStock'
+import {
+  buildAvailabilityPatch,
+  hasOutOfStockColumn,
+  readOutOfStockFromProduct,
+} from '../lib/productOutOfStock'
 
 const BADGE_OPTIONS = [
   { value: '', label: 'Auto (new / bestseller rules)' },
@@ -23,6 +29,7 @@ const emptyForm = {
   description: '',
   category: PRODUCT_CATEGORIES[0],
   stock: '1',
+  out_of_stock: false,
   rating: '',
   review_count: '',
   badge: '',
@@ -62,6 +69,9 @@ function formatProductSaveError(message) {
   if (message.includes('rating') || message.includes('review_count') || message.includes('badge')) {
     return `${message}\n\nRun supabase/add-product-display-fields.sql in the Supabase SQL Editor, then try again.`
   }
+  if (message.includes('out_of_stock')) {
+    return `${message}\n\nRun supabase/add-product-out-of-stock.sql in the Supabase SQL Editor, then try again.`
+  }
   return message
 }
 
@@ -77,6 +87,21 @@ export default function AdminDashboard() {
   const [originalImageUrls, setOriginalImageUrls] = useState([])
   const [editingId, setEditingId] = useState(null)
   const [busy, setBusy] = useState(false)
+  const [useOosColumn, setUseOosColumn] = useState(false)
+  const [oosColumnChecked, setOosColumnChecked] = useState(false)
+
+  useEffect(() => {
+    let cancelled = false
+    hasOutOfStockColumn(supabase).then((exists) => {
+      if (!cancelled) {
+        setUseOosColumn(exists)
+        setOosColumnChecked(true)
+      }
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -132,6 +157,7 @@ export default function AdminDashboard() {
       description: product.description ?? '',
       category: normalizeProductCategory(product.category) ?? PRODUCT_CATEGORIES[0],
       stock: String(product.stock ?? 1),
+      out_of_stock: readOutOfStockFromProduct(product, useOosColumn),
       rating: product.rating != null ? String(product.rating) : '',
       review_count: product.review_count != null ? String(product.review_count) : '',
       badge: product.badge ?? '',
@@ -222,6 +248,12 @@ export default function AdminDashboard() {
       const reviewRaw = form.review_count.trim()
       const badgeRaw = form.badge.trim()
 
+      const availability = buildAvailabilityPatch({
+        outOfStock: form.out_of_stock,
+        stock: form.stock,
+        useColumn: useOosColumn,
+      })
+
       const row = {
         name: form.name.trim(),
         price: Number(form.price),
@@ -229,7 +261,7 @@ export default function AdminDashboard() {
         category: normalizeProductCategory(form.category),
         image_url: allUrls[0] ?? null,
         gallery_urls: allUrls,
-        stock: Number(form.stock) || 0,
+        ...availability,
         rating: ratingRaw ? Number(ratingRaw) : null,
         review_count: reviewRaw ? Math.max(0, Math.floor(Number(reviewRaw))) : null,
         badge: badgeRaw === 'bestseller' || badgeRaw === 'new' ? badgeRaw : null,
@@ -307,6 +339,32 @@ export default function AdminDashboard() {
     notifyCatalogChange()
   }
 
+  async function toggleOutOfStock(product) {
+    const currentlyOut = readOutOfStockFromProduct(product, useOosColumn)
+    const patch = buildAvailabilityPatch({
+      outOfStock: !currentlyOut,
+      stock: product.stock,
+      useColumn: useOosColumn,
+    })
+
+    const { error } = await supabase.from('products').update(patch).eq('id', product.id)
+
+    if (error) {
+      alert(formatProductSaveError(error.message))
+      return
+    }
+
+    if (editingId === product.id) {
+      setForm((f) => ({
+        ...f,
+        out_of_stock: !currentlyOut,
+        stock: String(patch.stock ?? f.stock),
+      }))
+    }
+    await refreshProducts()
+    notifyCatalogChange()
+  }
+
   const inputClass =
     'w-full rounded-xl border border-[#847377]/25 bg-white px-4 py-2.5 text-sm text-[#130006] outline-none transition focus:border-[#3d0a21]/35 focus:ring-2 focus:ring-[#d4af37]/20'
 
@@ -339,6 +397,15 @@ export default function AdminDashboard() {
               </button>
             </div>
           </div>
+
+          {oosColumnChecked && !useOosColumn && (
+            <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+              <strong>Out-of-stock flag not in database yet.</strong> Marking out of stock sets inventory to 0
+              until you run{' '}
+              <code className="rounded bg-white/80 px-1 text-xs">supabase/add-product-out-of-stock.sql</code> in
+              the Supabase SQL Editor (then refresh this page).
+            </div>
+          )}
 
           {fetchError && (
             <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900">
@@ -397,6 +464,22 @@ export default function AdminDashboard() {
                   onChange={(e) => setForm((f) => ({ ...f, stock: e.target.value }))}
                   required
                 />
+              </label>
+
+              <label className="flex items-start gap-3 rounded-xl border border-[#847377]/20 bg-[#fdf9f4] px-4 py-3 sm:col-span-2">
+                <input
+                  type="checkbox"
+                  className="mt-1 h-4 w-4 shrink-0 accent-[#3d0a21]"
+                  checked={form.out_of_stock}
+                  onChange={(e) => setForm((f) => ({ ...f, out_of_stock: e.target.checked }))}
+                />
+                <span className="text-sm leading-relaxed text-[#514347]">
+                  <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+                    Out of stock
+                  </span>
+                  Shoppers see “Out of stock” and “Enquire this product” on the website. Stock count
+                  above is kept for your records.
+                </span>
               </label>
 
               <label>
@@ -595,6 +678,7 @@ export default function AdminDashboard() {
               {products.map((product) => {
                 const thumb = getProductImageUrls(product)[0]
                 const imageCount = getProductImageUrls(product).length
+                const soldOut = isProductSoldOut(product)
                 return (
                   <article
                     key={product.id}
@@ -606,6 +690,11 @@ export default function AdminDashboard() {
                         {imageCount > 1 && (
                           <span className="absolute bottom-2 right-2 rounded-full bg-[#130006]/55 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.1em] text-[#fdf9f4]">
                             {imageCount} photos
+                          </span>
+                        )}
+                        {soldOut && (
+                          <span className="absolute left-2 top-2 rounded-full bg-[#c9a75a] px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.1em] text-[#130006]">
+                            Out of stock
                           </span>
                         )}
                       </div>
@@ -623,7 +712,13 @@ export default function AdminDashboard() {
                       )}
                       <p className="mt-2 text-sm text-[#514347]">
                         ₹{Number(product.price).toLocaleString('en-IN')}
-                        <span className="text-[#847377]"> · Stock {product.stock}</span>
+                        <span className="text-[#847377]">
+                          {' '}
+                          · Stock {product.stock}
+                          {readOutOfStockFromProduct(product, useOosColumn) && useOosColumn
+                            ? ' · Marked out of stock'
+                            : ''}
+                        </span>
                       </p>
                       {product.description && (
                         <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-[#514347]/90">
@@ -639,6 +734,19 @@ export default function AdminDashboard() {
                         >
                           View on site
                         </Link>
+                        <button
+                          type="button"
+                          onClick={() => toggleOutOfStock(product)}
+                          className={`w-full rounded-full border py-2 text-[11px] font-semibold uppercase tracking-[0.12em] transition ${
+                            readOutOfStockFromProduct(product, useOosColumn)
+                              ? 'border-emerald-200 bg-emerald-50 text-emerald-900 hover:bg-emerald-100'
+                              : 'border-[#c9a75a]/40 bg-[#c9a75a]/10 text-[#8a6b1f] hover:bg-[#c9a75a]/20'
+                          }`}
+                        >
+                          {readOutOfStockFromProduct(product, useOosColumn)
+                            ? 'Mark in stock'
+                            : 'Mark out of stock'}
+                        </button>
                         <button
                           type="button"
                           onClick={() => startEdit(product)}

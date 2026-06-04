@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useCatalog } from '../context/CatalogContext'
-import { PRODUCT_LIST_SELECT } from '../lib/productQuery'
+import { fetchProductList } from '../lib/productQuery'
 import { supabase } from '../lib/supabaseClient'
 
 const FOCUS_REFRESH_MS = 60_000
@@ -14,10 +14,7 @@ export function useProducts() {
 
   const refresh = useCallback(async () => {
     setError(null)
-    const { data, error: fetchError } = await supabase
-      .from('products')
-      .select(PRODUCT_LIST_SELECT)
-      .order('created_at', { ascending: false })
+    const { data, error: fetchError } = await fetchProductList(supabase)
 
     if (fetchError) {
       setError(fetchError.message)

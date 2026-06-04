@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useCart } from '../../context/CartContext'
-import { getProductStock } from '../../lib/cartStock'
+import { isProductSoldOut } from '../../lib/cartStock'
+import { SITE_URL } from '../SEO/siteConfig'
+import BuyNowButton from '../WhatsApp/BuyNowButton'
 
 const FOOTER_BTN =
   'tap-target flex w-full max-w-full min-h-[2.375rem] shrink-0 items-center justify-center gap-1.5 overflow-visible rounded-full border-0 px-3 py-2 text-[10px] font-bold uppercase leading-normal tracking-[0.06em] transition disabled:opacity-60 sm:min-h-[2.5rem] sm:gap-2 sm:px-4 sm:text-[11px] sm:tracking-[0.08em]'
@@ -8,13 +10,13 @@ const FOOTER_BTN =
 const OVERLAY_BTN =
   'tap-target flex w-full items-center justify-center gap-1.5 rounded-full border-0 px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.1em] transition disabled:opacity-60 sm:text-[11px]'
 
-/** Collection card: add to bag (footer always; overlay on image hover for sm+). */
+/** Collection card: add to bag, or out-of-stock + enquire. */
 export default function ProductCardActions({ product, variant = 'footer' }) {
   const { addToCart } = useCart()
   const [adding, setAdding] = useState(false)
-  const stock = getProductStock(product)
-  const soldOut = stock <= 0
+  const soldOut = isProductSoldOut(product)
   const isOverlay = variant === 'overlay'
+  const productUrl = product.id ? `${SITE_URL}/product/${product.id}` : null
 
   function handleAdd(e) {
     e.preventDefault()
@@ -26,13 +28,27 @@ export default function ProductCardActions({ product, variant = 'footer' }) {
   }
 
   if (soldOut) {
-    const soldClass = isOverlay
-      ? `${OVERLAY_BTN} cursor-default border border-[#c9a75a]/50 bg-[#130006]/75 text-[#e9c349]`
-      : `${FOOTER_BTN} cursor-default border border-[#c9a75a]/35 bg-[#c9a75a]/10 text-[#8a6b1f]`
-
     return (
-      <div className={isOverlay ? 'w-full' : 'w-full shrink-0'}>
-        <p className={soldClass}>Sold out</p>
+      <div
+        className={isOverlay ? 'w-full space-y-1.5' : 'w-full shrink-0 space-y-1.5'}
+        onClick={(e) => e.stopPropagation()}
+        role="presentation"
+      >
+        <p
+          className={
+            isOverlay
+              ? `${OVERLAY_BTN} cursor-default border border-[#c9a75a]/50 bg-[#130006]/75 text-[#e9c349]`
+              : `${FOOTER_BTN} cursor-default border border-[#c9a75a]/35 bg-[#c9a75a]/10 text-[#8a6b1f]`
+          }
+        >
+          Out of stock
+        </p>
+        <BuyNowButton
+          productName={product.name}
+          productUrl={productUrl}
+          soldOut
+          className="w-full px-3 py-2 text-[10px]"
+        />
       </div>
     )
   }

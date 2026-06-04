@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useCatalog } from '../context/CatalogContext'
 import { collectHomeShopImageUrls, preloadImageUrls } from '../lib/preloadImages'
-import { PRODUCT_LIST_SELECT } from '../lib/productQuery'
+import { fetchProductList } from '../lib/productQuery'
 import { supabase } from '../lib/supabaseClient'
 
 /**
@@ -18,10 +18,7 @@ export function useHomeShopPreload() {
   const refresh = useCallback(async () => {
     setStatus('loading')
     setError(null)
-    const { data, error: fetchError } = await supabase
-      .from('products')
-      .select(PRODUCT_LIST_SELECT)
-      .order('created_at', { ascending: false })
+    const { data, error: fetchError } = await fetchProductList(supabase)
 
     if (fetchError) {
       setError(fetchError.message)

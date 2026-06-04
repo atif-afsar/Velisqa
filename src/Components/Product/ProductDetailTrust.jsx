@@ -18,7 +18,7 @@ export default function ProductDetailTrust({ soldOut }) {
           {soldOut ? '—' : '✓'}
         </span>
         <span className={soldOut ? 'text-[#8a6b1f]' : 'font-medium text-[#130006]'}>
-          {soldOut ? 'Currently sold out — enquire on WhatsApp' : 'In stock — ready to ship'}
+          {soldOut ? 'Out of stock — enquire this product on WhatsApp' : 'In stock — ready to ship'}
         </span>
       </li>
       {TRUST_ITEMS.map(({ label, href }) => (

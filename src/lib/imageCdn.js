@@ -25,10 +25,21 @@ export function isSupabaseStorageUrl(url) {
   return typeof url === 'string' && url.includes(PUBLIC_OBJECT_MARKER)
 }
 
+/** Master URL from a storage URL (strips `.thumb` if present). */
+export function masterImageUrl(src) {
+  if (typeof src !== 'string') return src
+  const [base, query] = src.split('?')
+  const master = base.replace(/\.thumb\.webp$/i, '.webp')
+  return query ? `${master}?${query}` : master
+}
+
 /** Inserts `.thumb` before the `.webp` extension (URL or storage path). Null if not a .webp. */
 function toThumbnailVariant(value) {
   if (typeof value !== 'string') return null
   const [base, query] = value.split('?')
+  if (/\.thumb\.webp$/i.test(base)) {
+    return query ? `${base}?${query}` : base
+  }
   if (!/\.webp$/i.test(base)) return null
   const thumb = base.replace(/\.webp$/i, '.thumb.webp')
   return query ? `${thumb}?${query}` : thumb
@@ -67,9 +78,9 @@ export function buildImageUrl(src, { width, height, quality = 72, resize = 'cove
   }
 
   if (width && width <= THUMBNAIL_WIDTH_THRESHOLD) {
-    return thumbnailUrl(src) ?? src
+    return thumbnailUrl(masterImageUrl(src)) ?? masterImageUrl(src)
   }
-  return src
+  return masterImageUrl(src)
 }
 
 /**

@@ -29,9 +29,32 @@ export default function ProductPurchasePanel({ product, productUrl, soldOut }) {
           productUrl={productUrl}
           soldOut
           className="w-full px-6 py-3.5"
+        />
+        <button
+          type="button"
+          onClick={() => toggleWishlist(product)}
+          aria-pressed={wishlisted}
+          className={`tap-target flex w-full min-h-[46px] items-center justify-center gap-1.5 rounded-full border text-[11px] font-bold uppercase tracking-[0.08em] transition ${
+            wishlisted
+              ? 'border-[#3d0a21]/30 bg-[#3d0a21]/5 text-[#3d0a21]'
+              : 'border-[#130006]/15 bg-white text-[#514347] hover:border-[#3d0a21]/25'
+          }`}
         >
-          Enquire on WhatsApp
-        </BuyNowButton>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill={wishlisted ? 'currentColor' : 'none'}
+            aria-hidden
+          >
+            <path
+              d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            />
+          </svg>
+          {wishlisted ? 'Saved to wishlist' : 'Save to wishlist'}
+        </button>
       </div>
     )
   }

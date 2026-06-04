@@ -8,10 +8,13 @@ import ProductCardActions from './ProductCardActions'
 import ProductRating from './ProductRating'
 import ProductBadgeLabel from './ProductBadgeLabel'
 import ProductWishlistButton from './ProductWishlistButton'
+import ProductSoldOutBadge from './ProductSoldOutBadge'
+import { isProductSoldOut } from '../../lib/cartStock'
 
 function ProductCard({ product, priority = false }) {
   const detailPath = `/product/${product.id}`
   const imageUrl = getPrimaryImageUrl(product)
+  const soldOut = isProductSoldOut(product)
 
   return (
     <article className="group flex h-full flex-col overflow-visible rounded-lg border border-[#d4af37]/15 bg-[#fbf7f1] p-2 shadow-[0_18px_44px_-28px_rgba(19,0,6,0.35)] transition duration-300 hover:-translate-y-1 hover:border-[#d4af37]/35 sm:p-3">
@@ -22,6 +25,7 @@ function ProductCard({ product, priority = false }) {
           aria-label={`View ${product.name}`}
         >
           <ProductPromoBadge />
+          {soldOut && <ProductSoldOutBadge />}
           <ProductBadgeLabel product={product} placement="image" />
           <ProductImage
             src={imageUrl}
@@ -67,17 +71,23 @@ function ProductCard({ product, priority = false }) {
         </div>
 
         <div className="mt-auto w-full shrink-0 pt-2 sm:pt-2.5">
-          <div className="sm:hidden">
+          {soldOut ? (
             <ProductCardActions product={product} variant="footer" />
-          </div>
-          <div className="hidden sm:block">
-            <Link
-              to={detailPath}
-              className="tap-target flex w-full items-center justify-center rounded-full border border-[#3d0a21]/20 bg-white py-2 text-[10px] font-bold uppercase tracking-[0.1em] text-[#3d0a21] transition hover:border-[#3d0a21]/40 hover:bg-[#fdf9f4]"
-            >
-              View details
-            </Link>
-          </div>
+          ) : (
+            <>
+              <div className="sm:hidden">
+                <ProductCardActions product={product} variant="footer" />
+              </div>
+              <div className="hidden sm:block">
+                <Link
+                  to={detailPath}
+                  className="tap-target flex w-full items-center justify-center rounded-full border border-[#3d0a21]/20 bg-white py-2 text-[10px] font-bold uppercase tracking-[0.1em] text-[#3d0a21] transition hover:border-[#3d0a21]/40 hover:bg-[#fdf9f4]"
+                >
+                  View details
+                </Link>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </article>

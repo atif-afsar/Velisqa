@@ -8,7 +8,7 @@ export default function BuyNowButton({
   className = "",
   soldOut = false,
 }) {
-  const label = soldOut ? "Enquire to purchase" : children;
+  const label = soldOut ? "Enquire this product" : children;
 
   function openWhatsApp() {
     const message = buildWhatsAppMessage({
@@ -32,7 +32,7 @@ export default function BuyNowButton({
     <div className="flex w-full max-w-full flex-col items-center">
       {soldOut && (
         <p className="mb-1.5 text-[9px] font-semibold uppercase tracking-[0.2em] text-[#c9a75a] sm:text-[10px]">
-          Sold out
+          Out of stock
         </p>
       )}
       <motion.button

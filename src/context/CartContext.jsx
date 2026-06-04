@@ -4,6 +4,7 @@ import {
   findCartStockIssues,
   getCartItemCount,
   getCartTotal,
+  isProductSoldOut,
   productToCartLine,
   validateCartQuantity,
 } from '../lib/cartStock'
@@ -38,7 +39,9 @@ export function CartProvider({ children }) {
     (product, quantity = 1) => {
       const existing = items.find((line) => line.productId === product.id)
       const currentQty = existing?.quantity ?? 0
-      const check = validateCartQuantity(product.stock, quantity, currentQty)
+      const check = validateCartQuantity(product.stock, quantity, currentQty, {
+        soldOut: isProductSoldOut(product),
+      })
 
       if (!check.ok) {
         showToast(check.message, 'error')
@@ -120,12 +123,14 @@ export function CartProvider({ children }) {
       const byId = new Map((data ?? []).map((row) => [row.id, row]))
       const next = items.map((line) => {
         const row = byId.get(line.productId)
-        if (!row) return { ...line, stock: 0 }
+        if (!row) return { ...line, stock: 0, outOfStock: true }
+        const merged = { ...line, ...row }
         return {
           ...line,
           name: row.name ?? line.name,
           price: Number(row.price) ?? line.price,
           stock: Math.max(0, Math.floor(Number(row.stock) || 0)),
+          outOfStock: isProductSoldOut(merged),
           imageUrl: getPrimaryImageUrl(row) || line.imageUrl,
         }
       })

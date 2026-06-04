@@ -16,6 +16,8 @@ import ProductImageGallery from '../Components/Product/ProductImageGallery'
 import ProductPromoBadge from '../Components/Product/ProductPromoBadge'
 import ProductRating from '../Components/Product/ProductRating'
 import ProductBadgeLabel from '../Components/Product/ProductBadgeLabel'
+import ProductSoldOutBadge from '../Components/Product/ProductSoldOutBadge'
+import { isProductSoldOut } from '../lib/cartStock'
 
 function ProductDetailSkeleton() {
   return (
@@ -73,7 +75,7 @@ export default function ProductDetail() {
   const collectionsLink = category
     ? `/collections?category=${getCategoryParamSlug(category)}#signature`
     : '/collections#signature'
-  const soldOut = product ? Number(product.stock) <= 0 : false
+  const soldOut = product ? isProductSoldOut(product) : false
   const productImages = product ? getProductImageUrls(product) : []
   const primaryImage = product ? getPrimaryImageUrl(product) : null
 
@@ -132,6 +134,7 @@ export default function ProductDetail() {
             <div className="lg:sticky lg:top-[calc(var(--nav-height)+1rem)] lg:self-start">
               <div className="relative overflow-hidden rounded-lg bg-[#f7f4ef]">
                 <ProductPromoBadge className="left-3 top-3 z-20 sm:left-4 sm:top-4" />
+                {soldOut && <ProductSoldOutBadge className="left-auto right-3 sm:right-4" />}
                 <ProductImageGallery
                   key={product.id}
                   images={productImages}
