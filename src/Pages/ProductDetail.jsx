@@ -18,6 +18,7 @@ import ProductRating from '../Components/Product/ProductRating'
 import ProductBadgeLabel from '../Components/Product/ProductBadgeLabel'
 import ProductSoldOutBadge from '../Components/Product/ProductSoldOutBadge'
 import { isProductSoldOut } from '../lib/cartStock'
+import { findCachedProduct } from '../lib/productCatalogCache'
 
 function ProductDetailSkeleton() {
   return (
@@ -46,24 +47,46 @@ export default function ProductDetail() {
 
   useEffect(() => {
     let cancelled = false
-    setLoading(true)
-    setNotFound(false)
+    const cached = findCachedProduct(id)
 
-    supabase
-      .from('products')
-      .select('*')
-      .eq('id', id)
-      .maybeSingle()
-      .then(({ data, error }) => {
-        if (cancelled) return
-        if (error || !data) {
-          setNotFound(true)
-          setProduct(null)
-        } else {
-          setProduct(data)
-        }
+    if (cached) {
+      setProduct(cached)
+      setLoading(false)
+      setNotFound(false)
+    } else {
+      setLoading(true)
+      setNotFound(false)
+    }
+
+    async function loadProduct(attempt = 0) {
+      const { data, error } = await supabase.from('products').select('*').eq('id', id).maybeSingle()
+
+      if (cancelled) return
+
+      if (!error && data) {
+        setProduct(data)
+        setNotFound(false)
         setLoading(false)
-      })
+        return
+      }
+
+      if (attempt < 2) {
+        await new Promise((resolve) => window.setTimeout(resolve, 400 * (attempt + 1)))
+        if (!cancelled) loadProduct(attempt + 1)
+        return
+      }
+
+      if (cached) {
+        setProduct(cached)
+        setNotFound(false)
+      } else {
+        setNotFound(true)
+        setProduct(null)
+      }
+      setLoading(false)
+    }
+
+    loadProduct()
 
     return () => {
       cancelled = true

@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import { clearProductCatalogCache } from '../lib/productCatalogCache'
 
 const CatalogContext = createContext(null)
 
@@ -6,6 +7,7 @@ export function CatalogProvider({ children }) {
   const [catalogVersion, setCatalogVersion] = useState(0)
 
   const notifyCatalogChange = useCallback(() => {
+    clearProductCatalogCache()
     setCatalogVersion((v) => v + 1)
   }, [])
 

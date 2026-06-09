@@ -143,7 +143,7 @@ export default function HomeShopGrid({ products, loading, error: fetchError }) {
           </p>
         )}
 
-        {loading && (
+        {loading && categoryProducts.length === 0 && (
           <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
             {Array.from({ length: 4 }, (_, i) => (
               <div
@@ -155,7 +155,7 @@ export default function HomeShopGrid({ products, loading, error: fetchError }) {
           </div>
         )}
 
-        {!loading && !fetchError && totalPieces === 0 && (
+        {!loading && !fetchError && totalPieces === 0 && categoryProducts.length === 0 && (
           <div className="py-12 text-center text-sm text-[#514347]">
             <p>New pieces arriving soon.</p>
             <Link
@@ -173,7 +173,7 @@ export default function HomeShopGrid({ products, loading, error: fetchError }) {
           </p>
         )}
 
-        {!loading && categoryProducts.length > 0 && (
+        {categoryProducts.length > 0 && (
           <>
             <div className="grid grid-cols-2 items-stretch gap-x-3 gap-y-6 sm:gap-x-5 sm:gap-y-8 lg:grid-cols-4">
               {categoryProducts.map((product, i) => (

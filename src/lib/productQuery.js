@@ -32,3 +32,22 @@ export async function fetchProductList(supabase, options = {}) {
 
   return { data: data ?? [], error }
 }
+
+function wait(ms) {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, ms)
+  })
+}
+
+/** Retry transient Supabase/network failures (common on cold start / mobile). */
+export async function fetchProductListWithRetry(supabase, options = {}, retries = 2) {
+  let lastResult = { data: [], error: null }
+
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    lastResult = await fetchProductList(supabase, options)
+    if (!lastResult.error) return lastResult
+    if (attempt < retries) await wait(400 * (attempt + 1))
+  }
+
+  return lastResult
+}

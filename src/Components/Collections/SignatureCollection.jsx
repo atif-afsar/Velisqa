@@ -109,11 +109,15 @@ export default function SignatureCollection() {
           </p>
         )}
 
-        {loading && (
-          <p className="py-12 text-center text-sm text-[#847377]">Loading collection…</p>
+        {loading && categoryProducts.length === 0 && (
+          <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
+            {Array.from({ length: 4 }, (_, i) => (
+              <div key={i} className="aspect-[4/5] animate-pulse rounded-lg bg-[#e8e2db]" aria-hidden />
+            ))}
+          </div>
         )}
 
-        {!loading && !fetchError && totalPieces === 0 && (
+        {!loading && !fetchError && totalPieces === 0 && categoryProducts.length === 0 && (
           <div className="py-12 text-center text-sm text-[#514347]">
             <p>No products in the catalogue yet.</p>
             <p className="mt-2">
@@ -133,7 +137,7 @@ export default function SignatureCollection() {
           </p>
         )}
 
-        {!loading && categoryProducts.length > 0 && (
+        {categoryProducts.length > 0 && (
           <div className="grid grid-cols-2 items-stretch gap-x-3 gap-y-6 sm:gap-x-7 sm:gap-y-10 lg:grid-cols-3">
             {categoryProducts.map((product, i) => (
               <ProductCard key={product.id} product={product} priority={i < 4} />
