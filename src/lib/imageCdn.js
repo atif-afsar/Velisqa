@@ -1,15 +1,15 @@
 /**
  * Image URL helpers for fast, right-sized delivery.
  *
- * Product images live in Supabase Storage. By default (free tier) we serve a
- * small pre-generated `*.thumb.webp` variant — created at upload time — to grid
- * cards and thumbnails, while detail views use the full-size master. This needs
- * no paid features. If a thumbnail doesn't exist yet (older products), the
- * ProductImage component falls back to the master automatically.
- *
- * On Supabase Pro you can instead enable on-the-fly transformations with
- * `VITE_SUPABASE_IMAGE_TRANSFORM=true`, which resizes any width on demand.
+ * Product images are served from Cloudinary when URLs point there (recommended).
+ * Legacy Supabase Storage URLs still work via pre-generated thumbnails or Pro transforms.
  */
+
+import {
+  buildCloudinarySrcSet,
+  getOptimizedCloudinaryUrl,
+  isCloudinaryUrl,
+} from './cloudinaryUrl'
 
 const PUBLIC_OBJECT_MARKER = '/storage/v1/object/public/'
 const RENDER_IMAGE_MARKER = '/storage/v1/render/image/public/'
@@ -25,9 +25,14 @@ export function isSupabaseStorageUrl(url) {
   return typeof url === 'string' && url.includes(PUBLIC_OBJECT_MARKER)
 }
 
-/** Master URL from a storage URL (strips `.thumb` if present). */
+/** Master URL from a storage URL (strips `.thumb` if present). Cloudinary URLs are normalized. */
 export function masterImageUrl(src) {
   if (typeof src !== 'string') return src
+
+  if (isCloudinaryUrl(src)) {
+    return getOptimizedCloudinaryUrl(src, { width: 2000, quality: 'auto' })
+  }
+
   const [base, query] = src.split('?')
   const master = base.replace(/\.thumb\.webp$/i, '.webp')
   return query ? `${master}?${query}` : master
@@ -56,13 +61,25 @@ export function thumbnailUrl(src) {
   return toThumbnailVariant(src)
 }
 
+function normalizeQuality(quality) {
+  if (quality === 'auto' || quality == null) return 'auto'
+  return String(quality)
+}
+
 /**
  * Returns the best delivery URL for an image at a given render width.
- * - Pro transforms on: resizes on the fly via the render endpoint.
- * - Free tier (default): small widths get the pre-generated thumbnail variant.
- * - Bundled assets / non-Supabase URLs: returned unchanged.
+ * - Cloudinary: f_auto,q_auto,w_{width}
+ * - Supabase Pro transforms: on-the-fly resize
+ * - Supabase free tier: pre-generated thumbnail for small widths
  */
-export function buildImageUrl(src, { width, height, quality = 72, resize = 'cover' } = {}) {
+export function buildImageUrl(src, { width, height, quality = 'auto', resize = 'cover' } = {}) {
+  if (!src) return src
+
+  if (isCloudinaryUrl(src)) {
+    if (!width) return masterImageUrl(src)
+    return getOptimizedCloudinaryUrl(src, { width, quality: 'auto' })
+  }
+
   if (!isSupabaseStorageUrl(src)) return src
 
   if (TRANSFORM_ENABLED) {
@@ -72,7 +89,7 @@ export function buildImageUrl(src, { width, height, quality = 72, resize = 'cove
     const params = new URLSearchParams(existingQuery)
     params.set('width', String(Math.round(width)))
     if (height) params.set('height', String(Math.round(height)))
-    params.set('quality', String(quality))
+    params.set('quality', String(quality === 'auto' ? 72 : quality))
     params.set('resize', resize)
     return `${base}?${params.toString()}`
   }
@@ -84,11 +101,17 @@ export function buildImageUrl(src, { width, height, quality = 72, resize = 'cove
 }
 
 /**
- * Responsive `srcSet` — only meaningful when Pro transforms are enabled (multiple
- * widths on demand). On the free tier we serve a single thumbnail, so this returns ''.
+ * Responsive `srcSet` for Cloudinary or Supabase Pro transforms.
  */
-export function buildImageSrcSet(src, widths, { quality = 72, resize = 'cover' } = {}) {
-  if (!TRANSFORM_ENABLED || !isSupabaseStorageUrl(src) || !Array.isArray(widths)) return ''
+export function buildImageSrcSet(src, widths, { quality = 'auto', resize = 'cover' } = {}) {
+  if (!Array.isArray(widths) || !widths.length) return ''
+
+  if (isCloudinaryUrl(src)) {
+    return buildCloudinarySrcSet(src, widths, { quality: normalizeQuality(quality) })
+  }
+
+  if (!TRANSFORM_ENABLED || !isSupabaseStorageUrl(src)) return ''
+
   return widths
     .map((w) => `${buildImageUrl(src, { width: w, quality, resize })} ${w}w`)
     .join(', ')

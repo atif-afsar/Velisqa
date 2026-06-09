@@ -1,6 +1,7 @@
 import { useEffect, useId, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
+import { isCloudinaryUploadConfigured } from '../lib/cloudinaryUpload'
 import {
   deleteProductImage,
   deleteProductImages,
@@ -43,8 +44,14 @@ async function fetchProductsFromDb() {
   return supabase.from('products').select('*').order('created_at', { ascending: false })
 }
 
-function makeGalleryItemFromUrl(url) {
-  return { id: `url-${url}`, kind: 'existing', url }
+function makeGalleryItemFromUrl(url, publicId = null) {
+  return { id: `url-${url}`, kind: 'existing', url, publicId }
+}
+
+function getGalleryCloudinaryIds(product) {
+  const raw = product?.gallery_cloudinary_ids
+  if (Array.isArray(raw)) return raw
+  return []
 }
 
 function makeGalleryItemFromFile(file) {
@@ -71,6 +78,9 @@ function formatProductSaveError(message) {
   }
   if (message.includes('out_of_stock')) {
     return `${message}\n\nRun supabase/add-product-out-of-stock.sql in the Supabase SQL Editor, then try again.`
+  }
+  if (message.includes('cloudinary_public_id') || message.includes('gallery_cloudinary_ids')) {
+    return `${message}\n\nRun supabase/add-cloudinary-fields.sql in the Supabase SQL Editor, then try again.`
   }
   return message
 }
@@ -163,8 +173,9 @@ export default function AdminDashboard() {
       badge: product.badge ?? '',
     })
     const urls = getProductImageUrls(product)
+    const publicIds = getGalleryCloudinaryIds(product)
     setOriginalImageUrls(urls)
-    setGalleryItems(urls.map(makeGalleryItemFromUrl))
+    setGalleryItems(urls.map((url, index) => makeGalleryItemFromUrl(url, publicIds[index] ?? null)))
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
@@ -238,11 +249,15 @@ export default function AdminDashboard() {
     setBusy(true)
 
     try {
-      const keptUrls = galleryItems.filter((item) => item.kind === 'existing').map((item) => item.url)
+      const keptItems = galleryItems.filter((item) => item.kind === 'existing')
       const newFiles = galleryItems.filter((item) => item.kind === 'new').map((item) => item.file)
 
-      const uploadedUrls = newFiles.length ? await uploadProductImages(newFiles, user?.id) : []
-      const allUrls = [...keptUrls, ...uploadedUrls]
+      const uploadedAssets = newFiles.length ? await uploadProductImages(newFiles, user?.id) : []
+      const allUrls = [...keptItems.map((item) => item.url), ...uploadedAssets.map((asset) => asset.url)]
+      const allPublicIds = [
+        ...keptItems.map((item) => item.publicId ?? null),
+        ...uploadedAssets.map((asset) => asset.publicId ?? null),
+      ]
 
       const ratingRaw = form.rating.trim()
       const reviewRaw = form.review_count.trim()
@@ -261,6 +276,8 @@ export default function AdminDashboard() {
         category: normalizeProductCategory(form.category),
         image_url: allUrls[0] ?? null,
         gallery_urls: allUrls,
+        cloudinary_public_id: allPublicIds[0] ?? null,
+        gallery_cloudinary_ids: allPublicIds,
         ...availability,
         rating: ratingRaw ? Number(ratingRaw) : null,
         review_count: reviewRaw ? Math.max(0, Math.floor(Number(reviewRaw))) : null,
@@ -269,34 +286,41 @@ export default function AdminDashboard() {
 
       const removedUrls = originalImageUrls.filter((url) => !allUrls.includes(url))
 
-      if (editingId) {
-        const { error } = await supabase.from('products').update(row).eq('id', editingId)
-
-        if (error) {
-          if (uploadedUrls.length) await deleteProductImages(uploadedUrls)
-          alert(formatProductSaveError(error.message))
-          return
+      async function persistProduct(payload) {
+        if (editingId) {
+          return supabase.from('products').update(payload).eq('id', editingId)
         }
-
-        if (removedUrls.length) await deleteProductImages(removedUrls)
-      } else {
-        const { error } = await supabase.from('products').insert({
-          ...row,
+        return supabase.from('products').insert({
+          ...payload,
           created_by: user?.id ?? null,
         })
-
-        if (error) {
-          if (uploadedUrls.length) await deleteProductImages(uploadedUrls)
-          alert(formatProductSaveError(error.message))
-          return
-        }
       }
+
+      let { error } = await persistProduct(row)
+
+      if (error?.message?.includes('cloudinary')) {
+        const { cloudinary_public_id: _a, gallery_cloudinary_ids: _b, ...legacyRow } = row
+        ;({ error } = await persistProduct(legacyRow))
+      }
+
+      if (error) {
+        if (uploadedAssets.length) await deleteProductImages(uploadedAssets.map((a) => a.url))
+        alert(formatProductSaveError(error.message))
+        return
+      }
+
+      if (removedUrls.length) await deleteProductImages(removedUrls)
 
       resetForm()
       await refreshProducts()
       notifyCatalogChange()
     } catch (err) {
-      alert(err.message ?? 'Could not upload images. Check Supabase storage and env vars.')
+      alert(
+        err.message ??
+          (isCloudinaryUploadConfigured()
+            ? 'Could not upload images to Cloudinary.'
+            : 'Could not upload images. Check Cloudinary or Supabase storage settings.'),
+      )
     } finally {
       setBusy(false)
     }
@@ -377,8 +401,9 @@ export default function AdminDashboard() {
               <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#847377]">Velisqa</p>
               <h1 className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">Admin — Products</h1>
               <p className="mt-1 max-w-lg text-sm leading-relaxed text-[#514347]">
-                Add, edit, or delete shop items. Upload several photos per product — they are compressed
-                automatically and shown as a swipe gallery on the product page.
+                Add, edit, or delete shop items. Images upload to{' '}
+                {isCloudinaryUploadConfigured() ? 'Cloudinary CDN' : 'storage'} and are optimized for fast
+                loading on the shop. Multiple photos appear as a swipe gallery on the product page.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">

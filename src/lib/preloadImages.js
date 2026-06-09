@@ -5,7 +5,7 @@ import { SIGNATURE_CATEGORIES, groupProductsByCategory } from './productCategori
 /** Matches HomeShopGrid — max products shown per category on the homepage shop section. */
 export const HOME_SHOP_PRODUCT_LIMIT = 8
 
-const GRID_DELIVERY_WIDTH = 520
+const GRID_DELIVERY_WIDTH = 500
 const PRELOAD_BATCH_SIZE = 4
 const preloaded = new Set()
 

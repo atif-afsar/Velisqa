@@ -86,17 +86,27 @@ export async function importSignatureCatalog({ userId, onProgress }) {
         type: blob.type || mimeFromFilename(item.file),
       })
 
-      const imageUrl = await uploadProductImage(file, userId)
+      const imageAsset = await uploadProductImage(file, userId)
 
-      const { error } = await supabase.from('products').insert({
+      const insertRow = {
         name: item.name,
         price: item.price,
         description: item.description,
         category,
-        image_url: imageUrl,
+        image_url: imageAsset.url,
+        cloudinary_public_id: imageAsset.publicId,
+        gallery_urls: [imageAsset.url],
+        gallery_cloudinary_ids: imageAsset.publicId ? [imageAsset.publicId] : [],
         stock: item.stock,
         created_by: userId ?? null,
-      })
+      }
+
+      let { error } = await supabase.from('products').insert(insertRow)
+
+      if (error?.message?.includes('cloudinary')) {
+        const { cloudinary_public_id: _a, gallery_cloudinary_ids: _b, ...legacyRow } = insertRow
+        ;({ error } = await supabase.from('products').insert(legacyRow))
+      }
 
       if (error) {
         throw error

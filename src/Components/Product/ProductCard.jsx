@@ -30,8 +30,8 @@ function ProductCard({ product, priority = false }) {
           <ProductImage
             src={imageUrl}
             alt={product.name}
-            width={520}
-            responsiveWidths={[320, 520, 720]}
+            width={500}
+            responsiveWidths={[320, 500, 720]}
             sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 50vw"
             aspect="4 / 5"
             priority={priority}

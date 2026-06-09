@@ -4,7 +4,7 @@ import { buildImageUrl, masterImageUrl } from '../../lib/imageCdn'
 
 function GalleryThumb({ src, selected, index, onSelect }) {
   const master = masterImageUrl(src)
-  const [thumbSrc, setThumbSrc] = useState(() => buildImageUrl(master, { width: 140 }))
+  const [thumbSrc, setThumbSrc] = useState(() => buildImageUrl(master, { width: 250 }))
 
   return (
     <button
@@ -86,8 +86,8 @@ export default function ProductImageGallery({ images, alt }) {
           key={currentSrc}
           src={currentSrc}
           alt={count > 1 ? `${alt} — image ${safeIndex + 1} of ${count}` : alt}
-          width={900}
-          responsiveWidths={[480, 720, 960]}
+          width={1000}
+          responsiveWidths={[480, 720, 1000]}
           sizes="(min-width: 1024px) 45vw, 100vw"
           quality={78}
           aspect="4 / 5"

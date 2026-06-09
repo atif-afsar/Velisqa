@@ -1,8 +1,12 @@
 import { supabase } from './supabaseClient'
+import { uploadImageToCloudinary, isCloudinaryUploadConfigured } from './cloudinaryUpload'
+import { isCloudinaryUrl } from './cloudinaryUrl'
 import { optimizeImageFile, createThumbnailFile } from './imageOptimize'
 import { thumbnailStoragePath } from './imageCdn'
 
 export const PRODUCT_IMAGES_BUCKET = 'product-images'
+
+/** @typedef {{ url: string, publicId: string | null }} ProductImageAsset */
 
 export function getStoragePathFromPublicUrl(url) {
   if (!url) return null
@@ -12,7 +16,7 @@ export function getStoragePathFromPublicUrl(url) {
   return decodeURIComponent(url.slice(idx + marker.length))
 }
 
-export async function uploadProductImage(file, userId) {
+async function uploadProductImageToSupabase(file, userId) {
   const optimized = await optimizeImageFile(file)
   const ext =
     optimized.type === 'image/webp'
@@ -32,8 +36,6 @@ export async function uploadProductImage(file, userId) {
     throw uploadError
   }
 
-  // Best-effort small thumbnail next to the master (used by grid cards for fast loads).
-  // Failure here must not block the product upload — grids fall back to the master image.
   const thumbPath = thumbnailStoragePath(filePath)
   if (thumbPath) {
     try {
@@ -51,15 +53,32 @@ export async function uploadProductImage(file, userId) {
   }
 
   const { data } = supabase.storage.from(PRODUCT_IMAGES_BUCKET).getPublicUrl(filePath)
-  return data.publicUrl
+  return { url: data.publicUrl, publicId: null }
 }
 
-export async function uploadProductImages(files, userId) {
-  const urls = []
-  for (const file of files) {
-    urls.push(await uploadProductImage(file, userId))
+/**
+ * Upload a product image to Cloudinary (preferred) or Supabase Storage (legacy fallback).
+ * @returns {Promise<ProductImageAsset>}
+ */
+export async function uploadProductImage(file, userId) {
+  if (isCloudinaryUploadConfigured()) {
+    const uploaded = await uploadImageToCloudinary(file)
+    return {
+      url: uploaded.secure_url,
+      publicId: uploaded.public_id,
+    }
   }
-  return urls
+
+  return uploadProductImageToSupabase(file, userId)
+}
+
+/** @returns {Promise<ProductImageAsset[]>} */
+export async function uploadProductImages(files, userId) {
+  const assets = []
+  for (const file of files) {
+    assets.push(await uploadProductImage(file, userId))
+  }
+  return assets
 }
 
 function withThumbnailPaths(paths) {
@@ -73,6 +92,8 @@ function withThumbnailPaths(paths) {
 }
 
 export async function deleteProductImage(publicUrl) {
+  if (isCloudinaryUrl(publicUrl)) return
+
   const path = getStoragePathFromPublicUrl(publicUrl)
   if (!path) return
 
@@ -86,8 +107,10 @@ export async function deleteProductImage(publicUrl) {
 
 export async function deleteProductImages(publicUrls) {
   const paths = publicUrls
+    .filter((url) => url && !isCloudinaryUrl(url))
     .map(getStoragePathFromPublicUrl)
     .filter(Boolean)
+
   if (!paths.length) return
 
   const { error } = await supabase.storage
