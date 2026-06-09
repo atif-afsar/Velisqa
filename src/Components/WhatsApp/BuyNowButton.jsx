@@ -1,14 +1,21 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { getPrimaryImageUrl } from "../../lib/productImages";
 import OrderFormModal from "./OrderFormModal";
 
 export default function BuyNowButton({
   productName,
   productUrl,
+  productImage,
+  productPrice,
+  product,
   children = "Buy Now",
   className = "",
   soldOut = false,
 }) {
+  const resolvedName = productName ?? product?.name;
+  const resolvedImage = productImage ?? (product ? getPrimaryImageUrl(product) : null);
+  const resolvedPrice = productPrice ?? product?.price ?? null;
   const [formOpen, setFormOpen] = useState(false);
   const label = soldOut ? "Enquire this product" : children;
   const resolvedUrl =
@@ -44,7 +51,7 @@ export default function BuyNowButton({
         whileHover={{ y: -2, scale: 1.01 }}
         whileTap={{ scale: 0.985 }}
         className={`${baseStyles} ${visual} ${premiumStyles} ${accent} ${className}`}
-        aria-label={soldOut ? `Sold out — ${label} for ${productName || "this piece"}` : undefined}
+        aria-label={soldOut ? `Sold out — ${label} for ${resolvedName || "this piece"}` : undefined}
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
           <path
@@ -58,8 +65,10 @@ export default function BuyNowButton({
       <OrderFormModal
         open={formOpen}
         onClose={() => setFormOpen(false)}
-        productName={productName}
+        productName={resolvedName}
         productUrl={resolvedUrl}
+        productImage={resolvedImage}
+        productPrice={resolvedPrice}
         variant={soldOut ? "enquiry" : "order"}
       />
     </div>

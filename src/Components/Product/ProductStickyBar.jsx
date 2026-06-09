@@ -24,7 +24,7 @@ export default function ProductStickyBar({ product, soldOut }) {
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#130006]/10 bg-[#fdf9f4]/95 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-md lg:hidden">
         <div className="mx-auto max-w-lg">
           <BuyNowButton
-            productName={product.name}
+            product={product}
             productUrl={productUrl}
             soldOut
             className="w-full px-5 py-3 text-[11px]"

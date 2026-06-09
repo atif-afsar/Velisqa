@@ -29,7 +29,7 @@ export default function RareFinds() {
               <div className="text-center">
                 <h3 className="mb-2 font-serif text-[28px] leading-[1.3] text-white">{item.name}</h3>
                 <p className="mb-4 text-base italic text-[#b97189] opacity-70">{item.meta}</p>
-                <BuyNowButton productName={item.name} className="w-full py-3">
+                <BuyNowButton productName={item.name} productImage={item.image} className="w-full py-3">
                   Buy Now
                 </BuyNowButton>
               </div>

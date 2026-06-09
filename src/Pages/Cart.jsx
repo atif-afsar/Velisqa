@@ -47,15 +47,15 @@ export default function Cart() {
     <>
       <SEOHead
         title="Your bag | Velisqa"
-        description="Review your Velisqa bag and complete your order on WhatsApp."
+        description="Review your Velisqa bag and complete your order with cash on delivery or online payment."
         canonicalPath="/cart"
       />
       <main className="page-offset-nav min-h-[60vh] bg-[#fdf9f4] text-[#130006]">
         <div className="container-stitch mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
           <h1 className="font-serif text-2xl font-semibold sm:text-3xl">Your bag</h1>
           <p className="mt-2 text-sm leading-relaxed text-[#514347]">
-            Review items below, then tap <span className="font-semibold text-[#130006]">Checkout on WhatsApp</span>.
-            We confirm stock and delivery before dispatch.
+            Review items below, then tap <span className="font-semibold text-[#130006]">Checkout</span>.
+            Choose cash on delivery or online payment — we confirm stock before dispatch.
           </p>
 
           {syncing && items.length > 0 && (
@@ -179,7 +179,7 @@ export default function Cart() {
                     disabled={!canCheckout}
                     className="rounded-full border border-[#d4af37]/20 bg-[#2A0718] px-6 py-3 text-xs font-bold uppercase tracking-[0.12em] text-[#f7ead0] shadow-[0_12px_32px_rgba(42,7,24,0.35)] transition hover:bg-[#3d0a21] disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    Checkout on WhatsApp
+                    Checkout
                   </button>
                 </div>
               </div>

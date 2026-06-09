@@ -25,7 +25,7 @@ export default function ProductPurchasePanel({ product, productUrl, soldOut }) {
     return (
       <div className="mt-6 space-y-3">
         <BuyNowButton
-          productName={product.name}
+          product={product}
           productUrl={productUrl}
           soldOut
           className="w-full px-6 py-3.5"
@@ -106,7 +106,7 @@ export default function ProductPurchasePanel({ product, productUrl, soldOut }) {
           </svg>
           {wishlisted ? 'Saved' : 'Wishlist'}
         </button>
-        <BuyNowButton productName={product.name} productUrl={productUrl} className="min-h-[46px] w-full px-3 py-2.5 text-[11px]">
+        <BuyNowButton product={product} productUrl={productUrl} className="min-h-[46px] w-full px-3 py-2.5 text-[11px]">
           Buy now
         </BuyNowButton>
       </div>

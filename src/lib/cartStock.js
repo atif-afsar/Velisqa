@@ -73,6 +73,13 @@ export function getCartTotal(lines) {
   return lines.reduce((sum, line) => sum + getCartLineSubtotal(line), 0)
 }
 
+/** Delivery fee at checkout; 0 = free delivery */
+export const CHECKOUT_DELIVERY_CHARGE = 0
+
+export function getCheckoutGrandTotal(subtotal) {
+  return (Number(subtotal) || 0) + CHECKOUT_DELIVERY_CHARGE
+}
+
 export function getCartItemCount(lines) {
   return lines.reduce((sum, line) => sum + (Number(line.quantity) || 0), 0)
 }

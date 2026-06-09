@@ -44,7 +44,7 @@ export default function ProductCardActions({ product, variant = 'footer' }) {
           Out of stock
         </p>
         <BuyNowButton
-          productName={product.name}
+          product={product}
           productUrl={productUrl}
           soldOut
           className="w-full px-3 py-2 text-[10px]"

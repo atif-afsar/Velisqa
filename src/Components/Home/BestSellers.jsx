@@ -100,6 +100,7 @@ function ProductCard({ product, className = "", layout = "standard" }) {
           <div className="mt-2 flex flex-wrap items-center gap-2 opacity-100 max-sm:mt-2 sm:mt-2">
             <BuyNowButton
               productName={product.name}
+              productImage={product.image}
               soldOut={product.soldOut}
               className="px-3 py-1.5 text-[0.62rem] sm:px-4 sm:py-2 sm:text-[0.68rem]"
             >

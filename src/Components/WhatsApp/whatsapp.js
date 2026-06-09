@@ -153,6 +153,58 @@ export function buildCartOrderWhatsAppMessage({
   return lines.filter((line) => line !== null).join("\n");
 }
 
+export function buildOnlinePaymentWhatsAppMessage({
+  productName,
+  productUrl,
+  cartItems = null,
+  name,
+  phone,
+  email,
+  address,
+  city,
+  pincode,
+  locationLabel,
+  locationMapsUrl,
+  notes,
+  orderRef,
+} = {}) {
+  const isCart = Array.isArray(cartItems) && cartItems.length > 0;
+
+  const lines = [
+    "💳 *Velisqa — Online Payment Request*",
+    orderRef ? `Order ref: ${orderRef}` : null,
+    "",
+    "Hello VELISQA, I would like to pay *online* for my order. Please share payment details (UPI / card / bank transfer) so we can complete the purchase.",
+    "",
+    isCart ? "*Cart items*" : `*Product:* ${productName || "Not specified"}`,
+    isCart
+      ? cartItems.map((item, i) => `${i + 1}. ${item.name} × ${item.quantity}`).join("\n")
+      : null,
+    !isCart && productUrl ? `*Page:* ${productUrl}` : null,
+    "",
+    "*My details*",
+    `Name: ${name}`,
+    `Phone: ${phone}`,
+    email ? `Email: ${email}` : null,
+    "",
+    "*Delivery address*",
+    address,
+    [city, pincode].filter(Boolean).length
+      ? `City / PIN: ${[city, pincode].filter(Boolean).join(" · ")}`
+      : null,
+    locationMapsUrl
+      ? `*Location:* ${locationLabel || "GPS shared"}\n${locationMapsUrl}`
+      : locationLabel
+        ? `*Location note:* ${locationLabel}`
+        : null,
+    notes ? `\n*Notes:* ${notes}` : null,
+    "",
+    "Thank you — looking forward to your payment link!",
+  ].filter(Boolean);
+
+  return lines.join("\n");
+}
+
 export function buildWhatsAppMessage({ productName, productUrl, intent = "inquiry" } = {}) {
   let message = "Hello VELISQA, I'm interested in this jewellery piece. Please assist me with pricing and delivery.";
 
