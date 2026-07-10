@@ -44,14 +44,14 @@ export const editorialModels = [
 ];
 
 export const productModels = [
-  ["Aethelgard Earrings", "High Jewellery", aethelgard],
-  ["Solitaire Pendant", "Necklace Model", solitaire],
+  ["Aethelgard Earrings", "Statement Collection", aethelgard],
+  ["Centre Stone Pendant", "Necklace Model", solitaire],
   ["Obsidian Bangle", "Sculptural Form", bangle],
   ["Lumina Brooch", "Archive Piece", brooch],
-  ["Ruby Sovereign", "Vault Treasure", ruby],
+  ["Crimson Sovereign", "Signature Edit", ruby],
   ["Azure Tiara", "Heritage Piece", tiara],
-  ["Celestial Pearls", "Limited Launch", pearls],
+  ["Celestial Pearl Strand", "Limited Launch", pearls],
   ["Solaris Bloom", "Seasonal Edit", solarisNecklace],
-  ["Golden Horizon", "Seasonal Edit", solarisRing],
+  ["Radiance Horizon", "Seasonal Edit", solarisRing],
   ["Aurora Drops", "Seasonal Edit", solarisEarrings],
 ];

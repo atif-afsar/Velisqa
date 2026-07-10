@@ -8,14 +8,14 @@ export default function Archive() {
       <div className="flex flex-col items-center gap-12 md:flex-row md:gap-16">
         <div className="w-full md:w-1/2">
           <div className="arched-window relative h-[460px] w-full overflow-hidden bg-[#f1ede8] sm:h-[620px] lg:h-[800px]">
-            <img className="h-full w-full object-cover" alt="Celestial diamond brooch in an arched niche" src={brooch} loading="lazy" decoding="async" />
+            <img className="h-full w-full object-cover" alt="Celestial crystal-accent brooch in an arched niche" src={brooch} loading="lazy" decoding="async" />
           </div>
         </div>
         <div className="space-y-8 md:w-1/2">
           <span className="type-label text-[#130006]">Masterpieces</span>
-          <h2 className="type-display text-[#130006]">The High Jewellery Archive</h2>
+          <h2 className="type-display text-[#130006]">The Statement Collection Archive</h2>
           <p className="body-stitch max-w-lg text-[#514347]">
-            Each piece in our High Jewellery collection is a singular creation, born from hundreds of hours of meticulous hand-craftsmanship. Using only the rarest D-color diamonds and ethically sourced emeralds, we sculpt light into wearable art.
+            Each piece in our Statement Collection is a singular creation, born from hundreds of hours of meticulous hand-craftsmanship. Premium alloy bases, gold-tone plating, and handset AD stones sculpt light into wearable art.
           </p>
           <div className="flex flex-col gap-6 pt-4">
             {archiveLinks.map((link) => (

@@ -106,10 +106,10 @@ export const pageSeo = {
 
 export const seoProducts = [
   {
-    name: "Solitaire Pendant",
+    name: "Centre Stone Pendant",
     category: "Necklace",
     image: `${SITE_URL}/images/img2.webp`,
-    description: "Velisqa solitaire pendant necklace — premium artificial jewellery with modern luxury styling.",
+    description: "Velisqa centre stone pendant necklace — premium artificial jewellery with handset AD stones and modern luxury styling.",
   },
   {
     name: "Solaris Necklace",
@@ -124,10 +124,10 @@ export const seoProducts = [
     description: "Velisqa Obsidian bangle — luxury artificial bracelet for festive and occasion wear.",
   },
   {
-    name: "Ruby Sovereign Ring",
+    name: "Crimson Sovereign Ring",
     category: "Rings",
     image: `${SITE_URL}/images/img5.webp`,
-    description: "Velisqa Ruby Sovereign ring — premium artificial ring for bold women's jewellery looks.",
+    description: "Velisqa Crimson Sovereign ring — premium artificial ring with ruby-tone CZ centrepiece for bold women's jewellery looks.",
   },
   {
     name: "Aethelgard Earrings",

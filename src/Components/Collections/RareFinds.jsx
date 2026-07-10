@@ -7,7 +7,7 @@ export default function RareFinds() {
       <div className="container-stitch">
         <div className="mb-12 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <span className="label-stitch uppercase tracking-widest text-[#ffe088]">Vault Treasures</span>
+            <span className="label-stitch uppercase tracking-widest text-[#ffe088]">Signature Edits</span>
             <h2 className="mt-2 type-section text-white">Rare Finds</h2>
           </div>
           <a className="hidden border-b border-[#ffe088] pb-1 label-stitch uppercase tracking-[0.2em] text-[#ffe088] hover:opacity-80 md:block" href="#archive">

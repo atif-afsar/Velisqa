@@ -26,10 +26,10 @@ export default function Artistry() {
           </div>
         </div>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-8">
-          <img src={craftsmanship} alt="Gem craftsmanship" loading="lazy" decoding="async" className="h-[300px] w-full object-cover sm:h-[360px]" />
-          <img src={brooch} alt="Gemstone display" loading="lazy" decoding="async" className="h-[300px] w-full object-cover sm:mt-16 sm:h-[360px]" />
+          <img src={craftsmanship} alt="Artificial jewellery craftsmanship" loading="lazy" decoding="async" className="h-[300px] w-full object-cover sm:h-[360px]" />
+          <img src={brooch} alt="Crystal-accent brooch display" loading="lazy" decoding="async" className="h-[300px] w-full object-cover sm:mt-16 sm:h-[360px]" />
           <img src={sketch} alt="Jewellery sketch" loading="lazy" decoding="async" className="h-[300px] w-full object-cover sm:h-[360px]" />
-          <img src={necklace} alt="Gold necklace on velvet bust" loading="lazy" decoding="async" className="h-[300px] w-full object-cover sm:mt-16 sm:h-[360px]" />
+          <img src={necklace} alt="Gold-tone necklace on velvet bust" loading="lazy" decoding="async" className="h-[300px] w-full object-cover sm:mt-16 sm:h-[360px]" />
         </div>
       </div>
     </section>

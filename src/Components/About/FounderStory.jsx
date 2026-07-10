@@ -11,7 +11,7 @@ export default function FounderStory() {
           <p className="mb-4 type-label text-[#d4af37]">The Visionary</p>
           <h2 className="type-section text-[#130006]">Modern Femininity<br />Through Authentic<br />Origin</h2>
           <blockquote className="mt-8 border-l border-[#d4af37] pl-5 text-base italic leading-8 text-[#514347] sm:pl-7">
-            "Jewellery is more than an adornment; it is a silent narrative of one's journey, heritage, and the quiet strength of modern femininity. At VELISQA, we don't just craft gems; we preserve stories."
+            "Jewellery is more than an adornment; it is a silent narrative of one's journey, heritage, and the quiet strength of modern femininity. At VELISQA, we don't just craft pieces; we preserve stories."
           </blockquote>
           <p className="mt-8 max-w-xl text-sm leading-7 text-[#514347]">
             Founded on the principles of architectural precision and artisanal soul, VELISQA merges the opulence of the past with the minimalist demands of the future. Each piece is a testament to the enduring spirit of craftsmanship.

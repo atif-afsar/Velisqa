@@ -20,17 +20,19 @@ function PolicyIcon({ name }) {
   )
 }
 
-function Chevron({ open }) {
+function PlusToggle({ open }) {
   return (
-    <svg
-      className={`h-5 w-5 shrink-0 text-[#847377] transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
+    <span
+      className="relative flex h-[52px] w-[52px] shrink-0 items-center justify-center self-stretch bg-[#130006] transition-colors duration-300 group-hover:bg-[#2a0718] sm:h-[58px] sm:w-[58px]"
       aria-hidden
     >
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 9l6 6 6-6" />
-    </svg>
+      <span className="absolute h-[2px] w-4 rounded-full bg-white" />
+      <span
+        className={`absolute h-4 w-[2px] rounded-full bg-white transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          open ? 'scale-y-0' : 'scale-y-100'
+        }`}
+      />
+    </span>
   )
 }
 
@@ -40,19 +42,23 @@ export function AccordionItem({ id, title, icon, children, defaultOpen = false }
   const buttonId = useId()
 
   return (
-    <div className="border-b border-[#d4af37]/18 last:border-b-0">
+    <div className="overflow-hidden rounded-lg bg-[#f5f4f2]">
       <h3>
         <button
           id={buttonId}
           type="button"
-          className="flex w-full items-center gap-3 py-3.5 text-left transition-colors hover:text-[#6f334a] sm:py-4"
+          className="group flex w-full items-stretch text-left"
           aria-expanded={open}
           aria-controls={panelId}
           onClick={() => setOpen((v) => !v)}
         >
-          {icon && <PolicyIcon name={icon} />}
-          <span className="min-w-0 flex-1 font-serif text-base leading-snug text-[#130006] sm:text-lg">{title}</span>
-          <Chevron open={open} />
+          <span className="flex flex-1 items-center gap-3 px-5 py-4">
+            {icon && <PolicyIcon name={icon} />}
+            <span className="min-w-0 flex-1 font-serif text-base leading-snug text-[#130006] transition-colors group-hover:text-[#6f334a] sm:text-lg">
+              {title}
+            </span>
+          </span>
+          <PlusToggle open={open} />
         </button>
       </h3>
       <div
@@ -65,7 +71,7 @@ export function AccordionItem({ id, title, icon, children, defaultOpen = false }
         }`}
       >
         <div className="min-h-0 overflow-hidden">
-          <div className={`pb-5 ${icon ? 'pl-12 sm:pl-14' : ''}`}>{children}</div>
+          <div className="px-5 pb-5 pt-1">{children}</div>
         </div>
       </div>
     </div>
@@ -77,18 +83,18 @@ export default function ProductAccordion({ description, policySections, footerLi
     <div
       className={
         compact
-          ? 'mt-6 border-t border-[#130006]/8'
-          : 'overflow-hidden rounded-2xl border border-[#d4af37]/22 bg-[#fbf7f1] shadow-[0_24px_64px_-32px_rgba(19,0,6,0.18)]'
+          ? 'mt-6'
+          : 'overflow-hidden rounded-2xl border border-[#d4af37]/22 bg-[#fbf7f1] p-4 shadow-[0_24px_64px_-32px_rgba(19,0,6,0.18)] sm:p-6'
       }
     >
       {!compact && (
-        <div className="border-b border-[#d4af37]/18 bg-gradient-to-r from-[#3d0a21]/[0.04] via-transparent to-[#d4af37]/[0.06] px-4 py-4 sm:px-6 sm:py-5">
-          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#847377]">Product information</p>
-          <p className="mt-1 font-serif text-lg italic text-[#130006] sm:text-xl">Details &amp; policies</p>
+        <div className="mb-4 px-1">
+          <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#847377]">Product information</p>
+          <p className="mt-1 font-serif text-lg text-[#130006] sm:text-xl">Details &amp; policies</p>
         </div>
       )}
 
-      <div className={compact ? '' : 'px-4 sm:px-6'}>
+      <div className="space-y-3">
         <AccordionItem id="about" title="Description" icon={compact ? null : 'document'} defaultOpen>
           <p className="text-sm leading-[1.75] text-[#514347] sm:text-[0.9375rem]">{description}</p>
         </AccordionItem>
@@ -114,7 +120,7 @@ export default function ProductAccordion({ description, policySections, footerLi
       </div>
 
       {footerLink && (
-        <div className="border-t border-[#d4af37]/18 bg-[#f9f5f0]/80 px-4 py-4 text-center sm:px-6">
+        <div className="mt-4 px-1 text-center">
           {footerLink}
         </div>
       )}

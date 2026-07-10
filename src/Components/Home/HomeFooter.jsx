@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 const collections = [
-  ["High Jewellery", "/collections"],
+  ["Statement Collection", "/collections"],
   ["Sun-Kissed Series", "/collections"],
   ["Daily Icons", "/collections"],
   ["Bespoke Atelier", "/collections"],
@@ -53,6 +53,9 @@ export default function HomeFooter() {
             </h2>
             <p className="mt-1.5 max-w-sm text-[11px] font-bold leading-relaxed tracking-wide text-white/55 sm:text-xs">
               A heritage of elegance, crafted for the modern visionary.
+            </p>
+            <p className="mt-2 max-w-sm text-[10px] font-bold leading-relaxed tracking-wide text-white/45 sm:text-[11px]">
+              Velisqa creates artificial/imitation fashion jewellery — we do not sell real gold, diamonds, or precious stones.
             </p>
             <address className="mt-4 not-italic border-l border-[#d4af37]/30 pl-3 sm:mt-5">
               <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#d4af37] sm:text-[11px]">

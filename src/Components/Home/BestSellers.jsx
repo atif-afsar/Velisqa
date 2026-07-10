@@ -13,10 +13,10 @@ const BEST_SELLERS_SOLD_OUT = true;
 /** Names match each asset filename (see `src/assets/BestSeller/*.webp`). */
 const BEST_SELLER_NAMES = {
   "image1.webp": "Velisqa Eternal Knot Cuff",
-  "image2.webp": "Velisqa Rose Quartz Pendant",
-  "image3.webp": "Velisqa Solitaire Necklace & Stud Set",
-  "image4.webp": "Velisqa Gold Bangle Trio",
-  "image5.webp": "Velisqa Split-Shank Solitaire Ring",
+  "image2.webp": "Velisqa Blush Crystal Pendant",
+  "image3.webp": "Velisqa Centre Stone Necklace & Stud Set",
+  "image4.webp": "Velisqa Gold-Tone Bangle Trio",
+  "image5.webp": "Velisqa Split-Shank Centre Stone Ring",
   "image6.webp": "Velisqa Classic Silver Hoops",
   "image7.webp": "Velisqa Dewdrop Teardrop Necklace",
   "image8.webp": "Velisqa Five-Stack Bangle Edit",
@@ -145,7 +145,7 @@ export default function BestSellers() {
             Best Sellers
           </h2>
           <p className="mx-auto mt-5 max-w-lg type-body-luxury text-[#514347]">
-            The pieces our collectors return for — refined silhouettes, luminous stones, and the quiet confidence of true luxury.
+            The pieces our collectors return for — refined silhouettes, luminous crystal accents, and the quiet confidence of elevated style.
             {BEST_SELLERS_SOLD_OUT && (
               <span className="mt-3 block text-sm text-[#6f334a]">
                 These edits are currently sold out online; use Enquire to purchase for waitlist, restock, or bespoke options. Dispatch is made to order and not same-day.

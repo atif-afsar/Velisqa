@@ -106,7 +106,7 @@ export const legalPages = {
         id: "philosophy",
         title: "Our Philosophy",
         body: [
-          "VELISQA creates premium artificial jewellery designed for modern luxury. We celebrate craftsmanship, thoughtful design, and the confidence that comes from wearing pieces finished to an exceptional standard.",
+          "VELISQA creates premium artificial jewellery designed for modern luxury. Velisqa creates artificial/imitation fashion jewellery — we do not sell real gold, diamonds, or precious stones. We celebrate craftsmanship, thoughtful design, and the confidence that comes from wearing pieces finished to an exceptional standard.",
         ],
       },
       {
@@ -199,7 +199,7 @@ export const legalPages = {
       ],
       [
         "Does Velisqa sell real gold or diamond jewellery?",
-        "Velisqa specialises in luxury artificial jewellery and fashion jewellery with premium finishing. Materials and care guidance are described on each product enquiry and on our Authenticity page.",
+        "No. Velisqa creates artificial/imitation fashion jewellery — we do not sell real gold, diamonds, or precious stones. We specialise in luxury artificial jewellery and fashion jewellery with premium gold-tone plating, premium alloy bases, and handset AD (American Diamond) stones. Materials and care guidance are described on each product enquiry and on our Authenticity page.",
       ],
       [
         "Can I visit a Velisqa store?",

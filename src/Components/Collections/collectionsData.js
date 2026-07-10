@@ -4,23 +4,23 @@ import pearls from "../../assets/collection-celestial-pearls.webp";
 
 export const rareFinds = [
   {
-    name: "The Ruby Sovereign",
+    name: "The Crimson Sovereign",
     meta: "1 of 5 Worldwide",
     image: ruby,
-    alt: "Rare ruby ring surrounded by baguette diamonds",
+    alt: "Crimson-tone statement ring with crystal baguette accents",
     badge: "Limited Edition",
   },
   {
     name: "Azure Tiara",
     meta: "Heritage Piece",
     image: tiara,
-    alt: "Sapphire and diamond tiara on dark silk",
+    alt: "Azure crystal-accent tiara on dark silk",
   },
   {
-    name: "Celestial Pearls",
+    name: "Celestial Pearl Strand",
     meta: "Limited Launch",
     image: pearls,
-    alt: "Multi-strand pearl necklace with vintage gold clasp",
+    alt: "Multi-strand pearl-effect necklace with vintage gold-tone clasp",
   },
 ];
 

@@ -10,6 +10,7 @@ export default function AboutFooter() {
           <a href="https://instagram.com/velisqa.in">Instagram</a>
           <a href="https://pinterest.com">Pinterest</a>
         </div>
+        <p className="text-xs opacity-80">Velisqa creates artificial/imitation fashion jewellery — we do not sell real gold, diamonds, or precious stones.</p>
         <p className="text-xs opacity-80">Copyright 2026 VELISQA JEWELLERY. Established in India. Newly Launched - 2026.</p>
       </div>
     </footer>

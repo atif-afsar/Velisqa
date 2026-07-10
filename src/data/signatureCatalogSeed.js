@@ -11,7 +11,7 @@ export const SIGNATURE_CATALOG_ITEMS = [
     price: 499,
     stock: 5,
     description:
-      'A refined multi-layer artificial necklace with a soft gold finish and delicate spacing between tiers. Ideal for weddings, receptions, and evening wear in Aligarh. Lightweight for all-day comfort; pair with sweetheart or boat-neck blouses.',
+      'A refined multi-layer artificial necklace with a soft gold-tone finish and delicate spacing between tiers. Ideal for weddings, receptions, and evening wear in Aligarh. Lightweight for all-day comfort; pair with sweetheart or boat-neck blouses.',
   },
   {
     category: 'Necklace',
@@ -47,7 +47,7 @@ export const SIGNATURE_CATALOG_ITEMS = [
     price: 519,
     stock: 5,
     description:
-      'Close-fitting choker with art-deco inspired geometry and a champagne-gold tone. Elevates simple outfits instantly — style with open hair and bold earrings. Includes extension-friendly clasp for comfortable fit.',
+      'Close-fitting choker with art-deco inspired geometry and a champagne gold-tone finish. Elevates simple outfits instantly — style with open hair and bold earrings. Includes extension-friendly clasp for comfortable fit.',
   },
 
   // —— Bracelet (6) ——
@@ -72,7 +72,7 @@ export const SIGNATURE_CATALOG_ITEMS = [
   {
     category: 'Bracelet',
     file: 'image1.webp',
-    name: 'Gilded Tennis Bracelet',
+    name: 'Gold-Tone Tennis Bracelet',
     price: 549,
     stock: 5,
     description:
@@ -81,7 +81,7 @@ export const SIGNATURE_CATALOG_ITEMS = [
   {
     category: 'Bracelet',
     file: 'image2.webp',
-    name: 'Pearl Line Bracelet',
+    name: 'Pearl-Effect Line Bracelet',
     price: 549,
     stock: 5,
     description:
@@ -128,16 +128,16 @@ export const SIGNATURE_CATALOG_ITEMS = [
   {
     category: 'Rings',
     file: 'image.webp',
-    name: 'Solitaire Glow Ring',
+    name: 'Centre Stone Glow Ring',
     price: 329,
     stock: 8,
     description:
-      'Classic solitaire-inspired centre stone on a tapered band — engagement-photo friendly at an accessible price point. High table cut for maximum brilliance under indoor lighting.',
+      'Classic centre-stone-inspired AD centrepiece on a tapered band — engagement-photo friendly at an accessible price point. High table cut for maximum brilliance under indoor lighting.',
   },
   {
     category: 'Rings',
     file: 'image1.webp',
-    name: 'Ruby Sovereign Ring',
+    name: 'Crimson Sovereign Ring',
     price: 419,
     stock: 6,
     description:
@@ -193,11 +193,11 @@ export const SIGNATURE_CATALOG_ITEMS = [
   {
     category: 'Earrings',
     file: 'image.webp',
-    name: 'Celestial Pearl Drops',
+    name: 'Celestial Pearl-Effect Drops',
     price: 369,
     stock: 6,
     description:
-      'Pearl-drop earrings with a celestial top motif — bridal-friendly and photogenic under warm venue lighting. Store separately to avoid scratches on the pearl finish.',
+      'Pearl-effect drop earrings with a celestial top motif — bridal-friendly and photogenic under warm venue lighting. Store separately to avoid scratches on the pearl-effect finish.',
   },
   {
     category: 'Earrings',
