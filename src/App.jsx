@@ -18,6 +18,9 @@ const Privacy = lazy(() => import('./Pages/Privacy'))
 const Terms = lazy(() => import('./Pages/Terms'))
 const Authenticity = lazy(() => import('./Pages/Authenticity'))
 const Shipping = lazy(() => import('./Pages/Shipping'))
+const ShippingDelivery = lazy(() => import('./Pages/ShippingDelivery'))
+const RefundCancellation = lazy(() => import('./Pages/RefundCancellation'))
+const Contact = lazy(() => import('./Pages/Contact'))
 const FAQ = lazy(() => import('./Pages/FAQ'))
 const Order = lazy(() => import('./Pages/Order'))
 const Login = lazy(() => import('./Pages/Login'))
@@ -59,6 +62,9 @@ function App() {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/authenticity" element={<Authenticity />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/shipping-delivery" element={<ShippingDelivery />} />
+          <Route path="/refund-cancellation" element={<RefundCancellation />} />
           <Route path="/shipping-returns" element={<Shipping />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/order" element={<Order />} />

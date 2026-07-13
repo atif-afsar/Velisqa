@@ -13,8 +13,8 @@ export default {
         },
       },
       fontFamily: {
-        serif: ['Canela', 'Cormorant Garamond', 'Times New Roman', 'serif'],
-        sans: ['Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        serif: ['Inter', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        sans: ['Inter', 'Helvetica Neue', 'Arial', 'sans-serif'],
       },
     },
   },

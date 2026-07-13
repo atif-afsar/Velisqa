@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 
 const TRUST_ITEMS = [
-  { label: 'Easy returns', href: '/shipping-returns' },
+  { label: 'Easy returns', href: '/refund-cancellation' },
   { label: 'Authenticity', href: '/authenticity' },
 ]
 

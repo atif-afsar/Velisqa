@@ -64,8 +64,12 @@ export default function ProductPolicyPanels() {
       ))}
       <p className="sm:col-span-2 text-center text-xs text-[#847377]">
         Full terms on{' '}
-        <Link to="/shipping-returns" className="text-[#6f334a] underline-offset-2 hover:underline">
-          Shipping &amp; Returns
+        <Link to="/shipping-delivery" className="text-[#6f334a] underline-offset-2 hover:underline">
+          Shipping &amp; Delivery
+        </Link>{' '}
+        and{' '}
+        <Link to="/refund-cancellation" className="text-[#6f334a] underline-offset-2 hover:underline">
+          Refund &amp; Cancellation
         </Link>
         .
       </p>

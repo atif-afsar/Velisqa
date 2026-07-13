@@ -5,6 +5,7 @@ import ProductAccordion from '../Components/Product/ProductAccordion'
 import ProductPurchasePanel from '../Components/Product/ProductPurchasePanel'
 import ProductDetailPrice from '../Components/Product/ProductDetailPrice'
 import ProductDetailTrust from '../Components/Product/ProductDetailTrust'
+import ProductTrustBadges from '../Components/Product/ProductTrustBadges'
 import ProductStickyBar from '../Components/Product/ProductStickyBar'
 import SEOHead from '../Components/SEO/SEOHead'
 import { SITE_URL } from '../Components/SEO/siteConfig'
@@ -198,14 +199,25 @@ export default function ProductDetail() {
                 description={description}
                 policySections={PRODUCT_POLICY_SECTIONS}
                 footerLink={
-                  <Link
-                    to="/shipping-returns"
-                    className="text-xs font-medium text-[#6f334a] underline-offset-2 hover:underline"
-                  >
-                    Full shipping &amp; returns policy
-                  </Link>
+                  <>
+                    <Link
+                      to="/shipping-delivery"
+                      className="text-xs font-medium text-[#6f334a] underline-offset-2 hover:underline"
+                    >
+                      Shipping &amp; delivery policy
+                    </Link>
+                    <span className="text-xs text-[#847377]"> · </span>
+                    <Link
+                      to="/refund-cancellation"
+                      className="text-xs font-medium text-[#6f334a] underline-offset-2 hover:underline"
+                    >
+                      Refund &amp; cancellation policy
+                    </Link>
+                  </>
                 }
               />
+
+              <ProductTrustBadges />
 
               <Link
                 to={collectionsLink}

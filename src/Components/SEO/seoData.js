@@ -81,12 +81,26 @@ export const pageSeo = {
     ],
     canonicalPath: "/models",
   },
-  shipping: {
-    title: "Shipping & Returns | Velisqa Jewellery",
+  shippingDelivery: {
+    title: "Shipping & Delivery Policy | Velisqa Jewellery",
     description:
-      "Velisqa shipping, delivery timelines, returns and care guidance for premium artificial jewellery orders across India.",
-    keywords: ["Velisqa shipping", "jewellery returns India", "artificial jewellery delivery"],
-    canonicalPath: "/shipping-returns",
+      "Velisqa shipping and delivery timelines, pan-India dispatch, Aligarh same-day options, packaging, and tracking for artificial jewellery orders.",
+    keywords: ["Velisqa shipping", "jewellery delivery India", "artificial jewellery delivery", "Aligarh jewellery delivery"],
+    canonicalPath: "/shipping-delivery",
+  },
+  refundCancellation: {
+    title: "Refund & Cancellation Policy | Velisqa Jewellery",
+    description:
+      "Velisqa order cancellations, refund eligibility, returns, exchanges, and damage claims for premium artificial jewellery orders.",
+    keywords: ["Velisqa refund policy", "jewellery returns India", "Velisqa cancellation", "artificial jewellery returns"],
+    canonicalPath: "/refund-cancellation",
+  },
+  contact: {
+    title: "Contact Velisqa | WhatsApp, Email & Salon",
+    description:
+      "Contact Velisqa for WhatsApp orders, salon appointments in Mumbai, email support, and delivery assistance across India.",
+    keywords: ["Velisqa contact", "Velisqa WhatsApp", "Velisqa email", "Velisqa salon Mumbai"],
+    canonicalPath: "/contact",
   },
   faq: {
     title: "FAQ | Velisqa Jewellery — Buying & Care",

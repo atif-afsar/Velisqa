@@ -17,6 +17,9 @@ const links = [
   { label: "CREATORS", to: "/models" },
 ];
 
+const contactLink = { label: "CONTACT", to: "/contact" };
+const mobileLinks = [...links, contactLink];
+
 const menuVariantsDesktop = {
   hidden: { opacity: 0, y: -10 },
   visible: {
@@ -240,8 +243,8 @@ export default function Navbar() {
         </Link>
 
         <nav
-          className={`hidden min-h-9 items-center justify-center justify-self-center md:flex ${
-            scrolled ? "gap-4 lg:gap-6" : "gap-5 lg:gap-8"
+          className={`hidden min-h-9 items-center justify-center justify-self-center lg:flex ${
+            scrolled ? "gap-3 xl:gap-6" : "gap-4 xl:gap-8"
           }`}
         >
           {links.map((link) => {
@@ -273,8 +276,8 @@ export default function Navbar() {
         </nav>
 
         <div
-          className={`col-start-3 hidden min-h-9 items-center justify-end justify-self-end md:flex ${
-            scrolled ? "gap-1.5 lg:gap-2" : "gap-2 lg:gap-2.5"
+          className={`col-start-3 hidden min-h-9 items-center justify-end justify-self-end lg:flex ${
+            scrolled ? "gap-1 xl:gap-2" : "gap-1.5 xl:gap-2.5"
           }`}
         >
           {!authLoading && (
@@ -313,6 +316,15 @@ export default function Navbar() {
 
           <NavActionDivider onDarkHero={onDarkHero} />
 
+          <NavLink
+            to={contactLink.to}
+            className={({ isActive }) =>
+              `hidden min-h-9 items-center whitespace-nowrap font-medium transition-colors duration-200 lg:inline-flex ${navTextClass({ scrolled, onDarkHero, isActive })}`
+            }
+          >
+            {contactLink.label}
+          </NavLink>
+
           <div className="flex items-center gap-1">
             <WishlistNavLink
               variant="icon"
@@ -329,10 +341,10 @@ export default function Navbar() {
           </div>
 
           <WhatsAppCTA
-            className={`hidden shrink-0 items-center md:inline-flex [&_svg]:shrink-0 ${
+            className={`hidden shrink-0 items-center lg:inline-flex [&_svg]:shrink-0 ${
               scrolled
-                ? "h-8 gap-1.5 px-3 py-0 text-[0.62rem] [&_svg]:h-3.5 [&_svg]:w-3.5 [&_span]:tracking-[0.14em]"
-                : "h-9 gap-2 px-3.5 py-0 text-[0.68rem] [&_svg]:h-3.5 [&_svg]:w-3.5 [&_span]:tracking-[0.12em]"
+                ? "h-8 gap-1.5 px-3 py-0 text-[0.58rem] [&_svg]:h-3.5 [&_svg]:w-3.5 [&_span]:tracking-[0.12em]"
+                : "h-9 gap-2 px-3 py-0 text-[0.64rem] [&_svg]:h-3.5 [&_svg]:w-3.5 [&_span]:tracking-[0.1em]"
             }`}
             intent="consult"
           >
@@ -340,7 +352,7 @@ export default function Navbar() {
           </WhatsAppCTA>
         </div>
 
-        <div className="col-start-3 flex items-center justify-end gap-2 justify-self-end md:hidden">
+        <div className="col-start-3 flex items-center justify-end gap-2 justify-self-end lg:hidden">
           <WishlistNavLink
             variant="icon"
             onDarkHero={onDarkHero}
@@ -394,14 +406,14 @@ export default function Navbar() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className={`absolute left-0 right-0 border-t px-6 pb-6 pt-3 md:hidden ${
+            className={`absolute left-0 right-0 border-t px-6 pb-6 pt-3 lg:hidden ${
               scrolled
                 ? "border-[#847377]/10 bg-[#fdf9f4] shadow-[0_20px_48px_rgba(19,0,6,0.08)]"
                 : "border-white/10 bg-[#130006]/95 shadow-[0_24px_48px_rgba(19,0,6,0.35)]"
             }`}
           >
             <nav className="mx-auto flex max-w-md flex-col">
-              {links.map((link) => (
+              {mobileLinks.map((link) => (
                 <motion.div key={link.label} variants={linkVariants}>
                   <NavLink
                     to={link.to}

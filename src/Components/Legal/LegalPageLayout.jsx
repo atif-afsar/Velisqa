@@ -12,7 +12,7 @@ export default function LegalPageLayout({ page }) {
   const { pathname } = useLocation();
 
   return (
-    <main className="bg-[#f9f5f0] text-[#130006]">
+    <main className="page-offset-nav bg-[#f9f5f0] text-[#130006]">
       <section className="relative overflow-hidden border-b border-[#d4af37]/15 bg-[#3d0a21] px-4 py-14 text-[#f7ead0] sm:px-6 sm:py-16 md:py-20">
         <div
           aria-hidden
@@ -52,14 +52,14 @@ export default function LegalPageLayout({ page }) {
               <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.22em] text-[#847377]">
                 Legal
               </p>
-              <ul className="flex flex-row flex-wrap gap-2 lg:flex-col lg:gap-1">
+              <ul className="flex flex-col gap-1">
                 {legalNav.map((item) => {
                   const active = pathname === item.path;
                   return (
                     <li key={item.key}>
                       <Link
                         to={item.path}
-                        className={`tap-target block rounded-full px-3.5 py-2 text-[11px] font-bold uppercase tracking-[0.12em] transition sm:text-xs lg:rounded-lg lg:px-3 lg:py-2.5 lg:normal-case lg:tracking-wide ${
+                        className={`tap-target block rounded-lg px-3 py-2.5 text-xs font-bold tracking-wide transition ${
                           active
                             ? "bg-[#3d0a21] text-[#d4af37] shadow-sm"
                             : "text-[#514347] hover:bg-[#f1ede8] hover:text-[#130006]"
@@ -118,12 +118,20 @@ export default function LegalPageLayout({ page }) {
                   Our concierge is at your service.
                 </p>
               </div>
-              <Link
-                to="/order"
-                className="tap-target inline-flex shrink-0 items-center justify-center rounded-full border border-[#d4af37]/50 bg-transparent px-6 py-3 text-[11px] font-bold uppercase tracking-[0.16em] text-[#d4af37] transition hover:bg-[#d4af37] hover:text-[#130006] sm:text-xs"
-              >
-                Order on WhatsApp
-              </Link>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Link
+                  to="/order"
+                  className="tap-target inline-flex shrink-0 items-center justify-center rounded-full border border-[#d4af37]/50 bg-transparent px-6 py-3 text-[11px] font-bold uppercase tracking-[0.16em] text-[#d4af37] transition hover:bg-[#d4af37] hover:text-[#130006] sm:text-xs"
+                >
+                  Order on WhatsApp
+                </Link>
+                <Link
+                  to="/contact"
+                  className="tap-target inline-flex shrink-0 items-center justify-center rounded-full border border-[#d4af37]/30 bg-transparent px-6 py-3 text-[11px] font-bold uppercase tracking-[0.16em] text-[#f7ead0]/85 transition hover:border-[#d4af37]/50 hover:text-[#d4af37] sm:text-xs"
+                >
+                  All contact details
+                </Link>
+              </div>
             </motion.div>
           </article>
         </motion.div>

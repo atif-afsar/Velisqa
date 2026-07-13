@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --font-luxury-serif: "Canela", "Cormorant Garamond", "Times New Roman", serif;
-  --font-modern-sans: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  --font-luxury-serif: "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-modern-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
   --primary: #3d0a21;
   --gold: #d4af37;
   --champagne-gold: #e9c349;
@@ -212,7 +212,7 @@ a[role="button"],
   font-size: clamp(0.66rem, 0.62rem + 0.12vw, 0.75rem);
   font-weight: 600;
   line-height: 1.4;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.06em;
 }
 
 .body-stitch {
@@ -226,41 +226,41 @@ a[role="button"],
   font-family: var(--font-luxury-serif);
   font-size: clamp(3rem, 9vw, 8.75rem);
   font-weight: 600;
-  line-height: 0.92;
-  letter-spacing: 0.025em;
+  line-height: 0.94;
+  letter-spacing: -0.015em;
 }
 
 .type-display {
   font-family: var(--font-luxury-serif);
   font-size: clamp(2.7rem, 6vw, 6rem);
   font-weight: 600;
-  line-height: 1.02;
-  letter-spacing: 0.015em;
+  line-height: 1.04;
+  letter-spacing: -0.015em;
 }
 
 .type-section {
   font-family: var(--font-luxury-serif);
   font-size: clamp(2.1rem, 4vw, 4.5rem);
-  font-weight: 500;
-  line-height: 1.08;
-  letter-spacing: 0.01em;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
 }
 
 .type-card-title {
   font-family: var(--font-luxury-serif);
   font-size: clamp(1.45rem, 1.2rem + 1vw, 2.25rem);
-  font-weight: 500;
-  line-height: 1.18;
-  letter-spacing: 0.015em;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.005em;
 }
 
 .type-quote {
   font-family: var(--font-luxury-serif);
   font-size: clamp(1.75rem, 3vw, 4rem);
-  font-style: italic;
+  font-style: normal;
   font-weight: 500;
-  line-height: 1.16;
-  letter-spacing: 0.005em;
+  line-height: 1.2;
+  letter-spacing: -0.005em;
 }
 
 .type-body-luxury {
@@ -276,7 +276,7 @@ a[role="button"],
   font-size: clamp(0.62rem, 0.58rem + 0.12vw, 0.75rem);
   font-weight: 600;
   line-height: 1.4;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
@@ -285,7 +285,7 @@ a[role="button"],
   font-size: clamp(0.68rem, 0.65rem + 0.08vw, 0.75rem);
   font-weight: 600;
   line-height: 1.2;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
@@ -293,7 +293,7 @@ a[role="button"],
 .type-ui {
   font-family: var(--font-modern-sans);
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.01em;
 }
 
 .text-champagne {
@@ -327,7 +327,7 @@ a[role="button"],
 }
 
 .luxury-hover-text:hover {
-  letter-spacing: 0.26em;
+  letter-spacing: 0.1em;
 }
 
 .text-reveal {
@@ -460,7 +460,7 @@ a[role="button"],
   .type-label,
   .type-button,
   .label-stitch {
-    letter-spacing: 0.12em;
+    letter-spacing: 0.06em;
   }
 }
 
@@ -472,6 +472,6 @@ a[role="button"],
   .type-button,
   .type-label,
   .label-stitch {
-    letter-spacing: 0.09em;
+    letter-spacing: 0.05em;
   }
 }

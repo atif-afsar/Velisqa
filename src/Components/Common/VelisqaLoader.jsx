@@ -134,7 +134,7 @@ export default function VelisqaLoader({
         ref={wordRef}
         className="relative z-10 flex items-baseline justify-center px-6 text-[clamp(2.5rem,10vw,4.5rem)] font-medium leading-none text-[#4d3148] will-change-[letter-spacing]"
         style={{
-          fontFamily: '"Playfair Display", "Cormorant Garamond", var(--font-luxury-serif), serif',
+          fontFamily: 'var(--font-luxury-serif)',
         }}
       >
         <span ref={vRef} className="inline-block will-change-transform">

@@ -40,12 +40,20 @@ export default function Order() {
             Prefer to read first? Visit our{" "}
             <Link to="/faq" className="text-[#6f334a] underline-offset-2 hover:underline">
               FAQ
-            </Link>{" "}
-            or{" "}
-            <Link to="/shipping-returns" className="text-[#6f334a] underline-offset-2 hover:underline">
-              Shipping & Returns
             </Link>
-            .
+            ,{" "}
+            <Link to="/contact" className="text-[#6f334a] underline-offset-2 hover:underline">
+              Contact
+            </Link>
+            , or our{" "}
+            <Link to="/shipping-delivery" className="text-[#6f334a] underline-offset-2 hover:underline">
+              Shipping &amp; Delivery
+            </Link>{" "}
+            and{" "}
+            <Link to="/refund-cancellation" className="text-[#6f334a] underline-offset-2 hover:underline">
+              Refund &amp; Cancellation
+            </Link>{" "}
+            policies.
           </p>
         </section>
         <HomeFooter />

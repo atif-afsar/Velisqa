@@ -1,4 +1,10 @@
 import { Link } from "react-router-dom";
+import {
+  CONTACT_CHANNELS,
+  SALON_ADDRESS_LINES,
+  SALON_HOURS,
+  SOCIAL_LINKS,
+} from "../../data/contactDetails";
 
 const collections = [
   ["Statement Collection", "/collections"],
@@ -9,22 +15,28 @@ const collections = [
 ];
 
 const concierge = [
-  { label: "WhatsApp Orders", value: "Order on WhatsApp", href: "/order", internal: true },
-  { label: "Email", value: "velisqa.in@gmail.com", href: "mailto:velisqa.in@gmail.com" },
-  { label: "Instagram", value: "@velisqa.in", href: "https://instagram.com/velisqa.in" },
-  { label: "Salon Hours", value: "Mon – Sat, 11am – 8pm" },
+  ...CONTACT_CHANNELS.filter((c) => ["whatsapp", "email", "order"].includes(c.id)).map((c) => ({
+    label: c.label,
+    value: c.value,
+    href: c.href,
+    internal: Boolean(c.internal),
+  })),
+  {
+    label: "Instagram",
+    value: SOCIAL_LINKS.find((s) => s.id === "instagram")?.handle ?? "@velisqa.in",
+    href: SOCIAL_LINKS.find((s) => s.id === "instagram")?.href,
+  },
+  { label: "Salon Hours", value: SALON_HOURS },
 ];
 
-const address = [
-  "Palladium Mall, Level 2",
-  "Senapati Bapat Marg",
-  "Lower Parel, Mumbai — 400 013",
-];
+const address = SALON_ADDRESS_LINES;
 
 const legal = [
+  { label: "Contact", to: "/contact" },
   { label: "Privacy", to: "/privacy" },
   { label: "Terms", to: "/terms" },
-  { label: "Shipping", to: "/shipping-returns" },
+  { label: "Shipping", to: "/shipping-delivery" },
+  { label: "Refunds", to: "/refund-cancellation" },
   { label: "FAQ", to: "/faq" },
   { label: "Authenticity", to: "/authenticity" },
 ];

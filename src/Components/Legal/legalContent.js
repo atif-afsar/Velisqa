@@ -140,20 +140,29 @@ export const legalPages = {
       },
     ],
   },
-  shipping: {
-    path: "/shipping-returns",
-    title: "Shipping & Returns",
-    eyebrow: "Delivery & Care",
+  shippingDelivery: {
+    path: "/shipping-delivery",
+    title: "Shipping & Delivery Policy",
+    eyebrow: "Delivery",
     description:
-      "Velisqa shipping timelines, pan-India delivery, packaging standards, returns, and exchange guidance for jewellery orders.",
-    updated: "May 2026",
+      "Velisqa shipping timelines, pan-India delivery, Aligarh dispatch options, packaging standards, and tracking for jewellery orders.",
+    updated: "July 2026",
     sections: [
       {
-        id: "shipping",
-        title: "Shipping Across India",
+        id: "coverage",
+        title: "Delivery Coverage",
         body: [
           "Velisqa fulfils orders across India through trusted courier partners. Dispatch timelines are confirmed on WhatsApp once your piece is reserved and payment terms are agreed.",
-          "Standard delivery typically ranges from 5–12 business days depending on your city, piece complexity, and festive-season volume. Express options may be available on request.",
+          "Our brand is rooted in Aligarh, Uttar Pradesh, with a flagship salon in Mumbai. Buyers across India can order via WhatsApp or the website.",
+        ],
+      },
+      {
+        id: "timelines",
+        title: "Delivery Timelines",
+        body: [
+          "Aligarh: same-day delivery on orders confirmed before 4 PM when the piece is in stock. Next-day delivery applies for the rest of Aligarh when same-day slots are full.",
+          "Pan-India: standard delivery typically ranges from 5–12 business days depending on your city, piece complexity, and festive-season volume.",
+          "Express options may be available on request. Made-to-order or sold-out pieces follow timelines shared at confirmation — dispatch is not same-day unless explicitly agreed.",
         ],
       },
       {
@@ -164,11 +173,63 @@ export const legalPages = {
         ],
       },
       {
+        id: "tracking",
+        title: "Tracking & Updates",
+        body: [
+          "You receive a courier tracking link or a WhatsApp dispatch update once your order leaves our atelier.",
+          "For delivery questions, contact our concierge on WhatsApp at +919336072590 or email velisqa.in@gmail.com with your order reference.",
+        ],
+      },
+      {
+        id: "inspection",
+        title: "Inspection at Delivery",
+        body: [
+          "Please inspect your jewellery in front of the delivery partner before they leave. Note any damage, missing items, or packaging issues immediately so we can assist under our Refund & Cancellation Policy.",
+        ],
+      },
+    ],
+  },
+  refundCancellation: {
+    path: "/refund-cancellation",
+    title: "Refund & Cancellation Policy",
+    eyebrow: "Returns",
+    description:
+      "Velisqa order cancellations, refund eligibility, exchange guidance, and how to report transit damage for artificial jewellery orders.",
+    updated: "July 2026",
+    sections: [
+      {
+        id: "cancellations",
+        title: "Order Cancellations",
+        body: [
+          "You may request cancellation before dispatch by messaging our WhatsApp concierge with your order reference.",
+          "Once production or packing has begun for made-to-order pieces, cancellation may not be possible. Our team will confirm status on WhatsApp before any refund is processed.",
+          "Salon appointments at our Mumbai flagship may be rescheduled or cancelled at least twenty-four hours in advance where possible.",
+        ],
+      },
+      {
+        id: "refunds",
+        title: "Refund Eligibility",
+        body: [
+          "Because many pieces are made or reserved to order, refunds are issued only for manufacturing defects, incorrect items sent, or transit damage reported within 48 hours of delivery.",
+          "Approved refunds are returned via the original payment method (UPI, bank transfer, or agreed channel) within 7–10 business days after verification.",
+          "Cash-on-delivery refunds in Aligarh are processed via UPI or bank transfer once the return or claim is approved.",
+        ],
+      },
+      {
         id: "returns",
         title: "Returns & Exchanges",
         body: [
-          "Because many pieces are made or reserved to order, returns are accepted only for manufacturing defects or transit damage reported within 48 hours of delivery with unboxing photos or video.",
+          "Returns are accepted only for manufacturing defects or transit damage reported within 48 hours of delivery with unboxing photos or video.",
           "Exchange requests for sizing or styling preferences are reviewed case-by-case before production begins. Contact our concierge on WhatsApp to initiate a return or exchange conversation.",
+          "Custom, final-sale, or heavily personalised edits are non-returnable unless faulty.",
+        ],
+      },
+      {
+        id: "how-to",
+        title: "How to Raise a Claim",
+        body: [
+          "Message us on WhatsApp at +919336072590 or email velisqa.in@gmail.com with your order reference, photos or video of the issue, and the delivery date.",
+          "Our concierge will review your claim and respond with next steps for return pickup, exchange, or refund within 2–3 business days.",
         ],
       },
       {
@@ -207,11 +268,11 @@ export const legalPages = {
       ],
       [
         "How long does shipping take?",
-        "Delivery across India typically takes 5–12 business days after order confirmation. Timelines are shared on WhatsApp and detailed on our Shipping & Returns page.",
+        "Delivery across India typically takes 5–12 business days after order confirmation. Aligarh buyers may receive same-day or next-day delivery when stock allows. Timelines are shared on WhatsApp and detailed on our Shipping & Delivery Policy page.",
       ],
       [
         "What is your return policy?",
-        "Returns are accepted for manufacturing defects or shipping damage reported within 48 hours of delivery with photo or video proof. See Shipping & Returns for full terms.",
+        "Returns are accepted for manufacturing defects or shipping damage reported within 48 hours of delivery with photo or video proof. See our Refund & Cancellation Policy for full terms.",
       ],
       [
         "How should I care for artificial jewellery?",
@@ -230,8 +291,10 @@ export const legalPages = {
 };
 
 export const legalNav = [
+  { key: "contact", label: "Contact", path: "/contact" },
   { key: "faq", label: "FAQ", path: legalPages.faq.path },
-  { key: "shipping", label: "Shipping", path: legalPages.shipping.path },
+  { key: "shippingDelivery", label: "Shipping", path: legalPages.shippingDelivery.path },
+  { key: "refundCancellation", label: "Refunds", path: legalPages.refundCancellation.path },
   { key: "privacy", label: "Privacy", path: legalPages.privacy.path },
   { key: "terms", label: "Terms", path: legalPages.terms.path },
   { key: "authenticity", label: "Authenticity", path: legalPages.authenticity.path },
