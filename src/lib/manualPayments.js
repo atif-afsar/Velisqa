@@ -1,4 +1,5 @@
 import { supabase } from './supabaseClient'
+import { invokeEdgeFunction } from './invokeEdgeFunction'
 
 const SCREENSHOT_BUCKET = 'payment-screenshots'
 const MAX_SCREENSHOT_BYTES = 5 * 1024 * 1024
@@ -136,4 +137,12 @@ export function buildUpiPaymentUrl({ upiId, payeeName, amount, orderRef }) {
   })
 
   return `upi://pay?${params.toString()}`
+}
+
+export async function cancelCustomerOrder(orderRef, accessToken) {
+  return invokeEdgeFunction('customer-cancel-order', { orderRef, accessToken })
+}
+
+export async function fetchOrderLiveTracking(orderRef, accessToken) {
+  return invokeEdgeFunction('order-live-tracking', { orderRef, accessToken })
 }

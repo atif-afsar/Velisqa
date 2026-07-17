@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { getManualPaymentOrder } from '../lib/manualPayments'
+import { isOrderTerminal } from '../lib/orderTracking'
 
 export function usePrivateOrder() {
   const { orderRef } = useParams()
@@ -8,42 +9,53 @@ export function usePrivateOrder() {
   const accessToken = searchParams.get('token') || ''
   const [order, setOrder] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
   const [error, setError] = useState('')
+  const [lastUpdatedAt, setLastUpdatedAt] = useState(null)
 
-  async function refresh() {
-    setLoading(true)
-    setError('')
-    try {
-      setOrder(await getManualPaymentOrder(orderRef, accessToken))
-    } catch (err) {
-      setError(err?.message || 'Could not load this order.')
+  const refresh = useCallback(async ({ silent = false } = {}) => {
+    if (!orderRef || !accessToken) {
+      setError('This order link is incomplete.')
       setOrder(null)
-    } finally {
       setLoading(false)
+      return
     }
-  }
 
-  useEffect(() => {
-    let cancelled = false
-    getManualPaymentOrder(orderRef, accessToken)
-      .then((nextOrder) => {
-        if (cancelled) return
-        setOrder(nextOrder)
-        setError('')
-      })
-      .catch((err) => {
-        if (cancelled) return
+    if (silent) setRefreshing(true)
+    else {
+      setLoading(true)
+      setError('')
+    }
+
+    try {
+      const nextOrder = await getManualPaymentOrder(orderRef, accessToken)
+      setOrder(nextOrder)
+      setError('')
+      setLastUpdatedAt(Date.now())
+    } catch (err) {
+      if (!silent) {
         setError(err?.message || 'Could not load this order.')
         setOrder(null)
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false)
-      })
-
-    return () => {
-      cancelled = true
+      }
+    } finally {
+      if (silent) setRefreshing(false)
+      else setLoading(false)
     }
   }, [orderRef, accessToken])
 
-  return { orderRef, accessToken, order, loading, error, refresh }
+  useEffect(() => {
+    void refresh()
+  }, [refresh])
+
+  useEffect(() => {
+    if (!order || isOrderTerminal(order)) return undefined
+
+    const timer = window.setInterval(() => {
+      void refresh({ silent: true })
+    }, 25000)
+
+    return () => window.clearInterval(timer)
+  }, [order, refresh])
+
+  return { orderRef, accessToken, order, loading, refreshing, error, lastUpdatedAt, refresh }
 }

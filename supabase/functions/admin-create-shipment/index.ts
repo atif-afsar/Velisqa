@@ -96,9 +96,10 @@ Deno.serve(async (request) => {
 
     const shipment = await createNimbusPostShipment(shipmentOrder)
     if (!shipment.awb) {
-      console.error('NimbusPost response missing AWB:', JSON.stringify(shipment.raw)?.slice(0, 1200))
+      const responseHint = JSON.stringify(shipment.raw)?.slice(0, 400)
+      console.error('NimbusPost response missing AWB:', responseHint)
       throw new Error(
-        `NimbusPost accepted the request but did not return an AWB for ${order.order_ref}. Open your NimbusPost dashboard and check whether the order was created.`,
+        `NimbusPost created the order but did not return an AWB for ${order.order_ref}. Check NimbusPost → Orders for "${shipmentOrder.nimbus_order_number || order.order_ref}" and click Ship Now if it shows NEW. Response: ${responseHint || 'empty'}`,
       )
     }
 

@@ -102,15 +102,40 @@ function packageDimensions() {
   }
 }
 
-function shippingState(city?: string | null) {
+function shippingState(city?: string | null, pincode?: string | null) {
+  const pin = String(pincode || '').replace(/\D/g, '')
+  const normalizedCity = String(city || '').trim().toLowerCase()
+
+  if (pin.startsWith('110') || normalizedCity.includes('delhi') || normalizedCity.includes('new delhi')) {
+    return 'DL'
+  }
+  if (
+    normalizedCity.includes('aligarh')
+    || pin.startsWith('202')
+    || pin.startsWith('201')
+    || normalizedCity.includes('noida')
+    || normalizedCity.includes('ghaziabad')
+    || normalizedCity.includes('lucknow')
+  ) {
+    return 'UP'
+  }
+  if (normalizedCity.includes('mumbai') || pin.startsWith('400') || normalizedCity.includes('pune') || pin.startsWith('411')) {
+    return 'MH'
+  }
+  if (normalizedCity.includes('bangalore') || normalizedCity.includes('bengaluru') || pin.startsWith('560')) {
+    return 'KA'
+  }
+  if (normalizedCity.includes('kolkata') || pin.startsWith('700')) return 'WB'
+  if (normalizedCity.includes('chennai') || pin.startsWith('600')) return 'TN'
+  if (normalizedCity.includes('hyderabad') || pin.startsWith('500')) return 'TG'
+  if (normalizedCity.includes('gurgaon') || normalizedCity.includes('gurugram') || pin.startsWith('122')) return 'HR'
+  if (normalizedCity.includes('jaipur') || pin.startsWith('302')) return 'RJ'
+
   const configured = String(Deno.env.get('NIMBUSPOST_DEFAULT_STATE') || '').trim()
   if (configured) return configured
 
-  const normalizedCity = String(city || '').trim().toLowerCase()
-  if (normalizedCity === 'aligarh') return 'UP'
-
   throw new Error(
-    'Set NIMBUSPOST_DEFAULT_STATE in Edge Function secrets (for example UP for Uttar Pradesh).',
+    `Could not determine shipping state for ${city || 'this city'} (${pincode || 'no pincode'}). Set NIMBUSPOST_DEFAULT_STATE in Supabase secrets.`,
   )
 }
 
@@ -179,6 +204,42 @@ function pickString(source: Record<string, unknown> | null | undefined, keys: st
   return null
 }
 
+function deepFindAwb(value: unknown): string | null {
+  if (value == null) return null
+
+  if (typeof value === 'string') {
+    const trimmed = value.trim()
+    if (/^(NMBC|IN|AWB)?[A-Z0-9]{8,20}$/i.test(trimmed)) return trimmed
+    return null
+  }
+
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      const found = deepFindAwb(item)
+      if (found) return found
+    }
+    return null
+  }
+
+  if (typeof value !== 'object') return null
+
+  const obj = value as Record<string, unknown>
+  for (const key of ['awb_number', 'awb', 'waybill', 'waybill_number', 'tracking_number', 'awbNumber']) {
+    const candidate = obj[key]
+    if (candidate != null && String(candidate).trim()) {
+      const normalized = String(candidate).trim()
+      if (normalized.length >= 8) return normalized
+    }
+  }
+
+  for (const nested of Object.values(obj)) {
+    const found = deepFindAwb(nested)
+    if (found) return found
+  }
+
+  return null
+}
+
 function parseShipmentResponse(data: Record<string, unknown> | null) {
   const root = data?.data && typeof data.data === 'object'
     ? data.data as Record<string, unknown>
@@ -192,16 +253,116 @@ function parseShipmentResponse(data: Record<string, unknown> | null) {
     ? shipment.result as Record<string, unknown>
     : null
 
+  const awb = deepFindAwb(data)
+    || pickString(shipment, ['awb_number', 'awb', 'waybill', 'waybill_number', 'tracking_number'])
+    || pickString(nestedResult, ['awb_number', 'awb', 'waybill', 'waybill_number', 'tracking_number'])
+
+  const trackingUrl = pickString(shipment, ['tracking_url', 'trackingUrl', 'label'])
+    || pickString(nestedResult, ['tracking_url', 'trackingUrl', 'label'])
+    || (awb ? `https://nimbuspost.com/tracking/?awb=${encodeURIComponent(awb)}` : null)
+
   return {
-    orderId: pickString(shipment, ['order_id', 'orderId']) || pickString(nestedResult, ['order_id', 'orderId']),
-    shipmentId: pickString(shipment, ['shipment_id', 'shipmentId']) || pickString(nestedResult, ['shipment_id', 'shipmentId']),
-    awb: pickString(shipment, ['awb_number', 'awb', 'waybill', 'waybill_number', 'tracking_number'])
-      || pickString(nestedResult, ['awb_number', 'awb', 'waybill', 'waybill_number', 'tracking_number']),
+    orderId: pickString(shipment, ['order_id', 'orderId', 'id']) || pickString(nestedResult, ['order_id', 'orderId', 'id']) || pickString(root, ['order_id', 'orderId', 'id']),
+    shipmentId: pickString(shipment, ['shipment_id', 'shipmentId']) || pickString(nestedResult, ['shipment_id', 'shipmentId']) || pickString(root, ['shipment_id', 'shipmentId']),
+    awb,
     courierName: pickString(shipment, ['courier_name', 'courier']) || pickString(nestedResult, ['courier_name', 'courier']),
-    trackingUrl: pickString(shipment, ['tracking_url', 'trackingUrl', 'label'])
-      || pickString(nestedResult, ['tracking_url', 'trackingUrl', 'label']),
+    trackingUrl,
     raw: data,
   }
+}
+
+async function nimbusApiHeaders() {
+  const { apiKey, apiSecret } = readApiCredentials()
+  return {
+    'Content-Type': 'application/json',
+    'x-api-key': apiKey,
+    'x-api-secret': apiSecret,
+  }
+}
+
+async function tryFetchAwbFromNimbus(orderNumber: string, orderId?: string | null, shipmentId?: string | null) {
+  const headers = await nimbusApiHeaders()
+  const urls = [
+    orderId ? `https://api-v2.nimbuspost.com/v2/shipments/${orderId}` : null,
+    shipmentId ? `https://api-v2.nimbuspost.com/v2/shipments/${shipmentId}` : null,
+    orderId ? `https://api-v2.nimbuspost.com/v2/orders/${orderId}` : null,
+    `https://api-v2.nimbuspost.com/v2/shipments?order_number=${encodeURIComponent(orderNumber)}`,
+    `https://api-v2.nimbuspost.com/v2/orders?order_number=${encodeURIComponent(orderNumber)}`,
+  ].filter(Boolean) as string[]
+
+  for (const url of urls) {
+    const response = await fetch(url, { method: 'GET', headers })
+    const data = await response.json().catch(() => null) as Record<string, unknown> | null
+    if (!data) continue
+    const parsed = parseShipmentResponse(data)
+    if (parsed.awb) return parsed
+  }
+
+  return null
+}
+
+async function tryBookShipmentOnNimbus(orderNumber: string, orderId?: string | null, shipmentId?: string | null) {
+  const headers = await nimbusApiHeaders()
+  const reference = shipmentId || orderId
+  const endpoints = [
+    reference ? `https://api-v2.nimbuspost.com/v2/shipments/${reference}/book` : null,
+    reference ? `https://api-v2.nimbuspost.com/v2/shipments/${reference}/ship` : null,
+    'https://api-v2.nimbuspost.com/v2/shipments/book',
+    'https://api-v2.nimbuspost.com/v2/shipments/assign',
+  ].filter(Boolean) as string[]
+
+  const bodies = [
+    { order_number: orderNumber, order_id: orderId, shipment_id: shipmentId, auto_assign_courier: true },
+    { order_number: orderNumber, order_id: orderId, shipment_id: shipmentId },
+    { awb_generate: true, order_number: orderNumber },
+  ]
+
+  for (const endpoint of endpoints) {
+    for (const body of bodies) {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body),
+      })
+      const data = await response.json().catch(() => null) as Record<string, unknown> | null
+      if (!data) continue
+      if (response.ok && data.success !== false && data.status !== false) {
+        const parsed = parseShipmentResponse(data)
+        if (parsed.awb) return parsed
+      }
+    }
+  }
+
+  return null
+}
+
+async function resolveExistingNimbusShipment(order: ShipmentOrder) {
+  const orderNumber = order.nimbus_order_number || order.order_ref
+  const fetched = await tryFetchAwbFromNimbus(orderNumber)
+  if (fetched?.awb) return fetched
+  if (fetched?.orderId || fetched?.shipmentId) {
+    return await finalizeV2Shipment(orderNumber, fetched)
+  }
+  return null
+}
+
+async function finalizeV2Shipment(orderNumber: string, initial: ReturnType<typeof parseShipmentResponse>) {
+  if (initial.awb) return initial
+
+  const booked = await tryBookShipmentOnNimbus(orderNumber, initial.orderId, initial.shipmentId)
+  if (booked?.awb) {
+    return { ...initial, ...booked, raw: booked.raw ?? initial.raw }
+  }
+
+  for (const delayMs of [0, 1500]) {
+    if (delayMs) await new Promise((resolve) => setTimeout(resolve, delayMs))
+    const fetched = await tryFetchAwbFromNimbus(orderNumber, initial.orderId, initial.shipmentId)
+    if (fetched?.awb) {
+      return { ...initial, ...fetched, raw: fetched.raw ?? initial.raw }
+    }
+  }
+
+  return initial
 }
 
 export function buildNimbusOrderNumber(orderRef: string, attempt = 0) {
@@ -240,7 +401,7 @@ function buildConsignee(order: ShipmentOrder) {
     name: order.customer_name,
     address: order.delivery_address,
     city: order.delivery_city || 'Aligarh',
-    state: shippingState(order.delivery_city),
+    state: shippingState(order.delivery_city, order.delivery_pincode),
     pincode: Number(normalizePincode(order.delivery_pincode)),
     phone: Number(normalizePhoneDigits(order.customer_phone)),
   }
@@ -339,19 +500,21 @@ async function createV2Shipment(order: ShipmentOrder) {
   const dimensions = packageDimensions()
   const phone = normalizePhoneDigits(order.customer_phone)
   const orderNumber = order.nimbus_order_number || order.order_ref
+  const deliveryState = shippingState(order.delivery_city, order.delivery_pincode)
   const body = {
     order_number: orderNumber,
     order_type: 'b2c',
     payment_mode: mode,
     order_collectable_amount: mode === 'cod' ? Number(order.grand_total) : 0,
     warehouse_id: normalizeWarehouseId(warehouseIdRaw),
+    auto_assign_courier: true,
     shipping_address: {
       name: order.customer_name,
       email: order.customer_email || undefined,
       address: order.delivery_address,
       pincode: Number(normalizePincode(order.delivery_pincode)),
       city: order.delivery_city || 'Aligarh',
-      state: shippingState(order.delivery_city),
+      state: deliveryState,
       country: 'India',
       phone,
     },
@@ -379,7 +542,8 @@ async function createV2Shipment(order: ShipmentOrder) {
     throw new Error(formatApiError(data, response.status, 'NimbusPost v2'))
   }
 
-  return parseShipmentResponse(data)
+  const initial = parseShipmentResponse(data)
+  return await finalizeV2Shipment(orderNumber, initial)
 }
 
 /**
@@ -395,7 +559,31 @@ export async function createNimbusPostShipment(order: ShipmentOrder) {
     return await createV1Shipment(order)
   }
 
-  return await createV2Shipment(order)
+  const existing = await resolveExistingNimbusShipment(order)
+  if (existing?.awb) return existing
+
+  try {
+    const result = await createV2Shipment(order)
+    if (result.awb || !readLoginCredentials()) return result
+
+    console.warn('NimbusPost v2 succeeded without AWB, trying v1 fallback')
+    try {
+      const v1Order = {
+        ...order,
+        nimbus_order_number: buildNimbusOrderNumber(order.nimbus_order_number || order.order_ref, 1),
+      }
+      const v1Result = await createV1Shipment(v1Order)
+      if (v1Result.awb) return v1Result
+    } catch (v1Error) {
+      console.error('NimbusPost v1 fallback after missing AWB failed:', v1Error)
+    }
+
+    return result
+  } catch (v2Error) {
+    if (!readLoginCredentials()) throw v2Error
+    console.error('NimbusPost v2 failed, trying v1 fallback:', v2Error)
+    return await createV1Shipment(order)
+  }
 }
 
 function cancelResponseLooksSuccessful(data: Record<string, unknown> | null, status: number) {
@@ -505,5 +693,130 @@ export async function cancelNimbusPostShipment(awb: string) {
       const v1Message = v1Error instanceof Error ? v1Error.message : String(v1Error)
       throw new Error(`${v2Message} | Fallback v1: ${v1Message}`)
     }
+  }
+}
+
+type TrackingScan = {
+  status: string
+  location: string | null
+  remark: string | null
+  timestamp: string | null
+}
+
+function normalizeTrackingScan(raw: Record<string, unknown>): TrackingScan | null {
+  const status = pickString(raw, ['status', 'shipment_status', 'tracking_status', 'clickpost_status_description'])
+    || (raw.message != null ? String(raw.message) : null)
+  if (!status) return null
+
+  return {
+    status,
+    location: pickString(raw, ['location', 'city', 'hub', 'current_location']),
+    remark: pickString(raw, ['remark', 'message', 'description', 'comments']),
+    timestamp: pickString(raw, ['timestamp', 'date', 'created_at', 'updated_at', 'scan_time']),
+  }
+}
+
+function parseTrackingResponse(data: Record<string, unknown> | null) {
+  const root = data?.data && typeof data.data === 'object'
+    ? data.data as Record<string, unknown>
+    : (data || {}) as Record<string, unknown>
+
+  const nested = root.tracking && typeof root.tracking === 'object'
+    ? root.tracking as Record<string, unknown>
+    : root
+
+  const scanSources = [
+    nested.scans,
+    nested.scan_history,
+    nested.history,
+    nested.tracking_history,
+    root.scans,
+    root.history,
+  ]
+
+  const scans: TrackingScan[] = []
+  for (const source of scanSources) {
+    if (!Array.isArray(source)) continue
+    for (const item of source) {
+      if (!item || typeof item !== 'object') continue
+      const scan = normalizeTrackingScan(item as Record<string, unknown>)
+      if (scan) scans.push(scan)
+    }
+  }
+
+  const latestRaw = nested.latest_status && typeof nested.latest_status === 'object'
+    ? nested.latest_status as Record<string, unknown>
+    : nested.current_status && typeof nested.current_status === 'object'
+      ? nested.current_status as Record<string, unknown>
+      : null
+
+  const latest = latestRaw
+    ? normalizeTrackingScan(latestRaw)
+    : scans[0] || null
+
+  const deduped = scans.filter((scan, index, list) => {
+    const key = `${scan.status}|${scan.location}|${scan.timestamp}`
+    return list.findIndex((item) => `${item.status}|${item.location}|${item.timestamp}` === key) === index
+  })
+
+  return {
+    latest,
+    scans: deduped,
+    raw: data,
+  }
+}
+
+async function fetchV1Tracking(awb: string) {
+  const login = readLoginCredentials()
+  if (!login) return null
+
+  const token = await loginV1(login.email, login.password)
+  const urls = [
+    `https://api.nimbuspost.com/v1/shipments/track/${encodeURIComponent(awb)}`,
+    `https://api.nimbuspost.com/v1/shipments/tracking/${encodeURIComponent(awb)}`,
+  ]
+
+  for (const url of urls) {
+    const response = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    const data = await response.json().catch(() => null) as Record<string, unknown> | null
+    if (!response.ok || !data) continue
+    const parsed = parseTrackingResponse(data)
+    if (parsed.latest || parsed.scans.length) return parsed
+  }
+
+  return null
+}
+
+export async function fetchNimbusPostTracking(awb: string) {
+  const normalizedAwb = String(awb || '').trim()
+  if (!normalizedAwb) {
+    return { latest: null, scans: [], message: 'AWB is required for tracking.' }
+  }
+
+  const headers = await nimbusApiHeaders()
+  const urls = [
+    `https://api-v2.nimbuspost.com/v2/shipments/track?awb=${encodeURIComponent(normalizedAwb)}`,
+    `https://api-v2.nimbuspost.com/v2/shipments/tracking?awb=${encodeURIComponent(normalizedAwb)}`,
+    `https://api-v2.nimbuspost.com/v2/tracking/${encodeURIComponent(normalizedAwb)}`,
+    `https://api-v2.nimbuspost.com/v2/shipments/${encodeURIComponent(normalizedAwb)}/track`,
+  ]
+
+  for (const url of urls) {
+    const response = await fetch(url, { method: 'GET', headers })
+    const data = await response.json().catch(() => null) as Record<string, unknown> | null
+    if (!response.ok || !data) continue
+    const parsed = parseTrackingResponse(data)
+    if (parsed.latest || parsed.scans.length) return parsed
+  }
+
+  const v1 = await fetchV1Tracking(normalizedAwb)
+  if (v1) return v1
+
+  return {
+    latest: null,
+    scans: [],
+    message: 'Live scan details are not available yet. Use the NimbusPost tracking link for updates.',
   }
 }
