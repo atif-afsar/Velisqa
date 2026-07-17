@@ -1,13 +1,18 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useId, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { getLenis } from '../../lib/smoothScrollState'
+import { buildLoginNextPath } from '../../lib/postSignIn'
 import SignInForm from './SignInForm'
 
 export default function SignInRequiredModal({ open, onClose }) {
   const titleId = useId()
   const [mounted, setMounted] = useState(false)
+  const location = useLocation()
+  const loginNext = buildLoginNextPath(location.pathname, {
+    openCheckout: location.pathname === '/cart',
+  })
 
   useEffect(() => {
     setMounted(true)
@@ -94,8 +99,7 @@ export default function SignInRequiredModal({ open, onClose }) {
               <p className="mt-4 text-center text-[10px] text-[#847377]">
                 Prefer the full page?{' '}
                 <Link
-                  to="/login"
-                  onClick={onClose}
+                  to={`/login?next=${encodeURIComponent(loginNext)}`}
                   className="font-semibold text-[#6f334a] underline-offset-2 hover:underline"
                 >
                   Open sign in page

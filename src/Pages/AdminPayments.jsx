@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import AdminShell from '../Components/Admin/AdminShell'
+import AdminOrderItems from '../Components/Admin/AdminOrderItems'
 import { formatInr } from '../lib/cartStock'
 import { getPaymentScreenshotSignedUrl } from '../lib/manualPayments'
 import { invokeEdgeFunction } from '../lib/invokeEdgeFunction'
@@ -23,6 +24,8 @@ async function fetchPendingPayments() {
       delivery_pincode,
       order_items (
         product_name,
+        product_url,
+        image_url,
         quantity,
         unit_price,
         line_total
@@ -204,17 +207,14 @@ export default function AdminPayments() {
 
                 <div className="mt-5 grid gap-5 border-t border-[#d4af37]/15 pt-5 lg:grid-cols-2">
                   <div>
-                    <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-[#847377]">Order</h2>
-                    <ul className="mt-2 space-y-1.5 text-sm">
-                      {(order.order_items || []).map((item, index) => (
-                        <li key={`${item.product_name}-${index}`} className="flex justify-between gap-3">
-                          <span>{item.product_name} × {item.quantity}</span>
-                          <span>{formatInr(item.line_total)}</span>
-                        </li>
-                      ))}
-                    </ul>
+                    <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-[#847377]">Products ordered</h2>
+                    <div className="mt-2">
+                      <AdminOrderItems items={order.order_items} />
+                    </div>
                     <p className="mt-4 text-sm leading-relaxed text-[#514347]">
-                      {order.delivery_address}<br />
+                      <span className="font-semibold text-[#130006]">Ship to: </span>
+                      {order.delivery_address}
+                      <br />
                       {[order.delivery_city, order.delivery_pincode].filter(Boolean).join(' · ')}
                     </p>
                   </div>

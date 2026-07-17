@@ -31,16 +31,16 @@ function productIdFromUrl(value) {
 
 const PAYMENT_OPTIONS = [
   {
-    value: "cod",
-    label: "Cash on delivery",
-    hint: "Pay when your order arrives",
-    icon: "💵",
-  },
-  {
     value: "online",
     label: "UPI QR payment",
     hint: "Scan QR and upload payment proof",
     icon: "💳",
+  },
+  {
+    value: "cod",
+    label: "Cash on delivery",
+    hint: "Pay when your order arrives",
+    icon: "💵",
   },
 ];
 
@@ -65,7 +65,7 @@ export default function OrderFormModal({
   const [locationStatus, setLocationStatus] = useState("idle");
   const [coords, setCoords] = useState(null);
   const [locationNote, setLocationNote] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("cod");
+  const [paymentMethod, setPaymentMethod] = useState("online");
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [confirmation, setConfirmation] = useState(null);
@@ -94,12 +94,18 @@ export default function OrderFormModal({
   }, [open, onClose]);
 
   useEffect(() => {
+    if (open && !isEnquiry) {
+      setPaymentMethod("online");
+    }
+  }, [open, isEnquiry]);
+
+  useEffect(() => {
     if (!open) {
       queueMicrotask(() => {
         setLocationStatus("idle");
         setCoords(null);
         setLocationNote("");
-        setPaymentMethod("cod");
+        setPaymentMethod("online");
         setSubmitting(false);
         setSubmitError("");
         setConfirmation(null);
@@ -233,7 +239,6 @@ export default function OrderFormModal({
       });
 
       if (resolvedPayment === "online") {
-        onCheckoutSuccess?.();
         onClose();
         navigate(orderPrivateUrl("/pay", created.orderRef, created.accessToken));
         return;

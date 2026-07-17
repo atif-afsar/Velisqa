@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import AdminShell from '../Components/Admin/AdminShell'
+import AdminOrderItems from '../Components/Admin/AdminOrderItems'
 import { formatInr } from '../lib/cartStock'
 import { orderPrivateUrl } from '../lib/manualPayments'
 import { PAYMENT_STATUS_LABELS, SHIPPING_STATUS_LABELS, ORDER_STATUS_LABELS } from '../lib/orderStatuses'
@@ -24,6 +25,7 @@ async function fetchOrders() {
       order_access_token,
       customer_name,
       customer_phone,
+      delivery_address,
       delivery_city,
       delivery_pincode,
       grand_total,
@@ -34,7 +36,15 @@ async function fetchOrders() {
       nimbuspost_awb,
       courier_name,
       tracking_url,
-      created_at
+      created_at,
+      order_items (
+        product_name,
+        product_url,
+        image_url,
+        quantity,
+        unit_price,
+        line_total
+      )
     `)
     .eq('is_enquiry', false)
     .order('created_at', { ascending: false })
@@ -290,6 +300,27 @@ export default function AdminOrders() {
                 <StatusPill label="Payment" value={PAYMENT_STATUS_LABELS[order.payment_status] || order.payment_status} />
                 <StatusPill label="Shipping" value={SHIPPING_STATUS_LABELS[order.shipping_status] || order.shipping_status} />
                 <StatusPill label="Order" value={ORDER_STATUS_LABELS[order.order_status] || order.order_status} />
+              </div>
+
+              <div className="mt-4 border-t border-[#d4af37]/15 pt-4">
+                <h3 className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#847377]">
+                  Products ordered
+                </h3>
+                <div className="mt-3">
+                  <AdminOrderItems items={order.order_items} />
+                </div>
+                {order.delivery_address && (
+                  <p className="mt-4 text-xs leading-relaxed text-[#514347]">
+                    <span className="font-semibold text-[#130006]">Ship to: </span>
+                    {order.delivery_address}
+                    {[order.delivery_city, order.delivery_pincode].filter(Boolean).length > 0 && (
+                      <>
+                        <br />
+                        {[order.delivery_city, order.delivery_pincode].filter(Boolean).join(' · ')}
+                      </>
+                    )}
+                  </p>
+                )}
               </div>
 
               {order.order_status === 'cancelled' && (

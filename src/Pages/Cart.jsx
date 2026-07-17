@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import QuantityStepper from '../Components/Cart/QuantityStepper'
 import OrderFormModal from '../Components/WhatsApp/OrderFormModal'
 import SEOHead from '../Components/SEO/SEOHead'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
+import { consumePostSignInIntent } from '../lib/postSignIn'
 import { formatInr, getCartLineSubtotal, getProductStock } from '../lib/cartStock'
 import ProductPriceDisplay from '../Components/Product/ProductPriceDisplay'
 
@@ -20,7 +21,8 @@ export default function Cart() {
     syncStockFromServer,
   } = useCart()
 
-  const { requireSignIn } = useAuth()
+  const { requireSignIn, user } = useAuth()
+  const [searchParams] = useSearchParams()
   const [checkoutOpen, setCheckoutOpen] = useState(false)
   const [localIssues, setLocalIssues] = useState([])
 
@@ -40,9 +42,21 @@ export default function Cart() {
   const issueMessages = issues.map((i) => i.message)
   const canCheckout = items.length > 0 && issues.length === 0 && !syncing
 
+  useEffect(() => {
+    if (!user) return
+
+    const shouldOpenFromQuery = searchParams.get('checkout') === '1'
+    const intent = consumePostSignInIntent()
+    const shouldOpenFromIntent = intent?.openCheckout || intent?.returnTo?.includes('checkout=1')
+
+    if (shouldOpenFromQuery || shouldOpenFromIntent) {
+      setCheckoutOpen(true)
+    }
+  }, [user, searchParams])
+
   function handleCheckoutClick() {
     if (issues.length > 0) return
-    requireSignIn(() => setCheckoutOpen(true))
+    requireSignIn(() => setCheckoutOpen(true), { openCheckout: true, returnTo: '/cart?checkout=1' })
   }
 
   return (

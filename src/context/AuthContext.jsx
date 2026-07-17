@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import SignInRequiredModal from '../Components/Auth/SignInRequiredModal'
+import { savePostSignInIntent } from '../lib/postSignIn'
 import { supabase } from '../lib/supabaseClient'
 
 const AuthContext = createContext(null)
@@ -80,7 +81,14 @@ export function AuthProvider({ children }) {
   }, [])
 
   const requireSignIn = useCallback(
-    (action) => {
+    (action, intent = {}) => {
+      const returnTo = intent.returnTo || `${window.location.pathname}${window.location.search}`
+
+      savePostSignInIntent({
+        returnTo,
+        openCheckout: Boolean(intent.openCheckout),
+      })
+
       if (loading) return false
       if (user) {
         action()

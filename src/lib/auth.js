@@ -1,8 +1,15 @@
 import { supabase } from './supabaseClient'
+import { peekPostSignInIntent } from './postSignIn'
 
 /** Where Supabase redirects after Google OAuth (must be listed in Supabase → URL Configuration). */
 export function getAuthCallbackUrl() {
-  return `${window.location.origin}/auth/callback`
+  const intent = peekPostSignInIntent()
+  const base = `${window.location.origin}/auth/callback`
+  if (!intent?.returnTo) return base
+
+  const params = new URLSearchParams()
+  params.set('next', intent.returnTo)
+  return `${base}?${params.toString()}`
 }
 
 export async function signInWithGoogle() {

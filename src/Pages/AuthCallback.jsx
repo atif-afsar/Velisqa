@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { consumePostSignInIntent } from '../lib/postSignIn'
 import { supabase } from '../lib/supabaseClient'
 
 export default function AuthCallback() {
@@ -9,6 +10,7 @@ export default function AuthCallback() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const oauthError = params.get('error_description')
+    const nextFromQuery = params.get('next')
 
     if (oauthError) {
       setError(decodeURIComponent(oauthError.replace(/\+/g, ' ')))
@@ -17,20 +19,23 @@ export default function AuthCallback() {
 
     let finished = false
 
-    function goHome() {
+    function goAfterAuth() {
       if (finished) return
       finished = true
-      navigate('/', { replace: true })
+
+      const intent = consumePostSignInIntent()
+      const destination = nextFromQuery || intent?.returnTo || '/'
+      navigate(destination, { replace: true })
     }
 
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) goHome()
+      if (session) goAfterAuth()
     })
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) goHome()
+      if (session) goAfterAuth()
     })
 
     const timeout = window.setTimeout(() => {
