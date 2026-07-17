@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import WhatsAppCTA from "./WhatsApp/WhatsAppCTA";
 import CartNavLink from "./Cart/CartNavLink";
 import WishlistNavLink from "./Wishlist/WishlistNavLink";
+import AccountNavMenu from "./Nav/AccountNavMenu";
 import { useAuth } from "../context/AuthContext";
 
 const DARK_HERO_ROUTES = ["/", "/about"];
@@ -109,17 +110,6 @@ function navTextClass({ scrolled, onDarkHero, isActive = false }) {
   return `${size} ${isActive ? "text-[#130006]" : "text-[#514347]/80 hover:text-[#130006]"}`;
 }
 
-function NavActionDivider({ onDarkHero }) {
-  return (
-    <span
-      aria-hidden
-      className={`mx-0.5 hidden h-5 w-px shrink-0 md:block ${
-        onDarkHero ? "bg-white/25" : "bg-[#130006]/15"
-      }`}
-    />
-  );
-}
-
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -222,14 +212,14 @@ export default function Navbar() {
       )}
 
       <div
-        className={`container-stitch relative grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 md:gap-4 ${
+        className={`container-stitch relative flex items-center justify-between gap-3 md:gap-4 ${
           scrolled ? "min-h-[44px] py-1 md:min-h-[52px]" : "min-h-[56px] py-2.5 md:min-h-[72px]"
         }`}
       >
         <Link
           to="/"
           onClick={closeMenu}
-          className={`inline-flex min-h-9 shrink-0 items-center justify-self-start font-serif font-medium leading-none tracking-[0.06em] transition-colors duration-200 hover:opacity-80 ${
+          className={`relative z-20 inline-flex min-h-9 shrink-0 items-center font-serif font-medium leading-none tracking-[0.06em] transition-colors duration-200 hover:opacity-80 ${
             scrolled
               ? "text-[1.1rem] sm:text-xl md:text-[1.35rem]"
               : "text-[1.25rem] sm:text-2xl md:text-3xl"
@@ -243,11 +233,11 @@ export default function Navbar() {
         </Link>
 
         <nav
-          className={`hidden min-h-9 items-center justify-center justify-self-center lg:flex ${
-            scrolled ? "gap-3 xl:gap-6" : "gap-4 xl:gap-8"
+          className={`pointer-events-none absolute left-1/2 top-1/2 z-10 hidden -translate-x-1/2 -translate-y-1/2 items-center xl:flex ${
+            scrolled ? "gap-4 2xl:gap-6" : "gap-5 2xl:gap-8"
           }`}
         >
-          {links.map((link) => {
+          {[...links, contactLink].map((link) => {
             const isHome = link.label === "HOME";
             return (
               <NavLink
@@ -255,7 +245,7 @@ export default function Navbar() {
                 to={link.to}
                 end={isHome}
                 className={({ isActive }) =>
-                  `relative inline-flex min-h-9 items-center whitespace-nowrap font-medium transition-colors duration-200 ${navTextClass({ scrolled, onDarkHero, isActive })}`
+                  `pointer-events-auto relative inline-flex min-h-9 items-center whitespace-nowrap font-medium transition-colors duration-200 ${navTextClass({ scrolled, onDarkHero, isActive })}`
                 }
               >
                 {({ isActive }) => (
@@ -276,55 +266,10 @@ export default function Navbar() {
         </nav>
 
         <div
-          className={`col-start-3 hidden min-h-9 items-center justify-end justify-self-end lg:flex ${
-            scrolled ? "gap-1 xl:gap-2" : "gap-1.5 xl:gap-2.5"
+          className={`relative z-20 hidden min-h-9 shrink-0 items-center justify-end xl:flex ${
+            scrolled ? "gap-1.5 2xl:gap-2" : "gap-2 2xl:gap-2.5"
           }`}
         >
-          {!authLoading && (
-            <div className="flex items-center gap-2 lg:gap-2.5">
-              {user ? (
-                <>
-                  {profile?.role === "admin" && (
-                    <Link
-                      to="/admin/panel"
-                      className={`inline-flex min-h-9 items-center whitespace-nowrap font-medium transition-colors duration-200 ${navTextClass({ scrolled, onDarkHero })} ${onDarkHero ? "text-[#f7ead0]/85 hover:text-[#d4af37]" : ""}`}
-                    >
-                      Admin
-                    </Link>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      void logout();
-                      closeMenu();
-                    }}
-                    className={`inline-flex min-h-9 items-center whitespace-nowrap font-medium transition-colors duration-200 ${navTextClass({ scrolled, onDarkHero })}`}
-                  >
-                    Sign out
-                  </button>
-                </>
-              ) : (
-                <Link
-                  to="/login"
-                  className={`inline-flex min-h-9 items-center whitespace-nowrap font-medium transition-colors duration-200 ${navTextClass({ scrolled, onDarkHero })}`}
-                >
-                  Sign in
-                </Link>
-              )}
-            </div>
-          )}
-
-          <NavActionDivider onDarkHero={onDarkHero} />
-
-          <NavLink
-            to={contactLink.to}
-            className={({ isActive }) =>
-              `hidden min-h-9 items-center whitespace-nowrap font-medium transition-colors duration-200 lg:inline-flex ${navTextClass({ scrolled, onDarkHero, isActive })}`
-            }
-          >
-            {contactLink.label}
-          </NavLink>
-
           <div className="flex items-center gap-1">
             <WishlistNavLink
               variant="icon"
@@ -340,8 +285,10 @@ export default function Navbar() {
             />
           </div>
 
+          <AccountNavMenu scrolled={scrolled} onDarkHero={onDarkHero} />
+
           <WhatsAppCTA
-            className={`hidden shrink-0 items-center lg:inline-flex [&_svg]:shrink-0 ${
+            className={`hidden shrink-0 items-center xl:inline-flex [&_svg]:shrink-0 ${
               scrolled
                 ? "h-8 gap-1.5 px-3 py-0 text-[0.58rem] [&_svg]:h-3.5 [&_svg]:w-3.5 [&_span]:tracking-[0.12em]"
                 : "h-9 gap-2 px-3 py-0 text-[0.64rem] [&_svg]:h-3.5 [&_svg]:w-3.5 [&_span]:tracking-[0.1em]"
@@ -352,7 +299,7 @@ export default function Navbar() {
           </WhatsAppCTA>
         </div>
 
-        <div className="col-start-3 flex items-center justify-end gap-2 justify-self-end lg:hidden">
+        <div className="relative z-20 flex shrink-0 items-center justify-end gap-2 xl:hidden">
           <WishlistNavLink
             variant="icon"
             onDarkHero={onDarkHero}
@@ -406,7 +353,7 @@ export default function Navbar() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className={`absolute left-0 right-0 border-t px-6 pb-6 pt-3 lg:hidden ${
+            className={`absolute left-0 right-0 border-t px-6 pb-6 pt-3 xl:hidden ${
               scrolled
                 ? "border-[#847377]/10 bg-[#fdf9f4] shadow-[0_20px_48px_rgba(19,0,6,0.08)]"
                 : "border-white/10 bg-[#130006]/95 shadow-[0_24px_48px_rgba(19,0,6,0.35)]"
@@ -452,6 +399,17 @@ export default function Navbar() {
                 {!authLoading &&
                   (user ? (
                     <>
+                      <Link
+                        to="/account/orders"
+                        onClick={closeMenu}
+                        className={`flex min-h-[48px] items-center justify-center rounded-full border text-[0.72rem] font-semibold uppercase tracking-[0.12em] transition ${
+                          scrolled
+                            ? "border-[#3d0a21]/20 bg-white text-[#130006] hover:border-[#3d0a21]/35"
+                            : "border-[#d4af37]/35 bg-white/10 text-[#f7ead0] hover:bg-white/15"
+                        }`}
+                      >
+                        My orders
+                      </Link>
                       {profile?.role === "admin" && (
                         <Link
                           to="/admin/panel"

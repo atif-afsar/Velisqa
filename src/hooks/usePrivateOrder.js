@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
+import { supabase } from '../lib/supabaseClient'
 import { getManualPaymentOrder } from '../lib/manualPayments'
+import { getMyOrderByRef } from '../lib/myOrders'
 import { isOrderTerminal } from '../lib/orderTracking'
 
 export function usePrivateOrder() {
@@ -13,12 +15,35 @@ export function usePrivateOrder() {
   const [error, setError] = useState('')
   const [lastUpdatedAt, setLastUpdatedAt] = useState(null)
 
+  const loadOrder = useCallback(async () => {
+    if (accessToken) {
+      return getManualPaymentOrder(orderRef, accessToken)
+    }
+
+    const { data: { session } } = await supabase.auth.getSession()
+    if (session?.user) {
+      return getMyOrderByRef(orderRef)
+    }
+
+    throw new Error('This order link is incomplete.')
+  }, [orderRef, accessToken])
+
   const refresh = useCallback(async ({ silent = false } = {}) => {
-    if (!orderRef || !accessToken) {
+    if (!orderRef) {
       setError('This order link is incomplete.')
       setOrder(null)
       setLoading(false)
       return
+    }
+
+    if (!accessToken) {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session?.user) {
+        setError('This order link is incomplete.')
+        setOrder(null)
+        setLoading(false)
+        return
+      }
     }
 
     if (silent) setRefreshing(true)
@@ -28,7 +53,7 @@ export function usePrivateOrder() {
     }
 
     try {
-      const nextOrder = await getManualPaymentOrder(orderRef, accessToken)
+      const nextOrder = await loadOrder()
       setOrder(nextOrder)
       setError('')
       setLastUpdatedAt(Date.now())
@@ -41,7 +66,7 @@ export function usePrivateOrder() {
       if (silent) setRefreshing(false)
       else setLoading(false)
     }
-  }, [orderRef, accessToken])
+  }, [orderRef, accessToken, loadOrder])
 
   useEffect(() => {
     void refresh()

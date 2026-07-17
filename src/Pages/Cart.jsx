@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import QuantityStepper from '../Components/Cart/QuantityStepper'
 import OrderFormModal from '../Components/WhatsApp/OrderFormModal'
 import SEOHead from '../Components/SEO/SEOHead'
+import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 import { formatInr, getCartLineSubtotal, getProductStock } from '../lib/cartStock'
 import ProductPriceDisplay from '../Components/Product/ProductPriceDisplay'
@@ -19,6 +20,7 @@ export default function Cart() {
     syncStockFromServer,
   } = useCart()
 
+  const { requireSignIn } = useAuth()
   const [checkoutOpen, setCheckoutOpen] = useState(false)
   const [localIssues, setLocalIssues] = useState([])
 
@@ -40,7 +42,7 @@ export default function Cart() {
 
   function handleCheckoutClick() {
     if (issues.length > 0) return
-    setCheckoutOpen(true)
+    requireSignIn(() => setCheckoutOpen(true))
   }
 
   return (
@@ -54,7 +56,7 @@ export default function Cart() {
         <div className="container-stitch mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
           <h1 className="font-serif text-2xl font-semibold sm:text-3xl">Your bag</h1>
           <p className="mt-2 text-sm leading-relaxed text-[#514347]">
-            Review items below, then tap <span className="font-semibold text-[#130006]">Checkout</span>.
+            Review items below, then sign in and tap <span className="font-semibold text-[#130006]">Checkout</span>.
             Choose cash on delivery or UPI QR payment — we confirm stock before dispatch.
           </p>
 

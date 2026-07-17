@@ -4,6 +4,7 @@ import SEOHead from '../Components/SEO/SEOHead'
 import PrivateOrderSummary from '../Components/Checkout/PrivateOrderSummary'
 import { cancelCustomerOrder, orderPrivateUrl } from '../lib/manualPayments'
 import { buildNimbusPostTrackingUrl } from '../lib/orderStatuses'
+import { useAuth } from '../context/AuthContext'
 import {
   buildTrackingTimeline,
   canCustomerCancelOrder,
@@ -15,6 +16,7 @@ import { usePrivateOrder } from '../hooks/usePrivateOrder'
 import { useLiveTracking, useTrackingEnabled } from '../hooks/useLiveTracking'
 
 export default function OrderTracking() {
+  const { user } = useAuth()
   const { accessToken, order, loading, refreshing, error, lastUpdatedAt, refresh } = usePrivateOrder()
   const [cancelBusy, setCancelBusy] = useState(false)
   const [cancelError, setCancelError] = useState('')
@@ -110,6 +112,14 @@ export default function OrderTracking() {
             >
               Refresh status
             </button>
+            {user && (
+              <Link
+                to="/account/orders"
+                className="rounded-full border border-[#3d0a21]/20 px-4 py-2 text-xs font-semibold text-[#3d0a21]"
+              >
+                My orders
+              </Link>
+            )}
           </div>
 
           {isCancelled && (

@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { getPrimaryImageUrl } from "../../lib/productImages";
+import { useAuth } from "../../context/AuthContext";
 import OrderFormModal from "./OrderFormModal";
 
 export default function BuyNowButton({
@@ -19,12 +20,17 @@ export default function BuyNowButton({
   const resolvedPrice = productPrice ?? product?.price ?? null;
   const resolvedProductId = productId ?? product?.id ?? null;
   const [formOpen, setFormOpen] = useState(false);
+  const { requireSignIn } = useAuth();
   const label = soldOut ? "Enquire this product" : children;
   const resolvedUrl =
     productUrl || (typeof window !== "undefined" ? window.location.href : "");
 
   function openOrderForm() {
-    setFormOpen(true);
+    if (soldOut) {
+      setFormOpen(true);
+      return;
+    }
+    requireSignIn(() => setFormOpen(true));
   }
 
   const baseStyles =

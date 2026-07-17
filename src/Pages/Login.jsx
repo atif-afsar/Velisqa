@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 import { enrichAuthError, signInWithGoogle } from '../lib/auth'
 import GoogleSignInButton from '../Components/Auth/GoogleSignInButton'
@@ -7,6 +7,8 @@ import { useAuth } from '../context/AuthContext'
 
 export default function Login() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const nextPath = searchParams.get('next') || '/'
   const { user, loading: authLoading } = useAuth()
 
   const [isSignup, setIsSignup] = useState(false)
@@ -17,9 +19,9 @@ export default function Login() {
 
   useEffect(() => {
     if (!authLoading && user) {
-      navigate('/', { replace: true })
+      navigate(nextPath.startsWith('/') ? nextPath : '/', { replace: true })
     }
-  }, [user, authLoading, navigate])
+  }, [user, authLoading, navigate, nextPath])
 
   async function handleEmailAuth(e) {
     e.preventDefault()

@@ -1,4 +1,5 @@
 import SmoothScroll from './Components/SmoothScroll'
+import AccountRoute from './Components/AccountRoute'
 import AdminRoute from './Components/AdminRoute'
 import { scrollToTop } from './lib/smoothScrollState'
 import Navbar from './Components/Navbar'
@@ -37,6 +38,7 @@ const ManualPaymentConfirmation = lazy(() => import('./Pages/ManualPaymentConfir
 const OrderTracking = lazy(() => import('./Pages/OrderTracking'))
 const AdminPayments = lazy(() => import('./Pages/AdminPayments'))
 const AdminOrders = lazy(() => import('./Pages/AdminOrders'))
+const MyOrders = lazy(() => import('./Pages/MyOrders'))
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -70,6 +72,14 @@ function App() {
           <Route path="/pay/:orderRef" element={<ManualPayment />} />
           <Route path="/order-confirmation/:orderRef" element={<ManualPaymentConfirmation />} />
           <Route path="/orders/:orderRef" element={<OrderTracking />} />
+          <Route
+            path="/account/orders"
+            element={(
+              <AccountRoute>
+                <MyOrders />
+              </AccountRoute>
+            )}
+          />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/authenticity" element={<Authenticity />} />

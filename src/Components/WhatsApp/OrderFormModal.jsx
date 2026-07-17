@@ -7,6 +7,7 @@ import { buildOrderEmailPayload, submitOrderEmail } from "../../lib/orderEmail";
 import { trackInitiateCheckout } from "../../lib/metaPixel";
 import { validateIndianPhone } from "../../lib/indianPhone";
 import { getLenis } from "../../lib/smoothScrollState";
+import { useAuth } from "../../context/AuthContext";
 import OrderConfirmation from "../Checkout/OrderConfirmation";
 import OrderProductPreview from "../Checkout/OrderProductPreview";
 
@@ -57,6 +58,7 @@ export default function OrderFormModal({
   onCheckoutSuccess,
 }) {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const isEnquiry = variant === "enquiry";
   const isCart = Array.isArray(cartItems) && cartItems.length > 0;
   const titleId = useId();
@@ -67,6 +69,8 @@ export default function OrderFormModal({
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [confirmation, setConfirmation] = useState(null);
+  const defaultName = String(user?.user_metadata?.full_name || user?.user_metadata?.name || "").trim();
+  const defaultEmail = String(user?.email || "").trim();
 
   useEffect(() => {
     if (!open) return undefined;
@@ -194,7 +198,13 @@ export default function OrderFormModal({
       return;
     }
 
-    // COD + UPI: create the order in Supabase (no FormSubmit dependency).
+    // COD + UPI: create the order in Supabase (requires sign-in).
+    if (!user) {
+      setSubmitError("Sign in is required to place an order.");
+      setSubmitting(false);
+      return;
+    }
+
     try {
       const orderItems = isCart
         ? cartItems
@@ -415,6 +425,7 @@ export default function OrderFormModal({
                           required
                           autoComplete="name"
                           placeholder="Your name"
+                          defaultValue={defaultName}
                         />
                       </label>
                       <label className="flex min-w-0 flex-col gap-1">
@@ -445,6 +456,7 @@ export default function OrderFormModal({
                           required
                           autoComplete="email"
                           placeholder="you@email.com"
+                          defaultValue={defaultEmail}
                         />
                       </label>
                     </div>
