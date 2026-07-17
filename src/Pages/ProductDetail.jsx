@@ -20,6 +20,7 @@ import ProductBadgeLabel from '../Components/Product/ProductBadgeLabel'
 import ProductSoldOutBadge from '../Components/Product/ProductSoldOutBadge'
 import { isProductSoldOut } from '../lib/cartStock'
 import { findCachedProduct } from '../lib/productCatalogCache'
+import { trackMetaEvent } from '../lib/metaPixel'
 
 function ProductDetailSkeleton() {
   return (
@@ -45,6 +46,17 @@ export default function ProductDetail() {
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
+
+  useEffect(() => {
+    if (!product?.id) return
+    trackMetaEvent('ViewContent', {
+      content_ids: [product.id],
+      content_name: product.name,
+      content_type: 'product',
+      value: Number(product.price) || 0,
+      currency: 'INR',
+    })
+  }, [product?.id, product?.name, product?.price])
 
   useEffect(() => {
     let cancelled = false

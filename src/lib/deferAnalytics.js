@@ -1,10 +1,11 @@
-/** Load GTM/gtag after idle so they do not compete with first paint and hydration. */
+/** Load analytics after idle so they do not compete with first paint and hydration. */
 export function deferAnalytics() {
   if (typeof window === 'undefined') return
 
   const run = () => {
     loadGtag()
     loadGtm()
+    loadMetaPixel()
   }
 
   if ('requestIdleCallback' in window) {
@@ -12,6 +13,34 @@ export function deferAnalytics() {
   } else {
     window.setTimeout(run, 1200)
   }
+}
+
+function loadMetaPixel() {
+  const pixelId = String(import.meta.env.VITE_META_PIXEL_ID || '').trim()
+  if (!pixelId || window.fbq) return
+
+  const fbq = function (...args) {
+    if (fbq.callMethod) {
+      fbq.callMethod(...args)
+    } else {
+      fbq.queue.push(args)
+    }
+  }
+  fbq.push = fbq
+  fbq.loaded = true
+  fbq.version = '2.0'
+  fbq.queue = []
+  window.fbq = fbq
+  window._fbq = fbq
+
+  const script = document.createElement('script')
+  script.id = 'velisqa-meta-pixel'
+  script.async = true
+  script.src = 'https://connect.facebook.net/en_US/fbevents.js'
+  document.head.appendChild(script)
+
+  fbq('init', pixelId)
+  fbq('track', 'PageView')
 }
 
 function loadGtag() {

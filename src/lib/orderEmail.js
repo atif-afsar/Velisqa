@@ -18,7 +18,7 @@ function buildSingleOrderBody({
   enquiryType = 'order',
 }) {
   const isEnquiry = enquiryType === 'enquiry'
-  const paymentLabel = paymentMethod === 'online' ? 'Online payment (via WhatsApp)' : 'Cash on delivery'
+  const paymentLabel = paymentMethod === 'online' ? 'Manual UPI QR payment' : 'Cash on delivery'
 
   const lines = [
     isEnquiry ? 'VELISQA — SOLD OUT / REGISTER INTEREST' : 'VELISQA — NEW ORDER',
@@ -83,7 +83,7 @@ function buildCartOrderBody({ orderRef, cartItems, stockWarnings, paymentMethod,
       .join('\n')
   })
 
-  const paymentLabel = paymentMethod === 'online' ? 'Online payment (via WhatsApp)' : 'Cash on delivery'
+  const paymentLabel = paymentMethod === 'online' ? 'Manual UPI QR payment' : 'Cash on delivery'
 
   const lines = [
     'VELISQA — CART ORDER (Website)',
@@ -178,6 +178,8 @@ function isFormSubmitSuccess(data) {
   return data.success === true || data.success === 'true'
 }
 
+const FORM_SUBMIT_TIMEOUT_MS = 20000
+
 export async function submitOrderEmail(payload) {
   const customer = payload.customer || {}
 
@@ -192,11 +194,15 @@ export async function submitOrderEmail(payload) {
   body.append('_template', 'table')
   body.append('_captcha', 'false')
 
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), FORM_SUBMIT_TIMEOUT_MS)
+
   try {
     const response = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(ORDER_INBOX)}`, {
       method: 'POST',
       headers: { Accept: 'application/json' },
       body,
+      signal: controller.signal,
     })
 
     let data = null
@@ -211,15 +217,23 @@ export async function submitOrderEmail(payload) {
         ok: false,
         error:
           (data && typeof data.message === 'string' && data.message) ||
-          'Could not send your order. Please try again.',
+          'Could not email our team about your enquiry. Please try again or message us on WhatsApp.',
       }
     }
 
     return { ok: true, orderRef: payload.orderRef }
-  } catch {
+  } catch (error) {
+    if (error?.name === 'AbortError') {
+      return {
+        ok: false,
+        error: 'Order email timed out. Please try again in a moment, or use UPI QR payment.',
+      }
+    }
     return {
       ok: false,
       error: 'Network error — please check your connection and try again.',
     }
+  } finally {
+    clearTimeout(timeoutId)
   }
 }

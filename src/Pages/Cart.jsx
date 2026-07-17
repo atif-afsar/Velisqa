@@ -47,7 +47,7 @@ export default function Cart() {
     <>
       <SEOHead
         title="Your bag | Velisqa"
-        description="Review your Velisqa bag and complete your order with cash on delivery or online payment."
+        description="Review your Velisqa bag and complete your order with cash on delivery or secure UPI QR payment."
         canonicalPath="/cart"
       />
       <main className="page-offset-nav min-h-[60vh] bg-[#fdf9f4] text-[#130006]">
@@ -55,7 +55,7 @@ export default function Cart() {
           <h1 className="font-serif text-2xl font-semibold sm:text-3xl">Your bag</h1>
           <p className="mt-2 text-sm leading-relaxed text-[#514347]">
             Review items below, then tap <span className="font-semibold text-[#130006]">Checkout</span>.
-            Choose cash on delivery or online payment — we confirm stock before dispatch.
+            Choose cash on delivery or UPI QR payment — we confirm stock before dispatch.
           </p>
 
           {syncing && items.length > 0 && (

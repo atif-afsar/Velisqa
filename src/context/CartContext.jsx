@@ -10,6 +10,7 @@ import {
 } from '../lib/cartStock'
 import { supabase } from '../lib/supabaseClient'
 import { getPrimaryImageUrl } from '../lib/productImages'
+import { trackMetaEvent } from '../lib/metaPixel'
 
 const CartContext = createContext(null)
 
@@ -61,6 +62,13 @@ export function CartProvider({ children }) {
       }
 
       showToast(`“${product.name}” added to your bag`, 'success')
+      trackMetaEvent('AddToCart', {
+        content_ids: [product.id],
+        content_name: product.name,
+        content_type: 'product',
+        value: (Number(product.price) || 0) * quantity,
+        currency: 'INR',
+      })
       return { ok: true }
     },
     [items, persist, showToast],

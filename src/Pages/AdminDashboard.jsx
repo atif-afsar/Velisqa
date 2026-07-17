@@ -1,5 +1,6 @@
 import { useEffect, useId, useState } from 'react'
 import { Link } from 'react-router-dom'
+import AdminShell from '../Components/Admin/AdminShell'
 import { supabase } from '../lib/supabaseClient'
 import { isCloudinaryUploadConfigured } from '../lib/cloudinaryUpload'
 import {
@@ -86,7 +87,7 @@ function formatProductSaveError(message) {
 }
 
 export default function AdminDashboard() {
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
   const { notifyCatalogChange } = useCatalog()
   const fileInputId = useId()
 
@@ -393,37 +394,11 @@ export default function AdminDashboard() {
     'w-full rounded-xl border border-[#847377]/25 bg-white px-4 py-2.5 text-sm text-[#130006] outline-none transition focus:border-[#3d0a21]/35 focus:ring-2 focus:ring-[#d4af37]/20'
 
   return (
-    <main className="min-h-screen bg-[#f9f5f0] text-[#130006]">
-      <div className="page-offset-nav">
-        <div className="container-stitch px-4 py-8 sm:px-6 sm:py-10">
-          <div className="mb-8 flex flex-col gap-4 border-b border-[#d4af37]/15 pb-8 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#847377]">Velisqa</p>
-              <h1 className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">Admin — Products</h1>
-              <p className="mt-1 max-w-lg text-sm leading-relaxed text-[#514347]">
-                Add, edit, or delete shop items. Images upload to{' '}
-                {isCloudinaryUploadConfigured() ? 'Cloudinary CDN' : 'storage'} and are optimized for fast
-                loading on the shop. Multiple photos appear as a swipe gallery on the product page.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Link
-                to="/collections"
-                className="rounded-full border border-[#847377]/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#514347] transition hover:border-[#3d0a21]/40 hover:text-[#130006]"
-              >
-                View collections
-              </Link>
-              <button
-                type="button"
-                onClick={() => logout()}
-                className="rounded-full bg-[#3d0a21] px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#fdf9f4] transition hover:bg-[#2a0718]"
-              >
-                Sign out
-              </button>
-            </div>
-          </div>
-
-          {oosColumnChecked && !useOosColumn && (
+    <AdminShell
+      title="Products"
+      subtitle="Add, edit, or remove shop items. New customer orders are handled under Overview, UPI reviews, and Ship orders."
+    >
+      {oosColumnChecked && !useOosColumn && (
             <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
               <strong>Out-of-stock flag not in database yet.</strong> Marking out of stock sets inventory to 0
               until you run{' '}
@@ -797,8 +772,6 @@ export default function AdminDashboard() {
               <p className="mt-8 text-center text-sm text-[#847377]">No products yet. Add one above.</p>
             )}
           </section>
-        </div>
-      </div>
-    </main>
+    </AdminShell>
   )
 }

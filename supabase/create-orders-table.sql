@@ -1,5 +1,5 @@
 -- Run once in Supabase Dashboard → SQL Editor.
--- Creates orders + order_items for COD, Cashfree, Razorpay, and NimbusPost shipping.
+-- Creates orders + order_items for COD, Cashfree, manual UPI, and NimbusPost shipping.
 
 -- ---------------------------------------------------------------------------
 -- Helpers
@@ -69,11 +69,9 @@ create table if not exists public.orders (
   payment_status text not null default 'pending'
     check (payment_status in ('pending', 'paid', 'failed', 'refunded')),
   payment_gateway text
-    check (payment_gateway is null or payment_gateway in ('cashfree', 'razorpay')),
+    check (payment_gateway is null or payment_gateway = 'cashfree'),
   cashfree_order_id text,
   cashfree_payment_id text,
-  razorpay_order_id text,
-  razorpay_payment_id text,
 
   subtotal numeric(12, 2) not null check (subtotal >= 0),
   delivery_charge numeric(12, 2) not null default 0 check (delivery_charge >= 0),
@@ -259,10 +257,3 @@ create policy "Admins can update all order items"
     )
   );
 
--- ---------------------------------------------------------------------------
--- Safe re-run: add Razorpay columns if this file is run on an older project
--- ---------------------------------------------------------------------------
-
-alter table public.orders
-  add column if not exists razorpay_order_id text,
-  add column if not exists razorpay_payment_id text;

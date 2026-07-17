@@ -6,6 +6,7 @@ export default function OrderConfirmation({
   variant = 'cod',
   customerName,
   orderRef,
+  trackUrl = null,
   productName,
   total,
   onClose,
@@ -63,8 +64,8 @@ export default function OrderConfirmation({
             </>
           ) : isOnline ? (
             <>
-              Thank you{customerName ? `, ${customerName.split(' ')[0]}` : ''}. WhatsApp should have opened —
-              send the pre-filled message so our team can share your payment link.
+              Thank you{customerName ? `, ${customerName.split(' ')[0]}` : ''}. Complete the UPI QR payment
+              and submit your screenshot so our team can verify the order.
             </>
           ) : (
             <>
@@ -97,21 +98,31 @@ export default function OrderConfirmation({
           </div>
         )}
 
-        {!isOnline && (
+        {!isOnline && !isEnquiry && (
           <p className="mx-auto mt-4 max-w-xs text-[11px] leading-snug text-[#847377]">
-            A confirmation has been sent to our team. Keep your phone handy for delivery updates.
+            Your order is saved. Keep your phone handy — we&apos;ll confirm stock and delivery soon.
           </p>
         )}
       </div>
 
       <div className="shrink-0 border-t border-[#d4af37]/15 bg-[#fbf7f1] px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-5">
-        <button
-          type="button"
-          onClick={onClose}
-          className="tap-target inline-flex h-11 w-full items-center justify-center rounded-full border border-[#d4af37]/20 bg-[#2A0718] px-4 text-[11px] font-bold uppercase tracking-[0.1em] text-[#f7ead0] shadow-[0_8px_24px_rgba(42,7,24,0.35)] transition hover:bg-[#3d0a21] sm:h-12 sm:text-xs"
-        >
-          Continue shopping
-        </button>
+        {trackUrl && !isOnline && !isEnquiry ? (
+          <Link
+            to={trackUrl}
+            onClick={onClose}
+            className="tap-target inline-flex h-11 w-full items-center justify-center rounded-full border border-[#d4af37]/20 bg-[#2A0718] px-4 text-[11px] font-bold uppercase tracking-[0.1em] text-[#f7ead0] shadow-[0_8px_24px_rgba(42,7,24,0.35)] transition hover:bg-[#3d0a21] sm:h-12 sm:text-xs"
+          >
+            Track order
+          </Link>
+        ) : (
+          <button
+            type="button"
+            onClick={onClose}
+            className="tap-target inline-flex h-11 w-full items-center justify-center rounded-full border border-[#d4af37]/20 bg-[#2A0718] px-4 text-[11px] font-bold uppercase tracking-[0.1em] text-[#f7ead0] shadow-[0_8px_24px_rgba(42,7,24,0.35)] transition hover:bg-[#3d0a21] sm:h-12 sm:text-xs"
+          >
+            Continue shopping
+          </button>
+        )}
         <Link
           to="/collections"
           onClick={onClose}

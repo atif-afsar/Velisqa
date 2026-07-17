@@ -8,6 +8,7 @@ export default function BuyNowButton({
   productUrl,
   productImage,
   productPrice,
+  productId,
   product,
   children = "Buy Now",
   className = "",
@@ -16,6 +17,7 @@ export default function BuyNowButton({
   const resolvedName = productName ?? product?.name;
   const resolvedImage = productImage ?? (product ? getPrimaryImageUrl(product) : null);
   const resolvedPrice = productPrice ?? product?.price ?? null;
+  const resolvedProductId = productId ?? product?.id ?? null;
   const [formOpen, setFormOpen] = useState(false);
   const label = soldOut ? "Enquire this product" : children;
   const resolvedUrl =
@@ -69,6 +71,7 @@ export default function BuyNowButton({
         productUrl={resolvedUrl}
         productImage={resolvedImage}
         productPrice={resolvedPrice}
+        productId={resolvedProductId}
         variant={soldOut ? "enquiry" : "order"}
       />
     </div>

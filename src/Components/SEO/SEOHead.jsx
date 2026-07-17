@@ -43,6 +43,7 @@ export default function SEOHead({
   image = DEFAULT_IMAGE,
   type = "website",
   schema = [],
+  noindex = false,
 }) {
   const location = useLocation();
   const canonicalUrl = `${SITE_URL}${canonicalPath ?? location.pathname}`;
@@ -61,7 +62,9 @@ export default function SEOHead({
     });
     upsertMeta('meta[name="robots"]', () => document.createElement("meta"), {
       name: "robots",
-      content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
+      content: noindex
+        ? "noindex, nofollow"
+        : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
     });
 
     upsertMeta('link[rel="canonical"]', () => document.createElement("link"), {
@@ -135,7 +138,7 @@ export default function SEOHead({
     } else {
       removeJsonLd("velisqa-page-schema");
     }
-  }, [canonicalUrl, description, image, keywords, schema, title, type]);
+  }, [canonicalUrl, description, image, keywords, noindex, schema, title, type]);
 
   return null;
 }

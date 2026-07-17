@@ -8,6 +8,7 @@ import WishlistToast from './Components/Wishlist/WishlistToast'
 // import FloatingWhatsApp from './Components/WhatsApp/FloatingWhatsApp'
 import { Route, Routes, useLocation, Navigate } from 'react-router-dom'
 import { Suspense, lazy, useEffect } from 'react'
+import { trackMetaEvent } from './lib/metaPixel'
 
 const Home = lazy(() => import('./Pages/Home'))
 const About = lazy(() => import('./Pages/About'))
@@ -26,16 +27,23 @@ const Order = lazy(() => import('./Pages/Order'))
 const Login = lazy(() => import('./Pages/Login'))
 const AuthCallback = lazy(() => import('./Pages/AuthCallback'))
 const AdminLogin = lazy(() => import('./Pages/AdminLogin'))
+const AdminHome = lazy(() => import('./Pages/AdminHome'))
 const AdminDashboard = lazy(() => import('./Pages/AdminDashboard'))
 const ProductDetail = lazy(() => import('./Pages/ProductDetail'))
 const Cart = lazy(() => import('./Pages/Cart'))
 const Wishlist = lazy(() => import('./Pages/Wishlist'))
+const ManualPayment = lazy(() => import('./Pages/ManualPayment'))
+const ManualPaymentConfirmation = lazy(() => import('./Pages/ManualPaymentConfirmation'))
+const OrderTracking = lazy(() => import('./Pages/OrderTracking'))
+const AdminPayments = lazy(() => import('./Pages/AdminPayments'))
+const AdminOrders = lazy(() => import('./Pages/AdminOrders'))
 
 function ScrollToTop() {
   const { pathname } = useLocation()
 
   useEffect(() => {
     scrollToTop({ immediate: true })
+    trackMetaEvent('PageView')
   }, [pathname])
 
   return null
@@ -59,6 +67,9 @@ function App() {
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/pay/:orderRef" element={<ManualPayment />} />
+          <Route path="/order-confirmation/:orderRef" element={<ManualPaymentConfirmation />} />
+          <Route path="/orders/:orderRef" element={<OrderTracking />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/authenticity" element={<Authenticity />} />
@@ -73,6 +84,14 @@ function App() {
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin-login" element={<Navigate to="/admin" replace />} />
           <Route
+            path="/admin/home"
+            element={(
+              <AdminRoute>
+                <AdminHome />
+              </AdminRoute>
+            )}
+          />
+          <Route
             path="/admin/panel"
             element={
               <AdminRoute>
@@ -80,7 +99,23 @@ function App() {
               </AdminRoute>
             }
           />
-          <Route path="/admin/dashboard" element={<Navigate to="/admin/panel" replace />} />
+          <Route
+            path="/admin/payments"
+            element={
+              <AdminRoute>
+                <AdminPayments />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/orders"
+            element={
+              <AdminRoute>
+                <AdminOrders />
+              </AdminRoute>
+            }
+          />
+          <Route path="/admin/dashboard" element={<Navigate to="/admin/home" replace />} />
           <Route path="/:slug" element={<SEOLanding />} />
         </Routes>
       </Suspense>

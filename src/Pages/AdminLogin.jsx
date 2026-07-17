@@ -14,7 +14,7 @@ export default function AdminLogin() {
   useEffect(() => {
     if (loading) return
     if (user && profile?.role === 'admin') {
-      navigate('/admin/panel', { replace: true })
+      navigate('/admin/home', { replace: true })
     }
   }, [user, profile, loading, navigate])
 
@@ -48,7 +48,7 @@ export default function AdminLogin() {
         return
       }
 
-      navigate('/admin/panel')
+      navigate('/admin/home')
     } finally {
       setBusy(false)
     }
