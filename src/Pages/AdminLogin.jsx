@@ -10,6 +10,7 @@ export default function AdminLogin() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [busy, setBusy] = useState(false)
+  const [formError, setFormError] = useState('')
 
   useEffect(() => {
     if (loading) return
@@ -21,6 +22,7 @@ export default function AdminLogin() {
   async function handleAdminLogin(e) {
     e.preventDefault()
     setBusy(true)
+    setFormError('')
 
     const normalizedEmail = email.trim().toLowerCase()
     const normalizedPassword = password.trim()
@@ -32,7 +34,14 @@ export default function AdminLogin() {
       })
 
       if (error) {
-        alert(error.message)
+        const msg = error.message || ''
+        if (/invalid login credentials|invalid email or password/i.test(msg)) {
+          setFormError(
+            'Wrong admin email or password. Sign in with your Velisqa admin account (Supabase user with role "admin") — not your NimbusPost shipping login.',
+          )
+        } else {
+          setFormError(error.message)
+        }
         return
       }
 
@@ -44,7 +53,7 @@ export default function AdminLogin() {
 
       if (profileError || profileData?.role !== 'admin') {
         await supabase.auth.signOut()
-        alert('Access denied. This entrance is reserved for administrators.')
+        setFormError('Access denied. This entrance is reserved for administrators.')
         return
       }
 
@@ -74,6 +83,12 @@ export default function AdminLogin() {
               Admin sign in
             </h1>
             <p className="mt-2 text-sm text-white/60">Use credentials for a profile with role &quot;admin&quot;.</p>
+
+            {formError ? (
+              <p className="mt-6 rounded-xl border border-red-300/40 bg-red-950/40 px-4 py-3 text-sm text-red-100">
+                {formError}
+              </p>
+            ) : null}
 
             <form onSubmit={handleAdminLogin} className="mt-8 grid gap-4">
               <input

@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import AdminShell from '../Components/Admin/AdminShell'
 import AdminOrderItems from '../Components/Admin/AdminOrderItems'
+import ConfirmDialog from '../Components/UI/ConfirmDialog'
 import { formatInr } from '../lib/cartStock'
 import { getPaymentScreenshotSignedUrl } from '../lib/manualPayments'
 import { invokeEdgeFunction } from '../lib/invokeEdgeFunction'
+import { useConfirm } from '../hooks/useConfirm'
 import { supabase } from '../lib/supabaseClient'
 
 async function fetchPendingPayments() {
@@ -41,11 +43,15 @@ function whatsappPhone(value) {
 }
 
 export default function AdminPayments() {
+  const { confirm, ConfirmDialog: ConfirmPrompt } = useConfirm()
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [notice, setNotice] = useState('')
   const [busyId, setBusyId] = useState(null)
   const [proofUrls, setProofUrls] = useState({})
+  const [rejectDialog, setRejectDialog] = useState(null)
+  const [zoomProofUrl, setZoomProofUrl] = useState('')
 
   async function refresh() {
     setLoading(true)
@@ -86,27 +92,31 @@ export default function AdminPayments() {
   }
 
   async function approve(order) {
-    if (!window.confirm(`Approve payment for ${order.order_ref} and create its shipment?`)) return
+    const ok = await confirm({
+      title: 'Approve payment?',
+      message: `Approve payment for ${order.order_ref} and create its shipment?`,
+      confirmLabel: 'Approve & ship',
+      variant: 'primary',
+    })
+    if (!ok) return
     setBusyId(order.id)
     setError('')
-    const { error: invokeError } = await invokeEdgeFunction('admin-approve-payment', {
+    setNotice('')
+    const { data, error: invokeError } = await invokeEdgeFunction('admin-approve-payment', {
       orderId: order.id,
     })
     if (invokeError) {
       setError(invokeError)
     } else {
+      if (data?.shipmentWarning) {
+        setNotice(data.shipmentWarning)
+      }
       await refresh()
     }
     setBusyId(null)
   }
 
-  async function reject(order) {
-    const reason = window.prompt(
-      'Reason shown to the customer:',
-      'Screenshot unclear — please upload a clearer payment proof.',
-    )
-    if (!reason?.trim()) return
-
+  async function rejectWithReason(order, reason) {
     setBusyId(order.id)
     setError('')
     const { error: invokeError } = await invokeEdgeFunction('admin-reject-payment', {
@@ -128,8 +138,21 @@ export default function AdminPayments() {
     setBusyId(null)
   }
 
+  function openRejectDialog(order) {
+    setRejectDialog({
+      order,
+      reason: 'Screenshot unclear — please upload a clearer payment proof.',
+    })
+  }
+
   async function removeOrder(order) {
-    if (!window.confirm(`Remove order ${order.order_ref} permanently? This cannot be undone.`)) return
+    const ok = await confirm({
+      title: 'Delete order record?',
+      message: `Remove order ${order.order_ref} permanently? This cannot be undone.`,
+      confirmLabel: 'Delete record',
+      variant: 'danger',
+    })
+    if (!ok) return
     setBusyId(order.id)
     setError('')
     const { error: invokeError } = await invokeEdgeFunction('admin-delete-order', {
@@ -144,7 +167,13 @@ export default function AdminPayments() {
   }
 
   async function cancelOrder(order) {
-    if (!window.confirm(`Cancel order ${order.order_ref} before approving payment?`)) return
+    const ok = await confirm({
+      title: 'Cancel order?',
+      message: `Cancel order ${order.order_ref} before approving payment?`,
+      confirmLabel: 'Cancel order',
+      variant: 'danger',
+    })
+    if (!ok) return
     setBusyId(order.id)
     setError('')
     const { error: invokeError } = await invokeEdgeFunction('admin-cancel-order', {
@@ -164,8 +193,66 @@ export default function AdminPayments() {
       subtitle="Customers who chose UPI QR upload a payment screenshot here. Check the proof matches the order amount, then approve to ship automatically."
       onRefresh={refresh}
     >
+      {ConfirmPrompt}
+      <ConfirmDialog
+        open={Boolean(rejectDialog)}
+        title={`Reject payment for ${rejectDialog?.order?.order_ref ?? ''}?`}
+        message="This reason is shown to the customer so they can upload clearer proof."
+        confirmLabel="Reject proof"
+        cancelLabel="Keep reviewing"
+        variant="danger"
+        busy={busyId === rejectDialog?.order?.id}
+        onCancel={() => setRejectDialog(null)}
+        onConfirm={() => {
+          const reason = rejectDialog?.reason?.trim()
+          if (!reason || !rejectDialog?.order) return
+          const order = rejectDialog.order
+          setRejectDialog(null)
+          void rejectWithReason(order, reason)
+        }}
+      >
+        <label className="block text-xs font-semibold uppercase tracking-[0.08em] text-[#847377]">
+          Reason for customer
+          <textarea
+            value={rejectDialog?.reason ?? ''}
+            onChange={(event) => {
+              setRejectDialog((current) => (
+                current ? { ...current, reason: event.target.value } : current
+              ))
+            }}
+            rows={3}
+            className="mt-2 w-full rounded-xl border border-[#130006]/10 bg-white px-3 py-2 text-sm normal-case tracking-normal text-[#130006] outline-none focus:border-[#3d0a21]/30"
+          />
+        </label>
+      </ConfirmDialog>
+      {zoomProofUrl ? (
+        <div
+          className="fixed inset-0 z-[230] flex items-center justify-center bg-[#130006]/90 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Payment proof full size"
+          onClick={() => setZoomProofUrl('')}
+        >
+          <button
+            type="button"
+            onClick={() => setZoomProofUrl('')}
+            className="absolute right-4 top-4 rounded-full border border-white/20 px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-white"
+          >
+            Close
+          </button>
+          <img
+            src={zoomProofUrl}
+            alt="Payment proof full size"
+            className="max-h-[90vh] max-w-full rounded-xl object-contain"
+            onClick={(event) => event.stopPropagation()}
+          />
+        </div>
+      ) : null}
       {error && (
         <p className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">{error}</p>
+      )}
+      {notice && (
+        <p className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">{notice}</p>
       )}
 
       {!loading && orders.length > 0 && (
@@ -231,13 +318,26 @@ export default function AdminPayments() {
                       </button>
                     </div>
                     {proofUrls[order.id] && (
-                      <a href={proofUrls[order.id]} target="_blank" rel="noreferrer">
-                        <img
-                          src={proofUrls[order.id]}
-                          alt={`Payment proof for ${order.order_ref}`}
-                          className="mt-3 max-h-72 w-full rounded-xl border border-[#130006]/10 bg-[#f1ede8] object-contain"
-                        />
-                      </a>
+                      <div className="mt-3 space-y-2">
+                        <button
+                          type="button"
+                          onClick={() => setZoomProofUrl(proofUrls[order.id])}
+                          className="text-xs font-semibold text-[#6f334a] hover:underline"
+                        >
+                          View full size
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setZoomProofUrl(proofUrls[order.id])}
+                          className="block w-full overflow-hidden rounded-xl border border-[#130006]/10 bg-[#f1ede8]"
+                        >
+                          <img
+                            src={proofUrls[order.id]}
+                            alt={`Payment proof for ${order.order_ref}`}
+                            className="max-h-72 w-full object-contain"
+                          />
+                        </button>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -262,7 +362,7 @@ export default function AdminPayments() {
                   <button
                     type="button"
                     disabled={busyId === order.id}
-                    onClick={() => void reject(order)}
+                    onClick={() => openRejectDialog(order)}
                     className="min-h-11 rounded-full border border-red-300 px-5 text-xs font-bold uppercase tracking-[0.1em] text-red-800 disabled:opacity-50"
                   >
                     Reject

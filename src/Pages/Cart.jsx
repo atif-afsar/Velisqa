@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import QuantityStepper from '../Components/Cart/QuantityStepper'
-import OrderFormModal from '../Components/WhatsApp/OrderFormModal'
+import ProductCard from '../Components/Product/ProductCard'
 import SEOHead from '../Components/SEO/SEOHead'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
+import { useProducts } from '../hooks/useProducts'
 import { consumePostSignInIntent } from '../lib/postSignIn'
-import { formatInr, getCartLineSubtotal, getProductStock } from '../lib/cartStock'
+import { formatInr, getCartLineSubtotal, getProductStock, isProductSoldOut } from '../lib/cartStock'
 import ProductPriceDisplay from '../Components/Product/ProductPriceDisplay'
 
 export default function Cart() {
+  const navigate = useNavigate()
   const {
     items,
     cartTotal,
@@ -22,9 +24,13 @@ export default function Cart() {
   } = useCart()
 
   const { requireSignIn, user } = useAuth()
+  const { products } = useProducts()
   const [searchParams] = useSearchParams()
-  const [checkoutOpen, setCheckoutOpen] = useState(false)
   const [localIssues, setLocalIssues] = useState([])
+
+  const suggestedProducts = products
+    .filter((product) => !isProductSoldOut(product))
+    .slice(0, 4)
 
   useEffect(() => {
     let cancelled = false
@@ -34,12 +40,10 @@ export default function Cart() {
     return () => {
       cancelled = true
     }
-    // Refresh stock once when opening the cart page
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const issues = localIssues.length ? localIssues : stockIssues
-  const issueMessages = issues.map((i) => i.message)
   const canCheckout = items.length > 0 && issues.length === 0 && !syncing
 
   useEffect(() => {
@@ -47,16 +51,16 @@ export default function Cart() {
 
     const shouldOpenFromQuery = searchParams.get('checkout') === '1'
     const intent = consumePostSignInIntent()
-    const shouldOpenFromIntent = intent?.openCheckout || intent?.returnTo?.includes('checkout=1')
+    const shouldOpenFromIntent = intent?.openCheckout || intent?.returnTo?.includes('checkout')
 
     if (shouldOpenFromQuery || shouldOpenFromIntent) {
-      setCheckoutOpen(true)
+      navigate('/checkout', { replace: true })
     }
-  }, [user, searchParams])
+  }, [user, searchParams, navigate])
 
   function handleCheckoutClick() {
     if (issues.length > 0) return
-    requireSignIn(() => setCheckoutOpen(true), { openCheckout: true, returnTo: '/cart?checkout=1' })
+    requireSignIn(() => navigate('/checkout'), { openCheckout: true, returnTo: '/checkout' })
   }
 
   return (
@@ -78,27 +82,6 @@ export default function Cart() {
             <p className="mt-4 text-xs text-[#847377]">Checking latest stock…</p>
           )}
 
-          {issues.length > 0 && (
-            <div
-              className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950"
-              role="alert"
-            >
-              <p className="font-semibold">Stock update needed</p>
-              <ul className="mt-2 list-inside list-disc space-y-1 text-xs leading-relaxed">
-                {issues.map((issue) => (
-                  <li key={issue.line.productId}>{issue.message}</li>
-                ))}
-              </ul>
-              <p className="mt-2 text-xs">
-                Reduce quantities or{' '}
-                <Link to="/order" className="font-medium underline-offset-2 hover:underline">
-                  request out-of-stock pieces
-                </Link>
-                .
-              </p>
-            </div>
-          )}
-
           {items.length === 0 ? (
             <div className="mt-12 text-center">
               <p className="text-sm text-[#514347]">Your cart is empty.</p>
@@ -108,6 +91,18 @@ export default function Cart() {
               >
                 Browse collections
               </Link>
+              {suggestedProducts.length > 0 && (
+                <div className="mt-10 text-left">
+                  <p className="text-center text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+                    You might like
+                  </p>
+                  <div className="mt-4 grid grid-cols-2 gap-3 sm:gap-4">
+                    {suggestedProducts.map((product) => (
+                      <ProductCard key={product.id} product={product} />
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <>
@@ -145,13 +140,19 @@ export default function Cart() {
                         <div className="mt-1">
                           <ProductPriceDisplay price={line.price} size="card" />
                         </div>
-                        {lineIssue && (
-                          <p className="mt-1 text-[10px] font-medium text-amber-800">{lineIssue.message}</p>
-                        )}
+                        {lineIssue ? (
+                          <div className="mt-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-[11px] leading-relaxed text-amber-950">
+                            <p className="font-semibold">Stock update needed</p>
+                            <p className="mt-1">{lineIssue.message}</p>
+                            <Link to="/order" className="mt-1 inline-flex font-medium underline-offset-2 hover:underline">
+                              Request this piece
+                            </Link>
+                          </div>
+                        ) : null}
                         {!lineIssue && stock > 0 && stock <= 3 && (
-                          <p className="mt-1 text-[10px] text-[#847377]">Only {stock} left</p>
+                          <p className="mt-1 text-[10px] font-medium text-[#6f334a]">Only {stock} left in stock</p>
                         )}
-                        <div className="mt-3 flex flex-wrap items-center gap-3">
+                        <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                           <QuantityStepper
                             value={line.quantity}
                             max={stock}
@@ -162,7 +163,7 @@ export default function Cart() {
                           <button
                             type="button"
                             onClick={() => removeFromCart(line.productId)}
-                            className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#847377] transition hover:text-red-800"
+                            className="self-start text-[10px] font-semibold uppercase tracking-[0.12em] text-[#847377] transition hover:text-red-800"
                           >
                             Remove
                           </button>
@@ -203,14 +204,6 @@ export default function Cart() {
           )}
         </div>
       </main>
-
-      <OrderFormModal
-        open={checkoutOpen}
-        onClose={() => setCheckoutOpen(false)}
-        cartItems={items}
-        stockWarnings={issueMessages}
-        onCheckoutSuccess={clearCart}
-      />
     </>
   )
 }

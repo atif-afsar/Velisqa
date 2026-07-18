@@ -8,11 +8,52 @@ import { trackInitiateCheckout } from "../../lib/metaPixel";
 import { validateIndianPhone } from "../../lib/indianPhone";
 import { getLenis } from "../../lib/smoothScrollState";
 import { useAuth } from "../../context/AuthContext";
+import { useConfirm } from "../../hooks/useConfirm";
+import CheckoutStepIndicator from "../Checkout/CheckoutStepIndicator";
 import OrderConfirmation from "../Checkout/OrderConfirmation";
 import OrderProductPreview from "../Checkout/OrderProductPreview";
 
 const fieldClass =
   "box-border w-full min-w-0 max-w-full rounded-lg border border-[#130006]/15 bg-white px-3 py-2.5 text-base text-[#130006] outline-none transition placeholder:text-[#847377]/55 focus:border-[#6f334a] focus:ring-1 focus:ring-[#6f334a]/20 sm:py-2 sm:text-sm";
+
+const INDIAN_STATES = [
+  "Andaman and Nicobar Islands",
+  "Andhra Pradesh",
+  "Arunachal Pradesh",
+  "Assam",
+  "Bihar",
+  "Chandigarh",
+  "Chhattisgarh",
+  "Dadra and Nagar Haveli and Daman and Diu",
+  "Delhi",
+  "Goa",
+  "Gujarat",
+  "Haryana",
+  "Himachal Pradesh",
+  "Jammu and Kashmir",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Ladakh",
+  "Lakshadweep",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Manipur",
+  "Meghalaya",
+  "Mizoram",
+  "Nagaland",
+  "Odisha",
+  "Puducherry",
+  "Punjab",
+  "Rajasthan",
+  "Sikkim",
+  "Tamil Nadu",
+  "Telangana",
+  "Tripura",
+  "Uttar Pradesh",
+  "Uttarakhand",
+  "West Bengal",
+];
 
 function mapsLink(lat, lng) {
   return `https://www.google.com/maps?q=${lat},${lng}`;
@@ -53,12 +94,15 @@ export default function OrderFormModal({
   productPrice = null,
   productId = null,
   variant = "order",
+  presentation = "modal",
   cartItems = null,
   stockWarnings = [],
   onCheckoutSuccess,
 }) {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { confirm, ConfirmDialog } = useConfirm();
+  const isPage = presentation === "page";
   const isEnquiry = variant === "enquiry";
   const isCart = Array.isArray(cartItems) && cartItems.length > 0;
   const titleId = useId();
@@ -69,14 +113,44 @@ export default function OrderFormModal({
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [confirmation, setConfirmation] = useState(null);
+  const [formDirty, setFormDirty] = useState(false);
   const defaultName = String(user?.user_metadata?.full_name || user?.user_metadata?.name || "").trim();
   const defaultEmail = String(user?.email || "").trim();
 
+  function handleCloseAll() {
+    onCheckoutSuccess?.();
+    onClose();
+  }
+
+  async function requestClose() {
+    if (confirmation) {
+      handleCloseAll();
+      return;
+    }
+
+    if (formDirty && !isPage) {
+      const ok = await confirm({
+        title: "Discard your order details?",
+        message: "You have started filling in this form. Close without saving?",
+        confirmLabel: "Discard",
+        cancelLabel: "Keep editing",
+        variant: "danger",
+      });
+      if (!ok) return;
+    }
+
+    onClose();
+  }
+
+  function markFormDirty() {
+    if (!formDirty) setFormDirty(true);
+  }
+
   useEffect(() => {
-    if (!open) return undefined;
+    if (!open || isPage) return undefined;
 
     function onKeyDown(event) {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") void requestClose();
     }
 
     const lenis = getLenis();
@@ -91,7 +165,7 @@ export default function OrderFormModal({
       window.removeEventListener("keydown", onKeyDown);
       lenis?.start();
     };
-  }, [open, onClose]);
+  }, [open, isPage]);
 
   useEffect(() => {
     if (open && !isEnquiry) {
@@ -109,6 +183,7 @@ export default function OrderFormModal({
         setSubmitting(false);
         setSubmitError("");
         setConfirmation(null);
+        setFormDirty(false);
       });
     }
   }, [open]);
@@ -131,22 +206,32 @@ export default function OrderFormModal({
     );
   }
 
-  function handleCloseAll() {
-    onCheckoutSuccess?.();
-    onClose();
-  }
-
   async function handleSubmit(event) {
     event.preventDefault();
     setSubmitError("");
     const form = new FormData(event.currentTarget);
+    const addressLine1 = String(form.get("addressLine1") || "").trim();
+    const addressLine2 = String(form.get("addressLine2") || "").trim();
+    const landmark = String(form.get("landmark") || "").trim();
+    const state = String(form.get("state") || "").trim();
+    const completeAddress = [
+      addressLine1,
+      addressLine2,
+      landmark ? `Landmark: ${landmark}` : "",
+      locationNote.trim() ? `Directions: ${locationNote.trim()}` : "",
+      state ? `State: ${state}` : "",
+    ].filter(Boolean).join(", ");
 
     const customer = {
       name: String(form.get("name") || "").trim(),
       phone: String(form.get("phone") || "").trim(),
       email: String(form.get("email") || "").trim(),
-      address: String(form.get("address") || "").trim(),
+      address: completeAddress,
+      addressLine1,
+      addressLine2,
+      landmark,
       city: String(form.get("city") || "").trim(),
+      state,
       pincode: String(form.get("pincode") || "").trim(),
       locationLabel: locationNote.trim() || (coords ? "GPS coordinates shared" : ""),
       locationMapsUrl: coords ? mapsLink(coords.lat, coords.lng) : "",
@@ -161,6 +246,12 @@ export default function OrderFormModal({
         return;
       }
       customer.phone = phoneCheck.phone;
+
+      if (addressLine1.length < 3 || addressLine2.length < 3 || !customer.city || !customer.state) {
+        setSubmitError("Enter the house/building, street or locality, city/district, and state for delivery.");
+        setSubmitting(false);
+        return;
+      }
     }
 
     const resolvedPayment = isEnquiry ? "cod" : paymentMethod;
@@ -285,51 +376,36 @@ export default function OrderFormModal({
           ? "Submit enquiry"
           : "Place order";
 
-  return createPortal(
-    <AnimatePresence mode="wait">
-      {open && (
-        <motion.div
-          key="order-form-overlay"
-          className="fixed inset-0 z-[200] flex sm:items-center sm:justify-center sm:p-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.22 }}
-          role="presentation"
-        >
-          <button
-            type="button"
-            className="absolute inset-0 hidden cursor-default bg-[#130006]/75 backdrop-blur-[2px] sm:block"
-            onClick={confirmation ? handleCloseAll : onClose}
-            aria-label="Close order form"
-          />
+  if (!open) return null
 
-          <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby={titleId}
-            data-lenis-prevent
-            className="relative z-10 flex h-[100dvh] max-h-[100dvh] w-full flex-col overflow-hidden bg-[#fbf7f1] max-sm:fixed max-sm:inset-0 sm:h-auto sm:max-h-[min(90dvh,680px)] sm:max-w-md sm:rounded-2xl sm:border sm:border-[#d4af37]/20 sm:shadow-[0_24px_80px_rgba(19,0,6,0.35)]"
-            initial={{ y: "100%", opacity: 0.9 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: "100%", opacity: 0 }}
-            transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
-            onClick={(e) => e.stopPropagation()}
-          >
+  const panel = (
+    <div
+      role={isPage ? undefined : "dialog"}
+      aria-modal={isPage ? undefined : true}
+      aria-labelledby={titleId}
+      data-lenis-prevent={isPage ? undefined : true}
+      className={`w-full bg-[#fbf7f1] ${
+        isPage
+          ? "overflow-visible rounded-2xl border border-[#d4af37]/20 shadow-[0_16px_48px_rgba(19,0,6,0.08)]"
+          : "relative z-10 flex h-[100dvh] max-h-[100dvh] flex-col overflow-hidden max-sm:fixed max-sm:inset-0 sm:h-auto sm:max-h-[min(90dvh,680px)] sm:max-w-md sm:rounded-2xl sm:border sm:border-[#d4af37]/20 sm:shadow-[0_24px_80px_rgba(19,0,6,0.35)]"
+      }`}
+    >
             <div className="flex shrink-0 items-center justify-between gap-3 border-b border-[#d4af37]/15 px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-5 sm:py-3">
               <div className="min-w-0 flex-1">
                 <h2 id={titleId} className="font-serif text-lg leading-tight text-[#130006] sm:text-xl">
                   {modalTitle}
                 </h2>
               </div>
-              <button
-                type="button"
-                onClick={confirmation ? handleCloseAll : onClose}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#130006]/10 text-lg leading-none text-[#130006] transition hover:bg-[#130006]/5"
-                aria-label="Close"
-              >
-                &times;
-              </button>
+              {!isPage && (
+                <button
+                  type="button"
+                  onClick={() => void (confirmation ? handleCloseAll() : requestClose())}
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#130006]/10 text-lg leading-none text-[#130006] transition hover:bg-[#130006]/5"
+                  aria-label="Close"
+                >
+                  &times;
+                </button>
+              )}
             </div>
 
             <AnimatePresence mode="wait">
@@ -349,12 +425,21 @@ export default function OrderFormModal({
                 <motion.form
                   key="order-form"
                   onSubmit={handleSubmit}
-                  className="flex min-h-0 flex-1 flex-col"
+                  onChange={markFormDirty}
+                  className={isPage ? "block" : "flex min-h-0 flex-1 flex-col"}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                 >
-                  <div className="min-h-0 flex-1 space-y-3 overflow-x-hidden overflow-y-auto overscroll-contain px-4 py-3 [-webkit-overflow-scrolling:touch] sm:space-y-3.5 sm:px-5 sm:py-4">
+                  <div className={`space-y-3 px-4 py-3 sm:space-y-3.5 sm:px-5 sm:py-4 ${
+                    isPage
+                      ? "overflow-visible"
+                      : "min-h-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]"
+                  }`}>
+                    {!isEnquiry && !confirmation && (
+                      <CheckoutStepIndicator showPayment={!isEnquiry} />
+                    )}
+
                     <OrderProductPreview
                       productName={productName}
                       productImage={productImage}
@@ -389,7 +474,7 @@ export default function OrderFormModal({
                                 key={option.value}
                                 className={`flex min-w-0 cursor-pointer items-start gap-2 rounded-lg border px-2.5 py-2 transition max-sm:min-h-0 sm:tap-target sm:gap-2.5 sm:rounded-xl sm:px-3 sm:py-2.5 ${
                                   selected
-                                    ? "border-[#3d0a21] bg-[#3d0a21]/[0.06] ring-1 ring-[#3d0a21]/15"
+                                    ? "border-[#3d0a21] bg-[#3d0a21]/[0.08] ring-2 ring-[#3d0a21]/20 shadow-sm"
                                     : "border-[#130006]/12 bg-white hover:border-[#3d0a21]/25"
                                 }`}
                               >
@@ -408,7 +493,7 @@ export default function OrderFormModal({
                                   <span className="block text-[10px] font-semibold leading-snug text-[#130006] sm:text-xs">
                                     {option.label}
                                   </span>
-                                  <span className="mt-0.5 hidden text-[10px] leading-snug text-[#847377] sm:block">
+                                  <span className="mt-0.5 block text-[9px] leading-snug text-[#847377] sm:text-[10px]">
                                     {option.hint}
                                   </span>
                                 </span>
@@ -468,28 +553,54 @@ export default function OrderFormModal({
 
                     <label className="flex min-w-0 flex-col gap-1">
                       <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#514347]">
-                        Delivery address <span className="text-[#6f334a]">*</span>
+                        House / flat / building <span className="text-[#6f334a]">*</span>
                       </span>
-                      <textarea
-                        className={`${fieldClass} min-h-[56px] resize-none sm:min-h-[60px]`}
-                        name="address"
+                      <input
+                        className={fieldClass}
+                        name="addressLine1"
                         required
-                        rows={2}
-                        autoComplete="street-address"
-                        placeholder="House no., street, area"
+                        autoComplete="address-line1"
+                        minLength={3}
+                        placeholder="House no., flat, floor, building"
+                      />
+                    </label>
+
+                    <label className="flex min-w-0 flex-col gap-1">
+                      <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#514347]">
+                        Street / road / locality <span className="text-[#6f334a]">*</span>
+                      </span>
+                      <input
+                        className={fieldClass}
+                        name="addressLine2"
+                        required
+                        autoComplete="address-line2"
+                        minLength={3}
+                        placeholder="Street, colony, area or village"
+                      />
+                    </label>
+
+                    <label className="flex min-w-0 flex-col gap-1">
+                      <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#514347]">
+                        Landmark <span className="font-normal normal-case tracking-normal text-[#847377]">(optional)</span>
+                      </span>
+                      <input
+                        className={fieldClass}
+                        name="landmark"
+                        placeholder="Near school, hospital, market…"
                       />
                     </label>
 
                     <div className="grid min-w-0 grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3">
                       <label className="flex min-w-0 flex-col gap-1">
                         <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#514347]">
-                          City
+                          City / district <span className="text-[#6f334a]">*</span>
                         </span>
                         <input
                           className={fieldClass}
                           name="city"
+                          required
                           autoComplete="address-level2"
-                          placeholder="City"
+                          placeholder="City or district"
                         />
                       </label>
                       <label className="flex min-w-0 flex-col gap-1">
@@ -507,6 +618,24 @@ export default function OrderFormModal({
                         />
                       </label>
                     </div>
+
+                    <label className="flex min-w-0 flex-col gap-1">
+                      <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#514347]">
+                        State / union territory <span className="text-[#6f334a]">*</span>
+                      </span>
+                      <select
+                        className={fieldClass}
+                        name="state"
+                        required
+                        autoComplete="address-level1"
+                        defaultValue=""
+                      >
+                        <option value="" disabled>Select state</option>
+                        {INDIAN_STATES.map((state) => (
+                          <option key={state} value={state}>{state}</option>
+                        ))}
+                      </select>
+                    </label>
 
                     <label className="flex min-w-0 flex-col gap-1">
                       <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#514347]">
@@ -541,8 +670,8 @@ export default function OrderFormModal({
                           className={`${fieldClass} min-w-0 flex-1`}
                           value={locationNote}
                           onChange={(e) => setLocationNote(e.target.value)}
-                          placeholder="Landmark or area"
-                          aria-label="Location notes"
+                          placeholder="Extra directions for delivery agent"
+                          aria-label="Delivery directions"
                         />
                       </div>
                       {locationStatus === "denied" && (
@@ -561,6 +690,11 @@ export default function OrderFormModal({
                   </div>
 
                   <div className="shrink-0 border-t border-[#d4af37]/15 bg-[#fbf7f1] px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-5">
+                    {paymentMethod === "online" && !isEnquiry ? (
+                      <p className="mb-3 rounded-lg border border-[#d4af37]/20 bg-[#fbf7f1] px-3 py-2 text-center text-[11px] leading-snug text-[#514347]">
+                        <span className="font-semibold text-[#130006]">Next step:</span> scan the UPI QR and upload your payment screenshot.
+                      </p>
+                    ) : null}
                     <button
                       type="submit"
                       disabled={submitting}
@@ -571,7 +705,7 @@ export default function OrderFormModal({
                     </button>
                     <p className="mt-1.5 text-center text-[10px] leading-snug text-[#847377]">
                       {paymentMethod === "online" && !isEnquiry
-                        ? "Next: scan the UPI QR and upload your payment screenshot."
+                        ? "You are not charged until you upload payment proof."
                         : isEnquiry
                           ? "We’ll email our team about your interest."
                           : "Your order is saved in Velisqa — no email gateway required."}
@@ -580,10 +714,49 @@ export default function OrderFormModal({
                 </motion.form>
               )}
             </AnimatePresence>
+    </div>
+  )
+
+  if (isPage) {
+    return (
+      <>
+        {ConfirmDialog}
+        {panel}
+      </>
+    )
+  }
+
+  return createPortal(
+    <>
+      {ConfirmDialog}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key="order-form-overlay"
+          className="fixed inset-0 z-[200] flex sm:items-center sm:justify-center sm:p-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.22 }}
+          role="presentation"
+        >
+          <button
+            type="button"
+            className="absolute inset-0 hidden cursor-default bg-[#130006]/75 backdrop-blur-[2px] sm:block"
+            onClick={() => void requestClose()}
+            aria-label="Close order form"
+          />
+          <motion.div
+            initial={{ y: "100%", opacity: 0.9 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: "100%", opacity: 0 }}
+            transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+            onClick={(event) => event.stopPropagation()}
+          >
+            {panel}
           </motion.div>
         </motion.div>
-      )}
-    </AnimatePresence>,
+      </AnimatePresence>
+    </>,
     document.body,
   );
 }

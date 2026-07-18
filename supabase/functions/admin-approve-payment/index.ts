@@ -1,7 +1,24 @@
 import { corsHeaders, jsonResponse } from '../_shared/http.ts'
 import { requireAdmin } from '../_shared/admin.ts'
-import { createNimbusPostShipment } from '../_shared/nimbuspost.ts'
+import { createNimbusPostShipment, isValidAwb } from '../_shared/nimbuspost.ts'
 import { sendMetaPurchase } from '../_shared/meta.ts'
+
+function buildShipmentPatch(shipment: Awaited<ReturnType<typeof createNimbusPostShipment>>) {
+  const patch: Record<string, unknown> = {}
+
+  if (shipment.orderId) patch.nimbuspost_order_id = shipment.orderId
+  if (shipment.shipmentId) patch.nimbuspost_shipment_id = shipment.shipmentId
+  if (shipment.courierName) patch.courier_name = shipment.courierName
+  if (shipment.trackingUrl) patch.tracking_url = shipment.trackingUrl
+
+  if (shipment.awb && isValidAwb(shipment.awb)) {
+    patch.order_status = 'shipped'
+    patch.shipping_status = 'shipped'
+    patch.nimbuspost_awb = shipment.awb
+  }
+
+  return patch
+}
 
 Deno.serve(async (request) => {
   if (request.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
@@ -40,37 +57,71 @@ Deno.serve(async (request) => {
       return jsonResponse({ success: false, message: 'This payment is no longer awaiting review.' }, 409)
     }
 
-    const shipment = await createNimbusPostShipment(order)
-    if (!shipment.awb) {
-      throw new Error(
-        `NimbusPost accepted the request but did not return an AWB for ${order.order_ref}. Check your NimbusPost dashboard before approving again.`,
-      )
-    }
-
-    const { error: updateError } = await adminClient
+    const { data: paidOrder, error: payError } = await adminClient
       .from('orders')
       .update({
         payment_status: 'paid',
         payment_reviewed_at: new Date().toISOString(),
         payment_reviewed_by: user.id,
         rejection_reason: null,
-        order_status: 'shipped',
-        shipping_status: 'shipped',
-        nimbuspost_order_id: shipment.orderId,
-        nimbuspost_shipment_id: shipment.shipmentId,
-        nimbuspost_awb: shipment.awb,
-        courier_name: shipment.courierName,
-        tracking_url: shipment.trackingUrl,
       })
       .eq('id', order.id)
       .eq('payment_status', 'payment_submitted')
+      .select('id')
+      .maybeSingle()
 
-    if (updateError) throw updateError
+    if (payError) throw payError
+    if (!paidOrder) {
+      return jsonResponse({ success: false, message: 'This payment is no longer awaiting review.' }, 409)
+    }
+
+    let shipment: Awaited<ReturnType<typeof createNimbusPostShipment>> | null = null
+    let shipmentWarning: string | null = null
+
+    try {
+      shipment = await createNimbusPostShipment(order)
+    } catch (shipmentError) {
+      shipmentWarning = shipmentError instanceof Error
+        ? shipmentError.message
+        : 'NimbusPost shipment could not be created automatically.'
+
+      await adminClient.from('payment_review_logs').insert({
+        order_id: order.id,
+        action: 'approved',
+        admin_note: `Payment approved. Shipment failed: ${shipmentWarning}`,
+        reviewed_by: user.id,
+      })
+
+      return jsonResponse({
+        success: true,
+        paymentApproved: true,
+        shipmentWarning,
+        message: `Payment approved for ${order.order_ref}. Shipment could not be created automatically — open Ship orders to retry.`,
+      })
+    }
+
+    const shipmentPatch = buildShipmentPatch(shipment)
+    if (!shipment.awb) {
+      shipmentWarning =
+        `Payment approved for ${order.order_ref}. NimbusPost accepted the order but did not return an AWB yet — if you already see it booked in NimbusPost, open Ship orders and click Ship via NimbusPost once to sync the AWB.`
+      console.error('NimbusPost response missing AWB after approve:', JSON.stringify(shipment.raw)?.slice(0, 500))
+    }
+
+    if (Object.keys(shipmentPatch).length > 0) {
+      const { error: shipmentUpdateError } = await adminClient
+        .from('orders')
+        .update(shipmentPatch)
+        .eq('id', order.id)
+
+      if (shipmentUpdateError) throw shipmentUpdateError
+    }
 
     await adminClient.from('payment_review_logs').insert({
       order_id: order.id,
       action: 'approved',
-      admin_note: shipment.awb ? `NimbusPost AWB: ${shipment.awb}` : 'NimbusPost shipment created.',
+      admin_note: shipment.awb
+        ? `NimbusPost AWB: ${shipment.awb}`
+        : shipmentWarning || 'Payment approved; shipment pending AWB sync.',
       reviewed_by: user.id,
     })
 
@@ -82,7 +133,16 @@ Deno.serve(async (request) => {
       metaResult = { error: metaError instanceof Error ? metaError.message : 'Unknown Meta error' }
     }
 
-    return jsonResponse({ success: true, shipment, meta: metaResult })
+    return jsonResponse({
+      success: true,
+      paymentApproved: true,
+      shipment,
+      shipmentWarning,
+      message: shipment.awb
+        ? `Payment approved and shipment booked (AWB ${shipment.awb}).`
+        : shipmentWarning,
+      meta: metaResult,
+    })
   } catch (error) {
     console.error('admin-approve-payment:', error)
     const message = error instanceof Error ? error.message : 'Payment approval failed.'

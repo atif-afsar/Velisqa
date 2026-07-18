@@ -14,11 +14,13 @@ import {
 } from '../lib/orderTracking'
 import { usePrivateOrder } from '../hooks/usePrivateOrder'
 import { useLiveTracking, useTrackingEnabled } from '../hooks/useLiveTracking'
+import RefreshCountdown from '../Components/OrderTracking/RefreshCountdown'
 
 export default function OrderTracking() {
   const { user } = useAuth()
   const { accessToken, order, loading, refreshing, error, lastUpdatedAt, refresh } = usePrivateOrder()
   const [cancelBusy, setCancelBusy] = useState(false)
+  const [cancelConfirmOpen, setCancelConfirmOpen] = useState(false)
   const [cancelError, setCancelError] = useState('')
   const [cancelMessage, setCancelMessage] = useState('')
 
@@ -57,13 +59,7 @@ export default function OrderTracking() {
   const showCancel = canCustomerCancelOrder(order)
   const latestScan = tracking?.latest || tracking?.scans?.[0] || null
 
-  async function handleCancel() {
-    if (!window.confirm(
-      order.awbNumber
-        ? 'Cancel this order? If the courier has not picked up yet, the shipment will be stopped.'
-        : 'Cancel this order before it is dispatched?',
-    )) return
-
+  async function confirmCancel() {
     setCancelBusy(true)
     setCancelError('')
     setCancelMessage('')
@@ -73,6 +69,7 @@ export default function OrderTracking() {
       setCancelError(invokeError)
     } else {
       setCancelMessage(data?.message || 'Your order was cancelled.')
+      setCancelConfirmOpen(false)
       await refresh({ silent: true })
     }
     setCancelBusy(false)
@@ -101,7 +98,19 @@ export default function OrderTracking() {
               <h1 className="mt-2 font-serif text-3xl font-semibold">Track your order</h1>
               {lastUpdatedAt && (
                 <p className="mt-2 text-xs text-[#847377]">
-                  {refreshing ? 'Updating…' : `Last updated ${new Date(lastUpdatedAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })} · auto-refresh every 25s`}
+                  {refreshing ? 'Updating…' : (
+                    <>
+                      Last updated {new Date(lastUpdatedAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                      {trackingEnabled ? (
+                        <>
+                          {' · '}
+                          <RefreshCountdown active={trackingEnabled} />
+                        </>
+                      ) : (
+                        ' · auto-refresh every 25s'
+                      )}
+                    </>
+                  )}
                 </p>
               )}
             </div>
@@ -262,14 +271,47 @@ export default function OrderTracking() {
                 You can cancel before delivery if the parcel has not left for your address yet.
                 {order.awbNumber ? ' If pickup already happened, contact us on WhatsApp.' : ''}
               </p>
-              <button
-                type="button"
-                disabled={cancelBusy}
-                onClick={() => void handleCancel()}
-                className="mt-4 rounded-full border border-red-300 px-5 py-2.5 text-xs font-bold uppercase tracking-[0.08em] text-red-800 disabled:opacity-50"
-              >
-                {cancelBusy ? 'Cancelling…' : 'Cancel order'}
-              </button>
+              {cancelConfirmOpen ? (
+                <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-950">
+                  <p className="font-semibold">
+                    {order.awbNumber
+                      ? 'Cancel this order?'
+                      : 'Cancel before dispatch?'}
+                  </p>
+                  <p className="mt-2 leading-relaxed">
+                    {order.awbNumber
+                      ? 'If the courier has not picked up yet, the shipment will be stopped.'
+                      : 'Your order will be cancelled before it is handed to the courier.'}
+                  </p>
+                  <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+                    <button
+                      type="button"
+                      disabled={cancelBusy}
+                      onClick={() => setCancelConfirmOpen(false)}
+                      className="min-h-10 rounded-full border border-[#3d0a21]/20 px-5 text-xs font-bold uppercase tracking-[0.08em] text-[#3d0a21] disabled:opacity-50"
+                    >
+                      Keep order
+                    </button>
+                    <button
+                      type="button"
+                      disabled={cancelBusy}
+                      onClick={() => void confirmCancel()}
+                      className="min-h-10 rounded-full border border-red-400 bg-red-800 px-5 text-xs font-bold uppercase tracking-[0.08em] text-white disabled:opacity-50"
+                    >
+                      {cancelBusy ? 'Cancelling…' : 'Yes, cancel order'}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  disabled={cancelBusy}
+                  onClick={() => setCancelConfirmOpen(true)}
+                  className="mt-4 rounded-full border border-red-300 px-5 py-2.5 text-xs font-bold uppercase tracking-[0.08em] text-red-800 disabled:opacity-50"
+                >
+                  Cancel order
+                </button>
+              )}
             </section>
           )}
 
@@ -285,6 +327,7 @@ export default function OrderTracking() {
 function StatusStep({ step }) {
   const complete = step.complete && !step.muted
   const active = step.active && !step.muted
+  const statusLabel = complete ? 'Completed' : active ? 'In progress' : 'Upcoming'
 
   return (
     <li className="flex gap-3">
@@ -294,9 +337,10 @@ function StatusStep({ step }) {
             complete
               ? 'bg-[#2d6a4f] text-white'
               : active
-                ? 'border-2 border-[#2d6a4f] bg-white text-[#2d6a4f]'
+                ? 'border-2 border-[#2d6a4f] bg-white text-[#2d6a4f] ring-4 ring-[#2d6a4f]/10 animate-pulse'
                 : 'border border-[#847377]/30 bg-white text-[#847377]'
           }`}
+          aria-label={`${step.label}: ${statusLabel}`}
         >
           {complete ? '✓' : active ? '•' : ''}
         </span>
@@ -307,6 +351,7 @@ function StatusStep({ step }) {
       <div className="pb-4">
         <p className={`text-sm ${complete || active ? 'font-semibold text-[#130006]' : 'text-[#847377]'}`}>
           {step.label}
+          {active ? <span className="ml-2 text-[10px] font-bold uppercase tracking-[0.08em] text-[#2d6a4f]">Now</span> : null}
         </p>
         {step.detail && (
           <p className="mt-0.5 text-xs leading-relaxed text-[#847377]">{step.detail}</p>

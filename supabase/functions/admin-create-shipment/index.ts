@@ -4,6 +4,7 @@ import {
   buildNimbusOrderNumber,
   createNimbusPostShipment,
   isIncompleteShipment,
+  isValidAwb,
 } from '../_shared/nimbuspost.ts'
 
 function httpStatusForError(message: string) {
@@ -63,7 +64,7 @@ Deno.serve(async (request) => {
 
     if (orderError || !order) throw orderError || new Error('Order not found.')
 
-    if (order.nimbuspost_awb) {
+    if (order.nimbuspost_awb && isValidAwb(order.nimbuspost_awb)) {
       return jsonResponse({ success: false, message: 'This order already has a shipment AWB.' }, 409)
     }
 
@@ -95,30 +96,43 @@ Deno.serve(async (request) => {
     }
 
     const shipment = await createNimbusPostShipment(shipmentOrder)
+
+    const shipmentPatch: Record<string, unknown> = {}
+    if (shipment.orderId) shipmentPatch.nimbuspost_order_id = shipment.orderId
+    if (shipment.shipmentId) shipmentPatch.nimbuspost_shipment_id = shipment.shipmentId
+    if (shipment.courierName) shipmentPatch.courier_name = shipment.courierName
+    if (shipment.trackingUrl) shipmentPatch.tracking_url = shipment.trackingUrl
+
+    if (shipment.awb && isValidAwb(shipment.awb)) {
+      shipmentPatch.payment_status = isCod ? order.payment_status : 'paid'
+      shipmentPatch.order_status = 'shipped'
+      shipmentPatch.shipping_status = 'shipped'
+      shipmentPatch.nimbuspost_awb = shipment.awb
+    } else if (shipment.awb) {
+      console.error('Rejected invalid NimbusPost AWB:', shipment.awb)
+      shipment.awb = null
+      shipment.trackingUrl = null
+    }
+
+    if (Object.keys(shipmentPatch).length > 0) {
+      const { error: updateError } = await adminClient
+        .from('orders')
+        .update(shipmentPatch)
+        .eq('id', order.id)
+
+      if (updateError) throw updateError
+    }
+
     if (!shipment.awb) {
       const responseHint = JSON.stringify(shipment.raw)?.slice(0, 400)
       console.error('NimbusPost response missing AWB:', responseHint)
-      throw new Error(
-        `NimbusPost created the order but did not return an AWB for ${order.order_ref}. Check NimbusPost → Orders for "${shipmentOrder.nimbus_order_number || order.order_ref}" and click Ship Now if it shows NEW. Response: ${responseHint || 'empty'}`,
-      )
-    }
-
-    const { error: updateError } = await adminClient
-      .from('orders')
-      .update({
-        payment_status: isCod ? order.payment_status : 'paid',
-        order_status: 'shipped',
-        shipping_status: 'shipped',
-        nimbuspost_order_id: shipment.orderId,
-        nimbuspost_shipment_id: shipment.shipmentId,
-        nimbuspost_awb: shipment.awb,
-        courier_name: shipment.courierName,
-        tracking_url: shipment.trackingUrl,
+      return jsonResponse({
+        success: true,
+        shipment,
+        shipmentWarning:
+          `NimbusPost accepted ${order.order_ref} but did not return an AWB yet. If you already see it booked in NimbusPost, wait a minute and click Ship via NimbusPost again to sync the AWB.`,
       })
-      .eq('id', order.id)
-      .is('nimbuspost_awb', null)
-
-    if (updateError) throw updateError
+    }
 
     return jsonResponse({ success: true, shipment })
   } catch (error) {

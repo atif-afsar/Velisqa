@@ -102,9 +102,54 @@ function packageDimensions() {
   }
 }
 
-function shippingState(city?: string | null, pincode?: string | null) {
+const INDIAN_STATE_CODES: Record<string, string> = {
+  'andaman and nicobar islands': 'AN',
+  'andhra pradesh': 'AP',
+  'arunachal pradesh': 'AR',
+  assam: 'AS',
+  bihar: 'BR',
+  chandigarh: 'CH',
+  chhattisgarh: 'CG',
+  'dadra and nagar haveli and daman and diu': 'DN',
+  delhi: 'DL',
+  goa: 'GA',
+  gujarat: 'GJ',
+  haryana: 'HR',
+  'himachal pradesh': 'HP',
+  'jammu and kashmir': 'JK',
+  jharkhand: 'JH',
+  karnataka: 'KA',
+  kerala: 'KL',
+  ladakh: 'LA',
+  lakshadweep: 'LD',
+  'madhya pradesh': 'MP',
+  maharashtra: 'MH',
+  manipur: 'MN',
+  meghalaya: 'ML',
+  mizoram: 'MZ',
+  nagaland: 'NL',
+  odisha: 'OD',
+  puducherry: 'PY',
+  punjab: 'PB',
+  rajasthan: 'RJ',
+  sikkim: 'SK',
+  'tamil nadu': 'TN',
+  telangana: 'TG',
+  tripura: 'TR',
+  'uttar pradesh': 'UP',
+  uttarakhand: 'UK',
+  'west bengal': 'WB',
+}
+
+function shippingState(city?: string | null, pincode?: string | null, address?: string | null) {
   const pin = String(pincode || '').replace(/\D/g, '')
   const normalizedCity = String(city || '').trim().toLowerCase()
+  const explicitState = String(address || '').match(/(?:^|,\s*)state:\s*([^,]+)/i)?.[1]?.trim().toLowerCase()
+
+  if (explicitState) {
+    const stateCode = INDIAN_STATE_CODES[explicitState]
+    if (stateCode) return stateCode
+  }
 
   if (pin.startsWith('110') || normalizedCity.includes('delhi') || normalizedCity.includes('new delhi')) {
     return 'DL'
@@ -184,7 +229,9 @@ function formatApiError(data: Record<string, unknown> | null, status: number, pr
   ]
 
   for (const candidate of candidates) {
-    if (typeof candidate === 'string' && candidate.trim()) return candidate.trim()
+    if (typeof candidate === 'string' && candidate.trim()) {
+      return `${prefix}: ${candidate.trim()}`
+    }
   }
 
   const raw = JSON.stringify(data)
@@ -204,13 +251,63 @@ function pickString(source: Record<string, unknown> | null | undefined, keys: st
   return null
 }
 
+export function isValidAwb(value: unknown): value is string {
+  if (value == null) return false
+  const trimmed = String(value).trim()
+  if (!trimmed || trimmed.length < 6 || trimmed.length > 20) return false
+  if (/error|proxy|exception|fail|null|undefined|domain|html|http|invalid/i.test(trimmed)) return false
+  if (/^\d{6,20}$/.test(trimmed)) return true
+  if (/^(NMBC|IN|AWB)\d{6,15}$/i.test(trimmed)) return true
+  return false
+}
+
+function pickAwb(source: Record<string, unknown> | null | undefined, keys: string[]) {
+  const candidate = pickString(source, keys)
+  return isValidAwb(candidate) ? candidate : null
+}
+
+function sanitizeParsedShipment(parsed: ReturnType<typeof parseShipmentResponse>) {
+  const awb = isValidAwb(parsed.awb) ? parsed.awb : null
+  const trackingUrl = awb
+    ? (parsed.trackingUrl && /^https?:\/\//i.test(parsed.trackingUrl) && isValidAwb(awb)
+      ? parsed.trackingUrl
+      : `https://nimbuspost.com/tracking/?awb=${encodeURIComponent(awb)}`)
+    : null
+
+  return { ...parsed, awb, trackingUrl }
+}
+
+function normalizeRecord(value: unknown): Record<string, unknown> | null {
+  if (value == null) return null
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      const record = normalizeRecord(item)
+      if (record) return record
+    }
+    return null
+  }
+  if (typeof value === 'object') return value as Record<string, unknown>
+  return null
+}
+
+function mergeShipmentRecords(...records: Array<Record<string, unknown> | null | undefined>) {
+  return records.reduce<Record<string, unknown>>((merged, record) => {
+    if (!record) return merged
+    return { ...merged, ...record }
+  }, {})
+}
+
 function deepFindAwb(value: unknown): string | null {
   if (value == null) return null
 
-  if (typeof value === 'string') {
-    const trimmed = value.trim()
-    if (/^(NMBC|IN|AWB)?[A-Z0-9]{8,20}$/i.test(trimmed)) return trimmed
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    const normalized = String(Math.trunc(value))
+    if (/^\d{6,20}$/.test(normalized)) return normalized
     return null
+  }
+
+  if (typeof value === 'string') {
+    return isValidAwb(value) ? value.trim() : null
   }
 
   if (Array.isArray(value)) {
@@ -224,11 +321,27 @@ function deepFindAwb(value: unknown): string | null {
   if (typeof value !== 'object') return null
 
   const obj = value as Record<string, unknown>
-  for (const key of ['awb_number', 'awb', 'waybill', 'waybill_number', 'tracking_number', 'awbNumber']) {
+  for (const key of [
+    'awb_number',
+    'awb',
+    'waybill',
+    'waybill_number',
+    'tracking_number',
+    'awbNumber',
+    'airwaybill_no',
+    'airway_bill_no',
+    'airway_bill',
+    'lrnumber',
+    'lr_number',
+    'lrn',
+    'courier_awb',
+    'tracking_no',
+    'trackingNo',
+  ]) {
     const candidate = obj[key]
     if (candidate != null && String(candidate).trim()) {
       const normalized = String(candidate).trim()
-      if (normalized.length >= 8) return normalized
+      if (isValidAwb(normalized)) return normalized
     }
   }
 
@@ -241,34 +354,33 @@ function deepFindAwb(value: unknown): string | null {
 }
 
 function parseShipmentResponse(data: Record<string, unknown> | null) {
-  const root = data?.data && typeof data.data === 'object'
-    ? data.data as Record<string, unknown>
-    : (data || {}) as Record<string, unknown>
+  const root = normalizeRecord(data?.data) || normalizeRecord(data) || {}
+  const shipment = mergeShipmentRecords(
+    root,
+    normalizeRecord(root.shipment),
+    normalizeRecord(root.result),
+    normalizeRecord(Array.isArray(root.shipments) ? root.shipments[0] : null),
+    normalizeRecord(Array.isArray(root.orders) ? root.orders[0] : null),
+  )
 
-  const shipment = root.shipment && typeof root.shipment === 'object'
-    ? root.shipment as Record<string, unknown>
-    : root
-
-  const nestedResult = shipment.result && typeof shipment.result === 'object'
-    ? shipment.result as Record<string, unknown>
-    : null
+  const nestedResult = normalizeRecord(shipment.result)
 
   const awb = deepFindAwb(data)
-    || pickString(shipment, ['awb_number', 'awb', 'waybill', 'waybill_number', 'tracking_number'])
-    || pickString(nestedResult, ['awb_number', 'awb', 'waybill', 'waybill_number', 'tracking_number'])
+    || pickAwb(shipment, ['awb_number', 'awb', 'waybill', 'waybill_number', 'tracking_number', 'airwaybill_no', 'airway_bill_no', 'lrnumber', 'lr_number'])
+    || pickAwb(nestedResult, ['awb_number', 'awb', 'waybill', 'waybill_number', 'tracking_number', 'airwaybill_no', 'airway_bill_no', 'lrnumber', 'lr_number'])
 
   const trackingUrl = pickString(shipment, ['tracking_url', 'trackingUrl', 'label'])
     || pickString(nestedResult, ['tracking_url', 'trackingUrl', 'label'])
     || (awb ? `https://nimbuspost.com/tracking/?awb=${encodeURIComponent(awb)}` : null)
 
-  return {
+  return sanitizeParsedShipment({
     orderId: pickString(shipment, ['order_id', 'orderId', 'id']) || pickString(nestedResult, ['order_id', 'orderId', 'id']) || pickString(root, ['order_id', 'orderId', 'id']),
     shipmentId: pickString(shipment, ['shipment_id', 'shipmentId']) || pickString(nestedResult, ['shipment_id', 'shipmentId']) || pickString(root, ['shipment_id', 'shipmentId']),
     awb,
     courierName: pickString(shipment, ['courier_name', 'courier']) || pickString(nestedResult, ['courier_name', 'courier']),
     trackingUrl,
     raw: data,
-  }
+  })
 }
 
 async function nimbusApiHeaders() {
@@ -292,45 +404,11 @@ async function tryFetchAwbFromNimbus(orderNumber: string, orderId?: string | nul
 
   for (const url of urls) {
     const response = await fetch(url, { method: 'GET', headers })
+    if (!response.ok) continue
     const data = await response.json().catch(() => null) as Record<string, unknown> | null
     if (!data) continue
     const parsed = parseShipmentResponse(data)
     if (parsed.awb) return parsed
-  }
-
-  return null
-}
-
-async function tryBookShipmentOnNimbus(orderNumber: string, orderId?: string | null, shipmentId?: string | null) {
-  const headers = await nimbusApiHeaders()
-  const reference = shipmentId || orderId
-  const endpoints = [
-    reference ? `https://api-v2.nimbuspost.com/v2/shipments/${reference}/book` : null,
-    reference ? `https://api-v2.nimbuspost.com/v2/shipments/${reference}/ship` : null,
-    'https://api-v2.nimbuspost.com/v2/shipments/book',
-    'https://api-v2.nimbuspost.com/v2/shipments/assign',
-  ].filter(Boolean) as string[]
-
-  const bodies = [
-    { order_number: orderNumber, order_id: orderId, shipment_id: shipmentId, auto_assign_courier: true },
-    { order_number: orderNumber, order_id: orderId, shipment_id: shipmentId },
-    { awb_generate: true, order_number: orderNumber },
-  ]
-
-  for (const endpoint of endpoints) {
-    for (const body of bodies) {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(body),
-      })
-      const data = await response.json().catch(() => null) as Record<string, unknown> | null
-      if (!data) continue
-      if (response.ok && data.success !== false && data.status !== false) {
-        const parsed = parseShipmentResponse(data)
-        if (parsed.awb) return parsed
-      }
-    }
   }
 
   return null
@@ -349,12 +427,7 @@ async function resolveExistingNimbusShipment(order: ShipmentOrder) {
 async function finalizeV2Shipment(orderNumber: string, initial: ReturnType<typeof parseShipmentResponse>) {
   if (initial.awb) return initial
 
-  const booked = await tryBookShipmentOnNimbus(orderNumber, initial.orderId, initial.shipmentId)
-  if (booked?.awb) {
-    return { ...initial, ...booked, raw: booked.raw ?? initial.raw }
-  }
-
-  for (const delayMs of [0, 1500]) {
+  for (const delayMs of [0, 1500, 3000, 6000, 10000]) {
     if (delayMs) await new Promise((resolve) => setTimeout(resolve, delayMs))
     const fetched = await tryFetchAwbFromNimbus(orderNumber, initial.orderId, initial.shipmentId)
     if (fetched?.awb) {
@@ -390,7 +463,10 @@ async function loginV1(email: string, password: string) {
   const token = typeof data?.data === 'string' ? data.data : null
 
   if (!response.ok || !token || data?.status === false) {
-    throw new Error(formatApiError(data, response.status, 'NimbusPost login'))
+    const detail = formatApiError(data, response.status, 'NimbusPost login')
+    throw new Error(
+      `${detail} Check Supabase Edge Function secrets NIMBUSPOST_EMAIL and NIMBUSPOST_PASSWORD — use your NimbusPost dashboard login, not your Velisqa admin password.`,
+    )
   }
 
   return token
@@ -401,7 +477,7 @@ function buildConsignee(order: ShipmentOrder) {
     name: order.customer_name,
     address: order.delivery_address,
     city: order.delivery_city || 'Aligarh',
-    state: shippingState(order.delivery_city, order.delivery_pincode),
+    state: shippingState(order.delivery_city, order.delivery_pincode, order.delivery_address),
     pincode: Number(normalizePincode(order.delivery_pincode)),
     phone: Number(normalizePhoneDigits(order.customer_phone)),
   }
@@ -500,14 +576,13 @@ async function createV2Shipment(order: ShipmentOrder) {
   const dimensions = packageDimensions()
   const phone = normalizePhoneDigits(order.customer_phone)
   const orderNumber = order.nimbus_order_number || order.order_ref
-  const deliveryState = shippingState(order.delivery_city, order.delivery_pincode)
+  const deliveryState = shippingState(order.delivery_city, order.delivery_pincode, order.delivery_address)
   const body = {
     order_number: orderNumber,
     order_type: 'b2c',
     payment_mode: mode,
     order_collectable_amount: mode === 'cod' ? Number(order.grand_total) : 0,
     warehouse_id: normalizeWarehouseId(warehouseIdRaw),
-    auto_assign_courier: true,
     shipping_address: {
       name: order.customer_name,
       email: order.customer_email || undefined,
@@ -560,7 +635,7 @@ export async function createNimbusPostShipment(order: ShipmentOrder) {
   }
 
   const existing = await resolveExistingNimbusShipment(order)
-  if (existing?.awb) return existing
+  if (existing?.awb && isValidAwb(existing.awb)) return existing
 
   try {
     const result = await createV2Shipment(order)
@@ -582,7 +657,13 @@ export async function createNimbusPostShipment(order: ShipmentOrder) {
   } catch (v2Error) {
     if (!readLoginCredentials()) throw v2Error
     console.error('NimbusPost v2 failed, trying v1 fallback:', v2Error)
-    return await createV1Shipment(order)
+    try {
+      return await createV1Shipment(order)
+    } catch (v1Error) {
+      const v2Msg = v2Error instanceof Error ? v2Error.message : String(v2Error)
+      const v1Msg = v1Error instanceof Error ? v1Error.message : String(v1Error)
+      throw new Error(`NimbusPost v2 failed: ${v2Msg} V1 fallback also failed: ${v1Msg}`)
+    }
   }
 }
 

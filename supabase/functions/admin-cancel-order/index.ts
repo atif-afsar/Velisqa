@@ -1,6 +1,6 @@
 import { corsHeaders, jsonResponse } from '../_shared/http.ts'
 import { requireAdmin } from '../_shared/admin.ts'
-import { cancelNimbusPostShipment } from '../_shared/nimbuspost.ts'
+import { cancelNimbusPostShipment, isValidAwb } from '../_shared/nimbuspost.ts'
 
 Deno.serve(async (request) => {
   if (request.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
@@ -37,16 +37,26 @@ Deno.serve(async (request) => {
       return jsonResponse({ success: false, message: 'Delivered orders cannot be cancelled here.' }, 409)
     }
 
-    let nimbusResult: { awb: string; raw: unknown } | null = null
-    if (order.nimbuspost_awb) {
-      nimbusResult = await cancelNimbusPostShipment(order.nimbuspost_awb)
+    let cancelledOnNimbusPost = false
+    let nimbusCancelError: string | null = null
+
+    const awb = isValidAwb(order.nimbuspost_awb) ? order.nimbuspost_awb : null
+
+    if (awb) {
+      try {
+        await cancelNimbusPostShipment(awb)
+        cancelledOnNimbusPost = true
+      } catch (error) {
+        nimbusCancelError = error instanceof Error ? error.message : String(error)
+        console.error('admin-cancel-order: NimbusPost cancel failed', nimbusCancelError)
+      }
     }
 
     const { error: updateError } = await adminClient
       .from('orders')
       .update({
         order_status: 'cancelled',
-        shipping_status: order.nimbuspost_awb ? 'rto' : 'not_shipped',
+        shipping_status: awb ? 'rto' : 'not_shipped',
         payment_status: order.payment_status === 'paid' ? 'refunded' : order.payment_status,
       })
       .eq('id', order.id)
@@ -56,11 +66,14 @@ Deno.serve(async (request) => {
     return jsonResponse({
       success: true,
       orderRef: order.order_ref,
-      cancelledOnNimbusPost: Boolean(nimbusResult),
-      awb: order.nimbuspost_awb,
-      walletNote: order.nimbuspost_awb
+      cancelledOnNimbusPost,
+      nimbusCancelError,
+      awb,
+      walletNote: awb && cancelledOnNimbusPost
         ? 'If pickup has not happened, NimbusPost usually credits shipping freight back to your wallet within 1–2 days.'
-        : null,
+        : awb && nimbusCancelError
+          ? `Order cancelled in Velisqa, but NimbusPost could not confirm cancellation: ${nimbusCancelError}`
+          : null,
     })
   } catch (error) {
     console.error('admin-cancel-order:', error)

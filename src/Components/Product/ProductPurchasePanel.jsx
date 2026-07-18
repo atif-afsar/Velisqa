@@ -6,18 +6,26 @@ import { getProductStock } from '../../lib/cartStock'
 import QuantityStepper from '../Cart/QuantityStepper'
 import BuyNowButton from '../WhatsApp/BuyNowButton'
 
-export default function ProductPurchasePanel({ product, productUrl, soldOut }) {
+export default function ProductPurchasePanel({
+  product,
+  productUrl,
+  soldOut,
+  quantity,
+  onQuantityChange,
+}) {
   const { addToCart, itemCount } = useCart()
   const { isWishlisted, toggleWishlist } = useWishlist()
-  const [quantity, setQuantity] = useState(1)
   const [adding, setAdding] = useState(false)
   const stock = getProductStock(product)
   const wishlisted = isWishlisted(product.id)
+  const [internalQuantity, setInternalQuantity] = useState(1)
+  const resolvedQuantity = quantity ?? internalQuantity
+  const setQuantity = onQuantityChange ?? setInternalQuantity
 
   function handleAdd() {
     if (adding || soldOut) return
     setAdding(true)
-    addToCart(product, quantity)
+    addToCart(product, resolvedQuantity)
     window.setTimeout(() => setAdding(false), 400)
   }
 
@@ -65,9 +73,9 @@ export default function ProductPurchasePanel({ product, productUrl, soldOut }) {
         <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#847377]">
           Qty
         </span>
-        <QuantityStepper value={quantity} max={stock} onChange={setQuantity} />
+        <QuantityStepper value={resolvedQuantity} max={stock} onChange={setQuantity} />
         {stock <= 3 && (
-          <span className="text-xs text-[#6f334a]">Only {stock} left</span>
+          <span className="text-xs font-medium text-[#6f334a]">Only {stock} left in stock</span>
         )}
       </div>
 
@@ -80,7 +88,7 @@ export default function ProductPurchasePanel({ product, productUrl, soldOut }) {
         {adding ? 'Adding…' : 'Add to bag'}
       </button>
 
-      <div className="grid grid-cols-2 gap-2.5">
+      <div className="grid grid-cols-[0.9fr_1.35fr] gap-2.5">
         <button
           type="button"
           onClick={() => toggleWishlist(product)}

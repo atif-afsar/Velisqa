@@ -46,6 +46,11 @@ export default function ProductDetail() {
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
+  const [quantity, setQuantity] = useState(1)
+
+  useEffect(() => {
+    setQuantity(1)
+  }, [product?.id])
 
   useEffect(() => {
     if (!product?.id) return
@@ -204,7 +209,13 @@ export default function ProductDetail() {
 
               <ProductDetailTrust soldOut={soldOut} />
 
-              <ProductPurchasePanel product={product} productUrl={productUrl} soldOut={soldOut} />
+              <ProductPurchasePanel
+                product={product}
+                productUrl={productUrl}
+                soldOut={soldOut}
+                quantity={quantity}
+                onQuantityChange={setQuantity}
+              />
 
               <ProductAccordion
                 compact
@@ -241,7 +252,7 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        <ProductStickyBar product={product} soldOut={soldOut} />
+        <ProductStickyBar product={product} soldOut={soldOut} quantity={quantity} />
       </main>
     </>
   )

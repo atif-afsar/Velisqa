@@ -6,15 +6,16 @@ import { SITE_URL } from '../SEO/siteConfig'
 import BuyNowButton from '../WhatsApp/BuyNowButton'
 
 /** Mobile-only sticky add-to-bag bar (Palmonas-style) */
-export default function ProductStickyBar({ product, soldOut }) {
+export default function ProductStickyBar({ product, soldOut, quantity = 1 }) {
   const { addToCart, itemCount } = useCart()
   const [adding, setAdding] = useState(false)
   const { sale } = getPromoPriceDisplay(product.price)
+  const addQuantity = Math.max(1, Number(quantity) || 1)
 
   function handleAdd() {
     if (adding || soldOut) return
     setAdding(true)
-    addToCart(product, 1)
+    addToCart(product, addQuantity)
     window.setTimeout(() => setAdding(false), 400)
   }
 
@@ -40,6 +41,9 @@ export default function ProductStickyBar({ product, soldOut }) {
         <div className="min-w-0 flex-1">
           <p className="truncate text-[11px] font-medium text-[#514347]">{product.name}</p>
           <p className="font-serif text-lg font-medium tabular-nums text-[#130006]">{formatInr(sale)}</p>
+          {addQuantity > 1 ? (
+            <p className="text-[10px] text-[#847377]">Qty {addQuantity}</p>
+          ) : null}
         </div>
         <button
           type="button"
@@ -47,7 +51,7 @@ export default function ProductStickyBar({ product, soldOut }) {
           disabled={adding}
           className="tap-target shrink-0 rounded-full bg-[#3d0a21] px-5 py-3 text-[11px] font-bold uppercase tracking-[0.1em] text-[#e9c349] disabled:opacity-60"
         >
-          {adding ? 'Adding…' : 'Add to bag'}
+          {adding ? 'Adding…' : addQuantity > 1 ? `Add ${addQuantity}` : 'Add to bag'}
         </button>
         {itemCount > 0 && (
           <Link

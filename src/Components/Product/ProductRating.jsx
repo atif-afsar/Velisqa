@@ -20,7 +20,7 @@ export default function ProductRating({ product, className = '', size = 'card' }
           const filled = i < fullStars
           const half = i === fullStars && halfStar
           return (
-            <span key={i} className="relative inline-block leading-none">
+            <span key={`star-${i + 1}`} className="relative inline-block leading-none">
               <span className={filled || half ? 'text-[#d4af37]' : 'text-[#d4af37]/25'}>★</span>
               {half && (
                 <span

@@ -32,6 +32,7 @@ const AdminHome = lazy(() => import('./Pages/AdminHome'))
 const AdminDashboard = lazy(() => import('./Pages/AdminDashboard'))
 const ProductDetail = lazy(() => import('./Pages/ProductDetail'))
 const Cart = lazy(() => import('./Pages/Cart'))
+const Checkout = lazy(() => import('./Pages/Checkout'))
 const Wishlist = lazy(() => import('./Pages/Wishlist'))
 const ManualPayment = lazy(() => import('./Pages/ManualPayment'))
 const ManualPaymentConfirmation = lazy(() => import('./Pages/ManualPaymentConfirmation'))
@@ -68,6 +69,14 @@ function App() {
           <Route path="/collections" element={<Collections />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/cart" element={<Cart />} />
+          <Route
+            path="/checkout"
+            element={(
+              <AccountRoute>
+                <Checkout />
+              </AccountRoute>
+            )}
+          />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/pay/:orderRef" element={<ManualPayment />} />
           <Route path="/order-confirmation/:orderRef" element={<ManualPaymentConfirmation />} />

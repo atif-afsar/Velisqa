@@ -17,6 +17,9 @@ export function isProductSoldOut(product) {
 }
 
 export function productToCartLine(product, quantity = 1) {
+  if (!product?.name) {
+    console.warn('[cart] product missing name — check admin catalogue row', product?.id ?? product)
+  }
   return {
     productId: product.id,
     name: product.name ?? 'Product',
@@ -45,7 +48,12 @@ export function validateCartQuantity(stock, requestedQty, currentInCart = 0, opt
   }
 
   if (qty < 1) {
-    return { ok: false, reason: 'invalid_qty', maxAllowed: available - currentInCart }
+    return {
+      ok: false,
+      reason: 'invalid_qty',
+      maxAllowed: available - currentInCart,
+      message: 'Quantity must be at least 1.',
+    }
   }
 
   const total = currentInCart + qty

@@ -7,16 +7,20 @@ import { PAYMENT_STATUS_LABELS, SHIPPING_STATUS_LABELS, ORDER_STATUS_LABELS } fr
 import { invokeEdgeFunction } from '../lib/invokeEdgeFunction'
 import { validateIndianPhone } from '../lib/indianPhone'
 import { orderNeedsShipment } from '../lib/adminInbox'
+import { effectiveAwb, isValidAwb } from '../lib/nimbusAwb'
+import { useConfirm } from '../hooks/useConfirm'
 import { supabase } from '../lib/supabaseClient'
 
+const PAGE_SIZE = 50
+
 const FILTERS = [
-  { id: 'needs_shipment', label: 'Ready to ship', hint: 'COD orders waiting for NimbusPost AWB' },
+  { id: 'needs_shipment', label: 'Ready to ship', hint: 'Paid orders waiting for NimbusPost AWB. After a successful ship, the order moves to In transit automatically.' },
   { id: 'in_transit', label: 'In transit', hint: 'Already shipped — share tracking with customer' },
   { id: 'delivered', label: 'Delivered', hint: 'Completed deliveries' },
   { id: 'all', label: 'All orders', hint: 'Full order history' },
 ]
 
-async function fetchOrders() {
+async function fetchOrdersPage({ offset = 0 } = {}) {
   return supabase
     .from('orders')
     .select(`
@@ -34,6 +38,8 @@ async function fetchOrders() {
       shipping_status,
       order_status,
       nimbuspost_awb,
+      nimbuspost_order_id,
+      nimbuspost_shipment_id,
       courier_name,
       tracking_url,
       created_at,
@@ -45,15 +51,23 @@ async function fetchOrders() {
         unit_price,
         line_total
       )
-    `)
+    `, { count: 'exact' })
     .eq('is_enquiry', false)
     .order('created_at', { ascending: false })
-    .limit(100)
+    .range(offset, offset + PAGE_SIZE - 1)
 }
 
 function isStuckShipment(order) {
-  return !order.nimbuspost_awb
+  return !effectiveAwb(order)
     && (order.shipping_status === 'shipped' || order.order_status === 'shipped')
+}
+
+function isInvalidAwbStored(order) {
+  return Boolean(order.nimbuspost_awb) && !isValidAwb(order.nimbuspost_awb)
+}
+
+function isPendingAwbSync(order) {
+  return !effectiveAwb(order) && Boolean(order.nimbuspost_order_id || order.nimbuspost_shipment_id)
 }
 
 function canShip(order) {
@@ -62,9 +76,11 @@ function canShip(order) {
 
 function matchesFilter(order, filter) {
   if (filter === 'all') return true
-  if (filter === 'needs_shipment') return canShip(order)
+  if (filter === 'needs_shipment') {
+    return canShip(order) || isStuckShipment(order) || isPendingAwbSync(order) || isInvalidAwbStored(order)
+  }
   if (filter === 'in_transit') {
-    return Boolean(order.nimbuspost_awb) && order.shipping_status !== 'delivered' && order.shipping_status !== 'rto'
+    return Boolean(effectiveAwb(order)) && order.shipping_status !== 'delivered' && order.shipping_status !== 'rto'
   }
   if (filter === 'delivered') {
     return order.shipping_status === 'delivered' || order.order_status === 'delivered'
@@ -83,32 +99,68 @@ function countForFilter(orders, filterId) {
 }
 
 export default function AdminOrders() {
+  const { confirm, ConfirmDialog } = useConfirm()
   const [orders, setOrders] = useState([])
+  const [totalCount, setTotalCount] = useState(0)
   const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
   const [error, setError] = useState('')
-  const [busyId, setBusyId] = useState(null)
+  const [actionNotice, setActionNotice] = useState('')
+  const [actionNoticeVariant, setActionNoticeVariant] = useState('success')
+  const [busyAction, setBusyAction] = useState(null)
+
+  function isBusy(orderId, action) {
+    if (!busyAction || busyAction.orderId !== orderId) return false
+    return !action || busyAction.action === action
+  }
+
+  function startBusy(orderId, action) {
+    setBusyAction({ orderId, action })
+  }
+
+  function endBusy() {
+    setBusyAction(null)
+  }
   const [filter, setFilter] = useState('needs_shipment')
   const [copiedId, setCopiedId] = useState(null)
   const [orderErrors, setOrderErrors] = useState({})
 
-  async function refresh() {
-    setLoading(true)
+  async function refresh({ silent = false } = {}) {
+    if (!silent) setLoading(true)
     setError('')
-    const { data, error: fetchError } = await fetchOrders()
+    const { data, error: fetchError, count } = await fetchOrdersPage({ offset: 0 })
     if (fetchError) {
       setError(fetchError.message)
     } else {
       setOrders(data || [])
+      setTotalCount(count || 0)
     }
-    setLoading(false)
+    if (!silent) setLoading(false)
+  }
+
+  async function loadMore() {
+    if (loadingMore || orders.length >= totalCount) return
+    setLoadingMore(true)
+    setError('')
+    const { data, error: fetchError, count } = await fetchOrdersPage({ offset: orders.length })
+    if (fetchError) {
+      setError(fetchError.message)
+    } else {
+      setOrders((current) => [...current, ...(data || [])])
+      setTotalCount(count || totalCount)
+    }
+    setLoadingMore(false)
   }
 
   useEffect(() => {
     let cancelled = false
-    fetchOrders().then(({ data, error: fetchError }) => {
+    fetchOrdersPage({ offset: 0 }).then(({ data, error: fetchError, count }) => {
       if (cancelled) return
       if (fetchError) setError(fetchError.message)
-      else setOrders(data || [])
+      else {
+        setOrders(data || [])
+        setTotalCount(count || 0)
+      }
       setLoading(false)
     })
     return () => {
@@ -124,42 +176,75 @@ export default function AdminOrders() {
   const activeFilter = FILTERS.find((item) => item.id === filter)
 
   async function shipOrder(order) {
-    if (!window.confirm(`Create NimbusPost shipment for ${order.order_ref}?\n\nThis charges your NimbusPost wallet once.`)) return
-    setBusyId(order.id)
+    const ok = await confirm({
+      title: 'Create NimbusPost shipment?',
+      message: `Create NimbusPost shipment for ${order.order_ref}?\n\nThis charges your NimbusPost wallet once.`,
+      confirmLabel: 'Ship now',
+      variant: 'primary',
+    })
+    if (!ok) return
+    startBusy(order.id, 'ship')
     setError('')
+    setActionNotice('')
     setOrderErrors((current) => ({ ...current, [order.id]: '' }))
-    const { error: invokeError } = await invokeEdgeFunction('admin-create-shipment', {
+    const { data, error: invokeError } = await invokeEdgeFunction('admin-create-shipment', {
       orderId: order.id,
     })
     if (invokeError) {
       setError(invokeError)
       setOrderErrors((current) => ({ ...current, [order.id]: invokeError }))
     } else {
-      await refresh()
+      await refresh({ silent: true })
+
+      if (data?.shipment?.awb) {
+        setFilter('in_transit')
+        setActionNoticeVariant('success')
+        setActionNotice(
+          `Shipment booked for ${order.order_ref}. AWB ${data.shipment.awb}. The order is now under In transit.`,
+        )
+      } else if (data?.shipmentWarning) {
+        setActionNoticeVariant('warning')
+        setActionNotice(data.shipmentWarning)
+        setOrderErrors((current) => ({ ...current, [order.id]: data.shipmentWarning }))
+      }
     }
-    setBusyId(null)
+    endBusy()
   }
 
   async function resetStuckOrder(order) {
-    if (!window.confirm(`Reset ${order.order_ref} back to "not shipped" so you can try again?`)) return
-    setBusyId(order.id)
+    const ok = await confirm({
+      title: 'Reset shipment?',
+      message: isInvalidAwbStored(order)
+        ? `Clear invalid shipment data for ${order.order_ref} and move it back to Ready to ship?`
+        : `Reset ${order.order_ref} back to "not shipped" so you can try again?`,
+      confirmLabel: 'Reset order',
+    })
+    if (!ok) return
+    startBusy(order.id, 'reset')
     setError('')
     const { error: updateError } = await supabase
       .from('orders')
       .update({
         order_status: 'placed',
         shipping_status: 'not_shipped',
+        nimbuspost_awb: null,
+        nimbuspost_order_id: null,
+        nimbuspost_shipment_id: null,
+        courier_name: null,
+        tracking_url: null,
       })
       .eq('id', order.id)
-      .is('nimbuspost_awb', null)
 
     if (updateError) {
       setError(updateError.message)
     } else {
+      setFilter('needs_shipment')
+      setActionNoticeVariant('success')
+      setActionNotice(`${order.order_ref} reset. Click Ship via NimbusPost to book it again on NimbusPost.`)
       setOrderErrors((current) => ({ ...current, [order.id]: '' }))
-      await refresh()
+      await refresh({ silent: true })
     }
-    setBusyId(null)
+    endBusy()
   }
 
   async function copyTrackingLink(order) {
@@ -175,9 +260,15 @@ export default function AdminOrders() {
   }
 
   async function removeOrder(order) {
-    if (!window.confirm(`Remove order ${order.order_ref} permanently? This cannot be undone.`)) return
+    const ok = await confirm({
+      title: 'Delete order record?',
+      message: `Remove order ${order.order_ref} permanently? This cannot be undone.`,
+      confirmLabel: 'Delete record',
+      variant: 'danger',
+    })
+    if (!ok) return
 
-    setBusyId(order.id)
+    startBusy(order.id, 'delete')
     setError('')
     setOrderErrors((current) => ({ ...current, [order.id]: '' }))
 
@@ -189,19 +280,26 @@ export default function AdminOrders() {
       setError(invokeError)
       setOrderErrors((current) => ({ ...current, [order.id]: invokeError }))
     } else {
-      await refresh()
+      await refresh({ silent: true })
     }
-    setBusyId(null)
+    endBusy()
   }
 
   async function cancelOrder(order) {
-    const nimbusNote = order.nimbuspost_awb
-      ? `\n\nNimbusPost AWB: ${order.nimbuspost_awb}\nThis cancels the shipment on NimbusPost. If pickup has not happened, freight is usually refunded to your NimbusPost wallet in 1–2 days.`
-      : '\n\nThis cancels the order in Velisqa before shipping.'
-    if (!window.confirm(`Cancel order ${order.order_ref} for the customer?${nimbusNote}`)) return
+    const nimbusNote = effectiveAwb(order)
+      ? `NimbusPost AWB: ${effectiveAwb(order)}\n\nThis cancels the shipment on NimbusPost. If pickup has not happened, freight is usually refunded to your NimbusPost wallet in 1–2 days.`
+      : 'This cancels the order in Velisqa before shipping.'
+    const ok = await confirm({
+      title: `Cancel ${order.order_ref}?`,
+      message: nimbusNote,
+      confirmLabel: effectiveAwb(order) ? 'Cancel on NimbusPost' : 'Cancel order',
+      variant: 'danger',
+    })
+    if (!ok) return
 
-    setBusyId(order.id)
+    startBusy(order.id, 'cancel')
     setError('')
+    setActionNotice('')
     setOrderErrors((current) => ({ ...current, [order.id]: '' }))
 
     const { data, error: invokeError } = await invokeEdgeFunction('admin-cancel-order', {
@@ -212,13 +310,16 @@ export default function AdminOrders() {
       setError(invokeError)
       setOrderErrors((current) => ({ ...current, [order.id]: invokeError }))
     } else {
-      await refresh()
+      await refresh({ silent: true })
       if (data?.walletNote) {
-        window.alert(String(data.walletNote))
+        setActionNoticeVariant('success')
+        setActionNotice(String(data.walletNote))
       }
     }
-    setBusyId(null)
+    endBusy()
   }
+
+  const hasMoreOrders = orders.length < totalCount
 
   return (
     <AdminShell
@@ -226,6 +327,7 @@ export default function AdminOrders() {
       subtitle="COD orders appear here after checkout. Click Ship via NimbusPost once per order — UPI orders ship automatically when you approve payment."
       onRefresh={refresh}
     >
+      {ConfirmDialog}
       <div className="flex flex-wrap gap-2">
         {FILTERS.map((item) => {
           const count = countForFilter(orders, item.id)
@@ -253,6 +355,16 @@ export default function AdminOrders() {
 
       {error && (
         <p className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">{error}</p>
+      )}
+
+      {actionNotice && (
+        <p className={`mt-6 rounded-xl border p-4 text-sm ${
+          actionNoticeVariant === 'warning'
+            ? 'border-amber-200 bg-amber-50 text-amber-950'
+            : 'border-[#2d6a4f]/25 bg-[#edf7f1] text-[#1f4334]'
+        }`}>
+          {actionNotice}
+        </p>
       )}
 
       {loading ? (
@@ -335,6 +447,18 @@ export default function AdminOrders() {
                 </p>
               )}
 
+              {isInvalidAwbStored(order) && (
+                <p className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900">
+                  Invalid shipment saved (<strong className="font-mono">{order.nimbuspost_awb}</strong>). NimbusPost did not book this order — the API returned an error that was saved by mistake. Use <strong>Reset &amp; retry ship</strong>, then ship again.
+                </p>
+              )}
+
+              {isPendingAwbSync(order) && (
+                <p className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+                  NimbusPost accepted this order but Velisqa has not synced the AWB yet. Click <strong>Ship via NimbusPost</strong> again to pull the AWB, or check the NimbusPost dashboard.
+                </p>
+              )}
+
               {isStuckShipment(order) && (
                 <p className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
                   Shipment incomplete — use <strong>Reset &amp; retry</strong>, then ship again.
@@ -342,19 +466,19 @@ export default function AdminOrders() {
               )}
 
               {orderErrors[order.id] && (
-                <p className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                <p className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
                   {orderErrors[order.id]}
                 </p>
               )}
 
-              {(order.nimbuspost_awb || order.courier_name || order.tracking_url) && (
+              {(effectiveAwb(order) || order.courier_name) && (
                 <div className="mt-4 rounded-xl bg-[#f0f7f4] p-4 text-sm text-[#514347]">
                   <p className="font-semibold text-[#1b4332]">Shipped via NimbusPost</p>
                   {order.courier_name && <p className="mt-2">Courier: <strong>{order.courier_name}</strong></p>}
-                  {order.nimbuspost_awb && (
-                    <p className="mt-1">AWB: <strong className="font-mono">{order.nimbuspost_awb}</strong></p>
+                  {effectiveAwb(order) && (
+                    <p className="mt-1">AWB: <strong className="font-mono">{effectiveAwb(order)}</strong></p>
                   )}
-                  {order.tracking_url && (
+                  {order.tracking_url && effectiveAwb(order) && (
                     <a
                       href={order.tracking_url}
                       target="_blank"
@@ -367,61 +491,97 @@ export default function AdminOrders() {
                 </div>
               )}
 
+              {isBusy(order.id, 'ship') && (
+                <div className="mt-4 flex items-center gap-3 rounded-xl border border-[#2d6a4f]/25 bg-[#e8f5ef] px-4 py-3 text-sm text-[#1b4332]">
+                  <LoadingSpinner className="h-5 w-5 text-[#2d6a4f]" />
+                  <div>
+                    <p className="font-semibold">Booking shipment with NimbusPost…</p>
+                    <p className="mt-0.5 text-xs text-[#40916c]">This usually takes 10–30 seconds. Do not close this page.</p>
+                  </div>
+                </div>
+              )}
+
               <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:justify-end">
                 {canCancelOrder(order) && (
                   <button
                     type="button"
-                    disabled={busyId === order.id}
+                    disabled={isBusy(order.id)}
                     onClick={() => void cancelOrder(order)}
                     className="min-h-10 rounded-full border border-[#3d0a21]/25 bg-[#3d0a21]/5 px-4 text-xs font-bold uppercase tracking-[0.08em] text-[#3d0a21] disabled:opacity-50 sm:mr-auto"
                   >
-                    {busyId === order.id
+                    {isBusy(order.id, 'cancel')
                       ? 'Cancelling…'
-                      : order.nimbuspost_awb
+                      : effectiveAwb(order)
                         ? 'Cancel on NimbusPost'
                         : 'Cancel order'}
                   </button>
                 )}
                 <button
                   type="button"
-                  disabled={busyId === order.id}
+                  disabled={isBusy(order.id)}
                   onClick={() => void removeOrder(order)}
                   className="min-h-10 rounded-full border border-red-300 px-4 text-xs font-bold uppercase tracking-[0.08em] text-red-800 disabled:opacity-50"
                 >
-                  {busyId === order.id ? 'Working…' : 'Delete record'}
+                  {isBusy(order.id, 'delete') ? 'Deleting…' : 'Delete record'}
                 </button>
                 <button
                   type="button"
+                  disabled={isBusy(order.id)}
                   onClick={() => void copyTrackingLink(order)}
-                  className="min-h-10 rounded-full border border-[#3d0a21]/20 px-4 text-xs font-bold uppercase tracking-[0.08em] text-[#3d0a21]"
+                  className="min-h-10 rounded-full border border-[#3d0a21]/20 px-4 text-xs font-bold uppercase tracking-[0.08em] text-[#3d0a21] disabled:opacity-50"
                 >
                   {copiedId === order.id ? 'Link copied' : 'Copy customer tracking link'}
                 </button>
-                {canShip(order) && (
+                {(canShip(order) || isInvalidAwbStored(order) || isStuckShipment(order)) && (
                   <>
-                    {isStuckShipment(order) && (
+                    {(isStuckShipment(order) || isInvalidAwbStored(order)) && (
                       <button
                         type="button"
-                        disabled={busyId === order.id}
+                        disabled={isBusy(order.id)}
                         onClick={() => void resetStuckOrder(order)}
                         className="min-h-10 rounded-full border border-amber-700/30 px-4 text-xs font-bold uppercase tracking-[0.08em] text-amber-950 disabled:opacity-50"
                       >
-                        Reset &amp; retry
+                        {isBusy(order.id, 'reset') ? 'Resetting…' : 'Reset & retry'}
                       </button>
                     )}
                     <button
                       type="button"
-                      disabled={busyId === order.id}
+                      disabled={isBusy(order.id)}
                       onClick={() => void shipOrder(order)}
-                      className="min-h-10 rounded-full bg-[#2d6a4f] px-5 text-xs font-bold uppercase tracking-[0.08em] text-white disabled:opacity-50"
+                      aria-busy={isBusy(order.id, 'ship')}
+                      className={`inline-flex min-h-10 items-center justify-center gap-2 rounded-full px-5 text-xs font-bold uppercase tracking-[0.08em] transition-colors disabled:cursor-wait ${
+                        isBusy(order.id, 'ship')
+                          ? 'bg-[#1b4332] text-white shadow-inner ring-2 ring-[#2d6a4f]/40'
+                          : 'bg-[#2d6a4f] text-white hover:bg-[#1b4332]'
+                      }`}
                     >
-                      {busyId === order.id ? 'Creating shipment…' : 'Ship via NimbusPost'}
+                      {isBusy(order.id, 'ship') ? (
+                        <>
+                          <LoadingSpinner className="h-4 w-4" />
+                          Booking AWB…
+                        </>
+                      ) : (
+                        'Ship via NimbusPost'
+                      )}
                     </button>
                   </>
                 )}
               </div>
             </article>
           ))}
+        </div>
+      )}
+
+      {!loading && hasMoreOrders && (
+        <div className="mt-6 flex justify-center">
+          <button
+            type="button"
+            disabled={loadingMore}
+            onClick={() => void loadMore()}
+            className="min-h-11 rounded-full border border-[#3d0a21]/20 bg-white px-6 text-xs font-bold uppercase tracking-[0.08em] text-[#3d0a21] disabled:opacity-50"
+          >
+            {loadingMore ? 'Loading more…' : `Load more orders (${orders.length} of ${totalCount})`}
+          </button>
         </div>
       )}
     </AdminShell>
@@ -432,7 +592,27 @@ function StatusPill({ label, value }) {
   return (
     <div className="rounded-lg border border-[#130006]/8 bg-[#fbf7f1] px-3 py-2">
       <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#847377]">{label}</p>
-      <p className="mt-0.5 text-sm font-semibold capitalize text-[#130006]">{value}</p>
+      <p className="mt-0.5 text-sm font-semibold capitalize text-[#130006]" aria-label={`${label}: ${value}`}>
+        {value}
+      </p>
     </div>
+  )
+}
+
+function LoadingSpinner({ className = 'h-4 w-4' }) {
+  return (
+    <svg
+      className={`animate-spin ${className}`}
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+      />
+    </svg>
   )
 }

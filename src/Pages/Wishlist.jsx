@@ -69,7 +69,15 @@ export default function Wishlist() {
         </header>
 
         {loading && wishlistCount > 0 && (
-          <p className="mt-12 text-center text-sm text-[#847377]">Loading your wishlist…</p>
+          <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
+            {Array.from({ length: Math.min(wishlistCount, 4) }, (_, index) => (
+              <div
+                key={`wishlist-skeleton-${index}`}
+                className="aspect-[4/5] animate-pulse rounded-lg bg-[#e8e2db]"
+                aria-hidden
+              />
+            ))}
+          </div>
         )}
 
         {!loading && wishlistCount === 0 && (

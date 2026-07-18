@@ -63,8 +63,17 @@ export default function BuyNowButton({
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
           <path
-            d="M17.5 14.5c-.4-.2-2.4-1.2-2.8-1.3-.4-.1-.6-.2-.8.2-.2.4-.8 1.3-1 1.6-.2.3-.4.3-.8.1-.4-.2-1.6-.6-3-1.9-1.1-1-1.8-2.3-2-2.7-.2-.4 0-.6.2-.8.2-.2.4-.6.6-1 .2-.4.1-.7 0-.9-.1-.2-.8-1.9-1.1-2.6-.3-.7-.6-.6-.8-.6-.2 0-.4 0-.7 0-.3 0-.9.1-1.3.6-.4.5-1.5 1.5-1.5 3.6 0 2.1 1.5 4.2 1.7 4.5.2.3 2.8 4.4 6.9 6.1 4.1 1.7 4.1 1.1 4.9 1 0 0 1.5-.6 2.1-1.4.6-.8 1.3-1.9 1.4-3.1.1-1.2-.8-1.8-1.2-2z"
-            fill="#c9a75a"
+            d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4H6Z"
+            stroke="#c9a75a"
+            strokeWidth="1.75"
+            strokeLinejoin="round"
+          />
+          <path d="M3 6h18" stroke="#c9a75a" strokeWidth="1.75" strokeLinecap="round" />
+          <path
+            d="M16 10a4 4 0 0 1-8 0"
+            stroke="#c9a75a"
+            strokeWidth="1.75"
+            strokeLinecap="round"
           />
         </svg>
         <span className="label-stitch min-w-0 text-sm leading-snug tracking-[0.12em]">{label}</span>

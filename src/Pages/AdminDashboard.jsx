@@ -1,6 +1,7 @@
 import { useEffect, useId, useState } from 'react'
 import { Link } from 'react-router-dom'
 import AdminShell from '../Components/Admin/AdminShell'
+import { useConfirm } from '../hooks/useConfirm'
 import { supabase } from '../lib/supabaseClient'
 import { isCloudinaryUploadConfigured } from '../lib/cloudinaryUpload'
 import {
@@ -88,11 +89,14 @@ function formatProductSaveError(message) {
 
 export default function AdminDashboard() {
   const { user } = useAuth()
+  const { confirm, ConfirmDialog } = useConfirm()
   const { notifyCatalogChange } = useCatalog()
   const fileInputId = useId()
 
   const [products, setProducts] = useState([])
   const [fetchError, setFetchError] = useState(null)
+  const [formError, setFormError] = useState('')
+  const [formNotice, setFormNotice] = useState('')
   const [form, setForm] = useState(emptyForm)
   const [galleryItems, setGalleryItems] = useState([])
   const [originalImageUrls, setOriginalImageUrls] = useState([])
@@ -180,6 +184,16 @@ export default function AdminDashboard() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  function showFormError(message) {
+    setFormNotice('')
+    setFormError(message)
+  }
+
+  function showFormNotice(message) {
+    setFormError('')
+    setFormNotice(message)
+  }
+
   function handleImagesChange(e) {
     const files = Array.from(e.target.files ?? [])
     e.target.value = ''
@@ -188,11 +202,11 @@ export default function AdminDashboard() {
     const validFiles = []
     for (const file of files) {
       if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
-        alert(`${file.name}: use JPG, PNG, WebP, or GIF.`)
+        showFormError(`${file.name}: use JPG, PNG, WebP, or GIF.`)
         continue
       }
       if (file.size > MAX_ORIGINAL_FILE_BYTES) {
-        alert(`${file.name} is too large (max 15 MB before compression).`)
+        showFormError(`${file.name} is too large (max 15 MB before compression).`)
         continue
       }
       validFiles.push(file)
@@ -202,13 +216,13 @@ export default function AdminDashboard() {
 
     const slotsLeft = MAX_IMAGES_PER_PRODUCT - galleryItems.length
     if (slotsLeft <= 0) {
-      alert(`You can add up to ${MAX_IMAGES_PER_PRODUCT} images per product.`)
+      showFormError(`You can add up to ${MAX_IMAGES_PER_PRODUCT} images per product.`)
       return
     }
 
     const toAdd = validFiles.slice(0, slotsLeft)
     if (toAdd.length < validFiles.length) {
-      alert(`Only ${toAdd.length} more image(s) added (max ${MAX_IMAGES_PER_PRODUCT} per product).`)
+      showFormNotice(`Only ${toAdd.length} more image(s) added (max ${MAX_IMAGES_PER_PRODUCT} per product).`)
     }
 
     setGalleryItems((items) => [...items, ...toAdd.map(makeGalleryItemFromFile)])
@@ -238,16 +252,18 @@ export default function AdminDashboard() {
     e.preventDefault()
 
     if (galleryItems.length === 0) {
-      alert('Please add at least one product image.')
+      showFormError('Please add at least one product image.')
       return
     }
 
     if (!form.category) {
-      alert('Please choose a category.')
+      showFormError('Please choose a category.')
       return
     }
 
     setBusy(true)
+    setFormError('')
+    setFormNotice('')
 
     try {
       const keptItems = galleryItems.filter((item) => item.kind === 'existing')
@@ -306,7 +322,7 @@ export default function AdminDashboard() {
 
       if (error) {
         if (uploadedAssets.length) await deleteProductImages(uploadedAssets.map((a) => a.url))
-        alert(formatProductSaveError(error.message))
+        showFormError(formatProductSaveError(error.message))
         return
       }
 
@@ -316,7 +332,7 @@ export default function AdminDashboard() {
       await refreshProducts()
       notifyCatalogChange()
     } catch (err) {
-      alert(
+      showFormError(
         err.message ??
           (isCloudinaryUploadConfigured()
             ? 'Could not upload images to Cloudinary.'
@@ -328,7 +344,13 @@ export default function AdminDashboard() {
   }
 
   async function deleteProduct(id) {
-    if (!window.confirm('Delete this product? It will be removed from the website immediately.')) return
+    const ok = await confirm({
+      title: 'Delete this product?',
+      message: 'It will be removed from the website immediately.',
+      confirmLabel: 'Delete product',
+      variant: 'danger',
+    })
+    if (!ok) return
 
     const product = products.find((item) => item.id === id)
 
@@ -339,12 +361,12 @@ export default function AdminDashboard() {
       .select('id')
 
     if (error) {
-      alert(error.message)
+      showFormError(error.message)
       return
     }
 
     if (!deletedRows?.length) {
-      alert(
+      showFormError(
         'Product was not removed from the database. Sign in as an admin account, then try again.',
       )
       return
@@ -375,7 +397,7 @@ export default function AdminDashboard() {
     const { error } = await supabase.from('products').update(patch).eq('id', product.id)
 
     if (error) {
-      alert(formatProductSaveError(error.message))
+      showFormError(formatProductSaveError(error.message))
       return
     }
 
@@ -398,6 +420,7 @@ export default function AdminDashboard() {
       title="Products"
       subtitle="Add, edit, or remove shop items. New customer orders are handled under Overview, UPI reviews, and Ship orders."
     >
+      {ConfirmDialog}
       {oosColumnChecked && !useOosColumn && (
             <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
               <strong>Out-of-stock flag not in database yet.</strong> Marking out of stock sets inventory to 0
@@ -422,6 +445,18 @@ export default function AdminDashboard() {
                 ? 'Update fields and images, then save. First image is the shop thumbnail.'
                 : 'Add up to 10 images. They are resized to WebP before upload.'}
             </p>
+
+            {formError ? (
+              <p className="mt-4 whitespace-pre-line rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                {formError}
+              </p>
+            ) : null}
+
+            {formNotice ? (
+              <p className="mt-4 rounded-xl border border-[#2d6a4f]/25 bg-[#edf7f1] px-4 py-3 text-sm text-[#1f4334]">
+                {formNotice}
+              </p>
+            ) : null}
 
             <form onSubmit={handleSubmit} className="mt-4 grid gap-4 sm:grid-cols-2">
               <label className="sm:col-span-2">

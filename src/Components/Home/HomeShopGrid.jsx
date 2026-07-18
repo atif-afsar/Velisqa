@@ -147,7 +147,7 @@ export default function HomeShopGrid({ products, loading, error: fetchError }) {
           <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
             {Array.from({ length: 4 }, (_, i) => (
               <div
-                key={i}
+                key={`home-skeleton-${i}`}
                 className="aspect-[4/5] animate-pulse rounded-lg bg-[#e8e2db]"
                 aria-hidden
               />

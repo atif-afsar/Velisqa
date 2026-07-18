@@ -51,8 +51,17 @@ Deno.serve(async (request) => {
       }, 409)
     }
 
+    let cancelledOnNimbusPost = false
+    let nimbusCancelError: string | null = null
+
     if (order.nimbuspost_awb) {
-      await cancelNimbusPostShipment(order.nimbuspost_awb)
+      try {
+        await cancelNimbusPostShipment(order.nimbuspost_awb)
+        cancelledOnNimbusPost = true
+      } catch (error) {
+        nimbusCancelError = error instanceof Error ? error.message : String(error)
+        console.error('customer-cancel-order: NimbusPost cancel failed', nimbusCancelError)
+      }
     }
 
     const nextPaymentStatus = order.payment_status === 'paid' ? 'refunded' : order.payment_status
@@ -69,11 +78,18 @@ Deno.serve(async (request) => {
 
     if (updateError) throw updateError
 
+    let message = 'Your order was cancelled before dispatch.'
+    if (order.nimbuspost_awb) {
+      message = cancelledOnNimbusPost
+        ? 'Your order and shipment were cancelled.'
+        : 'Your order was cancelled. We could not confirm courier cancellation automatically — our team will follow up if needed.'
+    }
+
     return jsonResponse({
       success: true,
-      message: order.nimbuspost_awb
-        ? 'Your order and shipment were cancelled.'
-        : 'Your order was cancelled before dispatch.',
+      message,
+      cancelledOnNimbusPost,
+      nimbusCancelError,
     })
   } catch (error) {
     console.error('customer-cancel-order:', error)
