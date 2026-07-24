@@ -1,13 +1,25 @@
 /** Columns for list/grid views — avoids fetching large unused fields. */
-export const PRODUCT_LIST_SELECT =
-  'id, name, price, stock, category, image_url, gallery_urls, cloudinary_public_id, gallery_cloudinary_ids, created_at, rating, review_count, badge'
-
-const PRODUCT_LIST_SELECT_WITH_OOS = `${PRODUCT_LIST_SELECT}, out_of_stock`
-
-const PRODUCT_LIST_SELECT_LEGACY =
+const PRODUCT_COMMERCE_FIELDS = 'mrp, metal, colour, styles, search_keywords'
+const PRODUCT_CORE_FIELDS =
   'id, name, price, stock, category, image_url, gallery_urls, created_at, rating, review_count, badge'
+const PRODUCT_CLOUDINARY_FIELDS = 'cloudinary_public_id, gallery_cloudinary_ids'
 
-const PRODUCT_LIST_SELECT_LEGACY_WITH_OOS = `${PRODUCT_LIST_SELECT_LEGACY}, out_of_stock`
+export const PRODUCT_LIST_SELECT =
+  `${PRODUCT_CORE_FIELDS}, ${PRODUCT_COMMERCE_FIELDS}, ${PRODUCT_CLOUDINARY_FIELDS}`
+
+function commerceColumnsMissing(error) {
+  const message = String(error?.message || '')
+  return ['mrp', 'metal', 'colour', 'styles', 'search_keywords'].some((column) => message.includes(column))
+}
+
+function productListColumns({ commerce, cloudinary, outOfStock }) {
+  return [
+    PRODUCT_CORE_FIELDS,
+    commerce ? PRODUCT_COMMERCE_FIELDS : null,
+    cloudinary ? PRODUCT_CLOUDINARY_FIELDS : null,
+    outOfStock ? 'out_of_stock' : null,
+  ].filter(Boolean).join(', ')
+}
 
 /** Fetch products for shop grids; works before and after schema migrations. */
 export async function fetchProductList(supabase, options = {}) {
@@ -16,21 +28,29 @@ export async function fetchProductList(supabase, options = {}) {
   const run = (columns) =>
     supabase.from('products').select(columns).order(order.column, { ascending: order.ascending })
 
-  let { data, error } = await run(PRODUCT_LIST_SELECT_WITH_OOS)
+  const supported = { commerce: true, cloudinary: true, outOfStock: true }
+  let result = { data: [], error: null }
 
-  if (error?.message?.includes('out_of_stock')) {
-    ;({ data, error } = await run(PRODUCT_LIST_SELECT))
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    result = await run(productListColumns(supported))
+    if (!result.error) break
+
+    if (supported.commerce && commerceColumnsMissing(result.error)) {
+      supported.commerce = false
+      continue
+    }
+    if (supported.cloudinary && result.error.message?.includes('cloudinary')) {
+      supported.cloudinary = false
+      continue
+    }
+    if (supported.outOfStock && result.error.message?.includes('out_of_stock')) {
+      supported.outOfStock = false
+      continue
+    }
+    break
   }
 
-  if (error?.message?.includes('cloudinary')) {
-    ;({ data, error } = await run(PRODUCT_LIST_SELECT_LEGACY_WITH_OOS))
-  }
-
-  if (error?.message?.includes('out_of_stock')) {
-    ;({ data, error } = await run(PRODUCT_LIST_SELECT_LEGACY))
-  }
-
-  return { data: data ?? [], error }
+  return { data: result.data ?? [], error: result.error }
 }
 
 function wait(ms) {

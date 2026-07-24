@@ -3,38 +3,12 @@
 const NEW_PRODUCT_DAYS = 30
 const BESTSELLER_REVIEW_THRESHOLD = 80
 
-function hashString(str) {
-  let h = 0
-  for (let i = 0; i < str.length; i += 1) {
-    h = (h << 5) - h + str.charCodeAt(i)
-    h |= 0
-  }
-  return Math.abs(h)
-}
-
-function productSeed(product) {
-  const id = product?.id ?? product?.name ?? 'velisqa'
-  return hashString(String(id))
-}
-
-/** Stable fallback when DB columns are empty (same product always shows the same values). */
-export function getDefaultRating(product) {
-  const seed = productSeed(product)
-  const tenths = 45 + (seed % 5)
-  return tenths / 10
-}
-
-export function getDefaultReviewCount(product) {
-  const seed = productSeed(product)
-  return 18 + (seed % 283)
-}
-
 export function getProductRating(product) {
   const raw = Number(product?.rating)
   if (Number.isFinite(raw) && raw > 0) {
     return Math.min(5, Math.max(1, Math.round(raw * 10) / 10))
   }
-  return getDefaultRating(product)
+  return 0
 }
 
 export function getProductReviewCount(product) {
@@ -42,7 +16,7 @@ export function getProductReviewCount(product) {
   if (Number.isFinite(raw) && raw >= 0) {
     return Math.floor(raw)
   }
-  return getDefaultReviewCount(product)
+  return 0
 }
 
 export function isProductNew(product) {

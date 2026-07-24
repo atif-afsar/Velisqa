@@ -9,6 +9,7 @@ import ProductTrustBadges from '../Components/Product/ProductTrustBadges'
 import ProductStickyBar from '../Components/Product/ProductStickyBar'
 import SEOHead from '../Components/SEO/SEOHead'
 import { SITE_URL } from '../Components/SEO/siteConfig'
+import { buildProductDetailSchema } from '../Components/SEO/schemaBuilders'
 import { PRODUCT_POLICY_SECTIONS } from '../lib/productPolicies'
 import { useCatalog } from '../context/CatalogContext'
 import { normalizeProductCategory, getCategoryParamSlug } from '../lib/productCategories'
@@ -18,6 +19,7 @@ import ProductPromoBadge from '../Components/Product/ProductPromoBadge'
 import ProductRating from '../Components/Product/ProductRating'
 import ProductBadgeLabel from '../Components/Product/ProductBadgeLabel'
 import ProductSoldOutBadge from '../Components/Product/ProductSoldOutBadge'
+import ProductReviews from '../Components/Product/ProductReviews'
 import { isProductSoldOut } from '../lib/cartStock'
 import { findCachedProduct } from '../lib/productCatalogCache'
 import { trackMetaEvent } from '../lib/metaPixel'
@@ -149,6 +151,14 @@ export default function ProductDetail() {
         description={description.slice(0, 155)}
         canonicalPath={`/product/${product.id}`}
         image={primaryImage || undefined}
+        schema={[
+          buildProductDetailSchema({
+            product,
+            image: primaryImage || undefined,
+            description: description.slice(0, 500),
+            url: productUrl,
+          }),
+        ]}
       />
       <main className="page-offset-nav bg-white text-[#130006] pb-24 lg:pb-12">
         <div className="container-stitch mx-auto max-w-6xl px-4 py-4 sm:px-6 sm:py-6">
@@ -174,7 +184,7 @@ export default function ProductDetail() {
           <div className="grid gap-8 lg:grid-cols-2 lg:gap-10 xl:gap-14">
             <div className="lg:sticky lg:top-[calc(var(--nav-height)+1rem)] lg:self-start">
               <div className="relative overflow-hidden rounded-lg bg-[#f7f4ef]">
-                <ProductPromoBadge className="left-3 top-3 z-20 sm:left-4 sm:top-4" />
+                <ProductPromoBadge product={product} className="left-3 top-3 z-20 sm:left-4 sm:top-4" />
                 {soldOut && <ProductSoldOutBadge className="left-auto right-3 sm:right-4" />}
                 <ProductImageGallery
                   key={product.id}
@@ -201,10 +211,10 @@ export default function ProductDetail() {
                 {product.name}
               </h1>
 
-              <ProductRating product={product} size="detail" className="mt-2 justify-start" />
+              <ProductRating product={product} size="detail" className="mt-2 justify-start" linkToReviews />
 
               <div className="mt-4">
-                <ProductDetailPrice price={product.price} />
+                <ProductDetailPrice product={product} />
               </div>
 
               <ProductDetailTrust soldOut={soldOut} />
@@ -250,6 +260,7 @@ export default function ProductDetail() {
               </Link>
             </div>
           </div>
+          <ProductReviews product={product} />
         </div>
 
         <ProductStickyBar product={product} soldOut={soldOut} quantity={quantity} />

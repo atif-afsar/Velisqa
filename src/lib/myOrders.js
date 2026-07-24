@@ -21,6 +21,7 @@ function mapOrderRow(row) {
     trackingUrl: row.tracking_url,
     createdAt: row.created_at,
     items: (row.order_items || []).map((item) => ({
+      productId: item.product_id,
       name: item.product_name,
       quantity: item.quantity,
       unitPrice: item.unit_price,
@@ -41,7 +42,7 @@ const ORDER_LIST_SELECT = `
   order_status,
   nimbuspost_awb,
   created_at,
-  order_items (product_name, quantity)
+  order_items (product_name, quantity, product_id)
 `
 
 const ORDER_DETAIL_SELECT = `
@@ -64,6 +65,7 @@ const ORDER_DETAIL_SELECT = `
   order_items (
     product_name,
     quantity,
+    product_id,
     unit_price,
     line_total,
     image_url

@@ -5,6 +5,7 @@ import { scrollToTop } from './lib/smoothScrollState'
 import Navbar from './Components/Navbar'
 import PromoAnnouncementBar from './Components/Common/PromoAnnouncementBar'
 import CartToast from './Components/Cart/CartToast'
+import MiniCartDrawer from './Components/Cart/MiniCartDrawer'
 import WishlistToast from './Components/Wishlist/WishlistToast'
 // import FloatingWhatsApp from './Components/WhatsApp/FloatingWhatsApp'
 import { Route, Routes, useLocation, Navigate } from 'react-router-dom'
@@ -31,6 +32,7 @@ const AdminLogin = lazy(() => import('./Pages/AdminLogin'))
 const AdminHome = lazy(() => import('./Pages/AdminHome'))
 const AdminDashboard = lazy(() => import('./Pages/AdminDashboard'))
 const ProductDetail = lazy(() => import('./Pages/ProductDetail'))
+const SearchResults = lazy(() => import('./Pages/SearchResults'))
 const Cart = lazy(() => import('./Pages/Cart'))
 const Checkout = lazy(() => import('./Pages/Checkout'))
 const Wishlist = lazy(() => import('./Pages/Wishlist'))
@@ -39,6 +41,8 @@ const ManualPaymentConfirmation = lazy(() => import('./Pages/ManualPaymentConfir
 const OrderTracking = lazy(() => import('./Pages/OrderTracking'))
 const AdminPayments = lazy(() => import('./Pages/AdminPayments'))
 const AdminOrders = lazy(() => import('./Pages/AdminOrders'))
+const AdminReviews = lazy(() => import('./Pages/AdminReviews'))
+const AdminReturns = lazy(() => import('./Pages/AdminReturns'))
 const MyOrders = lazy(() => import('./Pages/MyOrders'))
 
 function ScrollToTop() {
@@ -59,6 +63,7 @@ function App() {
       <ScrollToTop />
       <PromoAnnouncementBar />
       <Navbar />
+      <MiniCartDrawer />
       <CartToast />
       <WishlistToast />
       <Suspense fallback={<div className="min-h-[60vh] bg-[#fdf9f4]" aria-label="Loading page" />}>
@@ -67,6 +72,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/models" element={<Models />} />
           <Route path="/collections" element={<Collections />} />
+          <Route path="/search" element={<SearchResults />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/cart" element={<Cart />} />
           <Route
@@ -131,6 +137,22 @@ function App() {
             element={
               <AdminRoute>
                 <AdminOrders />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/reviews"
+            element={
+              <AdminRoute>
+                <AdminReviews />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/returns"
+            element={
+              <AdminRoute>
+                <AdminReturns />
               </AdminRoute>
             }
           />

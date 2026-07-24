@@ -87,7 +87,7 @@ export default function Cart() {
               <p className="text-sm text-[#514347]">Your cart is empty.</p>
               <Link
                 to="/collections#signature"
-                className="mt-6 inline-flex rounded-full bg-[#3d0a21] px-6 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-[#fdf9f4] transition hover:bg-[#2a0718]"
+                className="mt-6 inline-flex h-10 items-center justify-center rounded-full bg-[#3d0a21] px-5 text-[11px] font-semibold uppercase tracking-[0.1em] text-[#fdf9f4] transition hover:bg-[#2a0718] sm:text-xs"
               >
                 Browse collections
               </Link>
@@ -138,7 +138,7 @@ export default function Cart() {
                           {line.name}
                         </Link>
                         <div className="mt-1">
-                          <ProductPriceDisplay price={line.price} size="card" />
+                          <ProductPriceDisplay product={line} size="card" />
                         </div>
                         {lineIssue ? (
                           <div className="mt-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-[11px] leading-relaxed text-amber-950">
@@ -180,13 +180,13 @@ export default function Cart() {
               <div className="mt-8 flex flex-col items-stretch gap-4 border-t border-[#d4af37]/25 pt-6 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">Estimated total</p>
-                  <p className="font-serif text-2xl font-medium tabular-nums text-[#3d0a21]">{formatInr(cartTotal)}</p>
+                  <p className="font-serif text-xl font-medium tabular-nums text-[#3d0a21] sm:text-2xl">{formatInr(cartTotal)}</p>
                 </div>
                 <div className="flex flex-col gap-2 sm:flex-row">
                   <button
                     type="button"
                     onClick={clearCart}
-                    className="rounded-full border border-[#847377]/30 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-[#514347] transition hover:bg-white"
+                    className="flex h-10 items-center justify-center rounded-full border border-[#847377]/30 px-4 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#514347] transition hover:bg-white sm:px-5"
                   >
                     Clear cart
                   </button>
@@ -194,7 +194,7 @@ export default function Cart() {
                     type="button"
                     onClick={handleCheckoutClick}
                     disabled={!canCheckout}
-                    className="rounded-full border border-[#d4af37]/20 bg-[#2A0718] px-6 py-3 text-xs font-bold uppercase tracking-[0.12em] text-[#f7ead0] shadow-[0_12px_32px_rgba(42,7,24,0.35)] transition hover:bg-[#3d0a21] disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex h-10 items-center justify-center rounded-full border border-[#d4af37]/20 bg-[#2A0718] px-5 text-[11px] font-bold uppercase tracking-[0.08em] text-[#f7ead0] shadow-[0_8px_24px_rgba(42,7,24,0.3)] transition hover:bg-[#3d0a21] disabled:cursor-not-allowed disabled:opacity-50 sm:h-11 sm:px-6 sm:text-xs"
                   >
                     Checkout
                   </button>

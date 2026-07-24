@@ -15,6 +15,8 @@ import {
 import { usePrivateOrder } from '../hooks/usePrivateOrder'
 import { useLiveTracking, useTrackingEnabled } from '../hooks/useLiveTracking'
 import RefreshCountdown from '../Components/OrderTracking/RefreshCountdown'
+import OrderReturnPanel from '../Components/Orders/OrderReturnPanel'
+import OrderReviewLinks from '../Components/Orders/OrderReviewLinks'
 
 export default function OrderTracking() {
   const { user } = useAuth()
@@ -313,6 +315,14 @@ export default function OrderTracking() {
                 </button>
               )}
             </section>
+          )}
+
+          {!isCancelled && (order.shippingStatus === 'delivered' || order.orderStatus === 'delivered') && (
+            <OrderReviewLinks order={order} items={order.items} className="mt-6" />
+          )}
+
+          {user && order.id && !isCancelled && (
+            <OrderReturnPanel orderId={order.id} orderRef={order.orderRef} order={order} />
           )}
 
           <div className="mt-6">

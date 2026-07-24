@@ -26,15 +26,41 @@ const BADGE_OPTIONS = [
   { value: 'new', label: 'New' },
 ]
 
+const METAL_OPTIONS = [
+  'Gold plated',
+  'Rose gold plated',
+  'Silver plated',
+  '925 silver',
+  'Stainless steel',
+  'Brass',
+  'Alloy',
+]
+
+const COLOUR_OPTIONS = ['Gold', 'Rose gold', 'Silver', 'Oxidised', 'Multicolour']
+
+const STYLE_OPTIONS = [
+  'Everyday',
+  'Office',
+  'Party',
+  'Wedding',
+  'Minimal',
+  'Statement',
+  'Traditional',
+  'Contemporary',
+]
+
 const emptyForm = {
   name: '',
   price: '',
+  mrp: '',
   description: '',
   category: PRODUCT_CATEGORIES[0],
+  metal: '',
+  colour: '',
+  styles: [],
+  search_keywords: '',
   stock: '1',
   out_of_stock: false,
-  rating: '',
-  review_count: '',
   badge: '',
 }
 
@@ -75,7 +101,7 @@ function formatProductSaveError(message) {
   if (message.includes('gallery_urls')) {
     return `${message}\n\nRun supabase/add-product-gallery.sql in the Supabase SQL Editor, then try again.`
   }
-  if (message.includes('rating') || message.includes('review_count') || message.includes('badge')) {
+  if (message.includes('badge')) {
     return `${message}\n\nRun supabase/add-product-display-fields.sql in the Supabase SQL Editor, then try again.`
   }
   if (message.includes('out_of_stock')) {
@@ -84,7 +110,21 @@ function formatProductSaveError(message) {
   if (message.includes('cloudinary_public_id') || message.includes('gallery_cloudinary_ids')) {
     return `${message}\n\nRun supabase/add-cloudinary-fields.sql in the Supabase SQL Editor, then try again.`
   }
+  if (
+    message.includes('mrp')
+    || message.includes('metal')
+    || message.includes('colour')
+    || message.includes('styles')
+    || message.includes('search_keywords')
+  ) {
+    return `${message}\n\nRun supabase/add-product-commerce-fields.sql in the Supabase SQL Editor, then try again.`
+  }
   return message
+}
+
+function normalizeTextList(value) {
+  const source = Array.isArray(value) ? value : String(value || '').split(',')
+  return [...new Set(source.map((item) => String(item).trim()).filter(Boolean))]
 }
 
 export default function AdminDashboard() {
@@ -169,12 +209,15 @@ export default function AdminDashboard() {
     setForm({
       name: product.name ?? '',
       price: String(product.price ?? ''),
+      mrp: product.mrp != null ? String(product.mrp) : '',
       description: product.description ?? '',
       category: normalizeProductCategory(product.category) ?? PRODUCT_CATEGORIES[0],
+      metal: product.metal ?? '',
+      colour: product.colour ?? '',
+      styles: normalizeTextList(product.styles),
+      search_keywords: normalizeTextList(product.search_keywords).join(', '),
       stock: String(product.stock ?? 1),
       out_of_stock: readOutOfStockFromProduct(product, useOosColumn),
-      rating: product.rating != null ? String(product.rating) : '',
-      review_count: product.review_count != null ? String(product.review_count) : '',
       badge: product.badge ?? '',
     })
     const urls = getProductImageUrls(product)
@@ -261,6 +304,21 @@ export default function AdminDashboard() {
       return
     }
 
+    const price = Number(form.price)
+    const mrp = form.mrp.trim() ? Number(form.mrp) : null
+    if (!Number.isFinite(price) || price <= 0) {
+      showFormError('Selling price must be greater than ₹0.')
+      return
+    }
+    if (mrp != null && (!Number.isFinite(mrp) || mrp < price)) {
+      showFormError('MRP must be equal to or greater than the selling price.')
+      return
+    }
+    if (!form.metal || !form.colour || form.styles.length === 0) {
+      showFormError('Choose a metal, colour, and at least one style.')
+      return
+    }
+
     setBusy(true)
     setFormError('')
     setFormNotice('')
@@ -276,8 +334,6 @@ export default function AdminDashboard() {
         ...uploadedAssets.map((asset) => asset.publicId ?? null),
       ]
 
-      const ratingRaw = form.rating.trim()
-      const reviewRaw = form.review_count.trim()
       const badgeRaw = form.badge.trim()
 
       const availability = buildAvailabilityPatch({
@@ -288,16 +344,19 @@ export default function AdminDashboard() {
 
       const row = {
         name: form.name.trim(),
-        price: Number(form.price),
+        price,
+        mrp,
         description: form.description.trim() || null,
         category: normalizeProductCategory(form.category),
+        metal: form.metal,
+        colour: form.colour,
+        styles: normalizeTextList(form.styles),
+        search_keywords: normalizeTextList(form.search_keywords),
         image_url: allUrls[0] ?? null,
         gallery_urls: allUrls,
         cloudinary_public_id: allPublicIds[0] ?? null,
         gallery_cloudinary_ids: allPublicIds,
         ...availability,
-        rating: ratingRaw ? Number(ratingRaw) : null,
-        review_count: reviewRaw ? Math.max(0, Math.floor(Number(reviewRaw))) : null,
         badge: badgeRaw === 'bestseller' || badgeRaw === 'new' ? badgeRaw : null,
       }
 
@@ -316,7 +375,9 @@ export default function AdminDashboard() {
       let { error } = await persistProduct(row)
 
       if (error?.message?.includes('cloudinary')) {
-        const { cloudinary_public_id: _a, gallery_cloudinary_ids: _b, ...legacyRow } = row
+        const legacyRow = { ...row }
+        delete legacyRow.cloudinary_public_id
+        delete legacyRow.gallery_cloudinary_ids
         ;({ error } = await persistProduct(legacyRow))
       }
 
@@ -473,17 +534,33 @@ export default function AdminDashboard() {
 
               <label>
                 <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
-                  Price (₹)
+                  Selling price (₹)
                 </span>
                 <input
                   className={inputClass}
                   type="number"
-                  min="0"
+                  min="0.01"
                   step="0.01"
                   value={form.price}
                   onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))}
                   required
                 />
+              </label>
+
+              <label>
+                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+                  MRP (₹)
+                </span>
+                <input
+                  className={inputClass}
+                  type="number"
+                  min="0.01"
+                  step="0.01"
+                  value={form.mrp}
+                  onChange={(e) => setForm((f) => ({ ...f, mrp: e.target.value }))}
+                  placeholder="Leave empty when not discounted"
+                />
+                <p className="mt-1 text-xs text-[#847377]">Must not be lower than the selling price.</p>
               </label>
 
               <label>
@@ -517,37 +594,6 @@ export default function AdminDashboard() {
                 </span>
               </label>
 
-              <label>
-                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
-                  Rating (0–5)
-                </span>
-                <input
-                  className={inputClass}
-                  type="number"
-                  min="0"
-                  max="5"
-                  step="0.1"
-                  placeholder="Auto"
-                  value={form.rating}
-                  onChange={(e) => setForm((f) => ({ ...f, rating: e.target.value }))}
-                />
-              </label>
-
-              <label>
-                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
-                  Review count
-                </span>
-                <input
-                  className={inputClass}
-                  type="number"
-                  min="0"
-                  step="1"
-                  placeholder="Auto"
-                  value={form.review_count}
-                  onChange={(e) => setForm((f) => ({ ...f, review_count: e.target.value }))}
-                />
-              </label>
-
               <label className="sm:col-span-2">
                 <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
                   Badge
@@ -564,8 +610,8 @@ export default function AdminDashboard() {
                   ))}
                 </select>
                 <p className="mt-1 text-xs text-[#847377]">
-                  Leave rating/reviews empty for stable auto values. Auto badge: New (30 days) or
-                  Bestseller (80+ reviews).
+                  Ratings and review counts come only from approved customer reviews. Auto badge:
+                  New (30 days) or Bestseller (80+ approved reviews).
                 </p>
               </label>
 
@@ -587,6 +633,79 @@ export default function AdminDashboard() {
                 </select>
                 <p className="mt-1 text-xs text-[#847377]">
                   Shown on Collections under this category (e.g. Necklace, Rings).
+                </p>
+              </label>
+
+              <label>
+                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+                  Metal / material
+                </span>
+                <select
+                  className={inputClass}
+                  value={form.metal}
+                  onChange={(e) => setForm((f) => ({ ...f, metal: e.target.value }))}
+                  required
+                >
+                  <option value="" disabled>Select metal</option>
+                  {METAL_OPTIONS.map((metal) => (
+                    <option key={metal} value={metal}>{metal}</option>
+                  ))}
+                </select>
+              </label>
+
+              <label>
+                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+                  Colour
+                </span>
+                <select
+                  className={inputClass}
+                  value={form.colour}
+                  onChange={(e) => setForm((f) => ({ ...f, colour: e.target.value }))}
+                  required
+                >
+                  <option value="" disabled>Select colour</option>
+                  {COLOUR_OPTIONS.map((colour) => (
+                    <option key={colour} value={colour}>{colour}</option>
+                  ))}
+                </select>
+              </label>
+
+              <fieldset className="rounded-xl border border-[#847377]/20 bg-[#fdf9f4] p-4 sm:col-span-2">
+                <legend className="px-1 text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+                  Styles / occasions
+                </legend>
+                <div className="mt-1 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+                  {STYLE_OPTIONS.map((style) => (
+                    <label key={style} className="flex items-center gap-2 text-sm text-[#514347]">
+                      <input
+                        type="checkbox"
+                        className="h-4 w-4 accent-[#3d0a21]"
+                        checked={form.styles.includes(style)}
+                        onChange={(event) => setForm((current) => ({
+                          ...current,
+                          styles: event.target.checked
+                            ? [...current.styles, style]
+                            : current.styles.filter((item) => item !== style),
+                        }))}
+                      />
+                      {style}
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+
+              <label className="sm:col-span-2">
+                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+                  Search keywords
+                </span>
+                <input
+                  className={inputClass}
+                  value={form.search_keywords}
+                  onChange={(e) => setForm((f) => ({ ...f, search_keywords: e.target.value }))}
+                  placeholder="gift for her, dainty jewellery, floral pendant"
+                />
+                <p className="mt-1 text-xs text-[#847377]">
+                  Optional comma-separated phrases customers may type.
                 </p>
               </label>
 

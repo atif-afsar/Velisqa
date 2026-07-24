@@ -43,6 +43,8 @@ export default function AdminHome() {
     needsShipment: 0,
     awaitingUpi: 0,
     inTransit: 0,
+    pendingReviews: 0,
+    pendingReturns: 0,
     totalOpen: 0,
   }
 
@@ -73,16 +75,22 @@ export default function AdminHome() {
                 {counts.needsShipment > 0 ? (
                   <li>• {counts.needsShipment} COD order{counts.needsShipment === 1 ? '' : 's'} waiting for NimbusPost shipment</li>
                 ) : null}
+                {counts.pendingReviews > 0 ? (
+                  <li>• {counts.pendingReviews} customer review{counts.pendingReviews === 1 ? '' : 's'} waiting for moderation</li>
+                ) : null}
+                {counts.pendingReturns > 0 ? (
+                  <li>• {counts.pendingReturns} return request{counts.pendingReturns === 1 ? '' : 's'} waiting for approval</li>
+                ) : null}
               </ul>
             </div>
           ) : (
             <div className="mb-6 rounded-2xl border border-[#2d6a4f]/20 bg-[#f0f7f4] p-5 sm:p-6">
               <p className="font-semibold text-[#1b4332]">You&apos;re all caught up</p>
-              <p className="mt-1 text-sm text-[#514347]">No UPI proofs to review and no COD orders waiting to ship.</p>
+              <p className="mt-1 text-sm text-[#514347]">No UPI proofs, shipping tasks, or customer reviews need attention.</p>
             </div>
           )}
 
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <ActionCard
               title="UPI payment reviews"
               count={counts.paymentReviews}
@@ -106,6 +114,22 @@ export default function AdminHome() {
               href="/admin/orders"
               cta="View shipped orders"
               tone="default"
+            />
+            <ActionCard
+              title="Customer reviews"
+              count={counts.pendingReviews}
+              description="Verified purchasers submitted reviews. Approve useful feedback before it updates public product ratings."
+              href="/admin/reviews"
+              cta="Moderate reviews"
+              tone={counts.pendingReviews > 0 ? 'urgent' : 'calm'}
+            />
+            <ActionCard
+              title="Return requests"
+              count={counts.pendingReturns}
+              description="Post-delivery return requests within the 5-day window. Approve, book reverse AWB, QC, then mark refunded."
+              href="/admin/returns"
+              cta="Manage returns"
+              tone={counts.pendingReturns > 0 ? 'urgent' : 'calm'}
             />
           </div>
 

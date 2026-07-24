@@ -9,7 +9,7 @@ import BuyNowButton from '../WhatsApp/BuyNowButton'
 export default function ProductStickyBar({ product, soldOut, quantity = 1 }) {
   const { addToCart, itemCount } = useCart()
   const [adding, setAdding] = useState(false)
-  const { sale } = getPromoPriceDisplay(product.price)
+  const { sale } = getPromoPriceDisplay(product)
   const addQuantity = Math.max(1, Number(quantity) || 1)
 
   function handleAdd() {

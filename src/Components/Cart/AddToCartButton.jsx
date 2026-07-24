@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useCart } from '../../context/CartContext'
-import { getProductStock } from '../../lib/cartStock'
+import { isProductSoldOut } from '../../lib/cartStock'
 
 export default function AddToCartButton({
   product,
@@ -12,8 +12,7 @@ export default function AddToCartButton({
 }) {
   const { addToCart, itemCount } = useCart()
   const [adding, setAdding] = useState(false)
-  const stock = getProductStock(product)
-  const soldOut = stock <= 0
+  const soldOut = isProductSoldOut(product)
 
   async function handleClick(e) {
     e.preventDefault()

@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import SEOHead from '../Components/SEO/SEOHead'
+import OrderReturnPanel from '../Components/Orders/OrderReturnPanel'
+import OrderReviewLinks from '../Components/Orders/OrderReviewLinks'
 import { formatInr } from '../lib/cartStock'
 import { fetchMyOrders, myOrderPayUrl, myOrderTrackUrl } from '../lib/myOrders'
 import { getPaymentStatusLabel, getShipmentStatusLabel } from '../lib/orderTracking'
+import { isOrderDelivered } from '../lib/orderReturns'
 import { PAYMENT_STATUS_LABELS } from '../lib/orderStatuses'
 
 function summarizeItems(items = []) {
@@ -149,6 +152,21 @@ export default function MyOrders() {
                         </Link>
                       )}
                     </div>
+
+                    {!cancelled && isOrderDelivered(mapped) && (
+                      <>
+                        <OrderReviewLinks
+                          order={mapped}
+                          items={order.order_items}
+                          className="mt-5"
+                        />
+                        <OrderReturnPanel
+                          orderId={order.id}
+                          orderRef={order.order_ref}
+                          order={mapped}
+                        />
+                      </>
+                    )}
                   </li>
                 )
               })}

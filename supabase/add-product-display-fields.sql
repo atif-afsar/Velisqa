@@ -6,6 +6,6 @@ alter table public.products
   add column if not exists review_count integer check (review_count >= 0),
   add column if not exists badge text check (badge is null or badge in ('bestseller', 'new'));
 
-comment on column public.products.rating is 'Average star rating (0–5). Leave null to use a stable display default.';
-comment on column public.products.review_count is 'Total review count shown on product cards.';
+comment on column public.products.rating is 'Average rating calculated only from approved product_reviews rows.';
+comment on column public.products.review_count is 'Approved product review count maintained by the review aggregate trigger.';
 comment on column public.products.badge is 'Merchandising badge: bestseller | new. Leave null for auto rules.';

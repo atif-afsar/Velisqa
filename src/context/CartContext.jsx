@@ -18,6 +18,8 @@ export function CartProvider({ children }) {
   const [items, setItems] = useState(() => loadCartItems())
   const [toast, setToast] = useState(null)
   const [syncing, setSyncing] = useState(false)
+  const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false)
+  const [lastAddedProductId, setLastAddedProductId] = useState(null)
 
   const persist = useCallback((next) => {
     setItems(next)
@@ -35,6 +37,11 @@ export function CartProvider({ children }) {
   }, [toast])
 
   const dismissToast = useCallback(() => setToast(null), [])
+  const openCartDrawer = useCallback(() => setIsCartDrawerOpen(true), [])
+  const closeCartDrawer = useCallback(() => {
+    setIsCartDrawerOpen(false)
+    setLastAddedProductId(null)
+  }, [])
 
   const addToCartInternal = useCallback(
     (product, quantity = 1) => {
@@ -61,7 +68,8 @@ export function CartProvider({ children }) {
         persist([...items, line])
       }
 
-      showToast(`“${product.name}” added to your bag`, 'success')
+      setLastAddedProductId(product.id)
+      setIsCartDrawerOpen(true)
       trackMetaEvent('AddToCart', {
         content_ids: [product.id],
         content_name: product.name,
@@ -90,7 +98,9 @@ export function CartProvider({ children }) {
         return { ok: true }
       }
 
-      const check = validateCartQuantity(existing.stock, qty, 0)
+      const check = validateCartQuantity(existing.stock, qty, 0, {
+        soldOut: existing.outOfStock,
+      })
       if (!check.ok) {
         showToast(check.message, 'error')
         return { ok: false, reason: check.reason }
@@ -113,6 +123,7 @@ export function CartProvider({ children }) {
 
   const clearCart = useCallback(() => {
     persist([])
+    setLastAddedProductId(null)
   }, [persist])
 
   const syncStockFromServer = useCallback(async () => {
@@ -121,10 +132,25 @@ export function CartProvider({ children }) {
     setSyncing(true)
     try {
       const ids = items.map((line) => line.productId)
-      const { data, error } = await supabase
-        .from('products')
-        .select('id, name, price, stock, image_url, gallery_urls')
-        .in('id', ids)
+      const run = (columns) => supabase.from('products').select(columns).in('id', ids)
+      let supportsMrp = true
+      let { data, error } = await run(
+        'id, name, price, mrp, stock, out_of_stock, image_url, gallery_urls',
+      )
+
+      if (error?.message?.includes('mrp')) {
+        supportsMrp = false
+        ;({ data, error } = await run(
+          'id, name, price, stock, out_of_stock, image_url, gallery_urls',
+        ))
+      }
+      if (error?.message?.includes('out_of_stock')) {
+        ;({ data, error } = await run(
+          supportsMrp
+            ? 'id, name, price, mrp, stock, image_url, gallery_urls'
+            : 'id, name, price, stock, image_url, gallery_urls',
+        ))
+      }
 
       if (error) throw error
 
@@ -136,7 +162,8 @@ export function CartProvider({ children }) {
         return {
           ...line,
           name: row.name ?? line.name,
-          price: Number(row.price) ?? line.price,
+          price: Number.isFinite(Number(row.price)) ? Number(row.price) : line.price,
+          mrp: Number(row.mrp) > Number(row.price) ? Number(row.mrp) : null,
           stock: Math.max(0, Math.floor(Number(row.stock) || 0)),
           outOfStock: isProductSoldOut(merged),
           imageUrl: getPrimaryImageUrl(row) || line.imageUrl,
@@ -165,8 +192,12 @@ export function CartProvider({ children }) {
       stockIssues,
       hasStockIssues: stockIssues.length > 0,
       syncing,
+      isCartDrawerOpen,
+      lastAddedProductId,
       toast,
       dismissToast,
+      openCartDrawer,
+      closeCartDrawer,
       addToCart,
       setQuantity,
       removeFromCart,
@@ -179,8 +210,12 @@ export function CartProvider({ children }) {
       cartTotal,
       stockIssues,
       syncing,
+      isCartDrawerOpen,
+      lastAddedProductId,
       toast,
       dismissToast,
+      openCartDrawer,
+      closeCartDrawer,
       addToCart,
       setQuantity,
       removeFromCart,

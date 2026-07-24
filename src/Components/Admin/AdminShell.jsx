@@ -17,6 +17,18 @@ const NAV = [
     match: (path) => path.startsWith('/admin/orders'),
   },
   { to: '/admin/panel', label: 'Products', match: (path) => path.startsWith('/admin/panel') },
+  {
+    to: '/admin/reviews',
+    label: 'Reviews',
+    badgeKey: 'pendingReviews',
+    match: (path) => path.startsWith('/admin/reviews'),
+  },
+  {
+    to: '/admin/returns',
+    label: 'Returns',
+    badgeKey: 'pendingReturns',
+    match: (path) => path.startsWith('/admin/returns'),
+  },
 ]
 
 function NavBadge({ count }) {
@@ -108,6 +120,7 @@ export default function AdminShell({
               <strong>{openTasks} task{openTasks === 1 ? '' : 's'} need your attention</strong>
               {counts?.paymentReviews ? ` · ${counts.paymentReviews} UPI proof${counts.paymentReviews === 1 ? '' : 's'} to review` : ''}
               {counts?.needsShipment ? ` · ${counts.needsShipment} order${counts.needsShipment === 1 ? '' : 's'} ready to ship` : ''}
+              {counts?.pendingReviews ? ` · ${counts.pendingReviews} customer review${counts.pendingReviews === 1 ? '' : 's'} to moderate` : ''}
             </p>
             <div className="flex flex-wrap gap-2">
               {counts?.paymentReviews ? (
@@ -118,6 +131,11 @@ export default function AdminShell({
               {counts?.needsShipment ? (
                 <Link to="/admin/orders" className="font-semibold text-[#6f334a] hover:underline">
                   Ship orders →
+                </Link>
+              ) : null}
+              {counts?.pendingReviews ? (
+                <Link to="/admin/reviews" className="font-semibold text-[#6f334a] hover:underline">
+                  Moderate reviews →
                 </Link>
               ) : null}
             </div>

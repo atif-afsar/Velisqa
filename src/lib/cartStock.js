@@ -24,6 +24,7 @@ export function productToCartLine(product, quantity = 1) {
     productId: product.id,
     name: product.name ?? 'Product',
     price: Number(product.price) || 0,
+    mrp: Number(product.mrp) > Number(product.price) ? Number(product.mrp) : null,
     imageUrl: getPrimaryImageUrl(product),
     productUrl: product.id ? `${SITE_URL}/product/${product.id}` : null,
     stock: getProductStock(product),

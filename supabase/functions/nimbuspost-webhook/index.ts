@@ -82,6 +82,9 @@ Deno.serve(async (request) => {
       shipping_status: shippingStatus,
       order_status: orderStatus,
     }
+    if (shippingStatus === 'delivered') {
+      updatePayload.delivered_at = new Date().toISOString()
+    }
     if (courierName) updatePayload.courier_name = String(courierName)
     if (trackingUrl) updatePayload.tracking_url = String(trackingUrl)
 

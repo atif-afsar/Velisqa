@@ -75,7 +75,7 @@ export function buildWebsiteSchema() {
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: `${SITE_URL}/collections?category={search_term_string}`,
+        urlTemplate: `${SITE_URL}/search?q={search_term_string}`,
       },
       "query-input": "required name=search_term_string",
     },
@@ -133,4 +133,41 @@ export function buildFaqSchema(faqs) {
       acceptedAnswer: { "@type": "Answer", text: answer },
     })),
   };
+}
+
+export function buildProductDetailSchema({ product, image, description, url }) {
+  const rating = Number(product?.rating)
+  const reviewCount = Number(product?.review_count)
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product?.name,
+    image,
+    description,
+    brand: { "@type": "Brand", name: "Velisqa" },
+    category: product?.category,
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "INR",
+      price: Number(product?.price) || 0,
+      availability:
+        Number(product?.stock) > 0
+          ? "https://schema.org/InStock"
+          : "https://schema.org/OutOfStock",
+      url,
+      seller: { "@id": `${SITE_URL}/#organization` },
+    },
+  };
+
+  if (Number.isFinite(rating) && rating > 0 && Number.isFinite(reviewCount) && reviewCount > 0) {
+    schema.aggregateRating = {
+      "@type": "AggregateRating",
+      ratingValue: rating,
+      reviewCount,
+      bestRating: 5,
+      worstRating: 1,
+    };
+  }
+
+  return schema;
 }

@@ -49,6 +49,8 @@ export async function fetchAdminInboxSummary() {
     inTransitCountResult,
     shipmentCandidatesResult,
     recentOrdersResult,
+    pendingReviewsResult,
+    pendingReturnsResult,
   ] = await Promise.all([
     supabase
       .from('orders')
@@ -99,6 +101,14 @@ export async function fetchAdminInboxSummary() {
       .eq('is_enquiry', false)
       .order('created_at', { ascending: false })
       .limit(5),
+    supabase
+      .from('product_reviews')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'pending'),
+    supabase
+      .from('order_returns')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'pending'),
   ])
 
   if (paymentsCountResult.error) throw paymentsCountResult.error
@@ -113,6 +123,9 @@ export async function fetchAdminInboxSummary() {
   const needsShipment = (shipmentCandidatesResult.data || []).filter(orderNeedsShipment)
   const awaitingUpi = awaitingUpiCountResult.count || 0
   const inTransit = inTransitCountResult.count || 0
+  // Reviews are optional until product-reviews.sql is installed.
+  const pendingReviews = pendingReviewsResult.error ? 0 : pendingReviewsResult.count || 0
+  const pendingReturns = pendingReturnsResult.error ? 0 : pendingReturnsResult.count || 0
 
   return {
     counts: {
@@ -120,7 +133,9 @@ export async function fetchAdminInboxSummary() {
       needsShipment: needsShipment.length,
       awaitingUpi,
       inTransit,
-      totalOpen: paymentReviewCount + needsShipment.length,
+      pendingReviews,
+      pendingReturns,
+      totalOpen: paymentReviewCount + needsShipment.length + pendingReviews + pendingReturns,
     },
     paymentReviews,
     needsShipment: needsShipment.slice(0, 8),

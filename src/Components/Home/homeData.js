@@ -1,11 +1,23 @@
-import bracelet from "../../assets/Bracelet/IMG_3445.webp";
-import pendant from "../../assets/Necklace/IMG_3430.webp";
 import earrings from "../../assets/Earrings/image.webp";
+import pendant from "../../assets/Necklace/IMG_3430.webp";
+import bracelet from "../../assets/Bracelet/IMG_3445.webp";
 import rings from "../../assets/Rings/image.webp";
+import bangles from "../../assets/collection-obsidian-bangle.webp";
+import sets from "../../assets/collection-celestial-pearls.webp";
 import seasonalBracelet from "../../assets/Bracelet/image1.webp";
 import seasonalRing from "../../assets/Rings/image1.webp";
 import seasonalEarrings from "../../assets/Earrings/IMG_3463.webp";
-import seasonalHero from "../../assets/hero/image8.webp";
+import seasonalHero from "../../assets/hero/image.webp";
+
+/** Circular shop-by-category row on the homepage */
+export const shopCategories = [
+  { label: "Earrings", type: "Earrings", image: earrings },
+  { label: "Necklaces", type: "Necklace", image: pendant },
+  { label: "Bracelets", type: "Bracelet", image: bracelet },
+  { label: "Rings", type: "Rings", image: rings },
+  { label: "Bangles", type: "Bangles", image: bangles },
+  { label: "Sets", type: "Sets", image: sets },
+];
 
 export const icons = [
   { name: "Aurelia Knot", type: "Bracelet", image: bracelet, startingAt: 440 },

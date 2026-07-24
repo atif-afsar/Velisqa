@@ -7,10 +7,10 @@ export function isCloudinaryUploadConfigured() {
 }
 
 /**
- * Upload a product image to Cloudinary (unsigned preset).
+ * Upload an optimized image to Cloudinary (unsigned preset).
  * @returns {{ secure_url: string, public_id: string }}
  */
-export async function uploadImageToCloudinary(file) {
+export async function uploadImageToCloudinary(file, { folder = 'velisqa/products' } = {}) {
   const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
   const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
 
@@ -25,7 +25,7 @@ export async function uploadImageToCloudinary(file) {
   const formData = new FormData()
   formData.append('file', optimized)
   formData.append('upload_preset', uploadPreset)
-  formData.append('folder', 'velisqa/products')
+  formData.append('folder', folder)
 
   const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
     method: 'POST',

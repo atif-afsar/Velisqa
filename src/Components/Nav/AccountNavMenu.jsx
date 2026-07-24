@@ -30,7 +30,7 @@ function AccountIcon({ onDarkHero }) {
   )
 }
 
-export default function AccountNavMenu({ scrolled, onDarkHero, onNavigate }) {
+export default function AccountNavMenu({ scrolled, onDarkHero, onNavigate, variant = 'icon' }) {
   const menuId = useId()
   const rootRef = useRef(null)
   const { user, profile, loading, logout } = useAuth()
@@ -71,6 +71,8 @@ export default function AccountNavMenu({ scrolled, onDarkHero, onNavigate }) {
 
   const itemClass = `flex min-h-10 w-full items-center px-3 text-left text-[0.72rem] font-medium tracking-[0.06em] text-[#130006] transition hover:bg-[#f1ede8]`
 
+  const plain = variant === 'plain'
+
   return (
     <div ref={rootRef} className="relative">
       <button
@@ -80,11 +82,15 @@ export default function AccountNavMenu({ scrolled, onDarkHero, onNavigate }) {
         aria-expanded={open}
         aria-label="Account menu"
         onClick={() => setOpen((value) => !value)}
-        className={`inline-flex h-9 w-9 items-center justify-center rounded-full border transition ${
-          onDarkHero
-            ? 'border-white/25 bg-white/5 hover:border-white/45 hover:bg-white/10'
-            : 'border-[#130006]/10 bg-white/70 hover:border-[#130006]/25'
-        } ${open ? (onDarkHero ? 'border-white/45 bg-white/10' : 'border-[#3d0a21]/25 bg-white') : ''}`}
+        className={`inline-flex items-center justify-center transition ${
+          plain
+            ? 'h-10 w-10 text-[#130006] hover:opacity-70'
+            : `h-9 w-9 rounded-full border ${
+                onDarkHero
+                  ? 'border-white/25 bg-white/5 hover:border-white/45 hover:bg-white/10'
+                  : 'border-[#130006]/10 bg-white/70 hover:border-[#130006]/25'
+              } ${open ? (onDarkHero ? 'border-white/45 bg-white/10' : 'border-[#3d0a21]/25 bg-white') : ''}`
+        }`}
       >
         <AccountIcon onDarkHero={onDarkHero} />
       </button>

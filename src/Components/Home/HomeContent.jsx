@@ -21,7 +21,7 @@ export default function HomeContent() {
   return (
     <main className="bg-[#f9f5f0] text-[#130006]">
       <Hero />
-      <LazySection minHeight="480px" rootMargin="400px">
+      <LazySection minHeight="220px" rootMargin="400px">
         <IconsOfElegance />
       </LazySection>
       <LazySection minHeight="520px" rootMargin="500px">

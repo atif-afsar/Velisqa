@@ -1,8 +1,8 @@
-import { formatInr, getPromoPriceDisplay, PROMO_DISCOUNT_PERCENT } from '../../lib/promoPricing'
+import { formatInr, getPromoPriceDisplay } from '../../lib/promoPricing'
 
 /** Palmonas-style price block for product detail */
-export default function ProductDetailPrice({ price }) {
-  const { sale, compare, hasPromo } = getPromoPriceDisplay(price)
+export default function ProductDetailPrice({ product }) {
+  const { sale, compare, hasPromo, discountPercent } = getPromoPriceDisplay(product)
 
   return (
     <div className="space-y-1">
@@ -17,7 +17,7 @@ export default function ProductDetailPrice({ price }) {
         </span>
         {hasPromo && (
           <span className="rounded-md bg-[#3d0a21] px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-[#e9c349]">
-            Save {PROMO_DISCOUNT_PERCENT}%
+            Save {discountPercent}%
           </span>
         )}
       </div>

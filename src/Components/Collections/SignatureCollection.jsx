@@ -1,32 +1,79 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { getLenis } from '../../lib/smoothScrollState'
 import {
-  SIGNATURE_CATEGORIES,
+  PRODUCT_CATEGORIES,
   getCategoryFromParam,
   getCategoryParamSlug,
   groupProductsByCategory,
 } from '../../lib/productCategories'
+import {
+  EMPTY_PRODUCT_FILTERS,
+  filterAndSortProducts,
+  getProductFacetOptions,
+  readProductFilters,
+  writeProductFilters,
+  PRODUCT_SORT_OPTIONS,
+  countActiveProductFilters,
+} from '../../lib/productFilters'
 import { useProducts } from '../../hooks/useProducts'
 import ProductCard from '../Product/ProductCard'
+import ProductFilters, { ProductFilterSidebar } from './ProductFilters'
 
 export default function SignatureCollection() {
   const [searchParams, setSearchParams] = useSearchParams()
   const { products, loading, error: fetchError } = useProducts()
+  const stickyBarRef = useRef(null)
 
   const grouped = useMemo(
-    () => groupProductsByCategory(products, SIGNATURE_CATEGORIES),
+    () => groupProductsByCategory(products, PRODUCT_CATEGORIES),
     [products],
   )
 
   const categoryFromUrl = getCategoryFromParam(searchParams.get('category'))
   const activeCategory =
-    categoryFromUrl && SIGNATURE_CATEGORIES.includes(categoryFromUrl)
+    categoryFromUrl && PRODUCT_CATEGORIES.includes(categoryFromUrl)
       ? categoryFromUrl
-      : SIGNATURE_CATEGORIES[0]
+      : PRODUCT_CATEGORIES[0]
 
-  const categoryProducts = grouped[activeCategory] ?? []
-  const totalPieces = SIGNATURE_CATEGORIES.reduce((sum, cat) => sum + (grouped[cat]?.length ?? 0), 0)
+  const categoryProducts = useMemo(
+    () => grouped[activeCategory] ?? [],
+    [grouped, activeCategory],
+  )
+  const totalPieces = PRODUCT_CATEGORIES.reduce((sum, cat) => sum + (grouped[cat]?.length ?? 0), 0)
+  const facets = useMemo(() => getProductFacetOptions(products), [products])
+  const collectionFacets = useMemo(() => ({ ...facets, categories: [] }), [facets])
+  const filters = useMemo(
+    () => readProductFilters(searchParams, collectionFacets),
+    [searchParams, collectionFacets],
+  )
+  const filteredProducts = useMemo(
+    () => filterAndSortProducts(categoryProducts, filters),
+    [categoryProducts, filters],
+  )
+
+  useEffect(() => {
+    const el = stickyBarRef.current
+    if (!el) return undefined
+
+    const syncStickyBarHeight = () => {
+      const height = Math.ceil(el.getBoundingClientRect().height)
+      if (height > 0) {
+        document.documentElement.style.setProperty('--collection-sticky-bar', `${height}px`)
+      }
+    }
+
+    syncStickyBarHeight()
+    const observer = new ResizeObserver(syncStickyBarHeight)
+    observer.observe(el)
+    window.addEventListener('resize', syncStickyBarHeight)
+
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('resize', syncStickyBarHeight)
+      document.documentElement.style.removeProperty('--collection-sticky-bar')
+    }
+  }, [activeCategory])
 
   useEffect(() => {
     if (!categoryFromUrl) return
@@ -41,109 +88,161 @@ export default function SignatureCollection() {
         target.scrollIntoView({ block: 'start', behavior: 'instant' })
       }
     })
-  }, [searchParams, categoryFromUrl])
+  }, [categoryFromUrl])
 
   function handleCategoryChange(categoryTitle) {
-    setSearchParams({ category: getCategoryParamSlug(categoryTitle) })
+    const next = new URLSearchParams(searchParams)
+    next.set('category', getCategoryParamSlug(categoryTitle))
+    setSearchParams(next)
+  }
+
+  function handleFiltersChange(nextFilters) {
+    setSearchParams(writeProductFilters(searchParams, nextFilters))
+  }
+
+  function handleSortChange(sort) {
+    setSearchParams(writeProductFilters(searchParams, { ...filters, sort }))
+  }
+
+  function clearFilters() {
+    setSearchParams(writeProductFilters(searchParams, EMPTY_PRODUCT_FILTERS))
   }
 
   return (
     <section
       id="signature"
-      className="container-stitch mb-20 scroll-mt-[calc(var(--nav-height)+1rem)] md:mb-32"
+      className="scroll-mt-[calc(var(--nav-height)+0.5rem)] pb-16 md:pb-24"
     >
-      <div className="mb-10 flex flex-col items-center px-2 text-center md:mb-14">
-        <h2 className="mb-2 type-section italic text-[#130006]">The Signature Collection</h2>
-        <div className="h-px w-24 bg-[#e9c349]" />
-        <p className="mt-4 max-w-md text-sm leading-relaxed text-[#514347]">
-          Every piece below comes from your admin catalogue — add, edit, or remove products anytime.
-        </p>
-      </div>
-
-      <div className="mb-12 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-        {SIGNATURE_CATEGORIES.map((category) => {
-          const isActive = category === activeCategory
-          const count = grouped[category]?.length ?? 0
-
-          return (
-            <button
-              key={category}
-              type="button"
-              onClick={() => handleCategoryChange(category)}
-              className={`tap-target rounded-full border px-4 py-2 text-center transition-all sm:px-5 sm:py-2.5 ${
-                isActive
-                  ? 'border-[#3d0a21] bg-[#3d0a21] text-[#e9c349]'
-                  : 'border-[#d4af37]/35 bg-transparent text-[#130006] hover:border-[#3d0a21] hover:bg-[#130006]/5'
-              }`}
-              aria-pressed={isActive}
-            >
-              <span className="label-stitch">{category}</span>
-              {count > 0 && (
-                <span className={`ml-1.5 text-[10px] ${isActive ? 'text-[#ffe088]/90' : 'text-[#847377]'}`}>
-                  ({count})
-                </span>
-              )}
-            </button>
-          )
-        })}
-      </div>
-
-      <div>
-        <div className="mb-7 flex flex-col gap-3 border-b border-[#d4af37]/30 pb-3 sm:flex-row sm:items-end sm:justify-between sm:gap-5">
-          <h3 className="min-w-0 break-words font-serif text-2xl italic leading-tight text-[#130006] sm:text-3xl md:text-4xl">
+      <div
+        ref={stickyBarRef}
+        className="sticky top-[calc(var(--nav-height)+env(safe-area-inset-top,0px))] z-40 isolate border-b border-black/8 bg-white shadow-[0_4px_16px_rgba(19,0,6,0.06)]"
+      >
+        <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-10">
+          <p className="pt-4 pb-2 text-center text-[12px] font-medium uppercase tracking-[0.24em] text-[#130006] sm:pt-5 sm:text-[13px] sm:tracking-[0.28em]">
             {activeCategory}
-          </h3>
-          <div className="min-w-0 w-full text-left sm:w-auto sm:max-w-[min(100%,16rem)] sm:shrink-0 sm:text-right md:max-w-none">
-            <p className="text-[9px] font-bold uppercase leading-snug tracking-[0.16em] text-[#6f334a] sm:text-[10px] sm:tracking-[0.22em] md:text-[11px]">
-              Limited release — this edit only
-            </p>
-            <p className="mt-1 font-serif text-lg font-bold tabular-nums leading-none text-[#130006] sm:text-xl md:text-2xl">
-              {loading ? '…' : `${categoryProducts.length} piece${categoryProducts.length === 1 ? '' : 's'}`}
-            </p>
+          </p>
+          <div className="flex items-center gap-3 pb-3 md:pb-3.5">
+            <div className="-mx-1 flex min-w-0 flex-1 gap-2 overflow-x-auto px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {PRODUCT_CATEGORIES.map((category) => {
+                const isActive = category === activeCategory
+                const count = grouped[category]?.length ?? 0
+
+                return (
+                  <button
+                    key={category}
+                    type="button"
+                    onClick={() => handleCategoryChange(category)}
+                    className={`shrink-0 rounded-full px-4 py-2 text-[12px] font-medium transition-colors sm:px-5 sm:text-[13px] ${
+                      isActive
+                        ? 'bg-[#130006] text-white'
+                        : 'bg-[#f5f5f5] text-[#333] hover:bg-[#ececec]'
+                    }`}
+                    aria-pressed={isActive}
+                  >
+                    {category}
+                    {count > 0 && (
+                      <span className={`ml-1.5 ${isActive ? 'text-white/70' : 'text-[#888]'}`}>
+                        {count}
+                      </span>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+
+            <label className="hidden shrink-0 items-center lg:flex">
+              <span className="sr-only">Sort products</span>
+              <select
+                value={filters.sort}
+                onChange={(event) => handleSortChange(event.target.value)}
+                className="min-h-10 rounded-full border border-black/10 bg-white px-4 text-[12px] text-[#333] outline-none"
+              >
+                {PRODUCT_SORT_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
           </div>
+        </div>
+      </div>
+
+      <div className="relative z-0 mx-auto w-full max-w-[1600px] px-4 pt-5 sm:px-6 sm:pt-6 lg:px-10 lg:pt-8">
+        <div className="lg:hidden">
+          <ProductFilters
+            facets={collectionFacets}
+            filters={filters}
+            onChange={handleFiltersChange}
+            onClear={clearFilters}
+            resultCount={filteredProducts.length}
+          />
         </div>
 
         {fetchError && (
-          <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900">
-            Could not load products: {fetchError}. Check Supabase connection in your .env file.
+          <p className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900">
+            Could not load products. Check your connection and try again.
           </p>
         )}
 
-        {loading && categoryProducts.length === 0 && (
-          <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
-            {Array.from({ length: 4 }, (_, i) => (
-              <div key={`signature-skeleton-${i}`} className="aspect-[4/5] animate-pulse rounded-lg bg-[#e8e2db]" aria-hidden />
-            ))}
-          </div>
-        )}
+        <div className="flex items-start gap-8 xl:gap-10">
+          <ProductFilterSidebar
+            facets={collectionFacets}
+            filters={filters}
+            onChange={handleFiltersChange}
+            onClear={clearFilters}
+            stickyTopClass="top-[calc(var(--nav-height)+var(--collection-sticky-bar,5.5rem)+0.75rem)]"
+          />
 
-        {!loading && !fetchError && totalPieces === 0 && categoryProducts.length === 0 && (
-          <div className="py-12 text-center text-sm text-[#514347]">
-            <p>No products in the catalogue yet.</p>
-            <p className="mt-2">
-              Add products in the{' '}
-              <a href="/admin/panel" className="text-[#6f334a] underline-offset-2 hover:underline">
-                admin panel
-              </a>
-              .
+          <div className="min-w-0 flex-1">
+            <p className="mb-4 hidden text-[13px] text-[#666] lg:block">
+              {loading ? 'Loading…' : `${filteredProducts.length} products`}
             </p>
-          </div>
-        )}
 
-        {!loading && !fetchError && totalPieces > 0 && categoryProducts.length === 0 && (
-          <p className="py-12 text-center text-sm text-[#847377]">
-            No {activeCategory.toLowerCase()} in the catalogue yet. Add one in the admin panel with category
-            &ldquo;{activeCategory}&rdquo;.
-          </p>
-        )}
+            {loading && categoryProducts.length === 0 && (
+              <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-2 sm:gap-x-5 md:grid-cols-3 lg:gap-x-6 lg:gap-y-10 xl:grid-cols-3">
+                {Array.from({ length: 9 }, (_, i) => (
+                  <div key={`signature-skeleton-${i}`} className="animate-pulse">
+                    <div className="aspect-[3/4] bg-[#f0f0f0]" />
+                    <div className="mt-3 h-3 w-3/4 bg-[#f0f0f0]" />
+                    <div className="mt-2 h-3 w-1/3 bg-[#f0f0f0]" />
+                  </div>
+                ))}
+              </div>
+            )}
 
-        {categoryProducts.length > 0 && (
-          <div className="grid grid-cols-2 items-stretch gap-x-3 gap-y-6 sm:gap-x-7 sm:gap-y-10 lg:grid-cols-3">
-            {categoryProducts.map((product, i) => (
-              <ProductCard key={product.id} product={product} priority={i < 4} />
-            ))}
+            {!loading && !fetchError && totalPieces === 0 && (
+              <p className="py-16 text-center text-sm text-[#666]">No products available yet.</p>
+            )}
+
+            {!loading && !fetchError && totalPieces > 0 && categoryProducts.length === 0 && (
+              <p className="py-16 text-center text-sm text-[#666]">
+                No products in this category yet.
+              </p>
+            )}
+
+            {!loading && categoryProducts.length > 0 && filteredProducts.length === 0 && (
+              <div className="py-16 text-center">
+                <p className="text-sm text-[#666]">No products match your filters.</p>
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="mt-4 text-[13px] font-medium text-[#130006] underline-offset-2 hover:underline"
+                >
+                  Clear filters
+                </button>
+              </div>
+            )}
+
+            {categoryProducts.length > 0 && filteredProducts.length > 0 && (
+              <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-5 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 lg:gap-x-6 lg:gap-y-10">
+                {filteredProducts.map((product, i) => (
+                  <ProductCard key={product.id} product={product} priority={i < 6} variant="catalog" />
+                ))}
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </section>
   )

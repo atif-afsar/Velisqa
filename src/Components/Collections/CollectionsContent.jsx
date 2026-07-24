@@ -1,5 +1,4 @@
 import { lazy } from "react";
-import { Link } from "react-router-dom";
 import SignatureCollection from "./SignatureCollection";
 import LazySection from "../Performance/LazySection";
 
@@ -10,18 +9,8 @@ const CollectionsFooter = lazy(() => import("./CollectionsFooter"));
 
 export default function CollectionsContent() {
   return (
-    <main className="page-offset-nav bg-[#fdf9f4] text-[#1c1c19]">
-      <header className="container-stitch px-4 pb-2 pt-6 text-center sm:pt-8">
-        <p className="type-label text-[#847377]">Shop Velisqa</p>
-        <h1 className="mt-2 type-section text-[#130006]">Velisqa Jewellery Collections</h1>
-        <p className="mx-auto mt-3 max-w-lg text-sm font-medium text-[#514347]">
-          Premium artificial jewellery — necklaces, rings, bangles &amp; earrings.{" "}
-          <Link to="/order" className="text-[#6f334a] underline-offset-2 hover:underline">
-            Order on WhatsApp
-          </Link>
-          .
-        </p>
-      </header>
+    <main className="page-offset-nav bg-white text-[#130006]">
+      <h1 className="sr-only">Velisqa Collections</h1>
       <SignatureCollection />
       <LazySection minHeight="760px">
         <RareFinds />

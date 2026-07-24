@@ -16,31 +16,41 @@
   --outline: #847377;
   --type-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --luxury-ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --announcement-height: 3.125rem;
-  --nav-bar-height: 4.75rem;
+  --announcement-height: 2rem;
+  --nav-bar-height: 6.75rem;
   --nav-height: calc(var(--announcement-height) + var(--nav-bar-height));
 }
 
 @media (min-width: 640px) {
   :root {
-    --announcement-height: 2.25rem;
-    --nav-bar-height: 4.75rem;
+    --announcement-height: 2rem;
+    --nav-bar-height: 7rem;
     --nav-height: calc(var(--announcement-height) + var(--nav-bar-height));
   }
 }
 
 @media (min-width: 768px) {
   :root {
-    --nav-bar-height: 5.75rem;
+    --nav-bar-height: 7.25rem;
     --nav-height: calc(var(--announcement-height) + var(--nav-bar-height));
   }
 }
 
-/* Narrow viewports use native scroll — comfortable anchor offsets under fixed nav */
-@media (max-width: 767px) {
-  html {
-    scroll-padding-top: calc(var(--nav-height) + 0.5rem + env(safe-area-inset-top, 0px));
+@media (min-width: 1280px) {
+  :root {
+    /* Two-row shop header (logo row + nav links); synced at runtime via ResizeObserver */
+    --nav-bar-height: 9.75rem;
   }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --nav-bar-height: 6.125rem;
+  }
+}
+
+html {
+  scroll-padding-top: calc(var(--nav-height) + 0.5rem + env(safe-area-inset-top, 0px));
 }
 
 /* Clears fixed navbar on pages without a full-bleed hero */
@@ -136,15 +146,14 @@ textarea {
 }
 
 button,
+a[role="button"],
 a {
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
-button,
-a[role="button"],
 .tap-target {
   min-height: 44px;
-  touch-action: manipulation;
 }
 
 ::selection {
@@ -473,5 +482,33 @@ a[role="button"],
   .type-label,
   .label-stitch {
     letter-spacing: 0.05em;
+  }
+}
+
+.promo-marquee-track {
+  min-width: 100%;
+}
+
+.promo-marquee-animate {
+  animation: promo-marquee-scroll 28s linear infinite;
+}
+
+.promo-marquee-animate:hover {
+  animation-play-state: paused;
+}
+
+@keyframes promo-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .promo-marquee-animate {
+    animation: none;
   }
 }
