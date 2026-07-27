@@ -17,11 +17,13 @@ function navTextClass({ scrolled, onDarkHero, isActive = false }) {
 function AccountIcon({ onDarkHero }) {
   return (
     <svg
+      width="20"
+      height="20"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.6"
-      className={`h-4 w-4 ${onDarkHero ? 'text-white/90' : 'text-[#130006]'}`}
+      strokeWidth="1.5"
+      className={onDarkHero ? 'text-white/90' : 'text-[#130006]'}
       aria-hidden
     >
       <circle cx="12" cy="8" r="3.5" />
@@ -58,13 +60,23 @@ export default function AccountNavMenu({ scrolled, onDarkHero, onNavigate, varia
   if (loading) return null
 
   if (!user) {
+    const plain = variant === 'plain'
     return (
       <Link
         to="/login"
         onClick={onNavigate}
-        className={`inline-flex min-h-9 items-center whitespace-nowrap font-medium transition-colors duration-200 ${navTextClass({ scrolled, onDarkHero })}`}
+        aria-label="Sign in"
+        className={`inline-flex items-center justify-center transition-colors duration-200 ${
+          plain
+            ? 'h-10 w-10 text-[#130006] hover:opacity-70'
+            : `h-9 w-9 rounded-full border ${
+                onDarkHero
+                  ? 'border-white/25 bg-white/5 text-white hover:border-white/45 hover:bg-white/10'
+                  : 'border-[#130006]/10 bg-white/70 text-[#130006] hover:border-[#130006]/25'
+              }`
+        }`}
       >
-        Sign in
+        <AccountIcon onDarkHero={onDarkHero} />
       </Link>
     )
   }

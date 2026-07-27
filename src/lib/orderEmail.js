@@ -133,21 +133,22 @@ export function buildOrderEmailPayload({
   paymentMethod = 'cod',
   customer,
   enquiryType = 'order',
+  orderRef,
 }) {
-  const orderRef = generateOrderRef()
+  const finalOrderRef = orderRef || generateOrderRef()
   const isCart = Array.isArray(cartItems) && cartItems.length > 0
   const isEnquiry = enquiryType === 'enquiry'
 
   const subject = isCart
-    ? `Velisqa Cart Order ${orderRef} — ${customer.name}`
+    ? `Velisqa Cart Order ${finalOrderRef} — ${customer.name}`
     : isEnquiry
-      ? `Velisqa Enquiry ${orderRef} — ${productName || 'Product'}`
-      : `Velisqa Order ${orderRef} — ${productName || 'Product'}`
+      ? `Velisqa Enquiry ${finalOrderRef} — ${productName || 'Product'}`
+      : `Velisqa Order ${finalOrderRef} — ${productName || 'Product'}`
 
   const message = isCart
-    ? buildCartOrderBody({ orderRef, cartItems, stockWarnings, paymentMethod, customer })
+    ? buildCartOrderBody({ orderRef: finalOrderRef, cartItems, stockWarnings, paymentMethod, customer })
     : buildSingleOrderBody({
-        orderRef,
+        orderRef: finalOrderRef,
         productName,
         productUrl,
         paymentMethod,
@@ -158,11 +159,11 @@ export function buildOrderEmailPayload({
   const total = isCart ? getCartTotal(cartItems) : null
 
   return {
-    orderRef,
+    orderRef: finalOrderRef,
     subject,
     message,
     summary: {
-      orderRef,
+      orderRef: finalOrderRef,
       productName: isCart ? `${cartItems.length} items` : productName,
       total,
       paymentMethod,

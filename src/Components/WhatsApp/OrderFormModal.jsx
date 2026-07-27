@@ -323,6 +323,22 @@ export default function OrderFormModal({
         paymentMethod: resolvedPayment === "cod" ? "cod" : "online",
       });
 
+      // Send order notification email in the background to velisqa.in@gmail.com via FormSubmit
+      const emailPayload = buildOrderEmailPayload({
+        productName,
+        productUrl,
+        cartItems: isCart ? cartItems : null,
+        stockWarnings,
+        paymentMethod: resolvedPayment,
+        customer,
+        enquiryType: "order",
+        orderRef: created.orderRef,
+      });
+      void submitOrderEmail({
+        ...emailPayload,
+        customer,
+      }).catch((err) => console.error("Failed to send order confirmation email:", err));
+
       trackInitiateCheckout({
         value: created.grandTotal,
         itemCount: orderItems.reduce((sum, item) => sum + Number(item.quantity || 1), 0),

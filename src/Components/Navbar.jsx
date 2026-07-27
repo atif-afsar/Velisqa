@@ -125,13 +125,13 @@ function HeaderSearchBar({ onOpen, className = "" }) {
     <button
       type="button"
       onClick={onOpen}
-      className={`flex w-full min-w-0 items-center gap-3 rounded bg-[#f5f5f5] px-4 py-2.5 text-left transition hover:bg-[#efefef] md:py-3 ${className}`}
+      className={`flex w-full min-w-0 items-center gap-3 rounded-full border border-black/5 bg-[#f6f5f3] px-5 py-2 text-left transition hover:bg-[#efedea] hover:border-black/10 md:py-2.5 ${className}`}
       aria-label="Search products"
     >
-      <span className="min-w-0 flex-1 truncate text-sm text-[#8a8a8a]">
+      <span className="min-w-0 flex-1 truncate text-xs md:text-[13px] tracking-wide text-[#8a8a8a]">
         Search for necklaces, rings, earrings…
       </span>
-      <span className="shrink-0 text-[#130006]">
+      <span className="shrink-0 text-[#130006]/70">
         <SearchIcon />
       </span>
     </button>
@@ -142,10 +142,10 @@ function PincodeLink() {
   return (
     <button
       type="button"
-      className="mb-1.5 inline-flex items-center gap-1 text-[11px] font-medium text-[#666] transition hover:text-[#130006]"
+      className="inline-flex items-center gap-1.5 text-[12px] font-medium tracking-wide text-[#514347]/90 transition hover:text-[#130006] shrink-0"
       aria-label="Enter delivery pincode"
     >
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="text-[#130006]/70">
         <path
           d="M12 21s7-4.5 7-11a7 7 0 1 0-14 0c0 6.5 7 11 7 11Z"
           stroke="currentColor"
@@ -266,14 +266,14 @@ export default function Navbar() {
       initial={{ y: -6, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className={`fixed left-0 right-0 z-50 isolate border-b ${
+      className={`fixed left-0 right-0 z-50 isolate border-b transition-shadow duration-300 ${
         isAdmin ? "top-0" : "top-[var(--announcement-height)]"
       } ${
         isAdmin
           ? onDarkHero
             ? "border-white/10"
             : "border-[#847377]/12 shadow-[0_8px_32px_-12px_rgba(19,0,6,0.08)]"
-          : "border-black/10 bg-white"
+          : "border-black/5 bg-white/95 backdrop-blur-md shadow-[0_2px_15px_-3px_rgba(19,0,6,0.03)]"
       }`}
       style={
         isAdmin
@@ -310,10 +310,10 @@ export default function Navbar() {
         <Link
           to="/"
           onClick={closeMenu}
-          className={`relative z-20 inline-flex min-h-9 shrink-0 items-center font-serif font-medium leading-none tracking-[0.06em] transition-colors duration-200 hover:opacity-80 ${
+          className={`relative z-20 inline-flex min-h-9 shrink-0 items-center font-serif font-medium leading-none tracking-[0.16em] transition-colors duration-200 hover:opacity-80 ${
             scrolled
-              ? "text-[1.1rem] sm:text-xl md:text-[1.35rem]"
-              : "text-[1.25rem] sm:text-2xl md:text-3xl"
+              ? "text-[1.5rem] sm:text-3xl md:text-[2.25rem]"
+              : "text-[1.65rem] sm:text-[2.25rem] md:text-[2.75rem]"
           } ${
             onDarkHero
               ? "text-white drop-shadow-[0_2px_16px_rgba(19,0,6,0.45)]"
@@ -477,19 +477,19 @@ export default function Navbar() {
             <Link
               to="/"
               onClick={closeMenu}
-              className="relative z-20 inline-flex min-h-9 shrink-0 items-center font-serif text-[1rem] font-medium leading-none tracking-[0.1em] text-[#130006] transition-opacity hover:opacity-75 sm:text-xl md:text-[1.35rem]"
+              className="relative z-20 inline-flex min-h-9 shrink-0 items-center font-serif text-[1.5rem] font-medium leading-none tracking-[0.16em] text-[#130006] transition-opacity hover:opacity-75 sm:text-3xl md:text-[2.25rem] lg:text-[2.65rem]"
             >
               VELISQA
             </Link>
 
-            <div className="hidden min-w-0 flex-1 flex-col items-center md:flex">
+            <div className="hidden min-w-0 flex-1 items-center justify-center gap-6 md:flex">
               <PincodeLink />
-              <HeaderSearchBar onOpen={openSearch} className="max-w-2xl" />
+              <HeaderSearchBar onOpen={openSearch} className="max-w-md" />
             </div>
 
-            <div className="ml-auto flex shrink-0 items-center justify-end gap-0 sm:gap-0.5">
-              <WishlistNavLink variant="plain" onDarkHero={false} scrolled={false} onClick={closeMenu} className="!h-9 !w-9 md:!h-10 md:!w-10" />
-              <CartNavLink variant="plain" onDarkHero={false} scrolled={false} onClick={closeMenu} className="!h-9 !w-9 md:!h-10 md:!w-10" />
+            <div className="ml-auto flex shrink-0 items-center justify-end gap-1 sm:gap-2">
+              <WishlistNavLink variant="plain" onDarkHero={false} scrolled={false} onClick={closeMenu} className="!h-10 !w-10" />
+              <CartNavLink variant="plain" onDarkHero={false} scrolled={false} onClick={closeMenu} className="!h-10 !w-10" />
               <AccountNavMenu variant="plain" scrolled={false} onDarkHero={false} />
               <button
                 type="button"
@@ -519,12 +519,12 @@ export default function Navbar() {
             </div>
           </div>
 
-          <div className="pb-2.5 md:hidden">
-            <HeaderSearchBar onOpen={openSearch} className="py-2" />
+          <div className="pb-3 md:hidden">
+            <HeaderSearchBar onOpen={openSearch} className="w-full" />
           </div>
 
           <nav
-            className="hidden items-center justify-center gap-5 border-t border-black/8 py-2.5 xl:flex 2xl:gap-7"
+            className="hidden items-center justify-center gap-6 border-t border-black/5 py-3 xl:flex 2xl:gap-8"
             aria-label="Primary"
           >
             {[...links, contactLink].map((link) => {
@@ -535,10 +535,10 @@ export default function Navbar() {
                   to={link.to}
                   end={isHome}
                   className={({ isActive }) =>
-                    `relative inline-flex min-h-9 items-center whitespace-nowrap text-[13px] transition-colors ${
+                    `relative inline-flex min-h-9 items-center whitespace-nowrap text-[11px] font-medium tracking-[0.18em] uppercase transition-colors duration-200 ${
                       isActive
-                        ? "font-semibold text-[#130006]"
-                        : "font-normal text-[#333]/85 hover:text-[#130006]"
+                        ? "text-[#130006] font-semibold"
+                        : "text-[#514347]/85 hover:text-[#130006]"
                     }`
                   }
                 >
@@ -548,7 +548,7 @@ export default function Navbar() {
                       {isActive && (
                         <motion.div
                           layoutId="shop-desktop-active-underline"
-                          className="absolute -bottom-2.5 left-0 right-0 h-px bg-[#130006]"
+                          className="absolute -bottom-3 left-0 right-0 h-[1.5px] bg-[#130006]"
                           transition={{ type: "spring", stiffness: 380, damping: 30 }}
                         />
                       )}
@@ -584,8 +584,8 @@ export default function Navbar() {
                     end={link.label === "Home"}
                     onClick={closeMenu}
                     className={({ isActive }) =>
-                      `group flex min-h-[48px] items-center justify-between border-b text-[0.78rem] font-medium tracking-[0.10em] transition-colors duration-200 border-[#847377]/8 ${
-                        isActive ? "text-[#130006]" : "text-[#514347]/90 hover:text-[#130006]"
+                      `group flex min-h-[48px] items-center justify-between border-b text-[0.72rem] font-medium tracking-[0.16em] uppercase transition-colors duration-200 border-[#847377]/8 ${
+                        isActive ? "text-[#130006] font-semibold" : "text-[#514347]/85 hover:text-[#130006]"
                       }`
                     }
                   >
@@ -595,7 +595,7 @@ export default function Navbar() {
                           {link.label}
                           {isActive && (
                             <span
-                              className="absolute -left-3 top-1/2 h-1 w-1 -translate-y-1/2 rounded-full bg-[#3d0a21]"
+                              className="absolute -left-3.5 top-1/2 h-1 w-1 -translate-y-1/2 rounded-full bg-[#3d0a21]"
                             />
                           )}
                         </span>
