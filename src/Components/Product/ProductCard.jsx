@@ -51,29 +51,11 @@ function ProductCard({ product, priority = false, variant = 'default' }) {
             className={catalog ? 'w-full' : 'h-full w-full'}
             imgClassName={`object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03] ${catalog ? '' : 'rounded-md group-hover:scale-105'}`}
           />
-          {!catalog && (
-            <div
-              className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#130006]/55 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-sm:hidden"
-              aria-hidden
-            />
-          )}
         </Link>
 
         <div className={`absolute z-10 ${catalog ? 'right-2 top-2' : 'right-2 top-2 sm:right-3 sm:top-3'}`}>
           <ProductWishlistButton product={product} size="sm" />
         </div>
-
-        {!catalog && (
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 hidden p-2.5 opacity-0 transition-opacity duration-300 group-hover:pointer-events-auto group-hover:opacity-100 sm:block sm:p-3">
-            <ProductCardActions product={product} variant="overlay" />
-          </div>
-        )}
-
-        {catalog && (
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 hidden p-3 opacity-0 transition-opacity duration-300 group-hover:pointer-events-auto group-hover:opacity-100 md:block">
-            <ProductCardActions product={product} variant="overlay" />
-          </div>
-        )}
       </div>
 
       <div
@@ -101,67 +83,37 @@ function ProductCard({ product, priority = false, variant = 'default' }) {
           </h4>
         </Link>
 
-        {!catalog && <ProductRating product={product} className="mt-1.5 sm:mt-2" size="card" />}
+        {!catalog && (
+          <div
+            className={
+              'mt-1 flex min-h-[2.1rem] shrink-0 items-center justify-center sm:mt-1.5 sm:min-h-[2.35rem]'
+            }
+          >
+            <ProductPriceDisplay product={product} size="card" />
+          </div>
+        )}
 
-        <div
-          className={
-            catalog
-              ? 'mt-1.5 flex items-center gap-2'
-              : 'mt-1 flex min-h-[2.1rem] shrink-0 items-center justify-center sm:mt-1.5 sm:min-h-[2.35rem]'
-          }
-        >
-          <ProductPriceDisplay product={product} size={catalog ? 'compact' : 'card'} />
-          {catalog && !soldOut && (
-            <span className="hidden text-[11px] text-[#888] sm:inline">·</span>
-          )}
-          {catalog && !soldOut && (
-            <ProductRating product={product} className="hidden sm:flex" size="compact" />
-          )}
+        {!catalog && (
+          <div className="mt-1.5">
+            <ProductRating product={product} className="justify-center" size="card" />
+          </div>
+        )}
+
+        {catalog && (
+          <div className="mt-1.5 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+            <ProductPriceDisplay product={product} size="compact" />
+          </div>
+        )}
+
+        {catalog && (
+          <div className="mt-1.5">
+            <ProductRating product={product} className="justify-start" size="compact" />
+          </div>
+        )}
+
+        <div className={`${catalog ? 'mt-3' : 'mt-auto w-full shrink-0 pt-2 sm:pt-2.5'}`}>
+          <ProductCardActions product={product} />
         </div>
-
-        {catalog ? (
-          <>
-            <div className="mt-3 md:hidden">
-              <ProductCardActions product={product} variant="footer" />
-            </div>
-            {!soldOut && (
-              <div className="mt-3 hidden md:block">
-                <Link
-                  to={detailPath}
-                  className="inline-flex text-[12px] font-medium text-[#130006] underline-offset-2 hover:underline"
-                >
-                  View product
-                </Link>
-              </div>
-            )}
-          </>
-        ) : (
-          <div className="mt-auto w-full shrink-0 pt-2 sm:pt-2.5">
-            {soldOut ? (
-              <ProductCardActions product={product} variant="footer" />
-            ) : (
-              <>
-                <div className="sm:hidden">
-                  <ProductCardActions product={product} variant="footer" />
-                </div>
-                <div className="hidden sm:block">
-                  <Link
-                    to={detailPath}
-                    className="tap-target flex w-full items-center justify-center rounded-full border border-[#3d0a21]/20 bg-white py-2 text-[10px] font-bold uppercase tracking-[0.1em] text-[#3d0a21] transition hover:border-[#3d0a21]/40 hover:bg-[#fdf9f4]"
-                  >
-                    View details
-                  </Link>
-                </div>
-              </>
-            )}
-          </div>
-        )}
-
-        {catalog && soldOut && (
-          <div className="mt-3">
-            <ProductCardActions product={product} variant="footer" />
-          </div>
-        )}
       </div>
     </article>
   )

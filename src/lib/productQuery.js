@@ -2,6 +2,8 @@
 const PRODUCT_COMMERCE_FIELDS = 'mrp, metal, colour, styles, search_keywords'
 const PRODUCT_CORE_FIELDS =
   'id, name, price, stock, category, image_url, gallery_urls, created_at, rating, review_count, badge'
+const PRODUCT_CORE_FIELDS_WITHOUT_RATINGS =
+  'id, name, price, stock, category, image_url, gallery_urls, created_at, badge'
 const PRODUCT_CLOUDINARY_FIELDS = 'cloudinary_public_id, gallery_cloudinary_ids'
 
 export const PRODUCT_LIST_SELECT =
@@ -12,9 +14,14 @@ function commerceColumnsMissing(error) {
   return ['mrp', 'metal', 'colour', 'styles', 'search_keywords'].some((column) => message.includes(column))
 }
 
-function productListColumns({ commerce, cloudinary, outOfStock }) {
+function ratingColumnsMissing(error) {
+  const message = String(error?.message || '')
+  return message.includes('rating') || message.includes('review_count')
+}
+
+function productListColumns({ commerce, cloudinary, outOfStock, ratings }) {
   return [
-    PRODUCT_CORE_FIELDS,
+    ratings ? PRODUCT_CORE_FIELDS : PRODUCT_CORE_FIELDS_WITHOUT_RATINGS,
     commerce ? PRODUCT_COMMERCE_FIELDS : null,
     cloudinary ? PRODUCT_CLOUDINARY_FIELDS : null,
     outOfStock ? 'out_of_stock' : null,
@@ -28,13 +35,17 @@ export async function fetchProductList(supabase, options = {}) {
   const run = (columns) =>
     supabase.from('products').select(columns).order(order.column, { ascending: order.ascending })
 
-  const supported = { commerce: true, cloudinary: true, outOfStock: true }
+  const supported = { commerce: true, cloudinary: true, outOfStock: true, ratings: true }
   let result = { data: [], error: null }
 
-  for (let attempt = 0; attempt < 4; attempt += 1) {
+  for (let attempt = 0; attempt < 5; attempt += 1) {
     result = await run(productListColumns(supported))
     if (!result.error) break
 
+    if (supported.ratings && ratingColumnsMissing(result.error)) {
+      supported.ratings = false
+      continue
+    }
     if (supported.commerce && commerceColumnsMissing(result.error)) {
       supported.commerce = false
       continue

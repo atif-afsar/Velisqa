@@ -5,6 +5,7 @@ import {
   writeProductCatalogCache,
 } from '../lib/productCatalogCache'
 import { fetchProductListWithRetry } from '../lib/productQuery'
+import { enrichProductsWithApprovedReviewAggregates } from '../lib/productReviews'
 import { supabase } from '../lib/supabaseClient'
 
 const FOCUS_REFRESH_MS = 60_000
@@ -48,7 +49,7 @@ export function useProducts() {
         setIsStale(false)
       }
     } else {
-      const next = data ?? []
+      const next = await enrichProductsWithApprovedReviewAggregates(data ?? [])
       setProducts(next)
       writeProductCatalogCache(next)
       setError(null)

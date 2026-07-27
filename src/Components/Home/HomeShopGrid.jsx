@@ -8,6 +8,7 @@ import {
   groupProductsByCategory,
 } from '../../lib/productCategories'
 import { HOME_SHOP_PRODUCT_LIMIT } from '../../lib/preloadImages'
+import { CategoryPill, CategoryPillRow } from '../Common/CategoryPills'
 import ProductCard from '../Product/ProductCard'
 import Icon from './Icon'
 
@@ -96,37 +97,22 @@ export default function HomeShopGrid({ products, loading, error: fetchError }) {
           </p>
         </div>
 
-        <div className="mb-10 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+        <CategoryPillRow className="mb-10">
           {SIGNATURE_CATEGORIES.map((category) => {
             const isActive = category === activeCategory
             const count = grouped[category]?.length ?? 0
 
             return (
-              <button
+              <CategoryPill
                 key={category}
-                type="button"
+                active={isActive}
+                label={category}
+                count={count}
                 onClick={() => handleCategoryChange(category)}
-                className={`tap-target rounded-full border px-4 py-2 text-center transition-all sm:px-5 sm:py-2.5 ${
-                  isActive
-                    ? 'border-[#3d0a21] bg-[#3d0a21] text-[#e9c349]'
-                    : 'border-[#d4af37]/35 bg-white/60 text-[#130006] hover:border-[#3d0a21] hover:bg-[#130006]/5'
-                }`}
-                aria-pressed={isActive}
-              >
-                <span className="text-[10px] font-bold uppercase tracking-[0.14em] sm:text-[11px] sm:tracking-[0.16em]">
-                  {category}
-                </span>
-                {count > 0 && (
-                  <span
-                    className={`ml-1.5 text-[10px] ${isActive ? 'text-[#ffe088]/90' : 'text-[#847377]'}`}
-                  >
-                    ({count})
-                  </span>
-                )}
-              </button>
+              />
             )
           })}
-        </div>
+        </CategoryPillRow>
 
         <div className="mb-8 flex flex-col gap-2 border-b border-[#d4af37]/25 pb-4 sm:flex-row sm:items-end sm:justify-between">
           <h3 className="font-serif text-2xl italic text-[#130006] sm:text-3xl">{activeCategory}</h3>

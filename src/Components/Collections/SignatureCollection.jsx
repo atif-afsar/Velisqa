@@ -17,6 +17,7 @@ import {
   countActiveProductFilters,
 } from '../../lib/productFilters'
 import { useProducts } from '../../hooks/useProducts'
+import { CategoryPill, CategoryPillRow } from '../Common/CategoryPills'
 import ProductCard from '../Product/ProductCard'
 import ProductFilters, { ProductFilterSidebar } from './ProductFilters'
 
@@ -121,41 +122,30 @@ export default function SignatureCollection() {
           <p className="pt-4 pb-2 text-center text-[12px] font-medium uppercase tracking-[0.24em] text-[#130006] sm:pt-5 sm:text-[13px] sm:tracking-[0.28em]">
             {activeCategory}
           </p>
-          <div className="flex items-center gap-3 pb-3 md:pb-3.5">
-            <div className="-mx-1 flex min-w-0 flex-1 gap-2 overflow-x-auto px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="flex items-center gap-2 pb-3 sm:gap-3 md:pb-3.5">
+            <CategoryPillRow scrollable className="flex-1">
               {PRODUCT_CATEGORIES.map((category) => {
                 const isActive = category === activeCategory
                 const count = grouped[category]?.length ?? 0
 
                 return (
-                  <button
+                  <CategoryPill
                     key={category}
-                    type="button"
+                    active={isActive}
+                    label={category}
+                    count={count}
                     onClick={() => handleCategoryChange(category)}
-                    className={`shrink-0 rounded-full px-4 py-2 text-[12px] font-medium transition-colors sm:px-5 sm:text-[13px] ${
-                      isActive
-                        ? 'bg-[#130006] text-white'
-                        : 'bg-[#f5f5f5] text-[#333] hover:bg-[#ececec]'
-                    }`}
-                    aria-pressed={isActive}
-                  >
-                    {category}
-                    {count > 0 && (
-                      <span className={`ml-1.5 ${isActive ? 'text-white/70' : 'text-[#888]'}`}>
-                        {count}
-                      </span>
-                    )}
-                  </button>
+                  />
                 )
               })}
-            </div>
+            </CategoryPillRow>
 
             <label className="hidden shrink-0 items-center lg:flex">
               <span className="sr-only">Sort products</span>
               <select
                 value={filters.sort}
                 onChange={(event) => handleSortChange(event.target.value)}
-                className="min-h-10 rounded-full border border-black/10 bg-white px-4 text-[12px] text-[#333] outline-none"
+                className="h-8 rounded-full border border-black/10 bg-white px-3.5 text-[12px] text-[#333] outline-none"
               >
                 {PRODUCT_SORT_OPTIONS.map((option) => (
                   <option key={option.value} value={option.value}>

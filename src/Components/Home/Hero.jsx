@@ -105,7 +105,7 @@ export default function Hero() {
 
   const activeSlide = HERO_SLIDES[index] ?? HERO_SLIDES[0];
   const slideClassName =
-    "absolute left-0 top-0 block h-auto w-full max-w-none [backface-visibility:hidden] [transform:translateZ(0)]";
+    "absolute left-0 top-0 block h-auto w-full max-w-none [backface-visibility:hidden] [transform:translateZ(0)] max-md:inset-0 max-md:h-full max-md:object-cover max-md:object-center";
 
   return (
     <section
@@ -115,8 +115,8 @@ export default function Hero() {
     >
       <h1 className="sr-only">Velisqa Jewellery — Crafted to Captivate</h1>
 
-      <div className="relative w-full">
-        {/* Reserves exact banner height from the active slide’s native aspect ratio. */}
+      <div className="relative w-full max-md:aspect-[2/1]">
+        {/* Reserves exact banner height from the active slide’s native aspect ratio on desktop. */}
         <img
           src={activeSlide.src}
           alt=""
@@ -124,7 +124,7 @@ export default function Hero() {
           width={1024}
           height={406}
           draggable={false}
-          className="pointer-events-none block h-auto w-full max-w-none select-none opacity-0"
+          className="pointer-events-none hidden h-auto w-full max-w-none select-none opacity-0 md:block"
         />
 
         <div className="absolute inset-0">

@@ -70,6 +70,83 @@ export async function fetchApprovedProductReviewsPage(productId, page = 0, pageS
   })
 }
 
+const AGGREGATE_CHUNK_SIZE = 80
+
+function isReviewSchemaMissing(error) {
+  return /product_reviews/i.test(error?.message || '')
+}
+
+/** Live approved-review aggregates — used when products.rating is empty or stale. */
+export async function fetchApprovedReviewAggregatesByProductIds(productIds = []) {
+  const uniqueIds = [...new Set(productIds.filter(Boolean))]
+  if (!uniqueIds.length) return new Map()
+
+  const aggregateMap = new Map()
+
+  for (let index = 0; index < uniqueIds.length; index += AGGREGATE_CHUNK_SIZE) {
+    const chunk = uniqueIds.slice(index, index + AGGREGATE_CHUNK_SIZE)
+    const { data, error } = await supabase
+      .from('product_reviews')
+      .select('product_id, rating')
+      .eq('status', 'approved')
+      .in('product_id', chunk)
+
+    if (error) {
+      if (isReviewSchemaMissing(error)) return new Map()
+      throw error
+    }
+
+    const ratingsByProduct = new Map()
+    for (const row of data ?? []) {
+      const list = ratingsByProduct.get(row.product_id) ?? []
+      list.push(Number(row.rating))
+      ratingsByProduct.set(row.product_id, list)
+    }
+
+    for (const [productId, ratings] of ratingsByProduct) {
+      const summary = buildReviewSummary(ratings)
+      if (summary.total > 0) {
+        aggregateMap.set(productId, {
+          rating: summary.average,
+          review_count: summary.total,
+        })
+      }
+    }
+  }
+
+  return aggregateMap
+}
+
+export function applyReviewAggregatesToProducts(products, aggregateMap) {
+  if (!Array.isArray(products) || !aggregateMap?.size) return products
+
+  return products.map((product) => {
+    const live = aggregateMap.get(product.id)
+    if (!live) return product
+    return {
+      ...product,
+      rating: live.rating,
+      review_count: live.review_count,
+    }
+  })
+}
+
+export async function enrichProductsWithApprovedReviewAggregates(products) {
+  if (!Array.isArray(products) || products.length === 0) return products
+  try {
+    const aggregateMap = await fetchApprovedReviewAggregatesByProductIds(products.map((p) => p.id))
+    return applyReviewAggregatesToProducts(products, aggregateMap)
+  } catch {
+    return products
+  }
+}
+
+export async function enrichProductWithApprovedReviewAggregates(product) {
+  if (!product?.id) return product
+  const [enriched] = await enrichProductsWithApprovedReviewAggregates([product])
+  return enriched ?? product
+}
+
 export async function fetchReviewViewerState(productId, userId) {
   if (!userId) return { eligible: false, ownReview: null }
 

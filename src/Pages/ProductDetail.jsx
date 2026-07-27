@@ -22,6 +22,7 @@ import ProductSoldOutBadge from '../Components/Product/ProductSoldOutBadge'
 import ProductReviews from '../Components/Product/ProductReviews'
 import { isProductSoldOut } from '../lib/cartStock'
 import { findCachedProduct } from '../lib/productCatalogCache'
+import { enrichProductWithApprovedReviewAggregates } from '../lib/productReviews'
 import { trackMetaEvent } from '../lib/metaPixel'
 
 function ProductDetailSkeleton() {
@@ -84,9 +85,12 @@ export default function ProductDetail() {
       if (cancelled) return
 
       if (!error && data) {
-        setProduct(data)
-        setNotFound(false)
-        setLoading(false)
+        const enriched = await enrichProductWithApprovedReviewAggregates(data)
+        if (!cancelled) {
+          setProduct(enriched)
+          setNotFound(false)
+          setLoading(false)
+        }
         return
       }
 

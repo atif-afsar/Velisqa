@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useCart } from '../../context/CartContext'
 import { isProductSoldOut } from '../../lib/cartStock'
+import { PRODUCT_ADD_BTN_CLASS } from '../Product/ProductCardActions'
 
 export default function AddToCartButton({
   product,
@@ -24,10 +25,10 @@ export default function AddToCartButton({
     setAdding(false)
   }
 
-  const sizeClass =
+  const btnClass =
     size === 'lg'
-      ? 'px-8 py-3.5 text-xs sm:text-sm'
-      : 'px-3 py-2 text-[0.65rem] sm:px-5 sm:py-2.5 sm:text-xs'
+      ? `${PRODUCT_ADD_BTN_CLASS} h-10 text-xs sm:text-sm`
+      : PRODUCT_ADD_BTN_CLASS
 
   if (soldOut) {
     return (
@@ -35,7 +36,7 @@ export default function AddToCartButton({
         <button
           type="button"
           disabled
-          className={`tap-target w-full cursor-not-allowed rounded-full border border-[#c9a75a]/40 bg-[#c9a75a]/10 font-semibold uppercase tracking-[0.12em] text-[#8a6b1f] opacity-90 ${sizeClass}`}
+          className={`${btnClass} cursor-not-allowed border-[#847377]/35 bg-[#fafafa] text-[#847377]`}
         >
           Out of stock
         </button>
@@ -51,13 +52,8 @@ export default function AddToCartButton({
 
   return (
     <div className={`flex w-full flex-col items-center gap-1.5 ${className}`}>
-      <button
-        type="button"
-        onClick={handleClick}
-        disabled={adding}
-        className={`tap-target w-full rounded-full border border-[#3d0a21]/25 bg-white font-semibold uppercase tracking-[0.12em] text-[#3d0a21] shadow-[0_8px_24px_-12px_rgba(19,0,6,0.2)] transition hover:border-[#3d0a21]/45 hover:bg-[#fdf9f4] disabled:opacity-60 ${sizeClass}`}
-      >
-        {adding ? 'Adding…' : 'Add to cart'}
+      <button type="button" onClick={handleClick} disabled={adding} className={btnClass}>
+        {adding ? 'Adding…' : 'Add to Cart'}
       </button>
       {showViewCartLink && itemCount > 0 && (
         <Link
