@@ -369,8 +369,8 @@ export default function Navbar() {
           onClick={closeMenu}
           className={`relative z-20 inline-flex min-h-9 shrink-0 items-center font-sans font-black uppercase leading-none tracking-widest transition-colors duration-200 hover:opacity-80 ${
             scrolled
-              ? "text-4xl sm:text-5xl md:text-6xl"
-              : "text-5xl sm:text-6xl md:text-7xl"
+              ? "text-3xl sm:text-4xl md:text-5xl"
+              : "text-4xl sm:text-5xl md:text-6xl"
           } ${
             onDarkHero
               ? "text-white drop-shadow-[0_2px_16px_rgba(19,0,6,0.45)]"

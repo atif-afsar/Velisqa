@@ -38,26 +38,28 @@ export default function PromoAnnouncementBar() {
     >
       <Link
         to="/collections"
-        className="group flex min-h-[var(--announcement-height)] items-center"
+        className="group flex min-h-[var(--announcement-height)] items-center overflow-hidden"
         aria-label={MARQUEE_LINE}
       >
-        <div
-          className={`promo-marquee-track flex w-max items-center whitespace-nowrap ${
-            reduceMotion ? '' : 'promo-marquee-animate'
-          }`}
-        >
-          {[0, 1].map((copy) => (
-            <span
-              key={copy}
-              className="flex shrink-0 items-center px-6 text-[11px] font-medium tracking-[0.04em] text-white sm:px-8 sm:text-xs sm:tracking-[0.05em]"
-              aria-hidden={copy === 1}
-            >
-              {MARQUEE_LINE}
-              <span className="px-6 text-white/35 sm:px-8" aria-hidden>
-                •
+        <div className="promo-marquee-viewport w-full overflow-hidden">
+          <div
+            className={`promo-marquee-track flex min-w-full items-center whitespace-nowrap ${
+              reduceMotion ? '' : 'promo-marquee-animate'
+            }`}
+          >
+            {[0, 1].map((copy) => (
+              <span
+                key={copy}
+                className="flex shrink-0 items-center px-6 text-[11px] font-medium tracking-[0.04em] text-white sm:px-8 sm:text-xs sm:tracking-[0.05em]"
+                aria-hidden={copy === 1}
+              >
+                {MARQUEE_LINE}
+                <span className="px-6 text-white/35 sm:px-8" aria-hidden>
+                  •
+                </span>
               </span>
-            </span>
-          ))}
+            ))}
+          </div>
         </div>
       </Link>
     </div>

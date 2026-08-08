@@ -485,8 +485,15 @@ a {
   }
 }
 
+.promo-marquee-viewport {
+  min-width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
 .promo-marquee-track {
   min-width: 100%;
+  max-width: none;
 }
 
 .promo-marquee-animate {
