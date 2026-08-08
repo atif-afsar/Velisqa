@@ -14,10 +14,8 @@ export default function WishlistNavLink({
     wishlistCount > 0 ? (
       <span
         className={`absolute flex items-center justify-center rounded-full font-bold tabular-nums ${
-          variant === 'icon' || variant === 'plain'
-            ? `-right-0.5 -top-0.5 h-[18px] min-w-[18px] px-1 text-[10px] ${
-                variant === 'plain' || !onDarkHero ? 'bg-[#130006] text-white' : 'bg-[#e9c349] text-[#130006]'
-              }`
+          variant === 'icon' || variant === 'plain' || variant === 'labelled'
+            ? `-right-1.5 -top-1.5 h-[16px] min-w-[16px] px-1 text-[9px] bg-[#3B0D23] text-white`
             : `-right-2 -top-1.5 h-4 min-w-[1rem] px-1 text-[9px] ${
                 onDarkHero ? 'bg-[#e9c349] text-[#130006]' : 'bg-[#3d0a21] text-[#fdf9f4]'
               }`
@@ -27,32 +25,39 @@ export default function WishlistNavLink({
       </span>
     ) : null
 
-  if (variant === 'icon' || variant === 'plain') {
-    const plain = variant === 'plain'
+  if (variant === 'icon' || variant === 'plain' || variant === 'labelled') {
+    const plain = variant === 'plain' || variant === 'labelled'
     return (
       <Link
         to="/wishlist"
         onClick={onClick}
         aria-label={wishlistCount > 0 ? `Wishlist, ${wishlistCount} items` : 'Wishlist'}
-        className={`relative grid shrink-0 place-items-center transition-colors duration-200 ${
-          plain
-            ? 'h-10 w-10 text-[#130006] hover:opacity-70'
-            : `h-9 w-9 rounded-full border max-md:h-9 max-md:w-9 ${
-                onDarkHero
-                  ? 'border-white/30 text-white hover:border-white/50 hover:bg-white/10'
-                  : 'border-[#130006]/12 text-[#130006] hover:border-[#3d0a21]/30 hover:bg-[#3d0a21]/5'
-              }`
+        className={`relative flex flex-col items-center justify-center shrink-0 transition-all duration-200 ${
+          variant === 'labelled'
+            ? 'h-11 px-2 text-[#130006] hover:opacity-75'
+            : plain
+              ? 'h-10 w-10 text-[#130006] hover:opacity-70'
+              : `h-9 w-9 rounded-full border max-md:h-9 max-md:w-9 ${
+                  onDarkHero
+                    ? 'border-white/30 text-white hover:border-white/50 hover:bg-white/10'
+                    : 'border-[#130006]/12 text-[#130006] hover:border-[#3d0a21]/30 hover:bg-[#3d0a21]/5'
+                }`
         } ${className}`}
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
-          <path
-            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinejoin="round"
-          />
-        </svg>
-        {badge}
+        <div className="relative">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path
+              d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinejoin="round"
+            />
+          </svg>
+          {badge}
+        </div>
+        {variant === 'labelled' && (
+          <span className="text-[9px] font-bold uppercase tracking-wider text-[#514347] mt-1">Wishlist</span>
+        )}
       </Link>
     )
   }

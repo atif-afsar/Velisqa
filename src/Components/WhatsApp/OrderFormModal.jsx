@@ -73,8 +73,8 @@ function productIdFromUrl(value) {
 const PAYMENT_OPTIONS = [
   {
     value: "online",
-    label: "UPI QR payment",
-    hint: "Scan QR and upload payment proof",
+    label: "Card / UPI / NetBanking",
+    hint: "Pay securely via Razorpay",
     icon: "💳",
   },
   {
@@ -385,7 +385,7 @@ export default function OrderFormModal({
   const submitLabel = submitting
     ? "Placing order…"
     : paymentMethod === "online" && !isEnquiry
-      ? "Continue to UPI payment"
+      ? "Continue to payment"
       : isCart
         ? "Place order"
         : isEnquiry

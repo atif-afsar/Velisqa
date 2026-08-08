@@ -340,14 +340,14 @@ function StatusStep({ step }) {
   const statusLabel = complete ? 'Completed' : active ? 'In progress' : 'Upcoming'
 
   return (
-    <li className="flex gap-3">
+    <li className="flex gap-4">
       <div className="flex flex-col items-center">
         <span
-          className={`flex h-6 w-6 items-center justify-center rounded-full text-xs ${
+          className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold transition-all duration-300 ${
             complete
-              ? 'bg-[#2d6a4f] text-white'
+              ? 'bg-[#3B0D23] text-[#D4AF37]'
               : active
-                ? 'border-2 border-[#2d6a4f] bg-white text-[#2d6a4f] ring-4 ring-[#2d6a4f]/10 animate-pulse'
+                ? 'border-2 border-[#3B0D23] bg-white text-[#3B0D23] ring-4 ring-[#B76E79]/15 animate-pulse'
                 : 'border border-[#847377]/30 bg-white text-[#847377]'
           }`}
           aria-label={`${step.label}: ${statusLabel}`}
@@ -355,13 +355,13 @@ function StatusStep({ step }) {
           {complete ? '✓' : active ? '•' : ''}
         </span>
         {!step.last && (
-          <span className={`h-10 w-px ${complete ? 'bg-[#2d6a4f]' : 'bg-[#847377]/20'}`} />
+          <span className={`h-10 w-px ${complete ? 'bg-[#3B0D23]' : 'bg-[#847377]/20'}`} />
         )}
       </div>
       <div className="pb-4">
-        <p className={`text-sm ${complete || active ? 'font-semibold text-[#130006]' : 'text-[#847377]'}`}>
+        <p className={`text-sm ${complete || active ? 'font-semibold text-[#3B0D23]' : 'text-[#847377]'}`}>
           {step.label}
-          {active ? <span className="ml-2 text-[10px] font-bold uppercase tracking-[0.08em] text-[#2d6a4f]">Now</span> : null}
+          {active ? <span className="ml-2 text-[9px] font-bold uppercase tracking-[0.08em] text-[#B76E79]">Now</span> : null}
         </p>
         {step.detail && (
           <p className="mt-0.5 text-xs leading-relaxed text-[#847377]">{step.detail}</p>

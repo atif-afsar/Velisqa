@@ -118,7 +118,7 @@ export default function SearchResults() {
                     onChange={updateFilters}
                     onClear={clearFilters}
                   />
-                  <div className="grid min-w-0 flex-1 grid-cols-2 items-stretch gap-x-3 gap-y-6 sm:gap-x-7 sm:gap-y-10 lg:grid-cols-2 xl:grid-cols-3">
+                  <div className="grid min-w-0 flex-1 grid-cols-2 items-stretch gap-x-3 gap-y-6 sm:gap-x-7 sm:gap-y-10 lg:grid-cols-3 xl:grid-cols-4">
                     {results.map((product, index) => (
                       <ProductCard key={product.id} product={product} priority={index < 4} />
                     ))}

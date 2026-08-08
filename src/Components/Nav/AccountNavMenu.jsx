@@ -60,30 +60,35 @@ export default function AccountNavMenu({ scrolled, onDarkHero, onNavigate, varia
   if (loading) return null
 
   if (!user) {
-    const plain = variant === 'plain'
+    const plain = variant === 'plain' || variant === 'labelled'
     return (
       <Link
         to="/login"
         onClick={onNavigate}
         aria-label="Sign in"
-        className={`inline-flex items-center justify-center transition-colors duration-200 ${
-          plain
-            ? 'h-10 w-10 text-[#130006] hover:opacity-70'
-            : `h-9 w-9 rounded-full border ${
-                onDarkHero
-                  ? 'border-white/25 bg-white/5 text-white hover:border-white/45 hover:bg-white/10'
-                  : 'border-[#130006]/10 bg-white/70 text-[#130006] hover:border-[#130006]/25'
-              }`
+        className={`inline-flex flex-col items-center justify-center transition-colors duration-200 ${
+          variant === 'labelled'
+            ? 'h-11 px-2 text-[#130006] hover:opacity-75'
+            : plain
+              ? 'h-10 w-10 text-[#130006] hover:opacity-70'
+              : `h-9 w-9 rounded-full border ${
+                  onDarkHero
+                    ? 'border-white/25 bg-white/5 text-white hover:border-white/45 hover:bg-white/10'
+                    : 'border-[#130006]/10 bg-white/70 text-[#130006] hover:border-[#130006]/25'
+                }`
         }`}
       >
         <AccountIcon onDarkHero={onDarkHero} />
+        {variant === 'labelled' && (
+          <span className="text-[9px] font-bold uppercase tracking-wider text-[#514347] mt-1">Account</span>
+        )}
       </Link>
     )
   }
 
   const itemClass = `flex min-h-10 w-full items-center px-3 text-left text-[0.72rem] font-medium tracking-[0.06em] text-[#130006] transition hover:bg-[#f1ede8]`
 
-  const plain = variant === 'plain'
+  const plain = variant === 'plain' || variant === 'labelled'
 
   return (
     <div ref={rootRef} className="relative">
@@ -94,17 +99,22 @@ export default function AccountNavMenu({ scrolled, onDarkHero, onNavigate, varia
         aria-expanded={open}
         aria-label="Account menu"
         onClick={() => setOpen((value) => !value)}
-        className={`inline-flex items-center justify-center transition ${
-          plain
-            ? 'h-10 w-10 text-[#130006] hover:opacity-70'
-            : `h-9 w-9 rounded-full border ${
-                onDarkHero
-                  ? 'border-white/25 bg-white/5 hover:border-white/45 hover:bg-white/10'
-                  : 'border-[#130006]/10 bg-white/70 hover:border-[#130006]/25'
-              } ${open ? (onDarkHero ? 'border-white/45 bg-white/10' : 'border-[#3d0a21]/25 bg-white') : ''}`
+        className={`inline-flex flex-col items-center justify-center transition ${
+          variant === 'labelled'
+            ? 'h-11 px-2 text-[#130006] hover:opacity-75'
+            : plain
+              ? 'h-10 w-10 text-[#130006] hover:opacity-70'
+              : `h-9 w-9 rounded-full border ${
+                  onDarkHero
+                    ? 'border-white/25 bg-white/5 hover:border-white/45 hover:bg-white/10'
+                    : 'border-[#130006]/10 bg-white/70 hover:border-[#130006]/25'
+                } ${open ? (onDarkHero ? 'border-white/45 bg-white/10' : 'border-[#3d0a21]/25 bg-white') : ''}`
         }`}
       >
         <AccountIcon onDarkHero={onDarkHero} />
+        {variant === 'labelled' && (
+          <span className="text-[9px] font-bold uppercase tracking-wider text-[#514347] mt-1">Account</span>
+        )}
       </button>
 
       {open && (

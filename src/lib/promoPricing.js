@@ -14,7 +14,7 @@ export function getPromoComparePrice(salePrice, mrp) {
 export function getPromoPriceDisplay(productOrPrice, explicitMrp = null) {
   const product = productOrPrice && typeof productOrPrice === 'object' ? productOrPrice : null
   const sale = Number(product ? product.price : productOrPrice)
-  const mrp = product ? product.mrp : explicitMrp
+  const mrp = product ? (product.mrp || Math.round(product.price * 1.4)) : explicitMrp
   const compare = getPromoComparePrice(sale, mrp)
   if (!Number.isFinite(sale) || sale <= 0 || compare == null) {
     return { sale, compare: null, hasPromo: false, discountPercent: 0 }

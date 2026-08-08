@@ -31,6 +31,7 @@ const AuthCallback = lazy(() => import('./Pages/AuthCallback'))
 const AdminLogin = lazy(() => import('./Pages/AdminLogin'))
 const AdminHome = lazy(() => import('./Pages/AdminHome'))
 const AdminDashboard = lazy(() => import('./Pages/AdminDashboard'))
+const AdminCoupons = lazy(() => import('./Pages/AdminCoupons'))
 const ProductDetail = lazy(() => import('./Pages/ProductDetail'))
 const SearchResults = lazy(() => import('./Pages/SearchResults'))
 const Cart = lazy(() => import('./Pages/Cart'))
@@ -75,14 +76,7 @@ function App() {
           <Route path="/search" element={<SearchResults />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/cart" element={<Cart />} />
-          <Route
-            path="/checkout"
-            element={(
-              <AccountRoute>
-                <Checkout />
-              </AccountRoute>
-            )}
-          />
+          <Route path="/checkout" element={<Checkout />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/pay/:orderRef" element={<ManualPayment />} />
           <Route path="/order-confirmation/:orderRef" element={<ManualPaymentConfirmation />} />
@@ -145,6 +139,14 @@ function App() {
             element={
               <AdminRoute>
                 <AdminReviews />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/coupons"
+            element={
+              <AdminRoute>
+                <AdminCoupons />
               </AdminRoute>
             }
           />

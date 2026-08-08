@@ -92,12 +92,11 @@ export default function AdminHome() {
 
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <ActionCard
-              title="UPI payment reviews"
-              count={counts.paymentReviews}
-              description="Customer chose UPI QR and uploaded a screenshot. Verify the payment, then approve to create the NimbusPost shipment."
+              title="Payments history"
+              description="View all online payments made via Razorpay, including transaction and settlement details."
               href="/admin/payments"
-              cta="Review payment proofs"
-              tone={counts.paymentReviews > 0 ? 'urgent' : 'calm'}
+              cta="View payments log"
+              tone="calm"
             />
             <ActionCard
               title="Orders to ship"
@@ -139,19 +138,19 @@ export default function AdminHome() {
               <ol className="mt-4 space-y-3 text-sm leading-relaxed text-[#514347]">
                 <li className="flex gap-3">
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#3d0a21] text-xs font-bold text-white">1</span>
-                  <span><strong>Customer places order</strong> on the website (COD or UPI).</span>
+                  <span><strong>Customer places order</strong> on the website (COD or Online).</span>
                 </li>
                 <li className="flex gap-3">
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#3d0a21] text-xs font-bold text-white">2</span>
-                  <span><strong>UPI only:</strong> they pay and upload proof → you review under <Link to="/admin/payments" className="font-semibold text-[#6f334a] hover:underline">UPI reviews</Link>.</span>
+                  <span><strong>Payment:</strong> Online orders verify automatically via Razorpay. COD orders wait for your confirmation.</span>
                 </li>
                 <li className="flex gap-3">
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#3d0a21] text-xs font-bold text-white">3</span>
-                  <span><strong>Ship the order</strong> from <Link to="/admin/orders" className="font-semibold text-[#6f334a] hover:underline">Ship orders</Link> → NimbusPost creates AWB.</span>
+                  <span><strong>Fulfillment:</strong> Shipments are created automatically for paid orders (or manually triggered in <Link to="/admin/orders" className="font-semibold text-[#6f334a] hover:underline">Ship orders</Link>).</span>
                 </li>
                 <li className="flex gap-3">
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#3d0a21] text-xs font-bold text-white">4</span>
-                  <span><strong>Customer tracks</strong> via the private link you copy from the order card.</span>
+                  <span><strong>Tracking:</strong> Customers track shipment status automatically via their private order tracking page.</span>
                 </li>
               </ol>
             </div>

@@ -6,8 +6,7 @@ const NAV = [
   { to: '/admin/home', label: 'Overview', match: (path) => path === '/admin/home' },
   {
     to: '/admin/payments',
-    label: 'UPI reviews',
-    badgeKey: 'paymentReviews',
+    label: 'Payments',
     match: (path) => path.startsWith('/admin/payments'),
   },
   {
@@ -28,6 +27,11 @@ const NAV = [
     label: 'Returns',
     badgeKey: 'pendingReturns',
     match: (path) => path.startsWith('/admin/returns'),
+  },
+  {
+    to: '/admin/coupons',
+    label: 'Coupons',
+    match: (path) => path.startsWith('/admin/coupons'),
   },
 ]
 

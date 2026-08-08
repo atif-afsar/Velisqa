@@ -190,7 +190,7 @@ export default function SignatureCollection() {
             </p>
 
             {loading && categoryProducts.length === 0 && (
-              <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-2 sm:gap-x-5 md:grid-cols-3 lg:gap-x-6 lg:gap-y-10 xl:grid-cols-3">
+              <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-2 sm:gap-x-5 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-5 lg:gap-y-10 xl:grid-cols-4">
                 {Array.from({ length: 9 }, (_, i) => (
                   <div key={`signature-skeleton-${i}`} className="animate-pulse">
                     <div className="aspect-[3/4] bg-[#f0f0f0]" />
@@ -225,7 +225,7 @@ export default function SignatureCollection() {
             )}
 
             {categoryProducts.length > 0 && filteredProducts.length > 0 && (
-              <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-5 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 lg:gap-x-6 lg:gap-y-10">
+              <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-5 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-5 lg:gap-y-10 xl:grid-cols-4">
                 {filteredProducts.map((product, i) => (
                   <ProductCard key={product.id} product={product} priority={i < 6} variant="catalog" />
                 ))}

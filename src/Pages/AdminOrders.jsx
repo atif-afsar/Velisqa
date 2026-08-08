@@ -42,6 +42,8 @@ async function fetchOrdersPage({ offset = 0 } = {}) {
       nimbuspost_shipment_id,
       courier_name,
       tracking_url,
+      razorpay_order_id,
+      razorpay_payment_id,
       created_at,
       order_items (
         product_name,
@@ -324,7 +326,7 @@ export default function AdminOrders() {
   return (
     <AdminShell
       title="Ship orders"
-      subtitle="COD orders appear here after checkout. Click Ship via NimbusPost once per order — UPI orders ship automatically when you approve payment."
+      subtitle="COD orders appear here after checkout. Click Ship via NimbusPost once per order — Online orders are confirmed and shipped automatically via Razorpay."
       onRefresh={refresh}
     >
       {ConfirmDialog}
@@ -374,7 +376,7 @@ export default function AdminOrders() {
           <p className="font-serif text-xl">Nothing in this list</p>
           <p className="mx-auto mt-2 max-w-md text-sm text-[#514347]">
             {filter === 'needs_shipment'
-              ? 'New COD orders from the website will show here. UPI orders ship from the payment review page after approval.'
+              ? 'New COD orders from the website will show here. Online orders ship automatically after payment verification.'
               : 'Try another tab or refresh after a customer places an order.'}
           </p>
         </div>
@@ -405,6 +407,11 @@ export default function AdminOrders() {
                   <p className="mt-1 text-xs text-[#514347]">
                     {order.payment_method === 'cod' ? 'Collect on delivery' : 'Online payment'}
                   </p>
+                  {order.razorpay_payment_id && (
+                    <p className="mt-1 font-mono text-[9px] text-[#847377]" aria-label="Transaction ID">
+                      Txn: {order.razorpay_payment_id}
+                    </p>
+                  )}
                 </div>
               </div>
 

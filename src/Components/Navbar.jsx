@@ -125,7 +125,7 @@ function HeaderSearchBar({ onOpen, className = "" }) {
     <button
       type="button"
       onClick={onOpen}
-      className={`flex w-full min-w-0 items-center gap-3 rounded-full border border-black/5 bg-[#f6f5f3] px-5 py-2 text-left transition hover:bg-[#efedea] hover:border-black/10 md:py-2.5 ${className}`}
+      className={`flex w-full min-w-0 items-center gap-3 rounded-lg border border-black/10 bg-white px-4 py-2.5 text-left transition hover:bg-[#F8F6F3]/40 ${className}`}
       aria-label="Search products"
     >
       <span className="min-w-0 flex-1 truncate text-xs md:text-[13px] tracking-wide text-[#8a8a8a]">
@@ -138,14 +138,15 @@ function HeaderSearchBar({ onOpen, className = "" }) {
   );
 }
 
-function PincodeLink() {
+function PincodeLink({ pincode, onClick }) {
   return (
     <button
       type="button"
-      className="inline-flex items-center gap-1.5 text-[12px] font-medium tracking-wide text-[#514347]/90 transition hover:text-[#130006] shrink-0"
-      aria-label="Enter delivery pincode"
+      onClick={onClick}
+      className="inline-flex items-center gap-2 border border-black/5 bg-[#f6f5f3]/40 px-3.5 py-1 rounded text-left text-xs leading-tight transition hover:bg-[#efedea] shrink-0 font-sans"
+      aria-label="Update delivery pincode"
     >
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="text-[#130006]/70">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-[#3d0a21] shrink-0">
         <path
           d="M12 21s7-4.5 7-11a7 7 0 1 0-14 0c0 6.5 7 11 7 11Z"
           stroke="currentColor"
@@ -153,14 +154,70 @@ function PincodeLink() {
         />
         <circle cx="12" cy="10" r="2.25" stroke="currentColor" strokeWidth="1.5" />
       </svg>
-      Enter pincode
+      <div>
+        <p className="text-[9px] font-bold text-[#8a8a8a] uppercase tracking-wider leading-none">Where to Deliver?</p>
+        <p className="font-semibold text-[#130006] text-[10px] mt-0.5 leading-none">
+          {pincode ? `Delivering to ${pincode}` : 'Update Pincode'}
+        </p>
+      </div>
     </button>
+  );
+}
+
+function PincodeModal({ onClose, onUpdate, initialValue }) {
+  const [pin, setPin] = useState(initialValue || '');
+  const [error, setError] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (/^\d{6}$/.test(pin)) {
+      onUpdate(pin);
+      onClose();
+    } else {
+      setError('Please enter a valid 6-digit PIN code.');
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
+      <div className="relative w-full max-w-sm rounded-xl bg-white p-5 shadow-xl border border-black/5 font-sans">
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute right-4 top-4 text-[#847377] hover:text-[#130006] text-lg font-bold"
+        >
+          ✕
+        </button>
+        <h3 className="font-serif text-base font-semibold text-[#3d0a21] mb-4">Enter Pincode</h3>
+        <form onSubmit={handleSubmit} className="flex gap-2">
+          <input
+            type="text"
+            inputMode="numeric"
+            placeholder="Enter Delivery Pincode"
+            value={pin}
+            onChange={(e) => setPin(e.target.value.replace(/\D/g, '').slice(0, 6))}
+            className="flex-1 rounded border border-black/10 px-3 py-2 text-sm outline-none focus:border-[#3d0a21]/30 text-[#130006]"
+          />
+          <button
+            type="submit"
+            className="rounded bg-[#B76E79]/15 text-[#3b0d23] font-bold text-xs px-4 py-2 hover:bg-[#B76E79]/25 transition shrink-0"
+          >
+            Update
+          </button>
+        </form>
+        {error && <p className="mt-2 text-xs text-red-600 font-medium">{error}</p>}
+      </div>
+    </div>
   );
 }
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [pincodeOpen, setPincodeOpen] = useState(false);
+  const [deliveryPincode, setDeliveryPincode] = useState(() => {
+    return localStorage.getItem('velisqa:delivery_pincode') || '';
+  });
   const [scrolled, setScrolled] = useState(false);
   const compactMotion = useCompactNavMotion();
   const menuVariants = compactMotion ? menuVariantsMobile : menuVariantsDesktop;
@@ -310,10 +367,10 @@ export default function Navbar() {
         <Link
           to="/"
           onClick={closeMenu}
-          className={`relative z-20 inline-flex min-h-9 shrink-0 items-center font-serif font-medium leading-none tracking-[0.16em] transition-colors duration-200 hover:opacity-80 ${
+          className={`relative z-20 inline-flex min-h-9 shrink-0 items-center font-sans font-black uppercase leading-none tracking-widest transition-colors duration-200 hover:opacity-80 ${
             scrolled
-              ? "text-[1.5rem] sm:text-3xl md:text-[2.25rem]"
-              : "text-[1.65rem] sm:text-[2.25rem] md:text-[2.75rem]"
+              ? "text-4xl sm:text-5xl md:text-6xl"
+              : "text-5xl sm:text-6xl md:text-7xl"
           } ${
             onDarkHero
               ? "text-white drop-shadow-[0_2px_16px_rgba(19,0,6,0.45)]"
@@ -477,20 +534,20 @@ export default function Navbar() {
             <Link
               to="/"
               onClick={closeMenu}
-              className="relative z-20 inline-flex min-h-9 shrink-0 items-center font-serif text-[1.5rem] font-medium leading-none tracking-[0.16em] text-[#130006] transition-opacity hover:opacity-75 sm:text-3xl md:text-[2.25rem] lg:text-[2.65rem]"
+              className="relative z-20 inline-flex min-h-9 shrink-0 items-center font-sans font-black uppercase leading-none tracking-widest text-[#130006] transition-opacity hover:opacity-75 text-5xl sm:text-6xl md:text-7xl lg:text-8xl"
             >
               VELISQA
             </Link>
 
             <div className="hidden min-w-0 flex-1 items-center justify-center gap-6 md:flex">
-              <PincodeLink />
+              <PincodeLink pincode={deliveryPincode} onClick={() => setPincodeOpen(true)} />
               <HeaderSearchBar onOpen={openSearch} className="max-w-md" />
             </div>
 
-            <div className="ml-auto flex shrink-0 items-center justify-end gap-1 sm:gap-2">
-              <WishlistNavLink variant="plain" onDarkHero={false} scrolled={false} onClick={closeMenu} className="!h-10 !w-10" />
-              <CartNavLink variant="plain" onDarkHero={false} scrolled={false} onClick={closeMenu} className="!h-10 !w-10" />
-              <AccountNavMenu variant="plain" scrolled={false} onDarkHero={false} />
+            <div className="ml-auto flex shrink-0 items-center justify-end gap-2 sm:gap-4 items-stretch">
+              <WishlistNavLink variant="labelled" onDarkHero={false} scrolled={false} onClick={closeMenu} className="!h-11" />
+              <CartNavLink variant="labelled" onDarkHero={false} scrolled={false} onClick={closeMenu} className="!h-11" />
+              <AccountNavMenu variant="labelled" scrolled={false} onDarkHero={false} />
               <button
                 type="button"
                 onClick={() => setIsOpen((open) => !open)}
@@ -675,6 +732,16 @@ export default function Navbar() {
         )}
       </AnimatePresence>
       {searchOpen && !isAdmin && <SearchDialog onClose={() => setSearchOpen(false)} />}
+      {pincodeOpen && (
+        <PincodeModal
+          initialValue={deliveryPincode}
+          onClose={() => setPincodeOpen(false)}
+          onUpdate={(pin) => {
+            setDeliveryPincode(pin);
+            localStorage.setItem('velisqa:delivery_pincode', pin);
+          }}
+        />
+      )}
     </motion.header>
   );
 }

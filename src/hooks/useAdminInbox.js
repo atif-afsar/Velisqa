@@ -86,7 +86,7 @@ export function useAdminInbox({ pollMs = 60000 } = {}) {
   // Subscribe to real-time order insertions
   useEffect(() => {
     const channel = supabase
-      .channel('admin-order-notifications')
+      .channel(`admin-order-notifications-${Date.now()}`)
       .on(
         'postgres_changes',
         {
