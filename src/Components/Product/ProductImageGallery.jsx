@@ -76,9 +76,9 @@ export default function ProductImageGallery({ images, alt }) {
   const currentSrc = images[safeIndex]
 
   return (
-    <div className="flex flex-col gap-2 sm:gap-3">
+    <div className="flex flex-col gap-2 sm:gap-3 max-w-full min-w-0">
       <div
-        className="relative overflow-hidden bg-[#f7f4ef]"
+        className="relative overflow-hidden bg-[#f7f4ef] max-w-full"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
@@ -127,7 +127,7 @@ export default function ProductImageGallery({ images, alt }) {
 
       {count > 1 && (
         <div
-          className="flex gap-2 overflow-x-auto pb-1 scrollbar-thin"
+          className="flex gap-2 overflow-x-auto pb-1 scrollbar-thin max-w-full min-w-0"
           role="tablist"
           aria-label="Product images"
         >

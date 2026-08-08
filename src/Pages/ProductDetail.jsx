@@ -164,8 +164,8 @@ export default function ProductDetail() {
           }),
         ]}
       />
-      <main className="page-offset-nav bg-white text-[#130006] pb-24 lg:pb-12">
-        <div className="container-stitch mx-auto max-w-6xl px-4 py-4 sm:px-6 sm:py-6">
+      <main className="page-offset-nav bg-white text-[#130006] pb-24 lg:pb-12 no-overflow-x">
+        <div className="container-stitch mx-auto max-w-6xl px-4 py-4 sm:px-6 sm:py-6 max-w-safe">
           <nav
             className="mb-5 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[11px] text-[#847377]"
             aria-label="Breadcrumb"
@@ -186,7 +186,7 @@ export default function ProductDetail() {
           </nav>
 
           <div className="grid gap-8 lg:grid-cols-[400px_1fr] lg:gap-12 xl:gap-16">
-            <div className="lg:sticky lg:top-[calc(var(--nav-height)+1rem)] lg:self-start w-full">
+            <div className="lg:sticky lg:top-[calc(var(--nav-height)+1rem)] lg:self-start w-full max-w-safe">
               <div className="relative overflow-hidden rounded-lg bg-[#f7f4ef]">
                 <ProductPromoBadge product={product} className="left-3 top-3 z-20 sm:left-4 sm:top-4" />
                 {soldOut && <ProductSoldOutBadge className="left-auto right-3 sm:right-4" />}
@@ -198,7 +198,7 @@ export default function ProductDetail() {
               </div>
             </div>
 
-            <div className="flex flex-col">
+            <div className="flex flex-col min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 {category && (
                   <Link

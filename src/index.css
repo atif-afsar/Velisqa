@@ -53,6 +53,9 @@ html {
   scroll-padding-top: calc(var(--nav-height) + 0.5rem + env(safe-area-inset-top, 0px));
 }
 
+/* Force-hide any remaining horizontal overflow as a defensive fallback */
+/* removed global overflow-x:hidden to allow targeted fixes */
+
 /* Clears fixed navbar on pages without a full-bleed hero */
 .page-offset-nav {
   padding-top: calc(var(--nav-height) + env(safe-area-inset-top, 0px));
@@ -486,18 +489,37 @@ a {
 }
 
 .promo-marquee-viewport {
+  position: relative;
   min-width: 100%;
   max-width: 100%;
   overflow: hidden;
 }
 
 .promo-marquee-track {
-  min-width: 100%;
-  max-width: none;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  width: 200%;
+  will-change: transform;
+}
+
+.promo-marquee-track > span {
+  flex: 0 0 50%;
+  display: inline-flex;
+  align-items: center;
 }
 
 .promo-marquee-animate {
   animation: promo-marquee-scroll 28s linear infinite;
+}
+.max-w-safe {
+  max-width: 100%;
+  min-width: 0;
+}
+.no-overflow-x {
+  overflow-x: hidden !important;
 }
 
 .promo-marquee-animate:hover {

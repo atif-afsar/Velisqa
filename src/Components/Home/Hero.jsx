@@ -105,11 +105,11 @@ export default function Hero() {
 
   const activeSlide = HERO_SLIDES[index] ?? HERO_SLIDES[0];
   const slideClassName =
-    "absolute left-0 top-0 block h-auto w-full max-w-none [backface-visibility:hidden] [transform:translateZ(0)] max-md:inset-0 max-md:h-full max-md:object-cover max-md:object-center";
+    "absolute inset-0 block w-full h-full object-cover [backface-visibility:hidden] [transform:translateZ(0)]";
 
   return (
     <section
-      className="relative left-1/2 w-screen max-w-[100vw] -translate-x-1/2 overflow-hidden leading-[0]"
+      className="relative w-full overflow-hidden leading-[0]"
       style={{ marginTop: "calc(var(--nav-height) + env(safe-area-inset-top, 0px))" }}
       aria-label="Featured jewellery"
     >

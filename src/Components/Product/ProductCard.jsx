@@ -21,8 +21,8 @@ function ProductCard({ product, priority = false, variant = 'default' }) {
     <article
       className={
         catalog
-          ? 'group flex h-full flex-col'
-          : 'group flex h-full flex-col overflow-visible rounded-lg border border-[#d4af37]/15 bg-[#fbf7f1] p-2 shadow-[0_18px_44px_-28px_rgba(19,0,6,0.35)] transition duration-300 hover:-translate-y-1 hover:border-[#d4af37]/35 sm:p-3'
+          ? 'group flex h-full flex-col max-w-safe'
+          : 'group flex h-full flex-col overflow-visible rounded-lg border border-[#d4af37]/15 bg-[#fbf7f1] p-2 shadow-[0_18px_44px_-28px_rgba(19,0,6,0.35)] transition duration-300 hover:-translate-y-1 hover:border-[#d4af37]/35 sm:p-3 max-w-safe'
       }
     >
       <div className={`relative shrink-0 ${catalog ? 'isolate overflow-hidden' : ''}`}>
