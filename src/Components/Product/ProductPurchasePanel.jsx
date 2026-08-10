@@ -86,13 +86,13 @@ export default function ProductPurchasePanel({
           product={product}
           productUrl={productUrl}
           soldOut
-          className="w-full px-6 py-3.5"
+          className="w-full px-4 py-2 rounded-sm"
         />
         <button
           type="button"
           onClick={() => toggleWishlist(product)}
           aria-pressed={wishlisted}
-          className={`tap-target flex w-full min-h-[46px] items-center justify-center gap-1.5 rounded-full border text-[11px] font-bold uppercase tracking-[0.08em] transition ${
+          className={`tap-target flex w-full h-10 items-center justify-center gap-1.5 rounded-sm border text-[11px] font-bold uppercase tracking-[0.08em] transition ${
             wishlisted
               ? 'border-[#3d0a21]/30 bg-[#3d0a21]/5 text-[#3d0a21]'
               : 'border-[#130006]/15 bg-white text-[#514347] hover:border-[#3d0a21]/25'
@@ -134,7 +134,7 @@ export default function ProductPurchasePanel({
           product={product}
           productUrl={productUrl}
           variant="outline"
-          className="min-h-[46px] w-full"
+          className="h-10 w-full rounded-sm"
         >
           Buy now
         </BuyNowButton>
@@ -142,7 +142,7 @@ export default function ProductPurchasePanel({
           type="button"
           onClick={handleAdd}
           disabled={adding}
-          className="tap-target flex min-h-[46px] w-full items-center justify-center rounded-lg bg-[#3B0D23] text-xs font-bold uppercase tracking-[0.1em] text-white transition hover:bg-[#2A0718] disabled:opacity-60 shrink-0 font-sans"
+          className="tap-target flex h-10 w-full items-center justify-center rounded-sm bg-[#3B0D23] text-xs font-bold uppercase tracking-[0.1em] text-white transition hover:bg-[#2A0718] disabled:opacity-60 shrink-0 font-sans"
         >
           {adding ? 'Adding…' : 'Add to bag'}
         </button>
@@ -151,7 +151,7 @@ export default function ProductPurchasePanel({
       {itemCount > 0 && (
         <Link
           to="/cart"
-          className="tap-target flex w-full items-center justify-center gap-2 rounded-full border border-[#3d0a21]/20 py-2.5 text-[11px] font-bold uppercase tracking-[0.1em] text-[#3d0a21] transition hover:bg-[#3d0a21]/5"
+          className="tap-target flex w-full h-10 items-center justify-center gap-2 rounded-sm border border-[#3d0a21]/20 text-[11px] font-bold uppercase tracking-[0.1em] text-[#3d0a21] transition hover:bg-[#3d0a21]/5"
         >
           View bag
           <span className="rounded-full bg-[#3d0a21] px-2 py-0.5 text-[10px] text-[#e9c349]">
@@ -176,7 +176,7 @@ export default function ProductPurchasePanel({
             type="button"
             onClick={checkPincode}
             disabled={pincodeInput.length !== 6 || checkingPincode}
-            className="rounded-lg bg-[#3B0D23] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.1em] text-white hover:bg-[#2A0718] disabled:opacity-50 transition shrink-0"
+            className="rounded-sm bg-[#3B0D23] px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-white hover:bg-[#2A0718] disabled:opacity-50 transition shrink-0"
           >
             {checkingPincode ? 'Checking…' : 'Check'}
           </button>

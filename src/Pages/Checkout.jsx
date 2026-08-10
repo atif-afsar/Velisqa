@@ -548,7 +548,7 @@ export default function Checkout() {
               <button
                 type="submit"
                 disabled={isSubmitting || pincodeStatus === 'invalid'}
-                className="hidden lg:flex w-full h-12 items-center justify-center rounded-full bg-[#3B0D23] text-xs font-bold uppercase tracking-[0.1em] text-white hover:bg-[#2A0718] disabled:cursor-not-allowed disabled:opacity-50 shadow-md"
+                className="hidden lg:flex w-full h-10 items-center justify-center rounded-sm bg-[#3B0D23] text-xs font-bold uppercase tracking-[0.1em] text-white hover:bg-[#2A0718] disabled:cursor-not-allowed disabled:opacity-50 shadow-md"
               >
                 {paymentMethod === 'online' ? `Pay ${formatInr(finalTotal)} Securely` : 'Place COD Order'}
               </button>
@@ -663,7 +663,7 @@ export default function Checkout() {
               type="button"
               disabled={isSubmitting || pincodeStatus === 'invalid'}
               onClick={() => void handleCheckoutSubmit()}
-              className="flex-1 flex h-12 items-center justify-center rounded-full bg-[#3B0D23] text-xs font-bold uppercase tracking-[0.15em] text-white hover:bg-[#2A0718] disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex-1 flex h-10 items-center justify-center rounded-sm bg-[#3B0D23] text-xs font-bold uppercase tracking-[0.15em] text-white hover:bg-[#2A0718] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isSubmitting ? (
                 <span className="flex items-center gap-1.5">

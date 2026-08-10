@@ -39,7 +39,7 @@ export default function BuyNowButton({
   }
 
   const baseStyles =
-    "tap-target inline-flex max-w-full min-w-0 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-center font-bold transition-all cursor-pointer";
+    "tap-target inline-flex max-w-full min-w-0 items-center justify-center gap-2 rounded-sm px-4 py-2 text-center font-bold transition-all cursor-pointer";
   const visual = variant === "outline"
     ? "bg-white text-[#3B0D23] border border-[#3B0D23] hover:bg-[#F8F6F3]/40"
     : "bg-[#3B0D23] text-white hover:bg-[#2A0718]";
