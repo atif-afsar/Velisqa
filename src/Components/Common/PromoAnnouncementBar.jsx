@@ -3,11 +3,9 @@ import { Link, useLocation } from 'react-router-dom'
 import { useReducedMotion } from 'framer-motion'
 
 const MARQUEE_SEGMENTS = [
-  '500+ Happy Customers',
-  'Gifts For Her · Special Prices',
-  'Ships in 24 Hours',
-  'Premium Artificial Jewellery',
-  'Easy WhatsApp Checkout',
+  'Handcrafted Premium Jewellery',
+  'Free Shipping PAN India',
+  'Easy Returns & Exchanges',
 ]
 
 const MARQUEE_LINE = MARQUEE_SEGMENTS.join('   |   ')

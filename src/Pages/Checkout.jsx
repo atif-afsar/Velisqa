@@ -350,7 +350,7 @@ export default function Checkout() {
         canonicalPath="/checkout"
         noindex
       />
-      <main className="page-offset-nav min-h-screen bg-[#F8F6F3] text-[#1A1A1A] pb-24 lg:pb-8">
+      <main className="page-offset-nav min-h-screen bg-[#F8F6F3] text-[#1A1A1A] pb-24 lg:pb-8 w-full overflow-x-hidden">
         
         {/* Mobile Header Bar */}
         <div className="flex items-center justify-between border-b border-[#3B0D23]/5 bg-white px-4 py-3 lg:hidden">
@@ -359,7 +359,7 @@ export default function Checkout() {
           <span className="w-10"></span> {/* Spacer */}
         </div>
 
-        <div className="mx-auto max-w-[1280px] px-4 py-6 sm:px-6 lg:px-8">
+        <div className="container-stitch mx-auto max-w-[1280px] py-6 w-full overflow-hidden min-w-0">
           
           {/* Desktop Heading */}
           <div className="hidden lg:flex items-center justify-between mb-8 border-b border-[#3B0D23]/5 pb-4">
@@ -367,13 +367,13 @@ export default function Checkout() {
             <Link to="/cart" className="text-xs font-bold uppercase tracking-[0.1em] text-[#847377] hover:text-[#3B0D23]">&larr; Back to Bag</Link>
           </div>
 
-          <div className="grid gap-8 lg:grid-cols-[1fr_420px]">
+          <div className="grid gap-8 lg:grid-cols-[1fr_420px] w-full min-w-0">
             
             {/* LEFT COLUMN: Delivery Details & Payment Choice */}
-            <form onSubmit={handleCheckoutSubmit} className="space-y-6">
+            <form onSubmit={handleCheckoutSubmit} className="space-y-6 w-full min-w-0">
               
               {/* CONTACT DETAILS */}
-              <div className="rounded-2xl border border-[#D4AF37]/10 bg-white p-5 sm:p-6 shadow-sm space-y-4">
+              <div className="rounded-2xl border border-[#D4AF37]/10 bg-white p-5 sm:p-6 shadow-sm space-y-4 w-full min-w-0">
                 <h3 className="font-serif text-base font-semibold text-[#3B0D23]">Contact Information</h3>
                 
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -402,7 +402,7 @@ export default function Checkout() {
               </div>
 
               {/* SHIPPING ADDRESS */}
-              <div className="rounded-2xl border border-[#D4AF37]/10 bg-white p-5 sm:p-6 shadow-sm space-y-4">
+              <div className="rounded-2xl border border-[#D4AF37]/10 bg-white p-5 sm:p-6 shadow-sm space-y-4 w-full min-w-0">
                 <h3 className="font-serif text-base font-semibold text-[#3B0D23]">Delivery Address</h3>
 
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -486,7 +486,7 @@ export default function Checkout() {
               </div>
 
               {/* PAYMENT OPTION METHOD */}
-              <div className="rounded-2xl border border-[#D4AF37]/10 bg-white p-5 sm:p-6 shadow-sm space-y-4">
+              <div className="rounded-2xl border border-[#D4AF37]/10 bg-white p-5 sm:p-6 shadow-sm space-y-4 w-full min-w-0">
                 <h3 className="font-serif text-base font-semibold text-[#3B0D23]">Payment Method</h3>
 
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -556,7 +556,7 @@ export default function Checkout() {
             </form>
 
             {/* RIGHT COLUMN: Order Summary */}
-            <div className="rounded-2xl border border-[#D4AF37]/10 bg-white p-5 sm:p-6 shadow-sm self-start space-y-4">
+             <div className="rounded-2xl border border-[#D4AF37]/10 bg-white p-5 sm:p-6 shadow-sm self-start space-y-4 w-full min-w-0">
               <h3 className="font-serif text-base font-semibold text-[#3B0D23] border-b border-[#D4AF37]/10 pb-2">
                 Order Summary ({items.length} {items.length === 1 ? 'item' : 'items'})
               </h3>

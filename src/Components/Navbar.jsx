@@ -534,7 +534,7 @@ export default function Navbar() {
             <Link
               to="/"
               onClick={closeMenu}
-              className="relative z-20 inline-flex min-h-9 shrink-0 items-center font-sans font-black uppercase leading-none tracking-widest text-[#130006] transition-opacity hover:opacity-75 text-5xl sm:text-6xl md:text-7xl lg:text-8xl"
+              className="relative z-20 inline-flex min-h-9 shrink-0 items-center font-sans font-black uppercase leading-none tracking-widest text-[#130006] transition-opacity hover:opacity-75 text-3xl sm:text-5xl md:text-7xl lg:text-8xl"
             >
               VELISQA
             </Link>

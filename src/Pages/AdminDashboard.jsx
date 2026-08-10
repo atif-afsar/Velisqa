@@ -62,6 +62,8 @@ const emptyForm = {
   stock: '1',
   out_of_stock: false,
   badge: '',
+  mock_review_count: '0',
+  mock_rating: '',
 }
 
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
@@ -219,6 +221,8 @@ export default function AdminDashboard() {
       stock: String(product.stock ?? 1),
       out_of_stock: readOutOfStockFromProduct(product, useOosColumn),
       badge: product.badge ?? '',
+      mock_review_count: String(product.mock_review_count ?? 0),
+      mock_rating: product.mock_rating != null ? String(product.mock_rating) : '',
     })
     const urls = getProductImageUrls(product)
     const publicIds = getGalleryCloudinaryIds(product)
@@ -319,6 +323,18 @@ export default function AdminDashboard() {
       return
     }
 
+    const mock_review_count = Number(form.mock_review_count || 0)
+    const mock_rating = form.mock_rating ? Number(form.mock_rating) : null
+
+    if (isNaN(mock_review_count) || mock_review_count < 0) {
+      showFormError('Mock review count must be a non-negative number.')
+      return
+    }
+    if (mock_rating != null && (isNaN(mock_rating) || mock_rating < 1 || mock_rating > 5)) {
+      showFormError('Mock rating must be between 1.0 and 5.0.')
+      return
+    }
+
     setBusy(true)
     setFormError('')
     setFormNotice('')
@@ -358,6 +374,8 @@ export default function AdminDashboard() {
         gallery_cloudinary_ids: allPublicIds,
         ...availability,
         badge: badgeRaw === 'bestseller' || badgeRaw === 'new' ? badgeRaw : null,
+        mock_review_count,
+        mock_rating,
       }
 
       const removedUrls = originalImageUrls.filter((url) => !allUrls.includes(url))
@@ -613,6 +631,36 @@ export default function AdminDashboard() {
                   Ratings and review counts come only from approved customer reviews. Auto badge:
                   New (30 days) or Bestseller (80+ approved reviews).
                 </p>
+              </label>
+
+              <label>
+                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+                  Mock Review Count (Admin)
+                </span>
+                <input
+                  type="number"
+                  min="0"
+                  className={inputClass}
+                  placeholder="e.g. 150"
+                  value={form.mock_review_count}
+                  onChange={(e) => setForm((f) => ({ ...f, mock_review_count: e.target.value }))}
+                />
+              </label>
+
+              <label>
+                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+                  Mock Average Rating (1.0 - 5.0)
+                </span>
+                <input
+                  type="number"
+                  min="1"
+                  max="5"
+                  step="0.1"
+                  className={inputClass}
+                  placeholder="e.g. 4.8"
+                  value={form.mock_rating}
+                  onChange={(e) => setForm((f) => ({ ...f, mock_rating: e.target.value }))}
+                />
               </label>
 
               <label className="sm:col-span-2">

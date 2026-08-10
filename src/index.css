@@ -492,6 +492,7 @@ a {
   position: relative;
   min-width: 100%;
   max-width: 100%;
+  height: var(--announcement-height, 2rem);
   overflow: hidden;
 }
 

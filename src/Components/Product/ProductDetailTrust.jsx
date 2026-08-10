@@ -53,7 +53,7 @@ export default function ProductDetailTrust({ soldOut }) {
             <path d="M11 3 8 9l4 12 4-12-3-6" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M2 9h20" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
-          <span className="font-medium">Fine 925 Silver</span>
+          <span className="font-medium">Certified Authenticity</span>
         </Link>
       </div>
 

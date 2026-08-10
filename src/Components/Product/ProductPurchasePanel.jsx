@@ -161,16 +161,16 @@ export default function ProductPurchasePanel({
       )}
 
       {/* PINCODE CHECKER */}
-      <div className="rounded-xl border border-[#D4AF37]/15 bg-white p-4 mt-4 space-y-3 shadow-sm">
+      <div className="rounded-xl border border-[#D4AF37]/15 bg-white p-4 mt-4 space-y-3 shadow-sm w-full min-w-0">
         <h4 className="font-serif text-xs font-semibold text-[#3B0D23] uppercase tracking-[0.1em]">Check Delivery</h4>
-        <div className="flex gap-2">
+        <div className="flex gap-2 w-full min-w-0">
           <input
             type="text"
             inputMode="numeric"
             placeholder="Enter 6-digit Pincode"
             value={pincodeInput}
             onChange={(e) => setPincodeInput(e.target.value.replace(/\D/g, '').slice(0, 6))}
-            className="flex-1 rounded-lg border border-[#3B0D23]/10 px-3.5 py-2 text-xs text-[#1A1A1A] outline-none focus:border-[#3B0D23]/30"
+            className="flex-1 min-w-0 rounded-lg border border-[#3B0D23]/10 px-3.5 py-2 text-xs text-[#1A1A1A] outline-none focus:border-[#3B0D23]/30"
           />
           <button
             type="button"

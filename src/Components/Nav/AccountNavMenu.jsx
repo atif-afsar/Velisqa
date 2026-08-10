@@ -80,7 +80,7 @@ export default function AccountNavMenu({ scrolled, onDarkHero, onNavigate, varia
       >
         <AccountIcon onDarkHero={onDarkHero} />
         {variant === 'labelled' && (
-          <span className="text-[9px] font-bold uppercase tracking-wider text-[#514347] mt-1">Account</span>
+          <span className="hidden md:inline text-[9px] font-bold uppercase tracking-wider text-[#514347] mt-1">Account</span>
         )}
       </Link>
     )
@@ -113,7 +113,7 @@ export default function AccountNavMenu({ scrolled, onDarkHero, onNavigate, varia
       >
         <AccountIcon onDarkHero={onDarkHero} />
         {variant === 'labelled' && (
-          <span className="text-[9px] font-bold uppercase tracking-wider text-[#514347] mt-1">Account</span>
+          <span className="hidden md:inline text-[9px] font-bold uppercase tracking-wider text-[#514347] mt-1">Account</span>
         )}
       </button>
 

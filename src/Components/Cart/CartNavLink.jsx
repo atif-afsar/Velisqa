@@ -59,7 +59,7 @@ export default function CartNavLink({
           {badge}
         </div>
         {variant === 'labelled' && (
-          <span className="text-[9px] font-bold uppercase tracking-wider text-[#514347] mt-1">Cart</span>
+          <span className="hidden md:inline text-[9px] font-bold uppercase tracking-wider text-[#514347] mt-1">Cart</span>
         )}
       </button>
     )

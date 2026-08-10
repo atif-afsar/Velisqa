@@ -164,8 +164,15 @@ export default function ProductReviews({ product }) {
 
   if (!available) return null
 
-  const aggregateRating = summary?.total ? summary.average : getProductRating(product)
-  const aggregateCount = summary?.total || getProductReviewCount(product)
+  const mockCount = Number(product?.mock_review_count || 0)
+  const mockRating = product?.mock_rating != null ? Number(product?.mock_rating) : 0
+  const realCount = Number(summary?.total || 0)
+  const realRating = Number(summary?.average || 0)
+
+  const aggregateCount = realCount + mockCount
+  const aggregateRating = aggregateCount > 0
+    ? (realRating * realCount + mockRating * mockCount) / aggregateCount
+    : 0
   const reviewerName =
     profile?.full_name
     || user?.user_metadata?.full_name

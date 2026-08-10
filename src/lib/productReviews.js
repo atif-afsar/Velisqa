@@ -123,10 +123,21 @@ export function applyReviewAggregatesToProducts(products, aggregateMap) {
   return products.map((product) => {
     const live = aggregateMap.get(product.id)
     if (!live) return product
+
+    const mockCount = Number(product.mock_review_count || 0)
+    const mockRating = product.mock_rating != null ? Number(product.mock_rating) : 0
+    const realCount = Number(live.review_count || 0)
+    const realRating = Number(live.rating || 0)
+
+    const totalCount = realCount + mockCount
+    const totalRating = totalCount > 0
+      ? Math.round(((realRating * realCount + mockRating * mockCount) / totalCount) * 10) / 10
+      : null
+
     return {
       ...product,
-      rating: live.rating,
-      review_count: live.review_count,
+      rating: totalRating,
+      review_count: totalCount,
     }
   })
 }
