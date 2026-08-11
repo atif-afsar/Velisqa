@@ -19,6 +19,7 @@ function buildSingleOrderBody({
 }) {
   const isEnquiry = enquiryType === 'enquiry'
   const paymentLabel = paymentMethod === 'online' ? 'Manual UPI QR payment' : 'Cash on delivery'
+  const giftWrap = customer?.giftWrap === true || customer?.giftWrap === 'true'
 
   const lines = [
     isEnquiry ? 'VELISQA — SOLD OUT / REGISTER INTEREST' : 'VELISQA — NEW ORDER',
@@ -31,6 +32,7 @@ function buildSingleOrderBody({
     '',
     '--- PAYMENT ---',
     paymentLabel,
+    giftWrap ? 'Gift Wrap: Yes (₹50)' : null,
     '',
     '--- CUSTOMER ---',
     `Name: ${customer.name}`,
@@ -84,6 +86,9 @@ function buildCartOrderBody({ orderRef, cartItems, stockWarnings, paymentMethod,
   })
 
   const paymentLabel = paymentMethod === 'online' ? 'Manual UPI QR payment' : 'Cash on delivery'
+  const giftWrap = customer?.giftWrap === true || customer?.giftWrap === 'true'
+  const giftWrapFee = giftWrap ? 50 : 0
+  const grandTotal = getCheckoutGrandTotal(productsSubtotal) + giftWrapFee
 
   const lines = [
     'VELISQA — CART ORDER (Website)',
@@ -93,8 +98,9 @@ function buildCartOrderBody({ orderRef, cartItems, stockWarnings, paymentMethod,
     '--- ORDER SUMMARY ---',
     `Products: ${cartItems.length} · Total pieces: ${totalPieces}`,
     `Subtotal: ${formatInrLine(productsSubtotal)}`,
+    giftWrap ? `Gift Wrap: Yes (+${formatInrLine(50)})` : null,
     `Delivery: ${CHECKOUT_DELIVERY_CHARGE <= 0 ? 'FREE (₹0)' : formatInrLine(CHECKOUT_DELIVERY_CHARGE)}`,
-    `Grand total: ${formatInrLine(getCheckoutGrandTotal(productsSubtotal))}`,
+    `Grand total: ${formatInrLine(grandTotal)}`,
     `Payment: ${paymentLabel}`,
     '',
     ...itemLines,

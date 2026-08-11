@@ -35,6 +35,34 @@ export default function PrivateOrderSummary({ order }) {
           </li>
         ))}
       </ul>
+
+      {/* Pricing breakdown */}
+      <div className="mt-4 space-y-2 text-xs text-[#514347]">
+        <div className="flex justify-between">
+          <span>Subtotal</span>
+          <span className="font-semibold tabular-nums">{formatInr(order.subtotal || order.grandTotal)}</span>
+        </div>
+        {Number(order.discountAmount) > 0 && (
+          <div className="flex justify-between text-emerald-800 font-medium">
+            <span>Discount {order.couponCode ? `(${order.couponCode})` : ''}</span>
+            <span className="tabular-nums">- {formatInr(order.discountAmount)}</span>
+          </div>
+        )}
+        {order.giftWrap && (
+          <div className="flex justify-between">
+            <span>Gift Wrap Fee</span>
+            <span className="font-semibold tabular-nums">{formatInr(order.giftWrapFee || 50)}</span>
+          </div>
+        )}
+        <div className="flex justify-between">
+          <span>Delivery</span>
+          <span className="font-semibold text-emerald-600">FREE</span>
+        </div>
+        <div className="flex justify-between border-t border-[#d4af37]/15 pt-2.5 font-serif text-sm font-bold text-[#3d0a21]">
+          <span>Grand Total</span>
+          <span className="tabular-nums text-base">{formatInr(order.grandTotal)}</span>
+        </div>
+      </div>
     </section>
   )
 }

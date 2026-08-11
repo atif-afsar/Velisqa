@@ -37,6 +37,8 @@ async function fetchOrdersPage({ offset = 0 } = {}) {
       payment_status,
       shipping_status,
       order_status,
+      gift_wrap,
+      gift_wrap_fee,
       nimbuspost_awb,
       nimbuspost_order_id,
       nimbuspost_shipment_id,
@@ -391,6 +393,11 @@ export default function AdminOrders() {
                     <span className="rounded-full bg-[#f1ede8] px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-[#514347]">
                       {order.payment_method === 'cod' ? 'COD' : 'UPI'}
                     </span>
+                    {order.gift_wrap && (
+                      <span className="rounded-full bg-[#B76E79]/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-[#3B0D23]">
+                        🎁 Gift Wrapped
+                      </span>
+                    )}
                   </div>
                   <p className="mt-1 text-sm font-semibold">{order.customer_name}</p>
                   <p className="text-xs text-[#514347]">
@@ -436,6 +443,14 @@ export default function AdminOrders() {
                       <>
                         <br />
                         {[order.delivery_city, order.delivery_pincode].filter(Boolean).join(' · ')}
+                      </>
+                    )}
+                    {order.gift_wrap && (
+                      <>
+                        <br />
+                        <span className="inline-block mt-2 font-bold text-[#3B0D23] bg-[#B76E79]/10 px-2.5 py-1 rounded border border-[#B76E79]/20">
+                          🎁 GIFT WRAP REQUIRED (+₹50)
+                        </span>
                       </>
                     )}
                   </p>

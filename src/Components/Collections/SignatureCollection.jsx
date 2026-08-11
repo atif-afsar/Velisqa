@@ -20,6 +20,7 @@ import { useProducts } from '../../hooks/useProducts'
 import { CategoryPill, CategoryPillRow } from '../Common/CategoryPills'
 import ProductCard from '../Product/ProductCard'
 import ProductFilters, { ProductFilterSidebar } from './ProductFilters'
+import CustomSelect from '../Common/CustomSelect'
 
 export default function SignatureCollection() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -119,10 +120,7 @@ export default function SignatureCollection() {
         className="sticky top-[calc(var(--nav-height)+env(safe-area-inset-top,0px))] z-40 isolate border-b border-black/8 bg-white shadow-[0_4px_16px_rgba(19,0,6,0.06)]"
       >
         <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-10">
-          <p className="pt-4 pb-2 text-center text-[12px] font-medium uppercase tracking-[0.24em] text-[#130006] sm:pt-5 sm:text-[13px] sm:tracking-[0.28em]">
-            {activeCategory}
-          </p>
-          <div className="flex items-center gap-2 pb-3 sm:gap-3 md:pb-3.5">
+          <div className="flex items-center gap-2 py-3 sm:gap-3">
             <CategoryPillRow scrollable className="flex-1">
               {PRODUCT_CATEGORIES.map((category) => {
                 const isActive = category === activeCategory
@@ -140,20 +138,13 @@ export default function SignatureCollection() {
               })}
             </CategoryPillRow>
 
-            <label className="hidden shrink-0 items-center lg:flex">
-              <span className="sr-only">Sort products</span>
-              <select
+            <div className="hidden shrink-0 items-center lg:flex">
+              <CustomSelect
                 value={filters.sort}
-                onChange={(event) => handleSortChange(event.target.value)}
-                className="h-8 rounded-full border border-black/10 bg-white px-3.5 text-[12px] text-[#333] outline-none"
-              >
-                {PRODUCT_SORT_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </label>
+                onChange={handleSortChange}
+                options={PRODUCT_SORT_OPTIONS}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -185,9 +176,14 @@ export default function SignatureCollection() {
           />
 
           <div className="min-w-0 flex-1">
-            <p className="mb-4 hidden text-[13px] text-[#666] lg:block">
-              {loading ? 'Loading…' : `${filteredProducts.length} products`}
-            </p>
+            <div className="mb-6 flex items-center justify-between border-b border-black/5 pb-2">
+              <h2 className="font-serif text-xl font-normal text-[#130006] sm:text-2xl capitalize">
+                {activeCategory}
+              </h2>
+              <span className="text-[10px] uppercase tracking-[0.16em] text-[#847377]">
+                {loading ? 'Loading…' : `${filteredProducts.length} pieces`}
+              </span>
+            </div>
 
             {loading && categoryProducts.length === 0 && (
               <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-2 sm:gap-x-5 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-5 lg:gap-y-10 xl:grid-cols-4">

@@ -236,6 +236,7 @@ export default function OrderFormModal({
       locationLabel: locationNote.trim() || (coords ? "GPS coordinates shared" : ""),
       locationMapsUrl: coords ? mapsLink(coords.lat, coords.lng) : "",
       notes: String(form.get("notes") || "").trim(),
+      giftWrap: typeof window !== 'undefined' && localStorage.getItem('velisqa:gift_wrap') === 'true'
     };
 
     if (!isEnquiry) {
@@ -346,11 +347,13 @@ export default function OrderFormModal({
       });
 
       if (resolvedPayment === "online") {
+        localStorage.removeItem('velisqa:gift_wrap');
         onClose();
         navigate(orderPrivateUrl("/pay", created.orderRef, created.accessToken));
         return;
       }
 
+      localStorage.removeItem('velisqa:gift_wrap');
       setConfirmation({
         variant: "cod",
         customerName: customer.name,

@@ -49,7 +49,7 @@ export default function ProductStickyBar({ product, soldOut, quantity = 1 }) {
           type="button"
           onClick={handleAdd}
           disabled={adding}
-          className="tap-target shrink-0 rounded-full bg-[#3d0a21] px-5 py-3 text-[11px] font-bold uppercase tracking-[0.1em] text-[#e9c349] disabled:opacity-60"
+          className="tap-target shrink-0 rounded-sm bg-[#3d0a21] px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.15em] text-[#e9c349] disabled:opacity-60"
         >
           {adding ? 'Adding…' : addQuantity > 1 ? `Add ${addQuantity}` : 'Add to bag'}
         </button>

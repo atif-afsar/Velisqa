@@ -37,8 +37,9 @@ function PreviewImage({ src, alt, className = 'h-10 w-10 rounded-md' }) {
   )
 }
 
-function OrderPriceBreakdown({ subtotal, deliveryCharge = CHECKOUT_DELIVERY_CHARGE }) {
-  const grandTotal = getCheckoutGrandTotal(subtotal)
+function OrderPriceBreakdown({ subtotal, deliveryCharge = CHECKOUT_DELIVERY_CHARGE, giftWrap = false }) {
+  const giftWrapFee = giftWrap ? 50 : 0
+  const grandTotal = getCheckoutGrandTotal(subtotal) + giftWrapFee
   const isFreeDelivery = deliveryCharge <= 0
 
   return (
@@ -47,6 +48,12 @@ function OrderPriceBreakdown({ subtotal, deliveryCharge = CHECKOUT_DELIVERY_CHAR
         <span className="text-[#514347]">Subtotal</span>
         <span className="font-medium tabular-nums text-[#130006]">{formatInr(subtotal)}</span>
       </div>
+      {giftWrap && (
+        <div className="flex items-center justify-between gap-2 text-[11px]">
+          <span className="text-[#514347]">Gift Wrap Fee</span>
+          <span className="font-medium tabular-nums text-[#130006]">{formatInr(50)}</span>
+        </div>
+      )}
       <div className="flex items-center justify-between gap-2 text-[11px]">
         <span className="text-[#514347]">Delivery</span>
         {isFreeDelivery ? (
@@ -76,6 +83,7 @@ export default function OrderProductPreview({
   cartItems = null,
 }) {
   const isCart = Array.isArray(cartItems) && cartItems.length > 0
+  const giftWrap = typeof window !== 'undefined' && localStorage.getItem('velisqa:gift_wrap') === 'true'
 
   if (isCart) {
     const subtotal = getCartTotal(cartItems)
@@ -106,7 +114,7 @@ export default function OrderProductPreview({
           )}
         </ul>
 
-        <OrderPriceBreakdown subtotal={subtotal} />
+        <OrderPriceBreakdown subtotal={subtotal} giftWrap={giftWrap} />
       </div>
     )
   }
@@ -131,7 +139,7 @@ export default function OrderProductPreview({
         </div>
       </div>
 
-      {subtotal > 0 && <OrderPriceBreakdown subtotal={subtotal} />}
+      {subtotal > 0 && <OrderPriceBreakdown subtotal={subtotal} giftWrap={giftWrap} />}
     </div>
   )
 }

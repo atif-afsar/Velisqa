@@ -78,7 +78,7 @@ export default function ProductImageGallery({ images, alt }) {
   return (
     <div className="flex flex-col gap-2 sm:gap-3 max-w-full min-w-0">
       <div
-        className="relative overflow-hidden bg-[#f7f4ef] max-w-full"
+        className="relative overflow-hidden rounded-lg bg-[#f7f4ef] max-w-full"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >

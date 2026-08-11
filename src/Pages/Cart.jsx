@@ -36,14 +36,15 @@ export default function Cart() {
   const { products } = useProducts()
   const [localIssues, setLocalIssues] = useState([])
   const [couponOpen, setCouponOpen] = useState(false)
-  const [giftWrap, setGiftWrap] = useState(false)
 
-  // Coupon state
   const [couponInput, setCouponInput] = useState('')
   const [appliedCoupon, setAppliedCoupon] = useState(() => {
     return localStorage.getItem('velisqa:applied_coupon') || ''
   })
   const [couponError, setCouponError] = useState('')
+  const [giftWrap, setGiftWrap] = useState(() => {
+    return localStorage.getItem('velisqa:gift_wrap') === 'true'
+  })
 
   const suggestedProducts = products
     .filter((product) => !isProductSoldOut(product))
@@ -80,6 +81,16 @@ export default function Cart() {
   const giftWrapFee = giftWrap ? 50 : 0
   const finalTotal = Math.max(0, subtotal - couponDiscountVal + giftWrapFee)
   const totalSavings = discountOnMrp + couponDiscountVal
+
+  const handleGiftWrapChange = (e) => {
+    const checked = e.target.checked
+    setGiftWrap(checked)
+    if (checked) {
+      localStorage.setItem('velisqa:gift_wrap', 'true')
+    } else {
+      localStorage.removeItem('velisqa:gift_wrap')
+    }
+  }
 
   // Revalidate and update discount dynamically when subtotal changes
   useEffect(() => {
@@ -289,12 +300,13 @@ export default function Cart() {
                     <input
                       type="checkbox"
                       checked={giftWrap}
-                      onChange={(e) => setGiftWrap(e.target.checked)}
+                      onChange={handleGiftWrapChange}
                       className="h-4 w-4 rounded border-gray-300 text-[#3B0D23] focus:ring-[#3B0D23]"
                     />
                     <span>Add a <span className="text-[#B76E79]">gift wrap</span> &amp; a message with this item (+ ₹50)</span>
                   </label>
                 </div>
+
 
                 {/* Suggestions Block */}
                 {suggestedProducts.length > 0 && (
@@ -366,10 +378,10 @@ export default function Cart() {
                       <span>Discount on MRP</span>
                       <span className="tabular-nums">- {formatInr(discountOnMrp)}</span>
                     </div>
-                    {couponDiscount > 0 && (
+                    {couponDiscountVal > 0 && (
                       <div className="flex justify-between text-emerald-800 font-medium">
                         <span>Coupon Discount ({appliedCoupon})</span>
-                        <span className="tabular-nums">- {formatInr(couponDiscount)}</span>
+                        <span className="tabular-nums">- {formatInr(couponDiscountVal)}</span>
                       </div>
                     )}
                     {giftWrap && (

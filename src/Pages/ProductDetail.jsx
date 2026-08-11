@@ -185,9 +185,9 @@ export default function ProductDetail() {
             )}
           </nav>
 
-          <div className="grid gap-8 lg:grid-cols-[400px_1fr] lg:gap-12 xl:gap-16">
+          <div className="grid gap-8 lg:grid-cols-[400px_1fr] lg:gap-12 xl:gap-16 items-start">
             <div className="lg:sticky lg:top-[calc(var(--nav-height)+1rem)] lg:self-start w-full max-w-safe">
-              <div className="relative overflow-hidden rounded-lg bg-[#f7f4ef]">
+              <div className="relative">
                 <ProductPromoBadge product={product} className="left-3 top-3 z-20 sm:left-4 sm:top-4" />
                 {soldOut && <ProductSoldOutBadge className="left-auto right-3 sm:right-4" />}
                 <ProductImageGallery

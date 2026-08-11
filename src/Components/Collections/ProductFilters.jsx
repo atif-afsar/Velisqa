@@ -4,6 +4,7 @@ import {
   EMPTY_PRODUCT_FILTERS,
   PRODUCT_SORT_OPTIONS,
 } from '../../lib/productFilters'
+import CustomSelect from '../Common/CustomSelect'
 
 function toggleValue(values, value) {
   return values.includes(value)
@@ -151,18 +152,14 @@ export default function ProductFilters({ facets, filters, onChange, onClear, res
           <span className="font-semibold text-[#130006]">{resultCount}</span> matching piece{resultCount === 1 ? '' : 's'}
         </p>
 
-        <label className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-2">
           <span className="hidden text-[10px] font-bold uppercase tracking-[0.12em] text-[#847377] sm:inline">Sort</span>
-          <select
+          <CustomSelect
             value={filters.sort}
-            onChange={(event) => onChange({ ...filters, sort: event.target.value })}
-            className="min-h-10 rounded-full border border-[#847377]/20 bg-white px-3 text-xs text-[#514347] outline-none"
-          >
-            {PRODUCT_SORT_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>{option.label}</option>
-            ))}
-          </select>
-        </label>
+            onChange={(value) => onChange({ ...filters, sort: value })}
+            options={PRODUCT_SORT_OPTIONS}
+          />
+        </div>
       </div>
 
       <ActiveFilterChips filters={filters} onChange={onChange} onClear={onClear} />

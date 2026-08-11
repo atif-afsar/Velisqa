@@ -62,9 +62,13 @@ export default function Checkout() {
   })
   const [checkoutCouponInput, setCheckoutCouponInput] = useState('')
   const [checkoutCouponError, setCheckoutCouponError] = useState('')
+  const [giftWrap] = useState(() => {
+    return localStorage.getItem('velisqa:gift_wrap') === 'true'
+  })
 
   const subtotal = cartTotal
-  const finalTotal = Math.max(0, subtotal - couponDiscountVal)
+  const giftWrapFee = giftWrap ? 50 : 0
+  const finalTotal = Math.max(0, subtotal - couponDiscountVal + giftWrapFee)
 
   // Revalidate coupon from database on mount or subtotal change
   useEffect(() => {
@@ -252,7 +256,8 @@ export default function Checkout() {
           pincode: pincode.trim(),
           notes: notes.trim() || null,
           paymentMethod,
-          couponCode: appliedCoupon || null
+          couponCode: appliedCoupon || null,
+          giftWrap: giftWrap
         },
         p_items: items.map((line) => ({
           productId: line.productId,
@@ -275,6 +280,7 @@ export default function Checkout() {
         // 2. COD flow: immediately proceed to success page
         clearCart()
         localStorage.removeItem('velisqa:applied_coupon')
+        localStorage.removeItem('velisqa:gift_wrap')
         navigate(`/order-confirmation/${orderRef}?token=${accessToken}`)
       } else {
         // 3. Online payment flow: create Razorpay order and launch checkout
@@ -322,6 +328,7 @@ export default function Checkout() {
 
               clearCart()
               localStorage.removeItem('velisqa:applied_coupon')
+              localStorage.removeItem('velisqa:gift_wrap')
               navigate(`/order-confirmation/${orderRef}?token=${accessToken}`)
             } catch (err) {
               setCheckoutError(err.message || 'Payment verification failed.')
@@ -593,6 +600,12 @@ export default function Checkout() {
                   <div className="flex justify-between text-emerald-600 font-medium">
                     <span>Discount ({appliedCoupon})</span>
                     <span className="tabular-nums">- {formatInr(couponDiscountVal)}</span>
+                  </div>
+                )}
+                {giftWrap && (
+                  <div className="flex justify-between">
+                    <span>Gift Wrap Fee</span>
+                    <span className="tabular-nums">{formatInr(50)}</span>
                   </div>
                 )}
                 {pincodeStatus === 'available' && (

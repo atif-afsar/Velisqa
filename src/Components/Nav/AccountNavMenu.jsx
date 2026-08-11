@@ -2,127 +2,390 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 
-function navTextClass({ scrolled, onDarkHero, isActive = false }) {
-  const size = scrolled
-    ? 'text-[0.62rem] tracking-[0.1em]'
-    : 'text-[0.72rem] tracking-[0.12em]'
-
-  if (onDarkHero) {
-    return `${size} ${isActive ? 'text-[#d4af37]' : 'text-white/75 hover:text-[#f7ead0]'}`
-  }
-
-  return `${size} ${isActive ? 'text-[#130006]' : 'text-[#514347]/80 hover:text-[#130006]'}`
-}
-
-function AccountIcon({ onDarkHero }) {
+function AccountIcon({ onDarkHero, open = false }) {
   return (
     <svg
-      width="20"
-      height="20"
+      width="21"
+      height="21"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.5"
-      className={onDarkHero ? 'text-white/90' : 'text-[#130006]'}
-      aria-hidden
+      strokeWidth="1.35"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={`
+        transition-transform
+        duration-300
+        ${open ? 'scale-[0.94]' : ''}
+        ${onDarkHero ? 'text-white' : 'text-[#1b0b12]'}
+      `}
+      aria-hidden="true"
     >
-      <circle cx="12" cy="8" r="3.5" />
-      <path d="M5 20c1.2-3.2 3.6-5 7-5s5.8 1.8 7 5" strokeLinecap="round" />
+      <circle cx="12" cy="8" r="3.35" />
+      <path d="M5.5 20c1.05-3.15 3.25-4.85 6.5-4.85s5.45 1.7 6.5 4.85" />
     </svg>
   )
 }
 
-export default function AccountNavMenu({ scrolled, onDarkHero, onNavigate, variant = 'icon' }) {
+function ChevronIcon({ open, onDarkHero }) {
+  return (
+    <svg
+      width="10"
+      height="10"
+      viewBox="0 0 10 10"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={`
+        ml-1
+        transition-transform
+        duration-300
+        ${open ? 'rotate-180' : ''}
+        ${
+          onDarkHero
+            ? 'text-white/60'
+            : 'text-[#1b0b12]/45'
+        }
+      `}
+      aria-hidden="true"
+    >
+      <path d="M2 3.5 5 6.5 8 3.5" />
+    </svg>
+  )
+}
+
+function AccountLabel({ onDarkHero }) {
+  return (
+    <span
+      className={`
+        mt-1
+        hidden
+        text-[8px]
+        font-semibold
+        uppercase
+        tracking-[0.13em]
+        md:block
+        ${
+          onDarkHero
+            ? 'text-white/75'
+            : 'text-[#514347]'
+        }
+      `}
+    >
+      Account
+    </span>
+  )
+}
+
+export default function AccountNavMenu({
+  scrolled,
+  onDarkHero,
+  onNavigate,
+  variant = 'icon',
+}) {
   const menuId = useId()
   const rootRef = useRef(null)
-  const { user, profile, loading, logout } = useAuth()
+
+  const { user, profile, loading, logout } =
+    useAuth()
+
   const [open, setOpen] = useState(false)
+
+  const isLabelled = variant === 'labelled'
+  const isPlain =
+    variant === 'plain' || isLabelled
+
+  // ------------------------------------------------------------
+  // CLOSE MENU WHEN CLICKING OUTSIDE / ESCAPE
+  // ------------------------------------------------------------
 
   useEffect(() => {
     if (!open) return undefined
 
-    function onPointerDown(event) {
-      if (!rootRef.current?.contains(event.target)) setOpen(false)
+    function handlePointerDown(event) {
+      if (
+        !rootRef.current?.contains(
+          event.target,
+        )
+      ) {
+        setOpen(false)
+      }
     }
 
-    function onKeyDown(event) {
-      if (event.key === 'Escape') setOpen(false)
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') {
+        setOpen(false)
+      }
     }
 
-    document.addEventListener('pointerdown', onPointerDown)
-    document.addEventListener('keydown', onKeyDown)
+    document.addEventListener(
+      'pointerdown',
+      handlePointerDown,
+    )
+
+    document.addEventListener(
+      'keydown',
+      handleKeyDown,
+    )
+
     return () => {
-      document.removeEventListener('pointerdown', onPointerDown)
-      document.removeEventListener('keydown', onKeyDown)
+      document.removeEventListener(
+        'pointerdown',
+        handlePointerDown,
+      )
+
+      document.removeEventListener(
+        'keydown',
+        handleKeyDown,
+      )
     }
   }, [open])
+
+  // ------------------------------------------------------------
+  // CLOSE ON SCROLL
+  // ------------------------------------------------------------
+
+  useEffect(() => {
+    if (!open) return undefined
+
+    function handleScroll() {
+      setOpen(false)
+    }
+
+    window.addEventListener(
+      'scroll',
+      handleScroll,
+      { passive: true },
+    )
+
+    return () => {
+      window.removeEventListener(
+        'scroll',
+        handleScroll,
+      )
+    }
+  }, [open])
+
+  // ------------------------------------------------------------
+  // NOT LOGGED IN
+  // ------------------------------------------------------------
 
   if (loading) return null
 
   if (!user) {
-    const plain = variant === 'plain' || variant === 'labelled'
     return (
       <Link
         to="/login"
         onClick={onNavigate}
         aria-label="Sign in"
-        className={`inline-flex flex-col items-center justify-center transition-colors duration-200 ${
-          variant === 'labelled'
-            ? 'h-11 px-2 text-[#130006] hover:opacity-75'
-            : plain
-              ? 'h-10 w-10 text-[#130006] hover:opacity-70'
-              : `h-9 w-9 rounded-full border ${
-                  onDarkHero
-                    ? 'border-white/25 bg-white/5 text-white hover:border-white/45 hover:bg-white/10'
-                    : 'border-[#130006]/10 bg-white/70 text-[#130006] hover:border-[#130006]/25'
-                }`
-        }`}
+        className={`
+          group
+          inline-flex
+          flex-col
+          items-center
+          justify-center
+          transition-opacity
+          duration-200
+          hover:opacity-60
+
+          ${
+            isLabelled
+              ? 'min-h-11 px-2'
+              : isPlain
+                ? 'h-10 w-10'
+                : 'h-10 w-10'
+          }
+        `}
       >
-        <AccountIcon onDarkHero={onDarkHero} />
-        {variant === 'labelled' && (
-          <span className="hidden md:inline text-[9px] font-bold uppercase tracking-wider text-[#514347] mt-1">Account</span>
+        <AccountIcon
+          onDarkHero={onDarkHero}
+        />
+
+        {isLabelled && (
+          <AccountLabel
+            onDarkHero={onDarkHero}
+          />
         )}
       </Link>
     )
   }
 
-  const itemClass = `flex min-h-10 w-full items-center px-3 text-left text-[0.72rem] font-medium tracking-[0.06em] text-[#130006] transition hover:bg-[#f1ede8]`
+  // ------------------------------------------------------------
+  // MENU ITEM
+  // ------------------------------------------------------------
 
-  const plain = variant === 'plain' || variant === 'labelled'
+  const itemClass = `
+    flex
+    min-h-[42px]
+    w-full
+    items-center
+    px-4
+    text-left
+    text-[11px]
+    font-medium
+    tracking-[0.025em]
+    text-[#2a151d]
+    transition-colors
+    duration-200
+    hover:bg-[#f7f3ee]
+  `
+
+  // ------------------------------------------------------------
+  // LOGGED-IN ACCOUNT
+  // ------------------------------------------------------------
 
   return (
-    <div ref={rootRef} className="relative">
+    <div
+      ref={rootRef}
+      className="relative"
+    >
+      {/* ======================================================
+          ACCOUNT BUTTON
+      ======================================================= */}
+
       <button
         type="button"
         id={menuId}
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label="Account menu"
-        onClick={() => setOpen((value) => !value)}
-        className={`inline-flex flex-col items-center justify-center transition ${
-          variant === 'labelled'
-            ? 'h-11 px-2 text-[#130006] hover:opacity-75'
-            : plain
-              ? 'h-10 w-10 text-[#130006] hover:opacity-70'
-              : `h-9 w-9 rounded-full border ${
-                  onDarkHero
-                    ? 'border-white/25 bg-white/5 hover:border-white/45 hover:bg-white/10'
-                    : 'border-[#130006]/10 bg-white/70 hover:border-[#130006]/25'
-                } ${open ? (onDarkHero ? 'border-white/45 bg-white/10' : 'border-[#3d0a21]/25 bg-white') : ''}`
-        }`}
+        onClick={() =>
+          setOpen((value) => !value)
+        }
+        className={`
+          group
+          inline-flex
+          items-center
+          justify-center
+          transition-opacity
+          duration-200
+          hover:opacity-60
+
+          ${
+            isLabelled
+              ? 'min-h-11 px-2'
+              : 'h-10 w-10'
+          }
+        `}
       >
-        <AccountIcon onDarkHero={onDarkHero} />
-        {variant === 'labelled' && (
-          <span className="hidden md:inline text-[9px] font-bold uppercase tracking-wider text-[#514347] mt-1">Account</span>
-        )}
+        <span
+          className="
+            flex
+            flex-col
+            items-center
+            justify-center
+          "
+        >
+          <span
+            className="
+              flex
+              items-center
+              justify-center
+            "
+          >
+            <AccountIcon
+              onDarkHero={onDarkHero}
+              open={open}
+            />
+
+            {isLabelled && (
+              <ChevronIcon
+                open={open}
+                onDarkHero={
+                  onDarkHero
+                }
+              />
+            )}
+          </span>
+
+          {isLabelled && (
+            <AccountLabel
+              onDarkHero={onDarkHero}
+            />
+          )}
+        </span>
       </button>
+
+      {/* ======================================================
+          ACCOUNT DROPDOWN
+      ======================================================= */}
 
       {open && (
         <div
           role="menu"
           aria-labelledby={menuId}
-          className="absolute right-0 top-[calc(100%+0.45rem)] z-[60] min-w-[11.5rem] overflow-hidden rounded-xl border border-[#d4af37]/20 bg-[#fdf9f4] py-1 shadow-[0_18px_48px_rgba(19,0,6,0.14)]"
+          className="
+            absolute
+            right-0
+            top-[calc(100%+0.7rem)]
+            z-[60]
+            w-[190px]
+            overflow-hidden
+            border
+            border-[#1b0b12]/10
+            bg-[#fffdfb]
+            shadow-[0_16px_45px_rgba(27,11,18,0.10)]
+          "
         >
+          {/* -----------------------------------------------
+              ACCOUNT HEADER
+          ------------------------------------------------ */}
+
+          <div
+            className="
+              border-b
+              border-[#1b0b12]/8
+              px-4
+              py-4
+            "
+          >
+            <p
+              className="
+                text-[9px]
+                font-semibold
+                uppercase
+                tracking-[0.16em]
+                text-[#9b8c90]
+              "
+            >
+              My account
+            </p>
+
+            {profile?.name && (
+              <p
+                className="
+                  mt-1
+                  truncate
+                  font-serif
+                  text-[15px]
+                  text-[#1b0b12]
+                "
+              >
+                {profile.name}
+              </p>
+            )}
+
+            {!profile?.name &&
+              user?.email && (
+                <p
+                  className="
+                    mt-1
+                    truncate
+                    text-[10px]
+                    text-[#75696d]
+                  "
+                >
+                  {user.email}
+                </p>
+              )}
+          </div>
+
+          {/* -----------------------------------------------
+              ORDERS
+          ------------------------------------------------ */}
+
           <NavLink
             to="/account/orders"
             role="menuitem"
@@ -130,10 +393,37 @@ export default function AccountNavMenu({ scrolled, onDarkHero, onNavigate, varia
               setOpen(false)
               onNavigate?.()
             }}
-            className={({ isActive }) => `${itemClass} ${isActive ? 'bg-[#f1ede8] font-semibold' : ''}`}
+            className={({ isActive }) =>
+              `
+                ${itemClass}
+                ${
+                  isActive
+                    ? 'bg-[#f7f3ee] text-[#3d0a21]'
+                    : ''
+                }
+              `
+            }
           >
-            My orders
+            <span className="flex-1">
+              My orders
+            </span>
+
+            <span
+              className="
+                text-[#aaa0a2]
+                transition-transform
+                duration-200
+                group-hover:translate-x-0.5
+              "
+            >
+              →
+            </span>
           </NavLink>
+
+          {/* -----------------------------------------------
+              ADMIN
+          ------------------------------------------------ */}
+
           {profile?.role === 'admin' && (
             <Link
               to="/admin/panel"
@@ -144,21 +434,43 @@ export default function AccountNavMenu({ scrolled, onDarkHero, onNavigate, varia
               }}
               className={itemClass}
             >
-              Admin dashboard
+              <span className="flex-1">
+                Admin dashboard
+              </span>
+
+              <span className="text-[#aaa0a2]">
+                →
+              </span>
             </Link>
           )}
-          <button
-            type="button"
-            role="menuitem"
-            onClick={() => {
-              setOpen(false)
-              onNavigate?.()
-              void logout()
-            }}
-            className={`${itemClass} border-t border-[#d4af37]/15 text-[#6f334a]`}
+
+          {/* -----------------------------------------------
+              SIGN OUT
+          ------------------------------------------------ */}
+
+          <div
+            className="
+              border-t
+              border-[#1b0b12]/8
+            "
           >
-            Sign out
-          </button>
+            <button
+              type="button"
+              role="menuitem"
+              onClick={() => {
+                setOpen(false)
+                onNavigate?.()
+                void logout()
+              }}
+              className={`
+                ${itemClass}
+                text-[#76505d]
+                hover:bg-[#faf3f5]
+              `}
+            >
+              Sign out
+            </button>
+          </div>
         </div>
       )}
     </div>

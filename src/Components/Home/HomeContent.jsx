@@ -3,6 +3,7 @@ import { useHomeShopPreload } from "../../hooks/useHomeShopPreload";
 import Hero from "./Hero";
 import HomeBrandSeo from "./HomeBrandSeo";
 import LazySection from "../Performance/LazySection";
+import VelisqaLoader from "../Common/VelisqaLoader";
 
 const IconsOfElegance = lazy(() => import("./IconsOfElegance"));
 
@@ -17,6 +18,10 @@ const HomeFooter = lazy(() => import("./HomeFooter"));
 
 export default function HomeContent() {
   const homeShopCatalog = useHomeShopPreload();
+
+  if (homeShopCatalog.loading) {
+    return <VelisqaLoader fullScreen={true} />;
+  }
 
   return (
     <main className="bg-[#f9f5f0] text-[#130006]">

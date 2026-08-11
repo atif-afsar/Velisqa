@@ -1,94 +1,192 @@
 import { useCart } from '../../context/CartContext'
 
+function BagIcon({ size = 21 }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+      className="transition-transform duration-300"
+    >
+      <path
+        d="M6.5 8.5h11l-.7 11H7.2l-.7-11Z"
+        stroke="currentColor"
+        strokeWidth="1.35"
+        strokeLinejoin="round"
+      />
+
+      <path
+        d="M9 8.5V6.8a3 3 0 0 1 6 0v1.7"
+        stroke="currentColor"
+        strokeWidth="1.35"
+        strokeLinecap="round"
+      />
+    </svg>
+  )
+}
+
+function BagBadge({ count }) {
+  if (!count) return null
+
+  return (
+    <span
+      className="
+        absolute
+        -right-2
+        -top-2
+        flex
+        h-[15px]
+        min-w-[15px]
+        items-center
+        justify-center
+        rounded-full
+        bg-[#3d0a21]
+        px-1
+        text-[8px]
+        font-bold
+        leading-none
+        tabular-nums
+        text-white
+        ring-2
+        ring-[#fffdfb]
+      "
+    >
+      {count > 99 ? '99+' : count}
+    </span>
+  )
+}
+
 export default function CartNavLink({
   variant = 'text',
-  onDarkHero,
-  scrolled,
+  onDarkHero = false,
+  scrolled = true,
   onClick,
   className = '',
 }) {
-  const { itemCount, openCartDrawer } = useCart()
-  const handleClick = (event) => {
+  const {
+    itemCount,
+    openCartDrawer,
+  } = useCart()
+
+  function handleClick(event) {
     onClick?.(event)
     openCartDrawer()
   }
-  const badge =
-    itemCount > 0 ? (
-      <span
-        className={`absolute flex items-center justify-center rounded-full font-bold tabular-nums ${
-          variant === 'icon' || variant === 'plain' || variant === 'labelled'
-            ? `-right-1.5 -top-1.5 h-[16px] min-w-[16px] px-1 text-[9px] bg-[#3B0D23] text-white`
-            : `-right-2 -top-1.5 h-4 min-w-[1rem] px-1 text-[9px] ${
-                onDarkHero ? 'bg-[#e9c349] text-[#130006]' : 'bg-[#3d0a21] text-[#fdf9f4]'
-              }`
-        }`}
-      >
-        {itemCount > 99 ? '99+' : itemCount}
-      </span>
-    ) : null
 
-  if (variant === 'icon' || variant === 'plain' || variant === 'labelled') {
-    const plain = variant === 'plain' || variant === 'labelled'
+  // ------------------------------------------------------------
+  // ICON / PLAIN / LABELLED
+  // ------------------------------------------------------------
+
+  if (
+    variant === 'icon' ||
+    variant === 'plain' ||
+    variant === 'labelled'
+  ) {
+    const labelled =
+      variant === 'labelled'
+
     return (
       <button
         type="button"
         onClick={handleClick}
-        aria-label={itemCount > 0 ? `Bag, ${itemCount} items` : 'Bag'}
-        className={`relative flex flex-col items-center justify-center shrink-0 transition-all duration-200 ${
-          variant === 'labelled'
-            ? 'h-11 px-2 text-[#130006] hover:opacity-75'
-            : plain
-              ? 'h-10 w-10 text-[#130006] hover:opacity-70'
-              : `h-9 w-9 rounded-full border max-md:h-9 max-md:w-9 ${
-                  onDarkHero
-                    ? 'border-white/30 text-white hover:border-white/50 hover:bg-white/10'
-                    : 'border-[#130006]/12 text-[#130006] hover:border-[#3d0a21]/30 hover:bg-[#3d0a21]/5'
-                }`
-        } ${className}`}
+        aria-label={
+          itemCount > 0
+            ? `Bag, ${itemCount} items`
+            : 'Bag'
+        }
+        className={`
+          group
+          relative
+          inline-flex
+          shrink-0
+          items-center
+          justify-center
+          text-[#1b0b12]
+          transition-opacity
+          duration-200
+          hover:opacity-60
+
+          ${
+            labelled
+              ? 'min-h-10 min-w-[44px] px-1.5'
+              : 'h-10 w-10'
+          }
+
+          ${className}
+        `}
       >
-        <div className="relative">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
-            <path
-              d="M6 6h15l-1.5 9h-12L6 6zm0 0L5 3H2M9 20a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          {badge}
-        </div>
-        {variant === 'labelled' && (
-          <span className="hidden md:inline text-[9px] font-bold uppercase tracking-wider text-[#514347] mt-1">Cart</span>
+        <span className="relative">
+          <BagIcon />
+
+          <BagBadge count={itemCount} />
+        </span>
+
+        {labelled && (
+          <span
+            className="
+              ml-1.5
+              hidden
+              text-[8px]
+              font-semibold
+              uppercase
+              tracking-[0.14em]
+              text-[#514347]
+              md:block
+            "
+          >
+            Bag
+          </span>
         )}
       </button>
     )
   }
 
+  // ------------------------------------------------------------
+  // TEXT VARIANT
+  // ------------------------------------------------------------
+
   return (
     <button
       type="button"
       onClick={handleClick}
-      className={`relative inline-flex items-center gap-1.5 py-0.5 font-medium transition-colors duration-200 ${
-        scrolled ? 'text-[0.62rem] tracking-[0.1em]' : 'text-[0.72rem] tracking-[0.12em]'
-      } ${
-        onDarkHero
-          ? 'text-white/80 hover:text-[#d4af37]'
-          : 'text-[#514347]/80 hover:text-[#130006]'
-      } ${className}`}
-      aria-label={itemCount > 0 ? `Bag, ${itemCount} items` : 'Bag'}
+      aria-label={
+        itemCount > 0
+          ? `Bag, ${itemCount} items`
+          : 'Bag'
+      }
+      className={`
+        group
+        relative
+        inline-flex
+        items-center
+        gap-2
+        text-[#514347]
+        transition-colors
+        duration-200
+        hover:text-[#1b0b12]
+
+        ${
+          scrolled
+            ? 'text-[10px] tracking-[0.12em]'
+            : 'text-[11px] tracking-[0.14em]'
+        }
+
+        ${onDarkHero ? 'text-white/85 hover:text-white' : ''}
+
+        ${className}
+      `}
     >
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden className="shrink-0">
-        <path
-          d="M6 6h15l-1.5 9h-12L6 6zm0 0L5 3H2M9 20a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-      <span className="hidden sm:inline">Bag</span>
-      {badge}
+      <span className="relative">
+        <BagIcon size={19} />
+
+        <BagBadge count={itemCount} />
+      </span>
+
+      <span className="hidden uppercase sm:inline">
+        Bag
+      </span>
     </button>
   )
 }
