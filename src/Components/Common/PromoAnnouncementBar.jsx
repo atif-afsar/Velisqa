@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { useReducedMotion } from 'framer-motion'
 
 const MARQUEE_SEGMENTS = [
-  'Handcrafted Premium Jewellery',
+  'Luxury Fashion Jewellery',
   'Free Shipping PAN India',
   'Easy Returns & Exchanges',
 ]

@@ -143,9 +143,14 @@ export default function ProductFilters({ facets, filters, onChange, onClear, res
         <button
           type="button"
           onClick={() => setDrawerOpen(true)}
-          className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#3d0a21]/20 bg-white px-4 text-xs font-bold uppercase tracking-[0.1em] text-[#3d0a21] lg:hidden"
+          className="inline-flex py-[2px] px-[6px] items-center gap-1 rounded-sm border border-[#3d0a21]/20 bg-white text-[7px] font-semibold uppercase tracking-[0.06em] text-[#3d0a21] lg:hidden outline-none"
         >
-          Filters {activeCount > 0 && <span className="rounded-full bg-[#3d0a21] px-1.5 py-0.5 text-[9px] text-white">{activeCount}</span>}
+          <span>Filters</span>
+          {activeCount > 0 && (
+            <span className="rounded-sm bg-[#3d0a21] px-1 py-0.2 text-[5.5px] font-bold text-white leading-none">
+              {activeCount}
+            </span>
+          )}
         </button>
 
         <p className="text-xs text-[#847377]">
@@ -179,8 +184,8 @@ export default function ProductFilters({ facets, filters, onChange, onClear, res
               <FilterFields facets={facets} filters={filters} onChange={onChange} />
             </div>
             <div className="grid grid-cols-2 gap-2 border-t border-[#847377]/15 bg-white p-4">
-              <button type="button" onClick={() => onChange({ ...EMPTY_PRODUCT_FILTERS })} className="rounded-full border border-[#3d0a21]/20 px-4 py-3 text-xs font-bold uppercase tracking-[0.1em] text-[#3d0a21]">Clear all</button>
-              <button type="button" onClick={() => setDrawerOpen(false)} className="rounded-full bg-[#3d0a21] px-4 py-3 text-xs font-bold uppercase tracking-[0.1em] text-[#f7ead0]">Show {resultCount}</button>
+              <button type="button" onClick={() => onChange({ ...EMPTY_PRODUCT_FILTERS })} className="rounded-sm border border-[#3d0a21]/20 px-4 py-2.5 text-xs font-bold uppercase tracking-[0.1em] text-[#3d0a21]">Clear all</button>
+              <button type="button" onClick={() => setDrawerOpen(false)} className="rounded-sm bg-[#3d0a21] px-4 py-2.5 text-xs font-bold uppercase tracking-[0.1em] text-[#f7ead0]">Show {resultCount}</button>
             </div>
           </section>
         </div>

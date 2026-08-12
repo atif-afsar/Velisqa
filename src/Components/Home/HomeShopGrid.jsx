@@ -9,6 +9,7 @@ import {
 } from "../../lib/productCategories";
 import { HOME_SHOP_PRODUCT_LIMIT } from "../../lib/preloadImages";
 import ProductCard from "../Product/ProductCard";
+import { CategoryPill, CategoryPillRow } from "../Common/CategoryPills";
 
 export default function HomeShopGrid({ products, loading, error: fetchError }) {
   const { hash } = useLocation();
@@ -247,85 +248,25 @@ export default function HomeShopGrid({ products, loading, error: fetchError }) {
           className="
             border-y
             border-[#1b0b12]/10
+            py-3
           "
         >
-          <div
-            className="
-              flex
-              items-center
-              justify-start
-              gap-7
-              overflow-x-auto
-              overflow-y-hidden
-              py-3
-              scrollbar-hide
-              sm:justify-center
-              sm:gap-10
-            "
-          >
+          <CategoryPillRow scrollable className="w-full">
             {SIGNATURE_CATEGORIES.map((category) => {
               const isActive = category === activeCategory;
-
               const count = grouped[category]?.length ?? 0;
 
               return (
-                <button
+                <CategoryPill
                   key={category}
-                  type="button"
+                  active={isActive}
+                  label={category}
+                  count={count}
                   onClick={() => handleCategoryChange(category)}
-                  className={`
-                      relative
-                      shrink-0
-                      py-2
-                      text-[10px]
-                      font-medium
-                      uppercase
-                      tracking-[0.16em]
-                      transition-colors
-                      duration-200
-
-                      ${
-                        isActive
-                          ? "text-[#3d0a21]"
-                          : "text-[#81777a] hover:text-[#3d0a21]"
-                      }
-                    `}
-                >
-                  {category}
-
-                  {/* COUNT */}
-
-                  <sup
-                    className={`
-                        ml-1
-                        text-[7px]
-
-                        ${isActive ? "text-[#b18d50]" : "text-[#aaa2a3]"}
-                      `}
-                  >
-                    {count}
-                  </sup>
-
-                  {/* ACTIVE LINE */}
-
-                  <span
-                    className={`
-                        pointer-events-none
-                        absolute
-                        bottom-[-1px]
-                        left-0
-                        h-[1px]
-                        bg-[#b18d50]
-                        transition-all
-                        duration-200
-
-                        ${isActive ? "w-full" : "w-0"}
-                      `}
-                  />
-                </button>
+                />
               );
             })}
-          </div>
+          </CategoryPillRow>
         </div>
 
         {/* =====================================================

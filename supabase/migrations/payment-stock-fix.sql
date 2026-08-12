@@ -20,6 +20,7 @@ declare
   v_access_token uuid;
   v_subtotal numeric(12, 2);
   v_discount_amount numeric(12, 2);
+  v_gift_wrap_fee numeric(12, 2);
   v_grand_total numeric(12, 2);
   v_coupon_code text;
   v_item jsonb;
@@ -28,6 +29,7 @@ declare
   v_payment_method text;
   v_payment_status text;
   v_coupon public.coupons%rowtype;
+  v_gift_wrap boolean;
 begin
   if jsonb_typeof(p_items) <> 'array' or jsonb_array_length(p_items) = 0 then
     raise exception 'Your bag is empty.';
@@ -95,7 +97,14 @@ begin
     end if;
   end if;
 
-  v_grand_total := greatest(0.00, v_subtotal - v_discount_amount);
+  v_gift_wrap := coalesce((p_customer->>'giftWrap')::boolean, false);
+  v_gift_wrap_fee := case when v_gift_wrap then 50.00 else 0.00 end;
+
+  v_grand_total := greatest(0.00, v_subtotal - v_discount_amount) + v_gift_wrap_fee;
+
+  if v_payment_method = 'cod' then
+    v_grand_total := v_grand_total + 50.00 + round(greatest(0.00, v_subtotal - v_discount_amount) * 0.02, 2);
+  end if;
 
   insert into public.orders (
     user_id,
@@ -114,6 +123,8 @@ begin
     delivery_charge,
     discount_amount,
     coupon_code,
+    gift_wrap,
+    gift_wrap_fee,
     grand_total,
     order_status,
     shipping_status
@@ -131,9 +142,11 @@ begin
     v_payment_method,
     v_payment_status,
     v_subtotal,
-    0.00,
+    case when v_payment_method = 'cod' then 50.00 else 0.00 end,
     v_discount_amount,
     nullif(v_coupon_code, ''),
+    v_gift_wrap,
+    v_gift_wrap_fee,
     v_grand_total,
     'placed',
     'not_shipped'

@@ -9,45 +9,43 @@ export function CategoryPill({ active, onClick, label, count, className = '' }) 
       className={`
         relative
         shrink-0
-        py-2.5
-        px-1
-        text-[9px]
-        font-medium
+        inline-flex
+        items-center
+        justify-center
+        py-[2px]
+        px-[6px]
+        text-[7px]
+        sm:text-[7.5px]
+        font-semibold
         uppercase
-        tracking-[0.18em]
-        transition-colors
+        tracking-[0.06em]
+        rounded-sm
+        border
+        transition-all
         duration-200
         outline-none
-        ${active ? 'text-[#3d0a21]' : 'text-[#81777a] hover:text-[#3d0a21]'}
+        ${
+          active
+            ? 'bg-[#3d0a21] border-[#3d0a21] text-white'
+            : 'bg-[#130006]/[0.03] border-transparent text-[#6e5d62] hover:bg-[#130006]/[0.06] hover:text-[#3d0a21]'
+        }
         ${className}
       `}
     >
-      {label}
+      <span>{label}</span>
       {count > 0 && (
-        <sup
+        <span
           className={`
             ml-1
-            text-[6px]
+            text-[5.5px]
+            font-bold
             tabular-nums
-            ${active ? 'text-[#b18d50]' : 'text-[#aaa2a3]'}
+            ${active ? 'text-[#e5d5be]' : 'text-[#9c8e92]'}
           `}
         >
           {count}
-        </sup>
+        </span>
       )}
-      <span
-        className={`
-          pointer-events-none
-          absolute
-          bottom-[-4px]
-          left-0
-          h-[1.5px]
-          bg-[#b18d50]
-          transition-all
-          duration-200
-          ${active ? 'w-full' : 'w-0'}
-        `}
-      />
     </button>
   )
 }
@@ -60,11 +58,12 @@ export function CategoryPillRow({ children, scrollable = false, className = '' }
           -mx-1 
           flex 
           min-w-0 
-          gap-6 
+          gap-2
           overflow-x-auto 
           px-1 
           [scrollbar-width:none] 
-          sm:gap-9 
+          sm:gap-3 
+          lg:justify-center
           [&::-webkit-scrollbar]:hidden 
           ${className}
         `}
@@ -81,8 +80,8 @@ export function CategoryPillRow({ children, scrollable = false, className = '' }
         flex-wrap 
         items-center 
         justify-center 
-        gap-6 
-        sm:gap-9 
+        gap-2
+        sm:gap-3 
         ${className}
       `}
     >
@@ -90,3 +89,4 @@ export function CategoryPillRow({ children, scrollable = false, className = '' }
     </div>
   )
 }
+

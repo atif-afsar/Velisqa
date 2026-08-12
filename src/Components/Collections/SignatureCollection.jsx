@@ -120,8 +120,8 @@ export default function SignatureCollection() {
         className="sticky top-[calc(var(--nav-height)+env(safe-area-inset-top,0px))] z-40 isolate border-b border-black/8 bg-white shadow-[0_4px_16px_rgba(19,0,6,0.06)]"
       >
         <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-10">
-          <div className="flex items-center gap-2 py-3 sm:gap-3">
-            <CategoryPillRow scrollable className="flex-1">
+          <div className="relative flex items-center justify-center py-3">
+            <CategoryPillRow scrollable className="flex-1 lg:flex-initial">
               {PRODUCT_CATEGORIES.map((category) => {
                 const isActive = category === activeCategory
                 const count = grouped[category]?.length ?? 0
@@ -138,7 +138,7 @@ export default function SignatureCollection() {
               })}
             </CategoryPillRow>
 
-            <div className="hidden shrink-0 items-center lg:flex">
+            <div className="hidden shrink-0 items-center lg:absolute lg:right-10 lg:top-1/2 lg:-translate-y-1/2 lg:flex">
               <CustomSelect
                 value={filters.sort}
                 onChange={handleSortChange}

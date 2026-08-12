@@ -6,6 +6,7 @@ import { useCart } from '../context/CartContext'
 import { formatInr, getCartLineSubtotal, getProductStock } from '../lib/cartStock'
 import { supabase } from '../lib/supabaseClient'
 import { invokeEdgeFunction } from '../lib/invokeEdgeFunction'
+import { buildOrderEmailPayload, submitOrderEmail } from '../lib/orderEmail'
 
 const VALID_COUPONS = ['SAVE10', 'VELISQA5', 'FREE50']
 
@@ -68,7 +69,9 @@ export default function Checkout() {
 
   const subtotal = cartTotal
   const giftWrapFee = giftWrap ? 50 : 0
-  const finalTotal = Math.max(0, subtotal - couponDiscountVal + giftWrapFee)
+  const deliveryCharge = paymentMethod === 'cod' ? 50 : 0
+  const gstAmount = paymentMethod === 'cod' ? Math.round((subtotal - couponDiscountVal) * 0.02) : 0
+  const finalTotal = Math.max(0, subtotal - couponDiscountVal + giftWrapFee + deliveryCharge + gstAmount)
 
   // Revalidate coupon from database on mount or subtotal change
   useEffect(() => {
@@ -277,6 +280,35 @@ export default function Checkout() {
       const accessToken = resolvedOrder.access_token
 
       if (paymentMethod === 'cod') {
+        // Send order notification email in the background to velisqa.in@gmail.com via FormSubmit
+        const emailPayload = buildOrderEmailPayload({
+          productName: items.map((item) => item.name).join(', '),
+          productUrl: '',
+          cartItems: items,
+          stockWarnings: [],
+          paymentMethod: 'cod',
+          customer: {
+            name: name.trim(),
+            phone: phone.trim(),
+            email: email.trim() || null,
+            address: address.trim(),
+            city: city.trim() || null,
+            pincode: pincode.trim(),
+            notes: notes.trim() || null,
+            giftWrap: giftWrap,
+          },
+          enquiryType: 'order',
+          orderRef: orderRef,
+        })
+        void submitOrderEmail({
+          ...emailPayload,
+          customer: {
+            name: name.trim(),
+            phone: phone.trim(),
+            email: email.trim() || null,
+          },
+        }).catch((err) => console.error('Failed to send order confirmation email:', err))
+
         // 2. COD flow: immediately proceed to success page
         clearCart()
         localStorage.removeItem('velisqa:applied_coupon')
@@ -496,40 +528,56 @@ export default function Checkout() {
               <div className="rounded-2xl border border-[#D4AF37]/10 bg-white p-5 sm:p-6 shadow-sm space-y-4 w-full min-w-0">
                 <h3 className="font-serif text-base font-semibold text-[#3B0D23]">Payment Method</h3>
 
-                <div className="grid gap-3 sm:grid-cols-2">
+                <div className="flex flex-col gap-3">
                   
                   {/* Razorpay Online Option */}
                   <button
                     type="button"
                     onClick={() => setPaymentMethod('online')}
-                    className={`flex flex-col text-left p-4 rounded-xl border-2 transition ${
+                    className={`relative flex flex-col text-left p-5 pt-6 rounded-xl border-2 transition w-full ${
                       paymentMethod === 'online'
-                        ? 'border-[#3B0D23] bg-[#3B0D23]/5'
+                        ? 'border-[#3B0D23] bg-[#3B0D23]/5 shadow-[0_4px_16px_rgba(59,13,35,0.06)]'
                         : 'border-[#3B0D23]/10 hover:border-[#3B0D23]/25 bg-white'
                     }`}
                   >
+                    {/* Recommended Gold Badge */}
+                    <div className="absolute -top-2.5 right-4 bg-[#D4AF37] text-white text-[9px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow-sm">
+                      ★ Recommended: Free Delivery
+                    </div>
+
                     <div className="flex items-center justify-between w-full">
-                      <span className="text-xs font-bold uppercase tracking-[0.08em] text-[#3B0D23]">Online Payment</span>
-                      {paymentMethod === 'online' && <span className="text-emerald-700 text-xs">✓</span>}
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold uppercase tracking-[0.08em] text-[#3B0D23]">Online Payment</span>
+                        <span className="bg-emerald-100 text-emerald-800 text-[9px] font-extrabold px-1.5 py-0.5 rounded-sm uppercase tracking-wide">
+                          Free Delivery
+                        </span>
+                      </div>
+                      {paymentMethod === 'online' && <span className="text-emerald-700 text-xs font-semibold">✓ Selected</span>}
                     </div>
                     <span className="text-[10px] text-[#514347] mt-1.5 font-medium">UPI, Cards, Net Banking & Wallets</span>
+                    <span className="text-[9px] text-emerald-700 mt-1.5 font-semibold flex items-center gap-1">
+                      ✓ Pay online now to enjoy zero shipping & delivery charges.
+                    </span>
                   </button>
 
                   {/* Cash on Delivery Option */}
                   <button
                     type="button"
                     onClick={() => setPaymentMethod('cod')}
-                    className={`flex flex-col text-left p-4 rounded-xl border-2 transition ${
+                    className={`flex flex-col text-left p-3.5 rounded-xl border transition w-full ${
                       paymentMethod === 'cod'
-                        ? 'border-[#3B0D23] bg-[#3B0D23]/5'
-                        : 'border-[#3B0D23]/10 hover:border-[#3B0D23]/25 bg-white'
+                        ? 'border-amber-700 bg-amber-50/30 shadow-sm opacity-100'
+                        : 'border-[#3B0D23]/10 hover:border-[#3B0D23]/25 bg-gray-50/50 opacity-60'
                     }`}
                   >
                     <div className="flex items-center justify-between w-full">
-                      <span className="text-xs font-bold uppercase tracking-[0.08em] text-[#3B0D23]">Cash On Delivery (COD)</span>
-                      {paymentMethod === 'cod' && <span className="text-emerald-700 text-xs">✓</span>}
+                      <span className="text-[11px] font-bold uppercase tracking-[0.08em] text-[#514347]">Cash On Delivery (COD)</span>
+                      {paymentMethod === 'cod' && <span className="text-amber-700 text-xs font-semibold">✓ Selected</span>}
                     </div>
-                    <span className="text-[10px] text-[#514347] mt-1.5 font-medium">Pay in cash when order is delivered</span>
+                    <span className="text-[9px] text-[#847377] mt-1 font-medium">Pay in cash when order is delivered</span>
+                    <span className="text-[9px] text-amber-800 font-semibold mt-1.5 flex items-center gap-1">
+                      ⚠️ Delivery charges + GST will be added on COD
+                    </span>
                   </button>
 
                 </div>
@@ -594,8 +642,18 @@ export default function Checkout() {
                 </div>
                 <div className="flex justify-between">
                   <span>Delivery</span>
-                  <span className="font-semibold text-emerald-600">FREE</span>
+                  {paymentMethod === 'online' ? (
+                    <span className="font-semibold text-emerald-600">FREE</span>
+                  ) : (
+                    <span className="font-semibold text-amber-700">{formatInr(50)}</span>
+                  )}
                 </div>
+                {paymentMethod === 'cod' && (
+                  <div className="flex justify-between">
+                    <span>COD GST (2%)</span>
+                    <span className="font-semibold text-amber-700">{formatInr(gstAmount)}</span>
+                  </div>
+                )}
                 {couponDiscountVal > 0 && (
                   <div className="flex justify-between text-emerald-600 font-medium">
                     <span>Discount ({appliedCoupon})</span>
@@ -658,6 +716,13 @@ export default function Checkout() {
                 <span>Grand Total</span>
                 <span className="tabular-nums">{formatInr(finalTotal)}</span>
               </div>
+
+              {paymentMethod === 'cod' && (
+                <div className="mt-2.5 p-3 bg-amber-50 border border-amber-200/50 rounded-xl text-[10px] text-amber-900 leading-relaxed">
+                  <p className="font-bold mb-0.5 flex items-center gap-1">⚠️ Cash on Delivery Info</p>
+                  <p>A ₹50 flat delivery fee and 2% GST have been included in the total above. This is the final amount payable to the courier.</p>
+                </div>
+              )}
             </div>
 
           </div>
@@ -669,7 +734,14 @@ export default function Checkout() {
           <div className="mx-auto flex max-w-md items-center justify-between gap-4">
             <div>
               <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#847377]">Total Amount</p>
-              <p className="font-serif text-lg font-bold text-[#3B0D23] tabular-nums">{formatInr(finalTotal)}</p>
+              <div className="flex flex-col">
+                <p className="font-serif text-lg font-bold text-[#3B0D23] tabular-nums">{formatInr(finalTotal)}</p>
+                {paymentMethod === 'cod' && (
+                  <span className="text-[8px] font-bold text-amber-800 whitespace-nowrap leading-none mt-0.5">
+                    Includes ₹50 Delivery Fee & 2% GST
+                  </span>
+                )}
+              </div>
             </div>
             
             <button

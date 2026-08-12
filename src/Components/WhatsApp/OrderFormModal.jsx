@@ -485,40 +485,78 @@ export default function OrderFormModal({
                         <legend className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#514347]">
                           Payment method <span className="text-[#6f334a]">*</span>
                         </legend>
-                        <div className="grid grid-cols-2 gap-2">
-                          {PAYMENT_OPTIONS.map((option) => {
-                            const selected = paymentMethod === option.value;
-                            return (
-                              <label
-                                key={option.value}
-                                className={`flex min-w-0 cursor-pointer items-start gap-2 rounded-lg border px-2.5 py-2 transition max-sm:min-h-0 sm:tap-target sm:gap-2.5 sm:rounded-xl sm:px-3 sm:py-2.5 ${
-                                  selected
-                                    ? "border-[#3d0a21] bg-[#3d0a21]/[0.08] ring-2 ring-[#3d0a21]/20 shadow-sm"
-                                    : "border-[#130006]/12 bg-white hover:border-[#3d0a21]/25"
-                                }`}
-                              >
-                                <input
-                                  type="radio"
-                                  name="paymentMethod"
-                                  value={option.value}
-                                  checked={selected}
-                                  onChange={() => setPaymentMethod(option.value)}
-                                  className="sr-only"
-                                />
-                                <span className="text-sm leading-none sm:text-base" aria-hidden>
-                                  {option.icon}
+                        <div className="flex flex-col gap-2.5">
+                          {/* Razorpay Online Option */}
+                          <label
+                            className={`relative flex min-w-0 cursor-pointer items-start gap-2.5 rounded-xl border p-4.5 transition w-full ${
+                              paymentMethod === 'online'
+                                ? "border-[#3d0a21] bg-[#3d0a21]/[0.05] ring-2 ring-[#3d0a21]/20 shadow-sm"
+                                : "border-[#130006]/12 bg-white hover:border-[#3d0a21]/25"
+                            }`}
+                          >
+                            <input
+                              type="radio"
+                              name="paymentMethod"
+                              value="online"
+                              checked={paymentMethod === 'online'}
+                              onChange={() => setPaymentMethod('online')}
+                              className="sr-only"
+                            />
+                            <span className="text-sm leading-none mt-0.5" aria-hidden>
+                              💳
+                            </span>
+                            <span className="min-w-0 flex-1">
+                              <span className="flex items-center gap-1.5 flex-wrap">
+                                <span className="block text-[11px] font-bold leading-snug text-[#130006]">
+                                  Online Payment (Card, UPI, Wallets)
                                 </span>
-                                <span className="min-w-0 flex-1">
-                                  <span className="block text-[10px] font-semibold leading-snug text-[#130006] sm:text-xs">
-                                    {option.label}
-                                  </span>
-                                  <span className="mt-0.5 block text-[9px] leading-snug text-[#847377] sm:text-[10px]">
-                                    {option.hint}
-                                  </span>
+                                <span className="bg-emerald-100 text-emerald-800 text-[8px] font-extrabold px-1.5 py-0.5 rounded-sm uppercase tracking-wide leading-none">
+                                  Free Delivery
                                 </span>
-                              </label>
-                            );
-                          })}
+                              </span>
+                              <span className="mt-1 block text-[9px] leading-snug text-[#847377]">
+                                Pay securely via Razorpay
+                              </span>
+                              <span className="mt-1 block text-[9px] font-semibold text-emerald-700">
+                                ✓ Pay online now for completely free delivery.
+                              </span>
+                            </span>
+                            <div className="absolute top-2 right-3 text-[8px] font-extrabold text-[#D4AF37] uppercase tracking-wider">
+                              ★ Recommended
+                            </div>
+                          </label>
+
+                          {/* Cash on Delivery Option */}
+                          <label
+                            className={`flex min-w-0 cursor-pointer items-start gap-2.5 rounded-lg border p-3 transition w-full ${
+                              paymentMethod === 'cod'
+                                ? "border-amber-700 bg-amber-50/20 opacity-100 shadow-sm"
+                                : "border-[#130006]/12 bg-gray-50/50 opacity-60 hover:opacity-80"
+                            }`}
+                          >
+                            <input
+                              type="radio"
+                              name="paymentMethod"
+                              value="cod"
+                              checked={paymentMethod === 'cod'}
+                              onChange={() => setPaymentMethod('cod')}
+                              className="sr-only"
+                            />
+                            <span className="text-sm leading-none mt-0.5" aria-hidden>
+                              💵
+                            </span>
+                            <span className="min-w-0 flex-1">
+                              <span className="block text-[10px] font-bold leading-snug text-[#130006]">
+                                Cash on Delivery (COD)
+                              </span>
+                              <span className="mt-0.5 block text-[9px] leading-snug text-[#847377]">
+                                Pay when your order arrives
+                              </span>
+                              <span className="mt-1 block text-[9px] font-semibold text-amber-800">
+                                ⚠️ Delivery charges + GST will be added on COD
+                              </span>
+                            </span>
+                          </label>
                         </div>
                       </fieldset>
                     )}

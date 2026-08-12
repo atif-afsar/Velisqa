@@ -21,11 +21,11 @@ export default function CustomSelect({ value, onChange, options, className = '' 
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex min-h-10 items-center justify-between gap-1.5 rounded-full border border-[#847377]/20 bg-white px-4 text-xs font-semibold uppercase tracking-[0.06em] text-[#514347] shadow-sm outline-none transition-all hover:border-[#3d0a21]/30 active:scale-[0.98]"
+        className="flex py-[2px] px-[6px] sm:py-[3px] sm:px-[8px] items-center justify-between gap-1 rounded-sm border border-[#847377]/20 bg-white text-[7px] sm:text-[7.5px] font-semibold uppercase tracking-[0.06em] text-[#514347] shadow-sm outline-none transition-all hover:border-[#3d0a21]/30 active:scale-[0.98]"
       >
         <span>{selectedOption ? selectedOption.label : ''}</span>
         <svg
-          className={`h-4 w-4 text-[#847377] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+          className={`h-2.5 w-2.5 text-[#847377] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
           fill="currentColor"
@@ -40,7 +40,7 @@ export default function CustomSelect({ value, onChange, options, className = '' 
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 z-50 mt-1 w-44 origin-top-right rounded-xl border border-[#d4af37]/20 bg-white p-1.5 shadow-[0_10px_30px_rgba(61,10,33,0.08)] outline-none">
+        <div className="absolute right-0 z-50 mt-1 w-44 origin-top-right rounded-sm border border-[#d4af37]/20 bg-white p-1 shadow-[0_6px_20px_rgba(61,10,33,0.08)] outline-none">
           <div className="space-y-0.5" role="none">
             {options.map((option) => {
               const isSelected = option.value === value
@@ -52,7 +52,7 @@ export default function CustomSelect({ value, onChange, options, className = '' 
                     onChange(option.value)
                     setIsOpen(false)
                   }}
-                  className={`flex w-full items-center px-3.5 py-2 text-left text-xs transition-colors rounded-lg font-medium ${
+                  className={`flex w-full items-center px-3 py-1.5 text-left text-[11px] transition-colors rounded-sm font-medium ${
                     isSelected
                       ? 'bg-[#3d0a21] text-[#fdf9f4]'
                       : 'text-[#514347] hover:bg-[#3d0a21]/5 hover:text-[#3d0a21]'

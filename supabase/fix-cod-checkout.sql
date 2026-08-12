@@ -16,6 +16,7 @@ declare
   v_order_ref text;
   v_access_token uuid;
   v_subtotal numeric(12, 2);
+  v_grand_total numeric(12, 2);
   v_item jsonb;
   v_product public.products%rowtype;
   v_quantity integer;
@@ -67,6 +68,11 @@ begin
     raise exception 'One or more products are unavailable in the requested quantity.';
   end if;
 
+  v_grand_total := v_subtotal;
+  if v_payment_method = 'cod' then
+    v_grand_total := v_grand_total + 50.00 + round(v_grand_total * 0.02, 2);
+  end if;
+
   insert into public.orders (
     user_id,
     customer_name,
@@ -99,8 +105,8 @@ begin
     v_payment_method,
     v_payment_status,
     v_subtotal,
-    0,
-    v_subtotal,
+    case when v_payment_method = 'cod' then 50.00 else 0.00 end,
+    v_grand_total,
     'placed',
     'not_shipped'
   )
@@ -136,7 +142,7 @@ begin
     );
   end loop;
 
-  return query select v_order_ref, v_access_token, v_subtotal;
+  return query select v_order_ref, v_access_token, v_grand_total;
 end;
 $$;
 
