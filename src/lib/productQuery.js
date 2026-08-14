@@ -19,12 +19,13 @@ function ratingColumnsMissing(error) {
   return message.includes('rating') || message.includes('review_count')
 }
 
-function productListColumns({ commerce, cloudinary, outOfStock, ratings }) {
+function productListColumns({ commerce, cloudinary, outOfStock, ratings, combo }) {
   return [
     ratings ? PRODUCT_CORE_FIELDS : PRODUCT_CORE_FIELDS_WITHOUT_RATINGS,
     commerce ? PRODUCT_COMMERCE_FIELDS : null,
     cloudinary ? PRODUCT_CLOUDINARY_FIELDS : null,
     outOfStock ? 'out_of_stock' : null,
+    combo ? 'is_combo, combo_product_ids' : null,
   ].filter(Boolean).join(', ')
 }
 
@@ -35,7 +36,7 @@ export async function fetchProductList(supabase, options = {}) {
   const run = (columns) =>
     supabase.from('products').select(columns).order(order.column, { ascending: order.ascending })
 
-  const supported = { commerce: true, cloudinary: true, outOfStock: true, ratings: true }
+  const supported = { commerce: true, cloudinary: true, outOfStock: true, ratings: true, combo: true }
   let result = { data: [], error: null }
 
   for (let attempt = 0; attempt < 5; attempt += 1) {
@@ -56,6 +57,10 @@ export async function fetchProductList(supabase, options = {}) {
     }
     if (supported.outOfStock && result.error.message?.includes('out_of_stock')) {
       supported.outOfStock = false
+      continue
+    }
+    if (supported.combo && (result.error.message?.includes('is_combo') || result.error.message?.includes('combo_product_ids'))) {
+      supported.combo = false
       continue
     }
     break

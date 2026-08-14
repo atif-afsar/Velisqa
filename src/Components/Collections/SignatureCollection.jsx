@@ -117,7 +117,7 @@ export default function SignatureCollection() {
     >
       <div
         ref={stickyBarRef}
-        className="sticky top-[calc(var(--nav-height)+env(safe-area-inset-top,0px))] z-40 isolate border-b border-black/8 bg-white shadow-[0_4px_16px_rgba(19,0,6,0.06)]"
+        className="sticky-category-bar z-40 isolate border-b border-black/8 bg-white shadow-[0_4px_16px_rgba(19,0,6,0.06)]"
       >
         <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-10">
           <div className="relative flex items-center justify-center py-3">

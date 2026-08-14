@@ -10,7 +10,7 @@ export default function IconsOfElegance() {
           Everyday Signature Jewellery
         </h2>
 
-        <div className="grid grid-cols-3 gap-x-3 gap-y-5 sm:grid-cols-6 sm:gap-x-5 sm:gap-y-0 md:flex md:justify-center md:gap-8 lg:gap-10 xl:gap-12">
+        <div className="grid grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-6 sm:gap-x-6 sm:gap-y-0 md:flex md:justify-center md:gap-8 lg:gap-10 xl:gap-12">
           {shopCategories.map(({ label, type, image }) => (
             <article
               key={type}
@@ -22,21 +22,21 @@ export default function IconsOfElegance() {
                   search: `?category=${getCategoryParamSlug(type)}`,
                 }}
                 aria-label={`Shop ${label}`}
-                className="group block w-full max-w-[5.75rem] rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#130006]/30 focus-visible:ring-offset-2 sm:max-w-[6.5rem] md:max-w-[7.25rem] lg:max-w-[8rem]"
+                className="group flex flex-col items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[#130006]/30 focus-visible:ring-offset-2"
               >
-                <div className="aspect-square w-full overflow-hidden rounded-full bg-[#1a1a1a]">
+                <div className="aspect-square w-full max-w-[6.75rem] sm:max-w-[8rem] md:max-w-[9.5rem] lg:max-w-[10.5rem] xl:max-w-[11.5rem] overflow-hidden rounded-full border border-[#d4af37]/15 bg-[#1a1a1a] shadow-[0_12px_28px_-10px_rgba(19,0,6,0.18)] transition-all duration-500 ease-out group-hover:scale-[1.04] group-hover:border-[#d4af37]/35 group-hover:shadow-[0_20px_40px_-12px_rgba(19,0,6,0.28)]">
                   <img
                     src={image}
                     alt=""
                     loading="lazy"
                     decoding="async"
-                    className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                   />
                 </div>
+                <p className="mt-3 text-center text-xs font-serif italic tracking-wide text-[#130006] transition-colors duration-300 group-hover:text-[#6f334a] sm:mt-4 sm:text-sm">
+                  {label}
+                </p>
               </Link>
-              <p className="mt-2.5 text-center text-[11px] font-normal text-[#130006] sm:mt-3 sm:text-[13px]">
-                {label}
-              </p>
             </article>
           ))}
         </div>

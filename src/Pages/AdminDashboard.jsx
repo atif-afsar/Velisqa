@@ -64,6 +64,8 @@ const emptyForm = {
   badge: '',
   mock_review_count: '0',
   mock_rating: '',
+  is_combo: false,
+  combo_product_ids: [],
 }
 
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
@@ -109,6 +111,9 @@ function formatProductSaveError(message) {
   if (message.includes('out_of_stock')) {
     return `${message}\n\nRun supabase/add-product-out-of-stock.sql in the Supabase SQL Editor, then try again.`
   }
+  if (message.includes('is_combo') || message.includes('combo_product_ids')) {
+    return `${message}\n\nRun supabase/add-combo-fields.sql in the Supabase SQL Editor, then try again.`
+  }
   if (message.includes('cloudinary_public_id') || message.includes('gallery_cloudinary_ids')) {
     return `${message}\n\nRun supabase/add-cloudinary-fields.sql in the Supabase SQL Editor, then try again.`
   }
@@ -146,6 +151,10 @@ export default function AdminDashboard() {
   const [busy, setBusy] = useState(false)
   const [useOosColumn, setUseOosColumn] = useState(false)
   const [oosColumnChecked, setOosColumnChecked] = useState(false)
+  const [comboSearch, setComboSearch] = useState('')
+  const [comboTab, setComboTab] = useState('all')
+  const [selectedCategoryTab, setSelectedCategoryTab] = useState('all')
+  const [adminSearchQuery, setAdminSearchQuery] = useState('')
 
   useEffect(() => {
     let cancelled = false
@@ -223,6 +232,8 @@ export default function AdminDashboard() {
       badge: product.badge ?? '',
       mock_review_count: String(product.mock_review_count ?? 0),
       mock_rating: product.mock_rating != null ? String(product.mock_rating) : '',
+      is_combo: !!product.is_combo,
+      combo_product_ids: product.combo_product_ids || [],
     })
     const urls = getProductImageUrls(product)
     const publicIds = getGalleryCloudinaryIds(product)
@@ -376,6 +387,8 @@ export default function AdminDashboard() {
         badge: badgeRaw === 'bestseller' || badgeRaw === 'new' ? badgeRaw : null,
         mock_review_count,
         mock_rating,
+        is_combo: form.is_combo,
+        combo_product_ids: form.is_combo ? form.combo_product_ids : [],
       }
 
       const removedUrls = originalImageUrls.filter((url) => !allUrls.includes(url))
@@ -494,6 +507,15 @@ export default function AdminDashboard() {
   const inputClass =
     'w-full rounded-xl border border-[#847377]/25 bg-white px-4 py-2.5 text-sm text-[#130006] outline-none transition focus:border-[#3d0a21]/35 focus:ring-2 focus:ring-[#d4af37]/20'
 
+  const filteredProducts = products.filter((p) => {
+    const matchesCategory = selectedCategoryTab === 'all'
+      || normalizeProductCategory(p.category) === normalizeProductCategory(selectedCategoryTab)
+    const matchesSearch = !adminSearchQuery.trim()
+      || p.name.toLowerCase().includes(adminSearchQuery.toLowerCase())
+      || (p.search_keywords && p.search_keywords.toLowerCase().includes(adminSearchQuery.toLowerCase()))
+    return matchesCategory && matchesSearch
+  })
+
   return (
     <AdminShell
       title="Products"
@@ -549,6 +571,272 @@ export default function AdminDashboard() {
                   required
                 />
               </label>
+
+              {/* Combo Toggle & Configuration */}
+              <div className="sm:col-span-2 rounded-xl border border-[#d4af37]/20 bg-[#fdf9f4] p-4 shadow-[0_4px_12px_rgba(19,0,6,0.02)]">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="h-5 w-5 rounded accent-[#3d0a21] cursor-pointer"
+                    checked={form.is_combo}
+                    onChange={(e) => setForm((f) => ({ ...f, is_combo: e.target.checked }))}
+                  />
+                  <span className="text-sm font-semibold text-[#130006] leading-none">
+                    Is this a Combo / Bundle Product?
+                  </span>
+                </label>
+                <p className="mt-1 text-xs text-[#847377] ml-8">
+                  Check this box if this product is a package bundle containing multiple individual items.
+                </p>
+
+                {form.is_combo && (
+                  <div className="mt-4 border-t border-[#847377]/10 pt-4 space-y-4">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-[#3d0a21]">
+                      Configure Combo Products
+                    </h3>
+
+                    {/* Selected products list & Merged Price */}
+                    <div className="rounded-xl bg-[#3d0a21]/5 p-4 border border-[#3d0a21]/10">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <span className="text-xs font-semibold text-[#514347]">
+                          Selected Products ({form.combo_product_ids.length})
+                        </span>
+                        {form.combo_product_ids.length > 0 && (
+                          <div className="flex items-center gap-3">
+                            <span className="text-xs font-bold text-[#130006]">
+                              Merged Price: ₹{
+                                products
+                                  .filter((p) => form.combo_product_ids.includes(p.id))
+                                  .reduce((sum, p) => sum + (Number(p.price) || 0), 0)
+                                  .toLocaleString('en-IN')
+                              }
+                              {products.filter((p) => form.combo_product_ids.includes(p.id)).some(p => p.mrp) && (
+                                <span className="text-xs font-normal text-[#847377] line-through ml-1.5">
+                                  ₹{
+                                    products
+                                      .filter((p) => form.combo_product_ids.includes(p.id))
+                                      .reduce((sum, p) => sum + (Number(p.mrp) || Number(p.price) || 0), 0)
+                                      .toLocaleString('en-IN')
+                                  }
+                                </span>
+                              )}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const sel = products.filter((p) => form.combo_product_ids.includes(p.id));
+                                const sumPrice = sel.reduce((sum, p) => sum + (Number(p.price) || 0), 0);
+                                const sumMrp = sel.reduce((sum, p) => sum + (Number(p.mrp) || Number(p.price) || 0), 0);
+                                setForm((f) => ({
+                                  ...f,
+                                  price: String(sumPrice),
+                                  mrp: sumMrp > sumPrice ? String(sumMrp) : '',
+                                }));
+                              }}
+                              className="rounded bg-[#3d0a21] hover:bg-[#3d0a21]/90 text-[10px] font-bold text-[#fdf9f4] px-2.5 py-1 uppercase tracking-wider transition"
+                            >
+                              Apply Price
+                            </button>
+                          </div>
+                        )}
+                      </div>
+
+                      {form.combo_product_ids.length === 0 ? (
+                        <p className="mt-2 text-xs italic text-[#847377]">
+                          No products selected. Search and select products below.
+                        </p>
+                      ) : (
+                        <div className="mt-2.5 flex flex-wrap gap-2 max-h-40 overflow-y-auto pr-1">
+                          {products
+                            .filter((p) => form.combo_product_ids.includes(p.id))
+                            .map((p) => (
+                              <div
+                                key={p.id}
+                                className="flex items-center gap-2 rounded-lg bg-white border border-[#847377]/15 p-1.5 pr-2.5 shadow-sm"
+                              >
+                                <img
+                                  src={getProductImageUrls(p)[0] || ''}
+                                  alt=""
+                                  className="h-7 w-7 rounded object-cover"
+                                />
+                                <div className="text-[11px] leading-tight">
+                                  <div className="font-semibold text-[#130006] line-clamp-1 max-w-[120px]">
+                                    {p.name}
+                                  </div>
+                                  <div className="text-[#847377]">
+                                    ₹{Number(p.price).toLocaleString('en-IN')}
+                                  </div>
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setForm((f) => ({
+                                      ...f,
+                                      combo_product_ids: f.combo_product_ids.filter((id) => id !== p.id),
+                                    }))
+                                  }
+                                  className="text-red-700 hover:text-red-950 text-xs font-bold pl-1"
+                                >
+                                  ×
+                                </button>
+                              </div>
+                            ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Filter and Search */}
+                    <div className="space-y-2">
+                      <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                        <input
+                          type="text"
+                          placeholder="Search products to add..."
+                          value={comboSearch}
+                          onChange={(e) => setComboSearch(e.target.value)}
+                          className="w-full sm:w-64 rounded-lg border border-[#847377]/25 bg-white px-3 py-1.5 text-xs text-[#130006] outline-none focus:border-[#3d0a21]/35"
+                        />
+                        {/* Tabs / Category filter pills */}
+                        <div className="flex flex-wrap gap-1 items-center max-h-24 overflow-y-auto">
+                          <button
+                            type="button"
+                            onClick={() => setComboTab('all')}
+                            className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider transition ${
+                              comboTab === 'all'
+                                ? 'bg-[#3d0a21] text-[#fdf9f4]'
+                                : 'bg-[#847377]/10 text-[#514347] hover:bg-[#847377]/15'
+                            }`}
+                          >
+                            All
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setComboTab('new')}
+                            className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider transition ${
+                              comboTab === 'new'
+                                ? 'bg-[#3d0a21] text-[#fdf9f4]'
+                                : 'bg-[#847377]/10 text-[#514347] hover:bg-[#847377]/15'
+                            }`}
+                          >
+                            New Arrivals
+                          </button>
+                          {PRODUCT_CATEGORIES.map((cat) => {
+                            const hasProducts = products.some((p) => normalizeProductCategory(p.category) === cat && p.id !== editingId);
+                            if (!hasProducts) return null;
+                            return (
+                              <button
+                                key={cat}
+                                type="button"
+                                onClick={() => setComboTab(cat)}
+                                className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider transition ${
+                                  comboTab === cat
+                                    ? 'bg-[#3d0a21] text-[#fdf9f4]'
+                                    : 'bg-[#847377]/10 text-[#514347] hover:bg-[#847377]/15'
+                                }`}
+                              >
+                                {cat}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Scrollable grid of products to select */}
+                      <div className="grid gap-2 grid-cols-2 sm:grid-cols-3 max-h-60 overflow-y-auto border border-[#847377]/15 rounded-xl bg-white p-2.5">
+                        {products
+                          .filter((p) => p.id !== editingId)
+                          .filter((p) => {
+                            // Apply Tab Filter
+                            if (comboTab === 'new') {
+                              const isNew = p.badge === 'new' || (p.created_at && (new Date(p.created_at) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)));
+                              if (!isNew) return false;
+                            } else if (comboTab !== 'all') {
+                              if (normalizeProductCategory(p.category) !== comboTab) return false;
+                            }
+                            // Apply Search Filter
+                            if (comboSearch.trim()) {
+                              const q = comboSearch.toLowerCase();
+                              const nameMatch = p.name?.toLowerCase().includes(q);
+                              const catMatch = p.category?.toLowerCase().includes(q);
+                              const descMatch = p.description?.toLowerCase().includes(q);
+                              if (!nameMatch && !catMatch && !descMatch) return false;
+                            }
+                            return true;
+                          })
+                          .map((p) => {
+                            const isSelected = form.combo_product_ids.includes(p.id);
+                            return (
+                              <div
+                                key={p.id}
+                                onClick={() => {
+                                  setForm((f) => {
+                                    const exists = f.combo_product_ids.includes(p.id);
+                                    const nextIds = exists
+                                      ? f.combo_product_ids.filter((id) => id !== p.id)
+                                      : [...f.combo_product_ids, p.id];
+                                    
+                                    let extra = {};
+                                    if (!exists && f.combo_product_ids.length === 0) {
+                                      extra = {
+                                        price: String(p.price || ''),
+                                        mrp: String(p.mrp || p.price || ''),
+                                      };
+                                    } else {
+                                      const prevSel = products.filter((prevP) => f.combo_product_ids.includes(prevP.id));
+                                      const prevSum = prevSel.reduce((sum, prevP) => sum + (Number(prevP.price) || 0), 0);
+                                      if (f.price === '' || Number(f.price) === prevSum) {
+                                        const nextSel = products.filter((nextP) => nextIds.includes(nextP.id));
+                                        const nextSum = nextSel.reduce((sum, nextP) => sum + (Number(nextP.price) || 0), 0);
+                                        const nextMrp = nextSel.reduce((sum, nextP) => sum + (Number(nextP.mrp) || Number(nextP.price) || 0), 0);
+                                        extra = {
+                                          price: nextSum > 0 ? String(nextSum) : '',
+                                          mrp: nextMrp > nextSum ? String(nextMrp) : '',
+                                        };
+                                      }
+                                    }
+                                    
+                                    return {
+                                      ...f,
+                                      combo_product_ids: nextIds,
+                                      ...extra,
+                                    };
+                                  });
+                                }}
+                                className={`flex items-start gap-2.5 rounded-lg border p-2 cursor-pointer transition select-none ${
+                                  isSelected
+                                    ? 'border-[#3d0a21] bg-[#3d0a21]/5 ring-1 ring-[#3d0a21]'
+                                    : 'border-[#847377]/15 bg-[#fdf9f4]/20 hover:border-[#847377]/35'
+                                }`}
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={isSelected}
+                                  onChange={() => {}}
+                                  className="mt-1 h-3.5 w-3.5 accent-[#3d0a21] pointer-events-none"
+                                />
+                                <div className="min-w-0 flex-1">
+                                  <img
+                                    src={getProductImageUrls(p)[0] || ''}
+                                    alt=""
+                                    className="aspect-square w-full rounded object-cover bg-gray-100 max-h-16"
+                                  />
+                                  <div className="mt-1.5 font-semibold text-[11px] text-[#130006] truncate">
+                                    {p.name}
+                                  </div>
+                                  <div className="text-[10px] text-[#847377]">
+                                    {normalizeProductCategory(p.category)}
+                                  </div>
+                                  <div className="mt-0.5 text-xs font-bold text-[#130006]">
+                                    ₹{Number(p.price).toLocaleString('en-IN')}
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
 
               <label>
                 <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
@@ -873,11 +1161,68 @@ export default function AdminDashboard() {
             <p className="mt-1 text-sm text-[#514347]">
               {products.length === 0
                 ? 'No products yet — use the form above to add your first piece.'
+                : selectedCategoryTab !== 'all' || adminSearchQuery.trim() !== ''
+                ? `Found ${filteredProducts.length} of ${products.length} products.`
                 : `${products.length} product${products.length === 1 ? '' : 's'} on the website.`}
             </p>
 
+            {/* Category tabs & Search box */}
+            <div className="mt-4 flex flex-col gap-4 border-b border-[#847377]/15 pb-5 md:flex-row md:items-center md:justify-between">
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => setSelectedCategoryTab('all')}
+                  className={`rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wider transition ${
+                    selectedCategoryTab === 'all'
+                      ? 'bg-[#3d0a21] text-white shadow-sm'
+                      : 'bg-[#847377]/10 text-[#514347] hover:bg-[#847377]/15'
+                  }`}
+                >
+                  All ({products.length})
+                </button>
+                {PRODUCT_CATEGORIES.map((cat) => {
+                  const count = products.filter(
+                    (p) => normalizeProductCategory(p.category) === normalizeProductCategory(cat)
+                  ).length
+                  return (
+                    <button
+                      key={cat}
+                      type="button"
+                      onClick={() => setSelectedCategoryTab(cat)}
+                      className={`rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wider transition ${
+                        selectedCategoryTab === cat
+                          ? 'bg-[#3d0a21] text-white shadow-sm'
+                          : 'bg-[#847377]/10 text-[#514347] hover:bg-[#847377]/15'
+                      }`}
+                    >
+                      {cat} ({count})
+                    </button>
+                  )
+                })}
+              </div>
+
+              <div className="relative w-full max-w-xs">
+                <input
+                  type="text"
+                  value={adminSearchQuery}
+                  onChange={(e) => setAdminSearchQuery(e.target.value)}
+                  placeholder="Search products by name..."
+                  className="w-full rounded-full border border-[#847377]/25 bg-white px-4 py-1.5 pl-9 text-xs text-[#130006] outline-none transition placeholder:text-[#847377]/55 focus:border-[#6f334a] focus:ring-1 focus:ring-[#6f334a]/20"
+                />
+                <svg
+                  className="absolute left-3.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#847377]/60"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+            </div>
+
             <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {products.map((product) => {
+              {filteredProducts.map((product) => {
                 const thumb = getProductImageUrls(product)[0]
                 const imageCount = getProductImageUrls(product).length
                 const soldOut = isProductSoldOut(product)
@@ -906,7 +1251,14 @@ export default function AdminDashboard() {
                       </div>
                     )}
                     <div className="flex flex-1 flex-col p-4">
-                      <h3 className="font-serif text-base font-semibold">{product.name}</h3>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="font-serif text-base font-semibold">{product.name}</h3>
+                        {product.is_combo && (
+                          <span className="rounded bg-[#d4af37]/20 border border-[#d4af37]/45 text-[9px] font-bold uppercase tracking-wider text-[#8a6b1f] px-1.5 py-0.5">
+                            Combo
+                          </span>
+                        )}
+                      </div>
                       {product.category && (
                         <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-[#847377]">
                           {product.category}

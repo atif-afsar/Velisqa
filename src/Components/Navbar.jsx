@@ -296,6 +296,11 @@ export default function Navbar() {
       const height = Math.ceil(el.getBoundingClientRect().height);
       if (height > 0) {
         document.documentElement.style.setProperty("--nav-bar-height", `${height}px`);
+        
+        // Find announcement bar to get its exact height dynamically
+        const announcementEl = document.querySelector('[role="region"][aria-label="Store highlights"]');
+        const announcementHeight = announcementEl ? announcementEl.getBoundingClientRect().height : 0;
+        document.documentElement.style.setProperty("--nav-height", `${announcementHeight + height}px`);
       }
     };
 
@@ -308,6 +313,7 @@ export default function Navbar() {
       observer.disconnect();
       window.removeEventListener("resize", syncNavBarHeight);
       document.documentElement.style.removeProperty("--nav-bar-height");
+      document.documentElement.style.removeProperty("--nav-height");
     };
   }, [pathname]);
 

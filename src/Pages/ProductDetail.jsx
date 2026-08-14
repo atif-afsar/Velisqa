@@ -50,6 +50,44 @@ export default function ProductDetail() {
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
   const [quantity, setQuantity] = useState(1)
+  const [comboProducts, setComboProducts] = useState([])
+  const [loadingCombo, setLoadingCombo] = useState(false)
+
+  useEffect(() => {
+    if (!product?.is_combo || !product?.combo_product_ids?.length) {
+      setComboProducts([])
+      return
+    }
+
+    let cancelled = false
+    setLoadingCombo(true)
+
+    async function loadComboProducts() {
+      const { data, error } = await supabase
+        .from('products')
+        .select('id, name, price, mrp, image_url, gallery_urls, out_of_stock, stock, category')
+        .in('id', product.combo_product_ids)
+
+      if (cancelled) return
+      setLoadingCombo(false)
+
+      if (!error && data) {
+        // Sort them to match the order in combo_product_ids
+        const sorted = [...data].sort((a, b) => {
+          const idxA = product.combo_product_ids.indexOf(a.id)
+          const idxB = product.combo_product_ids.indexOf(b.id)
+          return idxA - idxB
+        })
+        setComboProducts(sorted)
+      }
+    }
+
+    loadComboProducts()
+
+    return () => {
+      cancelled = true
+    }
+  }, [product])
 
   useEffect(() => {
     setQuantity(1)
@@ -230,6 +268,60 @@ export default function ProductDetail() {
                 quantity={quantity}
                 onQuantityChange={setQuantity}
               />
+
+              {/* Combo products display */}
+              {product.is_combo && comboProducts.length > 0 && (
+                <div className="mt-6 rounded-xl border border-[#d4af37]/20 bg-[#fdf9f4]/30 p-4 shadow-[0_4px_16px_rgba(19,0,6,0.02)] animate-fade-in">
+                  <h3 className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377] mb-3">
+                    Included in this Combo
+                  </h3>
+                  <div className="space-y-3">
+                    {comboProducts.map((p) => {
+                      const pImages = getProductImageUrls(p)
+                      const pThumb = pImages[0] || ''
+                      const pLink = `/product/${p.id}`
+
+                      return (
+                        <div
+                          key={p.id}
+                          className="flex items-center gap-3.5 rounded-lg bg-white border border-[#847377]/10 p-2.5 shadow-sm transition hover:border-[#3d0a21]/30"
+                        >
+                          <Link to={pLink} className="shrink-0">
+                            <img
+                              src={pThumb}
+                              alt={p.name}
+                              className="h-14 w-14 rounded-md object-cover bg-gray-50 border border-black/5"
+                            />
+                          </Link>
+                          <div className="min-w-0 flex-1">
+                            {p.category && (
+                              <span className="text-[9px] font-bold uppercase tracking-wider text-[#6f334a]">
+                                {normalizeProductCategory(p.category)}
+                              </span>
+                            )}
+                            <Link
+                              to={pLink}
+                              className="block text-sm font-semibold text-[#130006] hover:text-[#6f334a] transition line-clamp-1 leading-snug mt-0.5"
+                            >
+                              {p.name}
+                            </Link>
+                            <div className="flex items-center gap-1.5 mt-1">
+                              <span className="text-sm font-bold text-[#130006]">
+                                ₹{Number(p.price).toLocaleString('en-IN')}
+                              </span>
+                              {p.mrp && Number(p.mrp) > Number(p.price) && (
+                                <span className="text-xs text-[#847377] line-through">
+                                  ₹{Number(p.mrp).toLocaleString('en-IN')}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
 
               <ProductAccordion
                 compact
