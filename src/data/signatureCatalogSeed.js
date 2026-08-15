@@ -6,7 +6,7 @@ export const SIGNATURE_CATALOG_ITEMS = [
   // —— Necklace (5) ——
   {
     category: 'Necklace',
-    file: 'IMG_3430.webp',
+    file: 'blue_pendant.webp',
     name: 'Aurelia Layered Necklace',
     price: 499,
     stock: 5,
@@ -62,7 +62,7 @@ export const SIGNATURE_CATALOG_ITEMS = [
   },
   {
     category: 'Bracelet',
-    file: 'IMG_3445.webp',
+    file: 'cuff_bracelet.webp',
     name: 'Velisqa Classic Kada Bracelet',
     price: 399,
     stock: 5,
@@ -127,7 +127,7 @@ export const SIGNATURE_CATALOG_ITEMS = [
   },
   {
     category: 'Rings',
-    file: 'image.webp',
+    file: 'diamond_ring.webp',
     name: 'Centre Stone Glow Ring',
     price: 329,
     stock: 8,
@@ -192,7 +192,7 @@ export const SIGNATURE_CATALOG_ITEMS = [
   },
   {
     category: 'Earrings',
-    file: 'image.webp',
+    file: 'clover_earrings.webp',
     name: 'Celestial Pearl-Effect Drops',
     price: 369,
     stock: 6,
