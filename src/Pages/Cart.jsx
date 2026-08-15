@@ -286,8 +286,8 @@ export default function Cart() {
                       {/* Badges footer */}
                       <div className="grid grid-cols-3 divide-x divide-gray-100 border-t border-gray-100 pt-3 text-[10px] text-center font-medium text-[#8a8a8a]">
                         <div>5-Day Returns</div>
-                        <div>6-Month Warranty</div>
-                        <div>Lifetime Plating Service</div>
+                        <div>Secure Payments</div>
+                        <div>Premium Quality</div>
                       </div>
 
                     </div>

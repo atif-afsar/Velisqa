@@ -37,14 +37,14 @@ export default function ProductDetailTrust({ soldOut }) {
             <circle cx="12" cy="12" r="10" />
             <path d="m12 6 2 4 4 1-3 3 1 4-4-2-4 2 1-4-3-3 4-1Z" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
-          <span className="font-medium">Lifetime Plating</span>
+          <span className="font-medium">Premium Quality</span>
         </div>
 
         <div className="flex items-center gap-2">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B76E79" strokeWidth="1.5" className="shrink-0">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
-          <span className="font-medium">6-Month Warranty</span>
+          <span className="font-medium">Secure Payments</span>
         </div>
 
         <Link to="/authenticity" className="flex items-center gap-2 hover:text-[#3B0D23] transition">
