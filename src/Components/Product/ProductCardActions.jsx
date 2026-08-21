@@ -6,7 +6,7 @@ import BuyNowButton from '../WhatsApp/BuyNowButton'
 
 /** Palmonas-style minimal add button — shared across product cards. */
 export const PRODUCT_ADD_BTN_CLASS =
-  'flex h-9 w-full items-center justify-center rounded-[3px] border border-[#130006] bg-white px-2 text-[11px] font-normal tracking-normal text-[#130006] transition hover:bg-[#fafafa] disabled:cursor-not-allowed disabled:opacity-50 sm:text-xs'
+  'flex h-10 w-full items-center justify-center rounded-lg border border-slate-900 bg-white px-3 text-xs sm:text-sm font-semibold tracking-wider text-slate-900 transition duration-200 hover:bg-[#8B6914] hover:text-white hover:border-[#8B6914] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 shadow-2xs'
 
 /** Product card footer: add to cart, or out-of-stock + enquire. */
 export default function ProductCardActions({ product }) {

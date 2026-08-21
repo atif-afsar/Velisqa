@@ -120,12 +120,12 @@ export default function ProductPurchasePanel({
   return (
     <div className="mt-6 space-y-4">
       <div className="flex items-center gap-3">
-        <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#847377]">
+        <span className="text-xs font-bold uppercase tracking-wider text-slate-700">
           Qty
         </span>
         <QuantityStepper value={resolvedQuantity} max={stock} onChange={setQuantity} />
         {stock <= 3 && (
-          <span className="text-xs font-medium text-[#6f334a]">Only {stock} left in stock</span>
+          <span className="text-xs font-bold text-amber-700">Only {stock} left in stock</span>
         )}
       </div>
 
@@ -134,7 +134,7 @@ export default function ProductPurchasePanel({
           product={product}
           productUrl={productUrl}
           variant="outline"
-          className="h-10 w-full rounded-sm"
+          className="h-11 w-full rounded-lg text-sm font-bold shadow-xs"
         >
           Buy now
         </BuyNowButton>
@@ -142,7 +142,7 @@ export default function ProductPurchasePanel({
           type="button"
           onClick={handleAdd}
           disabled={adding}
-          className="tap-target flex h-10 w-full items-center justify-center rounded-sm bg-[#3B0D23] text-xs font-bold uppercase tracking-[0.1em] text-white transition hover:bg-[#2A0718] disabled:opacity-60 shrink-0 font-sans"
+          className="tap-target flex h-11 w-full items-center justify-center rounded-lg bg-slate-900 text-sm font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-[#8B6914] active:scale-[0.99] disabled:opacity-60 shrink-0 font-sans"
         >
           {adding ? 'Adding…' : 'Add to bag'}
         </button>
@@ -151,18 +151,18 @@ export default function ProductPurchasePanel({
       {itemCount > 0 && (
         <Link
           to="/cart"
-          className="tap-target flex w-full h-10 items-center justify-center gap-2 rounded-sm border border-[#3d0a21]/20 text-[11px] font-bold uppercase tracking-[0.1em] text-[#3d0a21] transition hover:bg-[#3d0a21]/5"
+          className="tap-target flex w-full h-11 items-center justify-center gap-2 rounded-lg border border-slate-900 bg-white text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-900 transition hover:bg-[#F5EFE6] hover:border-[#C9A96E]"
         >
           View bag
-          <span className="rounded-full bg-[#3d0a21] px-2 py-0.5 text-[10px] text-[#e9c349]">
+          <span className="rounded-full bg-[#8B6914] px-2 py-0.5 text-xs text-white">
             {itemCount}
           </span>
         </Link>
       )}
 
       {/* PINCODE CHECKER */}
-      <div className="rounded-xl border border-[#D4AF37]/15 bg-white p-4 mt-4 space-y-3 shadow-sm w-full min-w-0">
-        <h4 className="font-serif text-xs font-semibold text-[#3B0D23] uppercase tracking-[0.1em]">Check Delivery</h4>
+      <div className="rounded-xl border border-slate-200 bg-white p-4 mt-4 space-y-3 shadow-xs w-full min-w-0">
+        <h4 className="font-sans text-xs font-bold text-slate-900 uppercase tracking-wider">Check Delivery Availability</h4>
         <div className="flex gap-2 w-full min-w-0">
           <input
             type="text"
@@ -170,27 +170,27 @@ export default function ProductPurchasePanel({
             placeholder="Enter 6-digit Pincode"
             value={pincodeInput}
             onChange={(e) => setPincodeInput(e.target.value.replace(/\D/g, '').slice(0, 6))}
-            className="flex-1 min-w-0 rounded-lg border border-[#3B0D23]/10 px-3.5 py-2 text-xs text-[#1A1A1A] outline-none focus:border-[#3B0D23]/30"
+            className="flex-1 min-w-0 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-xs font-medium text-slate-900 outline-none focus:border-[#C9A96E] focus:ring-1 focus:ring-[#C9A96E]"
           />
           <button
             type="button"
             onClick={checkPincode}
             disabled={pincodeInput.length !== 6 || checkingPincode}
-            className="rounded-sm bg-[#3B0D23] px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-white hover:bg-[#2A0718] disabled:opacity-50 transition shrink-0"
+            className="rounded-lg bg-slate-900 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#8B6914] disabled:opacity-50 transition shrink-0 shadow-xs"
           >
             {checkingPincode ? 'Checking…' : 'Check'}
           </button>
         </div>
 
         {pincodeStatus === 'available' && (
-          <div className="text-xs text-emerald-800 font-medium space-y-0.5 mt-2">
+          <div className="text-xs text-emerald-800 font-semibold space-y-0.5 mt-2">
             <p>✓ Delivery available to {pincodeCity}, {pincodeState}</p>
-            <p className="text-[10px] text-[#514347]">Estimated delivery: {expectedDate}</p>
+            <p className="text-xs text-slate-600 font-normal">Estimated delivery: {expectedDate}</p>
           </div>
         )}
 
         {pincodeStatus === 'invalid' && (
-          <p className="text-xs text-red-700 font-medium mt-2">
+          <p className="text-xs text-red-700 font-semibold mt-2">
             Sorry, we currently don't deliver to this pincode.
           </p>
         )}

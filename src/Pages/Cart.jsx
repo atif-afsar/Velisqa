@@ -191,18 +191,18 @@ export default function Cart() {
         description="Review your premium shopping bag and check out securely."
         canonicalPath="/cart"
       />
-      <main className="page-offset-nav min-h-[75vh] bg-[#F8F6F3] text-[#1A1A1A] pb-16 font-sans">
+      <main className="page-offset-nav min-h-[75vh] bg-[#FAF9F6] text-slate-900 pb-16 font-sans">
         <div className="mx-auto max-w-[1200px] px-4 py-8 sm:px-6 lg:px-8">
           
           <h1 className="sr-only">Shopping Bag</h1>
 
           {items.length === 0 ? (
-            <div className="mt-12 text-center py-16 bg-white rounded-2xl border border-[#D4AF37]/10 shadow-sm max-w-lg mx-auto">
+            <div className="mt-12 text-center py-16 bg-white rounded-2xl border border-slate-200 shadow-xs max-w-lg mx-auto">
               <span className="text-4xl">🛍️</span>
-              <p className="text-sm font-medium mt-4 text-[#514347]">Your bag is currently empty.</p>
+              <p className="text-sm sm:text-base font-semibold mt-4 text-slate-700">Your bag is currently empty.</p>
               <Link
                 to="/collections"
-                className="mt-6 inline-flex h-11 items-center justify-center rounded-lg bg-[#3B0D23] px-6 text-xs font-bold uppercase tracking-[0.1em] text-white transition hover:bg-[#2A0718]"
+                className="mt-6 inline-flex h-11 items-center justify-center rounded-lg bg-slate-900 px-6 text-xs sm:text-sm font-bold uppercase tracking-wider text-white transition hover:bg-[#8B6914] shadow-xs"
               >
                 Browse Collections
               </Link>
@@ -210,22 +210,21 @@ export default function Cart() {
           ) : (
             <div className="mt-4 grid gap-8 lg:grid-cols-[1fr_420px] items-start">
               
-              {/* LEFT COLUMN: GIVA-style Product Items */}
+              {/* LEFT COLUMN: Product Items */}
               <div className="space-y-4">
                 
                 {items.map((line) => {
                   const stock = getProductStock({ stock: line.stock })
                   const lineIssue = issues.find((i) => i.line.productId === line.productId)
                   const comparePrice = line.mrp || Math.round(line.price * 1.4)
-
                   return (
-                    <div key={line.productId} className="rounded-xl border border-[#D4AF37]/10 bg-white p-4 shadow-sm space-y-4 relative">
+                    <div key={line.productId} className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs space-y-4 relative">
                       
                       {/* Close / Remove button top right */}
                       <button
                         type="button"
                         onClick={() => removeFromCart(line.productId)}
-                        className="absolute right-4 top-4 text-gray-400 hover:text-red-600 transition text-lg"
+                        className="absolute right-4 top-4 text-slate-400 hover:text-red-600 transition text-lg"
                         aria-label="Remove item"
                       >
                         ✕
@@ -235,7 +234,7 @@ export default function Cart() {
                         {/* Product Image */}
                         <Link
                           to={`/product/${line.productId}`}
-                          className="h-24 w-24 shrink-0 overflow-hidden rounded-lg bg-[#F8F6F3] border border-black/5"
+                          className="h-24 w-24 shrink-0 overflow-hidden rounded-lg bg-[#FAF9F6] border border-slate-200"
                         >
                           {line.imageUrl ? (
                             <img
@@ -245,7 +244,7 @@ export default function Cart() {
                               loading="lazy"
                             />
                           ) : (
-                            <div className="flex h-full items-center justify-center text-[10px] text-[#847377]">
+                            <div className="flex h-full items-center justify-center text-xs text-slate-400">
                               No Image
                             </div>
                           )}
@@ -255,28 +254,28 @@ export default function Cart() {
                         <div className="min-w-0 flex-1 space-y-1">
                           <Link
                             to={`/product/${line.productId}`}
-                            className="font-serif text-sm font-bold text-[#1A1A1A] hover:text-[#3B0D23] transition-colors line-clamp-1 pr-6"
+                            className="font-sans text-sm sm:text-base font-bold text-slate-900 hover:text-[#8B6914] transition-colors line-clamp-1 pr-6"
                           >
                             {line.name}
                           </Link>
                           
                           <div className="flex items-baseline gap-2">
-                            <span className="text-sm font-bold text-[#3B0D23]">{formatInr(line.price)}</span>
-                            <span className="text-xs text-gray-400 line-through">{formatInr(comparePrice)}</span>
+                            <span className="text-sm sm:text-base font-bold text-slate-900">{formatInr(line.price)}</span>
+                            <span className="text-xs text-slate-400 line-through">{formatInr(comparePrice)}</span>
                           </div>
 
-                          <div className="flex items-center gap-1.5 text-xs text-emerald-800 font-medium">
+                          <div className="flex items-center gap-1.5 text-xs text-emerald-800 font-semibold">
                             <span>🚚</span>
                             <span>Free Delivery</span>
                           </div>
 
-                          <div className="flex items-center gap-2 pt-1 text-[11px] text-[#8a8a8a]">
+                          <div className="flex items-center gap-2 pt-1 text-xs text-slate-500">
                             <span>Style:</span>
-                            <span className="font-semibold text-[#1A1A1A] bg-gray-100 px-2 py-0.5 rounded">Single</span>
+                            <span className="font-semibold text-slate-800 bg-[#F5EFE6] px-2 py-0.5 rounded border border-[#E8DCC8]">Single</span>
                           </div>
 
                           {lineIssue && (
-                            <div className="mt-2 rounded border border-amber-200 bg-amber-50 px-2.5 py-1 text-[10px] text-amber-950">
+                            <div className="mt-2 rounded-md border border-amber-200 bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-950">
                               {lineIssue.message}
                             </div>
                           )}
@@ -284,7 +283,7 @@ export default function Cart() {
                       </div>
 
                       {/* Badges footer */}
-                      <div className="grid grid-cols-3 divide-x divide-gray-100 border-t border-gray-100 pt-3 text-[10px] text-center font-medium text-[#8a8a8a]">
+                      <div className="grid grid-cols-3 divide-x divide-slate-100 border-t border-slate-100 pt-3 text-xs text-center font-semibold text-slate-500">
                         <div>5-Day Returns</div>
                         <div>Secure Payments</div>
                         <div>Premium Quality</div>
@@ -295,15 +294,15 @@ export default function Cart() {
                 })}
 
                 {/* Add a Gift wrap option */}
-                <div className="rounded-xl border border-[#D4AF37]/10 bg-white p-4 shadow-sm flex items-center">
-                  <label className="flex items-center gap-2.5 cursor-pointer text-xs font-semibold text-[#1A1A1A]">
+                <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs flex items-center">
+                  <label className="flex items-center gap-2.5 cursor-pointer text-xs sm:text-sm font-semibold text-slate-800">
                     <input
                       type="checkbox"
                       checked={giftWrap}
                       onChange={handleGiftWrapChange}
-                      className="h-4 w-4 rounded border-gray-300 text-[#3B0D23] focus:ring-[#3B0D23]"
+                      className="h-4 w-4 rounded border-slate-300 text-[#8B6914] focus:ring-[#C9A96E]"
                     />
-                    <span>Add a <span className="text-[#B76E79]">gift wrap</span> &amp; a message with this item (+ ₹50)</span>
+                    <span>Add a <span className="text-[#8B6914] font-bold">gift wrap</span> &amp; a message with this item (+ ₹50)</span>
                   </label>
                 </div>
 
@@ -311,75 +310,75 @@ export default function Cart() {
                 {/* Suggestions Block */}
                 {suggestedProducts.length > 0 && (
                   <div className="pt-6">
-                    <h3 className="font-serif text-lg font-semibold text-[#3B0D23] mb-4">
+                    <h3 className="font-sans text-base sm:text-lg font-bold text-slate-900 mb-4">
                       You Might Also Like
                     </h3>
                     <div className="grid grid-cols-2 gap-4">
                       {suggestedProducts.map((product) => (
                         <ProductCard key={product.id} product={product} />
                       ))}
-                    </div>
+                      </div>
                   </div>
                 )}
 
               </div>
 
-              {/* RIGHT COLUMN: GIVA-style Price Summary & Coupons */}
+              {/* RIGHT COLUMN: Price Summary & Coupons */}
               <div className="space-y-4">
                 
                 {/* Apply Coupon Card */}
                 <button
                   type="button"
                   onClick={() => setCouponOpen(true)}
-                  className="w-full rounded-xl border border-[#D4AF37]/10 bg-white p-4 shadow-sm flex items-center justify-between hover:bg-[#F8F6F3]/50 transition text-left"
+                  className="w-full rounded-xl border border-slate-200 bg-white p-4 shadow-xs flex items-center justify-between hover:bg-slate-50 transition text-left"
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-lg">🏷️</span>
                     <div>
-                      <p className="text-xs font-bold text-[#1A1A1A]">Apply Coupon</p>
-                      {appliedCoupon && <p className="text-[10px] text-emerald-800 font-semibold mt-0.5">✓ Coupon "{appliedCoupon}" applied</p>}
+                      <p className="text-xs sm:text-sm font-bold text-slate-900">Apply Coupon</p>
+                      {appliedCoupon && <p className="text-xs text-emerald-800 font-bold mt-0.5">✓ Coupon "{appliedCoupon}" applied</p>}
                     </div>
                   </div>
-                  <span className="text-gray-400 text-lg">›</span>
+                  <span className="text-slate-400 text-lg">›</span>
                 </button>
 
                 {/* Redeem Gift Card Card */}
                 <button
                   type="button"
-                  className="w-full rounded-xl border border-[#D4AF37]/10 bg-white p-4 shadow-sm flex items-center justify-between hover:bg-[#F8F6F3]/50 transition text-left"
+                  className="w-full rounded-xl border border-slate-200 bg-white p-4 shadow-xs flex items-center justify-between hover:bg-slate-50 transition text-left"
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-lg">🎁</span>
                     <div>
-                      <p className="text-xs font-bold text-[#1A1A1A]">Redeem Gift Card</p>
+                      <p className="text-xs sm:text-sm font-bold text-slate-900">Redeem Gift Card</p>
                     </div>
                   </div>
-                  <span className="text-gray-400 text-lg">›</span>
+                  <span className="text-slate-400 text-lg">›</span>
                 </button>
 
                 {/* Rewards Info Line */}
-                <div className="rounded-xl border border-[#D4AF37]/10 bg-[#F8F6F3]/50 p-3 shadow-none flex items-center justify-between text-xs font-semibold text-[#514347]">
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3.5 shadow-none flex items-center justify-between text-xs sm:text-sm font-semibold text-slate-800">
                   <span>You will earn 5% Velisqa Crown Rewards</span>
-                  <span className="text-[#3B0D23]">{formatInr(Math.round(finalTotal * 0.05))}</span>
+                  <span className="text-slate-950 font-bold">{formatInr(Math.round(finalTotal * 0.05))}</span>
                 </div>
 
                 {/* PRICE DETAILS CARD */}
-                <div className="rounded-xl border border-[#D4AF37]/10 bg-white p-5 shadow-sm space-y-4">
-                  <h3 className="text-xs font-extrabold uppercase tracking-wider text-[#8a8a8a] border-b border-gray-100 pb-2">
+                <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs space-y-4">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100 pb-2">
                     PRICE DETAILS ({items.reduce((sum, item) => sum + item.quantity, 0)} ITEMS)
                   </h3>
 
-                  <div className="space-y-3 text-xs text-[#514347]">
+                  <div className="space-y-3 text-xs sm:text-sm text-slate-700 font-medium">
                     <div className="flex justify-between">
                       <span>Total MRP</span>
-                      <span className="font-semibold tabular-nums">{formatInr(totalMrp)}</span>
+                      <span className="font-semibold tabular-nums text-slate-900">{formatInr(totalMrp)}</span>
                     </div>
-                    <div className="flex justify-between text-emerald-800 font-medium">
+                    <div className="flex justify-between text-emerald-800 font-semibold">
                       <span>Discount on MRP</span>
                       <span className="tabular-nums">- {formatInr(discountOnMrp)}</span>
                     </div>
                     {couponDiscountVal > 0 && (
-                      <div className="flex justify-between text-emerald-800 font-medium">
+                      <div className="flex justify-between text-emerald-800 font-semibold">
                         <span>Coupon Discount ({appliedCoupon})</span>
                         <span className="tabular-nums">- {formatInr(couponDiscountVal)}</span>
                       </div>
@@ -393,22 +392,22 @@ export default function Cart() {
                     <div className="flex justify-between">
                       <span>Shipping Charges</span>
                       <span className="flex items-center gap-1.5">
-                        <span className="line-through text-gray-400">₹99.00</span>
-                        <span className="font-semibold text-emerald-800">₹0</span>
+                        <span className="line-through text-slate-400">₹99.00</span>
+                        <span className="font-bold text-emerald-800">₹0</span>
                       </span>
                     </div>
                   </div>
 
-                  <div className="border-t border-gray-100 pt-4 flex justify-between font-serif text-base font-bold text-[#1A1A1A]">
+                  <div className="border-t border-slate-100 pt-4 flex justify-between font-sans text-base font-bold text-slate-900">
                     <div>
-                      <p className="text-sm font-bold text-[#1A1A1A]">Estimated Amount:</p>
-                      <p className="text-[9px] text-[#8a8a8a] uppercase tracking-wider mt-0.5 font-sans font-normal">(incl. of all taxes)</p>
+                      <p className="text-sm font-bold text-slate-900">Estimated Amount:</p>
+                      <p className="text-xs text-slate-500 tracking-wider mt-0.5 font-normal">(incl. of all taxes)</p>
                     </div>
-                    <span className="tabular-nums text-lg text-[#3B0D23] font-sans">{formatInr(finalTotal)}</span>
+                    <span className="tabular-nums text-xl text-slate-900 font-bold">{formatInr(finalTotal)}</span>
                   </div>
 
                   {/* Green savings panel */}
-                  <div className="rounded-lg bg-emerald-50 text-emerald-800 font-semibold text-xs py-2 px-3 text-center border border-emerald-100">
+                  <div className="rounded-lg bg-emerald-50 text-emerald-800 font-semibold text-xs sm:text-sm py-2.5 px-3 text-center border border-emerald-200">
                     {formatInr(totalSavings)} savings on your current order
                   </div>
 
@@ -416,17 +415,17 @@ export default function Cart() {
                     type="button"
                     onClick={handleCheckoutClick}
                     disabled={!canCheckout}
-                    className="w-full flex h-12 items-center justify-center gap-2 rounded-lg bg-[#3B0D23] text-xs font-bold uppercase tracking-[0.1em] text-white shadow-sm transition hover:bg-[#2A0718] disabled:cursor-not-allowed disabled:opacity-50"
+                    className="w-full flex h-12 items-center justify-center gap-2 rounded-lg bg-slate-900 text-sm font-bold uppercase tracking-wider text-white shadow-xs transition hover:bg-[#8B6914] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50 font-sans"
                   >
                     <span>🔒</span>
                     <span>Checkout securely</span>
                   </button>
 
-                  <div className="flex justify-between border-t border-gray-100 pt-4 mt-2">
+                  <div className="flex justify-between border-t border-slate-100 pt-4 mt-2">
                     <button
                       type="button"
                       onClick={clearCart}
-                      className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#847377] hover:text-[#3B0D23] transition"
+                      className="text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-slate-900 transition"
                     >
                       Clear Bag
                     </button>
@@ -434,7 +433,7 @@ export default function Cart() {
                       <button
                         type="button"
                         onClick={handleRemoveCoupon}
-                        className="text-[10px] font-bold uppercase tracking-[0.1em] text-red-700 hover:underline"
+                        className="text-xs font-bold uppercase tracking-wider text-red-700 hover:underline"
                       >
                         Remove Coupon ({appliedCoupon})
                       </button>

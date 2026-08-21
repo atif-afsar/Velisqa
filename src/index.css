@@ -5,20 +5,22 @@
   --font-logo: 'Marcellus', serif;
   --font-luxury-serif: "Inter", "Helvetica Neue", Arial, sans-serif;
   --font-modern-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
-  --primary: #3d0a21;
-  --gold: #d4af37;
-  --champagne-gold: #e9c349;
-  --ivory: #fdf9f4;
-  --soft-ivory: #f9f5f0;
-  --satin-beige: #f1ede8;
-  --surface: #f9f5f0;
-  --surface-container: #ebe8e3;
+  --primary: #8B6914;
+  --primary-dark: #6B5210;
+  --primary-light: #F5EFE6;
+  --gold: #D4AF37;
+  --champagne-gold: #E9C349;
+  --ivory: #FAF9F6;
+  --soft-ivory: #FDFBF7;
+  --satin-beige: #F3F0EC;
+  --surface: #FAF9F6;
+  --surface-container: #F3F0EC;
   --on-surface: #130006;
-  --on-surface-variant: #514347;
-  --outline: #847377;
+  --on-surface-variant: #4B5563;
+  --outline: #E5E7EB;
   --type-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --luxury-ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --announcement-height: 2rem;
+  --announcement-height: 2.25rem;
   --nav-bar-height: 6.75rem;
   --nav-height: calc(var(--announcement-height) + var(--nav-bar-height));
 }
@@ -134,6 +136,24 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ── Global text-size floor ──────────────────────────────────
+   Remap hardcoded tiny pixel font sizes to readable minimums.
+   9px → 12px, 10px → 12px, 11px → 13px across all components. */
+.text-\[9px\]  { font-size: 12px !important; }
+.text-\[10px\] { font-size: 12px !important; }
+.text-\[11px\] { font-size: 13px !important; }
+
+/* Responsive breakpoint overrides for sm: variants */
+@media (min-width: 640px) {
+  .sm\:text-\[10px\] { font-size: 12px !important; }
+  .sm\:text-\[11px\] { font-size: 13px !important; }
+  .sm\:text-xs       { font-size: 0.8125rem !important; }  /* 13px */
+}
+
+* {
+  -webkit-text-size-adjust: 100%;
+}
+
 body::-webkit-scrollbar {
   display: none;
   width: 0;
@@ -234,10 +254,10 @@ a {
 
 .label-stitch {
   font-family: var(--font-modern-sans);
-  font-size: clamp(0.66rem, 0.62rem + 0.12vw, 0.75rem);
+  font-size: clamp(0.8125rem, 0.78rem + 0.15vw, 0.9375rem);
   font-weight: 600;
   line-height: 1.4;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
 }
 
 .body-stitch {
@@ -298,19 +318,19 @@ a {
 
 .type-label {
   font-family: var(--font-modern-sans);
-  font-size: clamp(0.62rem, 0.58rem + 0.12vw, 0.75rem);
+  font-size: clamp(0.8125rem, 0.78rem + 0.15vw, 0.875rem);
   font-weight: 600;
   line-height: 1.4;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
 .type-button {
   font-family: var(--font-modern-sans);
-  font-size: clamp(0.68rem, 0.65rem + 0.08vw, 0.75rem);
+  font-size: clamp(0.875rem, 0.84rem + 0.12vw, 1rem);
   font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: 0.08em;
+  line-height: 1.3;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 

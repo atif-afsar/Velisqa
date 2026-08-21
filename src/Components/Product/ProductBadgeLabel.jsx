@@ -10,10 +10,10 @@ export default function ProductBadgeLabel({ product, className = '', placement =
   if (placement === 'image') {
     return (
       <span
-        className={`pointer-events-none absolute left-2 top-10 z-[18] inline-flex rounded-md px-2 py-1 text-[9px] font-bold uppercase tracking-[0.14em] shadow-[0_4px_16px_rgba(19,0,6,0.35)] sm:left-3 sm:top-11 sm:text-[10px] ${
+        className={`pointer-events-none absolute left-2 top-10 z-[18] inline-flex rounded-md px-2.5 py-1 text-xs font-bold uppercase tracking-wider shadow-xs sm:left-3 sm:top-11 ${
           isBestseller
-            ? 'bg-[#3d0a21] text-[#e9c349]'
-            : 'bg-[#fbf7f1] text-[#130006] ring-1 ring-[#d4af37]/40'
+            ? 'bg-[#8B6914] text-white shadow-[#8B6914]/20'
+            : 'bg-white text-slate-900 border border-slate-200'
         } ${className}`}
       >
         {label}
@@ -23,10 +23,10 @@ export default function ProductBadgeLabel({ product, className = '', placement =
 
   return (
     <span
-      className={`inline-flex w-fit rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.16em] ${
+      className={`inline-flex w-fit rounded-full border px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider ${
         isBestseller
-          ? 'border-[#3d0a21]/20 bg-[#3d0a21]/8 text-[#3d0a21]'
-          : 'border-[#d4af37]/35 bg-[#fbf7f1] text-[#6f334a]'
+          ? 'border-[#C9A96E] bg-[#F5EFE6] text-[#6B5210]'
+          : 'border-slate-200 bg-slate-50 text-slate-700'
       } ${className}`}
     >
       {label}

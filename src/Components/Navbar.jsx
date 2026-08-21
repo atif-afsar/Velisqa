@@ -144,21 +144,21 @@ function PincodeLink({ pincode, onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex items-center gap-2 border border-black/5 bg-[#f6f5f3]/40 px-3.5 py-1 rounded text-left text-xs leading-tight transition hover:bg-[#efedea] shrink-0 font-sans"
+      className="inline-flex items-center gap-2.5 border border-[#E8DCC8] bg-[#F5EFE6]/60 px-3.5 py-1.5 rounded-md text-left text-xs leading-tight transition hover:bg-[#F5EFE6] shrink-0 font-sans shadow-xs"
       aria-label="Update delivery pincode"
     >
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-[#3d0a21] shrink-0">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" className="text-[#8B6914] shrink-0">
         <path
           d="M12 21s7-4.5 7-11a7 7 0 1 0-14 0c0 6.5 7 11 7 11Z"
           stroke="currentColor"
-          strokeWidth="1.5"
+          strokeWidth="2"
         />
-        <circle cx="12" cy="10" r="2.25" stroke="currentColor" strokeWidth="1.5" />
+        <circle cx="12" cy="10" r="2.25" stroke="currentColor" strokeWidth="2" />
       </svg>
       <div>
-        <p className="text-[9px] font-bold text-[#8a8a8a] uppercase tracking-wider leading-none">Where to Deliver?</p>
-        <p className="font-semibold text-[#130006] text-[10px] mt-0.5 leading-none">
-          {pincode ? `Delivering to ${pincode}` : 'Update Pincode'}
+        <p className="text-[11px] font-bold text-[#8B6914]/70 uppercase tracking-wider leading-none">Deliver To</p>
+        <p className="font-semibold text-slate-800 text-xs mt-0.5 leading-none">
+          {pincode ? pincode : 'Enter Pincode'}
         </p>
       </div>
     </button>
@@ -643,7 +643,7 @@ export default function Navbar() {
           </div>
 
           <nav
-            className="hidden items-center justify-center gap-6 border-t border-black/5 py-3 xl:flex 2xl:gap-8"
+            className="hidden items-center justify-center gap-6 border-t border-slate-100 py-3 xl:flex 2xl:gap-8 bg-white"
             aria-label="Primary"
           >
             {[...links, contactLink].map((link) => {
@@ -654,10 +654,10 @@ export default function Navbar() {
                   to={link.to}
                   end={isHome}
                   className={({ isActive }) =>
-                    `relative inline-flex min-h-9 items-center whitespace-nowrap text-[11px] font-medium tracking-[0.18em] uppercase transition-colors duration-200 ${
+                    `relative inline-flex min-h-9 items-center whitespace-nowrap text-xs md:text-sm font-semibold tracking-[0.15em] uppercase transition-colors duration-200 ${
                       isActive
-                        ? "text-[#130006] font-semibold"
-                        : "text-[#514347]/85 hover:text-[#130006]"
+                        ? "text-[#8B6914] font-bold"
+                        : "text-slate-800 hover:text-[#8B6914]"
                     }`
                   }
                 >
@@ -667,7 +667,7 @@ export default function Navbar() {
                       {isActive && (
                         <motion.div
                           layoutId="shop-desktop-active-underline"
-                          className="absolute -bottom-3 left-0 right-0 h-[1.5px] bg-[#130006]"
+                          className="absolute -bottom-3 left-0 right-0 h-[2.5px] bg-[#8B6914] rounded-full"
                           transition={{ type: "spring", stiffness: 380, damping: 30 }}
                         />
                       )}

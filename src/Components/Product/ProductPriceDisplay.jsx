@@ -8,10 +8,10 @@ export default function ProductPriceDisplay({ product = null, price, mrp = null,
       <p
         className={
           size === 'detail'
-            ? 'font-serif text-3xl font-medium tabular-nums tracking-[0.02em] text-[#3d0a21] sm:text-4xl'
+            ? 'font-serif text-3xl font-bold tabular-nums tracking-[0.02em] text-slate-900 sm:text-4xl'
             : size === 'compact'
-              ? 'text-[13px] font-semibold tabular-nums leading-none text-[#130006] sm:text-sm'
-              : 'text-[0.8rem] font-semibold tabular-nums leading-none tracking-[0.02em] text-[#3d0a21] sm:text-base lg:text-lg'
+              ? 'text-sm font-semibold tabular-nums leading-none text-slate-900 sm:text-base'
+              : 'text-sm font-bold tabular-nums leading-none tracking-[0.02em] text-slate-900 sm:text-base lg:text-lg'
         }
       >
         {formatInr(sale)}
@@ -22,10 +22,10 @@ export default function ProductPriceDisplay({ product = null, price, mrp = null,
   if (size === 'detail') {
     return (
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <p className="font-serif text-3xl font-medium tabular-nums tracking-[0.02em] text-[#3d0a21] sm:text-4xl">
+        <p className="font-serif text-3xl font-bold tabular-nums tracking-[0.02em] text-slate-900 sm:text-4xl">
           {formatInr(sale)}
         </p>
-        <p className="font-serif text-lg tabular-nums text-[#847377] line-through decoration-[#847377]/70 sm:text-xl">
+        <p className="font-serif text-lg tabular-nums text-slate-400 line-through decoration-slate-400/70 sm:text-xl">
           {formatInr(compare)}
         </p>
       </div>
@@ -43,8 +43,8 @@ export default function ProductPriceDisplay({ product = null, price, mrp = null,
       <p
         className={
           size === 'compact'
-            ? 'text-[11px] tabular-nums text-[#888] line-through'
-            : 'text-[0.65rem] font-medium tabular-nums text-[#847377] line-through decoration-[#847377]/60 sm:text-[0.7rem]'
+            ? 'text-xs tabular-nums text-slate-400 line-through'
+            : 'text-xs font-medium tabular-nums text-slate-400 line-through decoration-slate-400/60 sm:text-xs'
         }
       >
         {formatInr(compare)}
@@ -52,8 +52,8 @@ export default function ProductPriceDisplay({ product = null, price, mrp = null,
       <p
         className={
           size === 'compact'
-            ? 'text-[13px] font-semibold tabular-nums text-[#130006] sm:text-sm'
-            : 'text-[0.8rem] font-semibold tabular-nums tracking-[0.02em] text-[#3d0a21] sm:text-base lg:text-lg'
+            ? 'text-sm font-semibold tabular-nums text-slate-900 sm:text-base'
+            : 'text-sm font-bold tabular-nums tracking-[0.02em] text-slate-900 sm:text-base lg:text-lg'
         }
       >
         {formatInr(sale)}

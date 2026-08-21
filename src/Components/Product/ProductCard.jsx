@@ -22,14 +22,14 @@ function ProductCard({ product, priority = false, variant = 'default' }) {
       className={
         catalog
           ? 'group flex h-full flex-col max-w-safe'
-          : 'group flex h-full flex-col overflow-visible rounded-lg border border-[#d4af37]/15 bg-[#fbf7f1] p-2 shadow-[0_18px_44px_-28px_rgba(19,0,6,0.35)] transition duration-300 hover:-translate-y-1 hover:border-[#d4af37]/35 sm:p-3 max-w-safe'
+          : 'group flex h-full flex-col overflow-visible rounded-xl border border-slate-200/80 bg-white p-2.5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#C9A96E]/80 hover:shadow-md sm:p-3 max-w-safe'
       }
     >
       <div className={`relative shrink-0 ${catalog ? 'isolate overflow-hidden' : ''}`}>
         <Link
           to={detailPath}
-          className={`relative block overflow-hidden bg-[#f5f5f5] ${
-            catalog ? '' : 'aspect-[4/5] rounded-md bg-[#f1ede8]'
+          className={`relative block overflow-hidden bg-[#FAF9F6] ${
+            catalog ? '' : 'aspect-[4/5] rounded-lg bg-[#FAF9F6]'
           }`}
           aria-label={`View ${product.name}`}
         >
@@ -49,7 +49,7 @@ function ProductCard({ product, priority = false, variant = 'default' }) {
             aspect={catalog ? '3 / 4' : '4 / 5'}
             priority={priority}
             className={catalog ? 'w-full' : 'h-full w-full'}
-            imgClassName={`object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03] ${catalog ? '' : 'rounded-md group-hover:scale-105'}`}
+            imgClassName={`object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03] ${catalog ? '' : 'rounded-lg group-hover:scale-105'}`}
           />
         </Link>
 
@@ -65,18 +65,14 @@ function ProductCard({ product, priority = false, variant = 'default' }) {
             : 'flex flex-1 flex-col items-stretch overflow-visible px-1 pb-2 pt-2.5 text-center sm:px-1.5 sm:pb-2.5 sm:pt-3'
         }
       >
-        {!catalog && (
-          <div className="mb-1 flex justify-center sm:hidden">
-            <ProductBadgeLabel product={product} placement="inline" />
-          </div>
-        )}
+
 
         <Link to={detailPath} className="block w-full shrink-0">
           <h4
             className={
               catalog
-                ? 'line-clamp-2 text-[13px] font-normal leading-snug text-[#130006] sm:text-sm'
-                : 'line-clamp-2 min-h-[2.35rem] font-serif text-[0.88rem] leading-snug text-[#130006] transition hover:text-[#6f334a] sm:min-h-[2.5rem] sm:text-xl lg:text-2xl'
+                ? 'line-clamp-2 text-sm font-semibold leading-snug text-slate-900 sm:text-base hover:text-[#8B6914] transition-colors'
+                : 'line-clamp-2 min-h-[2.5rem] font-sans text-sm font-bold leading-snug text-slate-900 transition hover:text-[#8B6914] sm:min-h-[2.75rem] sm:text-base lg:text-lg'
             }
           >
             {product.name}

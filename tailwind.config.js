@@ -3,13 +3,17 @@ export default {
     extend: {
       colors: {
         velisqa: {
-          plum: '#1a0a1e',
-          gold: '#D8B98A',
-          muted: '#9e8e7e',
-          beige: '#EFE7DD',
-          card: '#1f0e24',
-          dark: '#0d0510',
-          aubergine: '#3D1C44',
+          primary: '#8B6914',
+          primaryDark: '#6B5210',
+          primaryLight: '#F5EFE6',
+          accent: '#A67C52',
+          plum: '#130006',
+          dark: '#130006',
+          gold: '#D4AF37',
+          muted: '#64748B',
+          beige: '#F9F8F6',
+          card: '#FFFFFF',
+          aubergine: '#130006',
         },
       },
       fontFamily: {

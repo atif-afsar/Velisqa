@@ -205,20 +205,20 @@ export default function ProductDetail() {
       <main className="page-offset-nav bg-white text-[#130006] pb-24 lg:pb-12 no-overflow-x">
         <div className="container-stitch mx-auto max-w-6xl px-4 py-4 sm:px-6 sm:py-6 max-w-safe">
           <nav
-            className="mb-5 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[11px] text-[#847377]"
+            className="mb-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-500 font-medium sm:text-sm"
             aria-label="Breadcrumb"
           >
-            <Link to="/" className="hover:text-[#130006]">
+            <Link to="/" className="hover:text-[#8B6914] transition-colors">
               Home
             </Link>
             <span aria-hidden>/</span>
-            <Link to={collectionsLink} className="hover:text-[#130006]">
+            <Link to={collectionsLink} className="hover:text-[#8B6914] transition-colors">
               Shop
             </Link>
             {category && (
               <>
                 <span aria-hidden>/</span>
-                <span>{category}</span>
+                <span className="text-slate-800 font-semibold">{category}</span>
               </>
             )}
           </nav>
@@ -241,7 +241,7 @@ export default function ProductDetail() {
                 {category && (
                   <Link
                     to={collectionsLink}
-                    className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#6f334a] hover:underline"
+                    className="text-xs font-bold uppercase tracking-wider text-[#8B6914] hover:text-[#6B5210] hover:underline"
                   >
                     {category}
                   </Link>
@@ -249,7 +249,7 @@ export default function ProductDetail() {
                 <ProductBadgeLabel product={product} placement="inline" />
               </div>
 
-              <h1 className="mt-2 font-serif text-2xl leading-snug text-[#130006] sm:text-3xl">
+              <h1 className="mt-2 font-sans text-2xl font-bold leading-snug text-slate-900 sm:text-3xl lg:text-4xl">
                 {product.name}
               </h1>
 
@@ -271,8 +271,8 @@ export default function ProductDetail() {
 
               {/* Combo products display */}
               {product.is_combo && comboProducts.length > 0 && (
-                <div className="mt-6 rounded-xl border border-[#d4af37]/20 bg-[#fdf9f4]/30 p-4 shadow-[0_4px_16px_rgba(19,0,6,0.02)] animate-fade-in">
-                  <h3 className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377] mb-3">
+                <div className="mt-6 rounded-xl border border-slate-200 bg-[#FAF9F6] p-4 shadow-xs animate-fade-in">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-3">
                     Included in this Combo
                   </h3>
                   <div className="space-y-3">
@@ -284,7 +284,7 @@ export default function ProductDetail() {
                       return (
                         <div
                           key={p.id}
-                          className="flex items-center gap-3.5 rounded-lg bg-white border border-[#847377]/10 p-2.5 shadow-sm transition hover:border-[#3d0a21]/30"
+                          className="flex items-center gap-3.5 rounded-lg bg-white border border-slate-200/80 p-2.5 shadow-xs transition hover:border-[#C9A96E]"
                         >
                           <Link to={pLink} className="shrink-0">
                             <img
