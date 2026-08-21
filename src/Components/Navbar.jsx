@@ -7,6 +7,7 @@ import WishlistNavLink from "./Wishlist/WishlistNavLink";
 import AccountNavMenu from "./Nav/AccountNavMenu";
 import SearchDialog from "./Search/SearchDialog";
 import { useAuth } from "../context/AuthContext";
+import { requestLocationPincode } from "../lib/geolocation";
 
 const DARK_HERO_ROUTES = ["/about"];
 const BG_FADE_RANGE = 56;
@@ -167,6 +168,7 @@ function PincodeLink({ pincode, onClick }) {
 function PincodeModal({ onClose, onUpdate, initialValue }) {
   const [pin, setPin] = useState(initialValue || '');
   const [error, setError] = useState('');
+  const [detecting, setDetecting] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -178,8 +180,29 @@ function PincodeModal({ onClose, onUpdate, initialValue }) {
     }
   };
 
+  const handleDetectLocation = async () => {
+    setDetecting(true);
+    setError('');
+    try {
+      // Clear session flag so geolocation re-triggers
+      sessionStorage.removeItem('velisqa:geo_asked');
+      const { pincode } = await requestLocationPincode();
+      if (pincode) {
+        setPin(pincode);
+        onUpdate(pincode);
+        onClose();
+      } else {
+        setError('Could not detect your pincode. Please enter manually.');
+      }
+    } catch {
+      setError('Location access denied. Please enter pincode manually.');
+    } finally {
+      setDetecting(false);
+    }
+  };
+
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-black/50 px-4 py-20 scrollbar-none" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
       <div className="relative w-full max-w-sm rounded-xl bg-white p-5 shadow-xl border border-black/5 font-sans">
         <button
           type="button"
@@ -189,6 +212,27 @@ function PincodeModal({ onClose, onUpdate, initialValue }) {
           ✕
         </button>
         <h3 className="font-serif text-base font-semibold text-[#3d0a21] mb-4">Enter Pincode</h3>
+
+        <button
+          type="button"
+          onClick={handleDetectLocation}
+          disabled={detecting}
+          className="mb-3 flex w-full items-center justify-center gap-2 rounded-lg border border-[#3d0a21]/15 bg-[#fdf9f4] px-4 py-2.5 text-xs font-semibold text-[#3d0a21] transition hover:bg-[#f5efe8] disabled:opacity-50"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="shrink-0">
+            <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.5" />
+            <path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="1.5" strokeDasharray="2 3" />
+          </svg>
+          {detecting ? 'Detecting location…' : 'Detect my location'}
+        </button>
+
+        <div className="mb-3 flex items-center gap-3 text-[10px] text-[#8a8a8a] uppercase tracking-wider">
+          <span className="h-px flex-1 bg-black/8" />
+          or enter manually
+          <span className="h-px flex-1 bg-black/8" />
+        </div>
+
         <form onSubmit={handleSubmit} className="flex gap-2">
           <input
             type="text"
@@ -230,6 +274,18 @@ export default function Navbar() {
 
   const isDarkHeroRoute = DARK_HERO_ROUTES.includes(pathname);
   const onDarkHero = isDarkHeroRoute && !scrolled;
+
+  // Auto-detect pincode via browser geolocation on first visit
+  useEffect(() => {
+    if (deliveryPincode) return; // already have one
+    let cancelled = false;
+    requestLocationPincode().then(({ pincode }) => {
+      if (!cancelled && pincode) {
+        setDeliveryPincode(pincode);
+      }
+    });
+    return () => { cancelled = true; };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const el = headerRef.current;
@@ -373,10 +429,10 @@ export default function Navbar() {
         <Link
           to="/"
           onClick={closeMenu}
-          className={`relative z-20 inline-flex min-h-9 shrink-0 items-center font-sans font-black uppercase leading-none tracking-widest transition-colors duration-200 hover:opacity-80 ${
+          className={`relative z-20 inline-flex min-h-9 shrink-0 items-center font-logo uppercase leading-none tracking-[0.25em] transition-colors duration-200 hover:opacity-80 ${
             scrolled
-              ? "text-3xl sm:text-4xl md:text-5xl"
-              : "text-4xl sm:text-5xl md:text-6xl"
+              ? "text-2xl sm:text-3xl md:text-4xl"
+              : "text-3xl sm:text-4xl md:text-5xl"
           } ${
             onDarkHero
               ? "text-white drop-shadow-[0_2px_16px_rgba(19,0,6,0.45)]"
@@ -540,7 +596,7 @@ export default function Navbar() {
             <Link
               to="/"
               onClick={closeMenu}
-              className="relative z-20 inline-flex min-h-9 shrink-0 items-center font-sans font-black uppercase leading-none tracking-widest text-[#130006] transition-opacity hover:opacity-75 text-3xl sm:text-5xl md:text-7xl lg:text-8xl"
+              className="relative z-20 inline-flex min-h-9 shrink-0 items-center font-logo uppercase leading-none tracking-[0.25em] text-[#130006] transition-opacity hover:opacity-75 text-2xl sm:text-3xl md:text-4xl lg:text-5xl"
             >
               VELISQA
             </Link>

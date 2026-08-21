@@ -1,6 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Bakbak+One&family=Cascadia+Mono:ital,wght@0,200..700;1,200..700&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Marcellus&family=Outfit:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Sora:wght@100..800&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
 
 :root {
+  --font-logo: 'Marcellus', serif;
   --font-luxury-serif: "Inter", "Helvetica Neue", Arial, sans-serif;
   --font-modern-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
   --primary: #3d0a21;
@@ -19,6 +21,10 @@
   --announcement-height: 2rem;
   --nav-bar-height: 6.75rem;
   --nav-height: calc(var(--announcement-height) + var(--nav-bar-height));
+}
+
+.font-logo {
+  font-family: var(--font-logo);
 }
 
 @media (min-width: 640px) {
@@ -152,7 +158,7 @@ a,
 input,
 select,
 textarea {
-  font: inherit;
+  font-family: inherit;
 }
 
 button,
