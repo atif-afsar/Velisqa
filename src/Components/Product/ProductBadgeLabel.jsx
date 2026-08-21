@@ -2,6 +2,8 @@ import { getProductBadge, getBadgeLabel } from '../../lib/productDisplay'
 
 export default function ProductBadgeLabel({ product, className = '', placement = 'inline' }) {
   const badge = getProductBadge(product)
+  if (!badge || badge === 'new') return null
+
   const label = getBadgeLabel(badge)
   if (!label) return null
 
@@ -10,7 +12,7 @@ export default function ProductBadgeLabel({ product, className = '', placement =
   if (placement === 'image') {
     return (
       <span
-        className={`pointer-events-none absolute left-2 top-10 z-[18] inline-flex rounded-md px-2.5 py-1 text-xs font-bold uppercase tracking-wider shadow-xs sm:left-3 sm:top-11 ${
+        className={`pointer-events-none absolute left-2 top-8 z-[18] inline-flex rounded-md px-2 py-0.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-xs sm:left-3 sm:top-9 ${
           isBestseller
             ? 'bg-[#8B6914] text-white shadow-[#8B6914]/20'
             : 'bg-white text-slate-900 border border-slate-200'

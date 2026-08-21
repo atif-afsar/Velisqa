@@ -7,7 +7,7 @@ import sets from "../../assets/Sets/blue_set.webp";
 import seasonalBracelet from "../../assets/Bracelet/image1.webp";
 import seasonalRing from "../../assets/Rings/image1.webp";
 import seasonalEarrings from "../../assets/Earrings/IMG_3463.webp";
-import seasonalHero from "../../assets/hero/image.webp";
+import seasonalHero from "../../assets/hero/image.png";
 
 /** Circular shop-by-category row on the homepage */
 export const shopCategories = [

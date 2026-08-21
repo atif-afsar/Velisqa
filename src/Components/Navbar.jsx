@@ -429,10 +429,10 @@ export default function Navbar() {
         <Link
           to="/"
           onClick={closeMenu}
-          className={`relative z-20 inline-flex min-h-9 shrink-0 items-center font-logo uppercase leading-none tracking-[0.25em] transition-colors duration-200 hover:opacity-80 ${
+          className={`relative z-20 inline-flex min-h-9 shrink-0 items-center font-logo uppercase leading-none tracking-[0.2em] transition-colors duration-200 hover:opacity-80 ${
             scrolled
-              ? "text-2xl sm:text-3xl md:text-4xl"
-              : "text-3xl sm:text-4xl md:text-5xl"
+              ? "text-base sm:text-lg md:text-xl lg:text-2xl"
+              : "text-lg sm:text-xl md:text-2xl lg:text-3xl"
           } ${
             onDarkHero
               ? "text-white drop-shadow-[0_2px_16px_rgba(19,0,6,0.45)]"
@@ -596,7 +596,7 @@ export default function Navbar() {
             <Link
               to="/"
               onClick={closeMenu}
-              className="relative z-20 inline-flex min-h-9 shrink-0 items-center font-logo uppercase leading-none tracking-[0.25em] text-[#130006] transition-opacity hover:opacity-75 text-2xl sm:text-3xl md:text-4xl lg:text-5xl"
+              className="relative z-20 inline-flex min-h-9 shrink-0 items-center font-logo uppercase leading-none tracking-[0.2em] text-[#130006] transition-opacity hover:opacity-75 text-lg sm:text-xl md:text-2xl lg:text-3xl"
             >
               VELISQA
             </Link>

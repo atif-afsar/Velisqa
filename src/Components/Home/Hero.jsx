@@ -1,169 +1,153 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
-const SLIDE_INTERVAL_MS = 3000;
-const CROSSFADE_MS = 1100;
-const CROSSFADE_EASE = "cubic-bezier(0.33, 0, 0.2, 1)";
+import heroImage1 from "../../assets/hero/image.png";
+import heroImage2 from "../../assets/hero/image5.webp";
+import heroImage3 from "../../assets/hero/image copy.png";
+import heroImage4 from "../../assets/hero/image copy 2.png";
 
-import heroPrimary from "../../assets/hero/image.webp";
-import heroSecondary from "../../assets/hero/image2.webp";
-import heroTertiary from "../../assets/hero/image3.webp";
-import heroQuaternary from "../../assets/hero/image4.webp";
-import heroQuinary from "../../assets/hero/image5.webp";
 
-const HERO_SLIDES = [
+const SLIDES = [
   {
-    src: heroPrimary,
-    alt: "Velisqa Jewellery — gold knot cuff bracelet with pavé accents on velvet",
+    id: "slide-1",
+    src: heroImage1,
+    alt: "Velisqa Fine Jewellery Showcase 1",
   },
   {
-    src: heroSecondary,
-    alt: "Velisqa Jewellery — polished silver hoop earrings on a ceramic tray",
+    id: "slide-2",
+    src: heroImage2,
+    alt: "Velisqa Fine Jewellery Showcase 2",
   },
   {
-    src: heroTertiary,
-    alt: "Velisqa Jewellery — gold diamond pendant necklace and matching stud earrings",
+    id: "slide-3",
+    src: heroImage3,
+    alt: "Velisqa Fine Jewellery Showcase 3",
   },
   {
-    src: heroQuaternary,
-    alt: "Velisqa Jewellery — silver necklace with rose quartz pendant on silk",
-  },
-  {
-    src: heroQuinary,
-    alt: "Velisqa Jewellery — emerald-cut solitaire ring in rose gold on velvet",
+    id: "slide-4",
+    src: heroImage4,
+    alt: "Velisqa Fine Jewellery Showcase 4",
   },
 ];
 
-function prefersReducedMotion() {
-  if (typeof window === "undefined") return false;
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
-
-function HeroArrow({ direction, onClick, label }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={label}
-      className="absolute top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-[#130006] shadow-[0_2px_12px_rgba(0,0,0,0.12)] transition hover:bg-white md:grid"
-      style={direction === "prev" ? { left: "clamp(0.75rem, 2vw, 1.5rem)" } : { right: "clamp(0.75rem, 2vw, 1.5rem)" }}
-    >
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path
-          d={direction === "prev" ? "m14 6-6 6 6 6" : "m10 6 6 6-6 6"}
-          stroke="currentColor"
-          strokeWidth="1.75"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </button>
-  );
-}
+const AUTO_SLIDE_INTERVAL = 3000; // 3 seconds slide interval
 
 export default function Hero() {
-  const [index, setIndex] = useState(0);
-  const [reduceMotion, setReduceMotion] = useState(prefersReducedMotion);
-  const fadeMs = reduceMotion ? 0 : CROSSFADE_MS;
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
 
+  const nextSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
+  }, []);
+
+  const prevSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
+  }, []);
+
+  // Auto-slide every 3 seconds continuously
   useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const onChange = () => setReduceMotion(mq.matches);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
+    const timer = setInterval(() => {
+      nextSlide();
+    }, AUTO_SLIDE_INTERVAL);
 
-  const visibleSlideIndices = useMemo(() => {
-    if (HERO_SLIDES.length <= 1) return [0];
-    const prev = (index - 1 + HERO_SLIDES.length) % HERO_SLIDES.length;
-    return [prev, index];
-  }, [index]);
+    return () => clearInterval(timer);
+  }, [currentSlide, nextSlide]);
 
-  const goNext = useCallback(() => {
-    setIndex((i) => (i + 1) % HERO_SLIDES.length);
-  }, []);
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.targetTouches[0].clientX;
+  };
 
-  const goPrev = useCallback(() => {
-    setIndex((i) => (i - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
-  }, []);
+  const handleTouchMove = (e) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
 
-  useEffect(() => {
-    HERO_SLIDES.forEach((slide) => {
-      const preload = new Image();
-      preload.src = slide.src;
-    });
-  }, []);
-
-  useEffect(() => {
-    if (reduceMotion || HERO_SLIDES.length < 2) return undefined;
-
-    const id = window.setInterval(() => {
-      setIndex((i) => (i + 1) % HERO_SLIDES.length);
-    }, SLIDE_INTERVAL_MS);
-
-    return () => window.clearInterval(id);
-  }, [reduceMotion]);
-
-  const activeSlide = HERO_SLIDES[index] ?? HERO_SLIDES[0];
-  const slideClassName =
-    "absolute inset-0 block w-full h-full object-cover [backface-visibility:hidden] [transform:translateZ(0)]";
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    const diff = touchStartX.current - touchEndX.current;
+    if (diff > 50) {
+      nextSlide();
+    } else if (diff < -50) {
+      prevSlide();
+    }
+    touchStartX.current = 0;
+    touchEndX.current = 0;
+  };
 
   return (
     <section
-      className="relative w-full overflow-hidden leading-[0]"
+      className="relative w-full overflow-hidden select-none"
       style={{ marginTop: "calc(var(--nav-height) + env(safe-area-inset-top, 0px))" }}
-      aria-label="Featured jewellery"
+      aria-label="Featured Jewellery Hero Carousel"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
-      <h1 className="sr-only">Velisqa Jewellery — Crafted to Captivate</h1>
+      <h1 className="sr-only">Velisqa Fine Jewellery Banner Carousel</h1>
 
-      <div className="relative w-full max-md:aspect-[2/1]">
-        {/* Reserves exact banner height from the active slide’s native aspect ratio on desktop. */}
-        <img
-          src={activeSlide.src}
-          alt=""
-          aria-hidden
-          width={1024}
-          height={406}
-          draggable={false}
-          className="pointer-events-none hidden h-auto w-full max-w-none select-none opacity-0 md:block"
-        />
-
-        <div className="absolute inset-0">
-          {HERO_SLIDES.map((slide, i) => {
-            if (!visibleSlideIndices.includes(i)) return null;
-
-            const isActive = i === index;
-            const isLcp = i === 0;
-            return (
+      {/* Slide Container */}
+      <div className="relative w-full aspect-[16/9] sm:aspect-[21/9] md:aspect-[2.4/1] min-h-[320px] sm:min-h-[420px] md:min-h-[520px] lg:min-h-[620px] overflow-hidden bg-[#0d1520]">
+        {/* Horizontal Track for Smooth Sliding Effect */}
+        <div
+          className="flex w-full h-full transition-transform duration-700 ease-in-out"
+          style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+        >
+          {SLIDES.map((slide, index) => (
+            <div key={slide.id} className="w-full h-full flex-shrink-0 relative">
               <img
-                key={slide.src}
                 src={slide.src}
-                alt={isActive ? slide.alt : ""}
-                aria-hidden={!isActive}
-                width={1024}
-                height={406}
-                loading={isLcp ? "eager" : "lazy"}
-                fetchPriority={isActive && isLcp ? "high" : "low"}
-                decoding="async"
-                draggable={false}
-                sizes="100vw"
-                className={slideClassName}
-                style={{
-                  opacity: isActive ? 1 : 0,
-                  zIndex: isActive ? 2 : 1,
-                  transition: fadeMs ? `opacity ${fadeMs}ms ${CROSSFADE_EASE}` : "none",
-                }}
+                alt={slide.alt}
+                loading={index === 0 ? "eager" : "lazy"}
+                fetchPriority={index === 0 ? "high" : "low"}
+                className="w-full h-full object-cover object-center select-none block"
               />
-            );
-          })}
+            </div>
+          ))}
+        </div>
 
-          {HERO_SLIDES.length > 1 && (
-            <>
-              <HeroArrow direction="prev" onClick={goPrev} label="Previous hero slide" />
-              <HeroArrow direction="next" onClick={goNext} label="Next hero slide" />
-            </>
-          )}
+        {/* Previous Navigation Arrow */}
+        <button
+          type="button"
+          onClick={prevSlide}
+          aria-label="Previous Slide"
+          className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-30 p-2.5 sm:p-3 rounded-full bg-white/70 hover:bg-white/95 text-[#130006] shadow-lg backdrop-blur-sm transition-all duration-300 transform hover:scale-110 active:scale-95 focus:outline-none"
+        >
+          <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        {/* Next Navigation Arrow */}
+        <button
+          type="button"
+          onClick={nextSlide}
+          aria-label="Next Slide"
+          className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-30 p-2.5 sm:p-3 rounded-full bg-white/70 hover:bg-white/95 text-[#130006] shadow-lg backdrop-blur-sm transition-all duration-300 transform hover:scale-110 active:scale-95 focus:outline-none"
+        >
+          <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+
+        {/* Pagination Dots */}
+        <div className="absolute bottom-4 sm:bottom-6 left-0 right-0 z-30 flex justify-center items-center space-x-2 sm:space-x-3">
+          {SLIDES.map((_, index) => (
+            <button
+              key={index}
+              type="button"
+              onClick={() => setCurrentSlide(index)}
+              aria-label={`Go to slide ${index + 1}`}
+              className={`h-2.5 rounded-full transition-all duration-500 ${
+                currentSlide === index
+                  ? "w-8 sm:w-10 bg-[#c49a45] shadow-sm"
+                  : "w-2.5 bg-white/50 hover:bg-white/80"
+              }`}
+            />
+          ))}
         </div>
       </div>
     </section>
   );
 }
+
+
+
