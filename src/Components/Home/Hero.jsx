@@ -1,10 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
-import heroImage1 from "../../assets/hero/image.png";
-import heroImage2 from "../../assets/hero/image5.webp";
-import heroImage3 from "../../assets/hero/image copy.png";
-import heroImage4 from "../../assets/hero/image copy 2.png";
-
+import heroImage1 from "../../assets/hero/hero1.webp";
+import heroImage2 from "../../assets/hero/hero2.webp";
+import heroImage3 from "../../assets/hero/hero3.webp";
+import heroImage4 from "../../assets/hero/hero4.webp";
 
 const SLIDES = [
   {
@@ -84,21 +83,25 @@ export default function Hero() {
     >
       <h1 className="sr-only">Velisqa Fine Jewellery Banner Carousel</h1>
 
+      {/* Preload first slide for instantaneous rendering */}
+      <link rel="preload" as="image" href={heroImage1} fetchPriority="high" />
+
       {/* Slide Container */}
-      <div className="relative w-full aspect-[16/9] sm:aspect-[21/9] md:aspect-[2.4/1] min-h-[320px] sm:min-h-[420px] md:min-h-[520px] lg:min-h-[620px] overflow-hidden bg-[#0d1520]">
+      <div className="relative w-full aspect-[16/9] sm:aspect-[2.2/1] md:aspect-[2.5/1] lg:aspect-[2.9/1] overflow-hidden bg-[#f9f5f0]">
         {/* Horizontal Track for Smooth Sliding Effect */}
         <div
-          className="flex w-full h-full transition-transform duration-700 ease-in-out"
+          className="absolute inset-0 flex w-full h-full transition-transform duration-700 ease-in-out"
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}
         >
           {SLIDES.map((slide, index) => (
-            <div key={slide.id} className="w-full h-full flex-shrink-0 relative">
+            <div key={slide.id} className="relative w-full h-full flex-shrink-0">
               <img
                 src={slide.src}
                 alt={slide.alt}
                 loading={index === 0 ? "eager" : "lazy"}
                 fetchPriority={index === 0 ? "high" : "low"}
-                className="w-full h-full object-cover object-center select-none block"
+                decoding={index === 0 ? "sync" : "async"}
+                className="block w-full h-full object-cover object-center select-none"
               />
             </div>
           ))}
@@ -109,9 +112,9 @@ export default function Hero() {
           type="button"
           onClick={prevSlide}
           aria-label="Previous Slide"
-          className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-30 p-2.5 sm:p-3 rounded-full bg-white/70 hover:bg-white/95 text-[#130006] shadow-lg backdrop-blur-sm transition-all duration-300 transform hover:scale-110 active:scale-95 focus:outline-none"
+          className="absolute left-2.5 sm:left-5 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-3 rounded-full bg-white/75 hover:bg-white/95 text-[#130006] shadow-md backdrop-blur-sm transition-all duration-300 transform hover:scale-110 active:scale-95 focus:outline-none"
         >
-          <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
           </svg>
         </button>
@@ -121,25 +124,25 @@ export default function Hero() {
           type="button"
           onClick={nextSlide}
           aria-label="Next Slide"
-          className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-30 p-2.5 sm:p-3 rounded-full bg-white/70 hover:bg-white/95 text-[#130006] shadow-lg backdrop-blur-sm transition-all duration-300 transform hover:scale-110 active:scale-95 focus:outline-none"
+          className="absolute right-2.5 sm:right-5 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-3 rounded-full bg-white/75 hover:bg-white/95 text-[#130006] shadow-md backdrop-blur-sm transition-all duration-300 transform hover:scale-110 active:scale-95 focus:outline-none"
         >
-          <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
           </svg>
         </button>
 
         {/* Pagination Dots */}
-        <div className="absolute bottom-4 sm:bottom-6 left-0 right-0 z-30 flex justify-center items-center space-x-2 sm:space-x-3">
+        <div className="absolute bottom-2.5 sm:bottom-4 left-0 right-0 z-30 flex justify-center items-center space-x-2 sm:space-x-3">
           {SLIDES.map((_, index) => (
             <button
               key={index}
               type="button"
               onClick={() => setCurrentSlide(index)}
               aria-label={`Go to slide ${index + 1}`}
-              className={`h-2.5 rounded-full transition-all duration-500 ${
+              className={`h-2 sm:h-2.5 rounded-full transition-all duration-500 ${
                 currentSlide === index
-                  ? "w-8 sm:w-10 bg-[#c49a45] shadow-sm"
-                  : "w-2.5 bg-white/50 hover:bg-white/80"
+                  ? "w-6 sm:w-10 bg-[#c49a45] shadow-sm"
+                  : "w-2 sm:w-2.5 bg-white/60 hover:bg-white/90"
               }`}
             />
           ))}
@@ -148,6 +151,3 @@ export default function Hero() {
     </section>
   );
 }
-
-
-

@@ -1,5 +1,5 @@
 import modelPortrait from "../../assets/image4.webp";
-import collectionHero from "../../assets/hero/image.png";
+import collectionHero from "../../assets/hero/hero1.webp";
 import velvetService from "../../assets/contact-velvet-service.webp";
 import boutique from "../../assets/contact-boutique.webp";
 import craftsmanship from "../../assets/velisqa-craftsmanship.webp";
