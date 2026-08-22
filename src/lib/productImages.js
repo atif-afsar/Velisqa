@@ -26,3 +26,23 @@ export function getPrimaryImageUrl(product) {
   const urls = getProductImageUrls(product)
   return urls[0] ?? null
 }
+
+export function getHoverImageUrl(product) {
+  if (!product) return null
+
+  // Explicit hover image set by admin
+  if (product.hover_image_url && typeof product.hover_image_url === 'string') {
+    const url = normalizeGalleryUrl(product.hover_image_url)
+    if (url) return url
+  }
+
+  // Explicit index specified
+  if (typeof product.hover_image_index === 'number' && product.hover_image_index >= 0) {
+    const urls = getProductImageUrls(product)
+    if (urls[product.hover_image_index]) {
+      return urls[product.hover_image_index]
+    }
+  }
+
+  return null
+}

@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import { Link } from 'react-router-dom'
-import { getPrimaryImageUrl } from '../../lib/productImages'
+import { getPrimaryImageUrl, getHoverImageUrl } from '../../lib/productImages'
 import ProductImage from '../Common/ProductImage'
 import ProductPromoBadge from './ProductPromoBadge'
 import ProductPriceDisplay from './ProductPriceDisplay'
@@ -14,6 +14,7 @@ import { isProductSoldOut } from '../../lib/cartStock'
 function ProductCard({ product, priority = false, variant = 'default' }) {
   const detailPath = `/product/${product.id}`
   const imageUrl = getPrimaryImageUrl(product)
+  const hoverImageUrl = getHoverImageUrl(product)
   const soldOut = isProductSoldOut(product)
   const catalog = variant === 'catalog'
 
@@ -38,6 +39,7 @@ function ProductCard({ product, priority = false, variant = 'default' }) {
           {!catalog && <ProductBadgeLabel product={product} placement="image" />}
           <ProductImage
             src={imageUrl}
+            hoverSrc={hoverImageUrl}
             alt={product.name}
             width={catalog ? 720 : 500}
             responsiveWidths={catalog ? [400, 560, 720, 960] : [320, 500, 720]}

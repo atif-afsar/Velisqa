@@ -1,5 +1,6 @@
 /** Columns for list/grid views — avoids fetching large unused fields. */
 const PRODUCT_COMMERCE_FIELDS = 'mrp, metal, colour, styles, search_keywords'
+const PRODUCT_HOVER_FIELDS = 'hover_image_url, hover_cloudinary_public_id'
 const PRODUCT_CORE_FIELDS =
   'id, name, price, stock, category, image_url, gallery_urls, created_at, rating, review_count, badge'
 const PRODUCT_CORE_FIELDS_WITHOUT_RATINGS =
@@ -7,7 +8,7 @@ const PRODUCT_CORE_FIELDS_WITHOUT_RATINGS =
 const PRODUCT_CLOUDINARY_FIELDS = 'cloudinary_public_id, gallery_cloudinary_ids'
 
 export const PRODUCT_LIST_SELECT =
-  `${PRODUCT_CORE_FIELDS}, ${PRODUCT_COMMERCE_FIELDS}, ${PRODUCT_CLOUDINARY_FIELDS}`
+  `${PRODUCT_CORE_FIELDS}, ${PRODUCT_HOVER_FIELDS}, ${PRODUCT_COMMERCE_FIELDS}, ${PRODUCT_CLOUDINARY_FIELDS}`
 
 function commerceColumnsMissing(error) {
   const message = String(error?.message || '')
@@ -19,9 +20,10 @@ function ratingColumnsMissing(error) {
   return message.includes('rating') || message.includes('review_count')
 }
 
-function productListColumns({ commerce, cloudinary, outOfStock, ratings, combo }) {
+function productListColumns({ commerce, cloudinary, outOfStock, ratings, combo, hover }) {
   return [
     ratings ? PRODUCT_CORE_FIELDS : PRODUCT_CORE_FIELDS_WITHOUT_RATINGS,
+    hover ? PRODUCT_HOVER_FIELDS : null,
     commerce ? PRODUCT_COMMERCE_FIELDS : null,
     cloudinary ? PRODUCT_CLOUDINARY_FIELDS : null,
     outOfStock ? 'out_of_stock' : null,
@@ -36,13 +38,17 @@ export async function fetchProductList(supabase, options = {}) {
   const run = (columns) =>
     supabase.from('products').select(columns).order(order.column, { ascending: order.ascending })
 
-  const supported = { commerce: true, cloudinary: true, outOfStock: true, ratings: true, combo: true }
+  const supported = { commerce: true, cloudinary: true, outOfStock: true, ratings: true, combo: true, hover: true }
   let result = { data: [], error: null }
 
-  for (let attempt = 0; attempt < 5; attempt += 1) {
+  for (let attempt = 0; attempt < 6; attempt += 1) {
     result = await run(productListColumns(supported))
     if (!result.error) break
 
+    if (supported.hover && result.error.message?.includes('hover_image_url')) {
+      supported.hover = false
+      continue
+    }
     if (supported.ratings && ratingColumnsMissing(result.error)) {
       supported.ratings = false
       continue

@@ -64,38 +64,38 @@ export default function AdminShell({
   const openTasks = counts?.totalOpen || 0
 
   return (
-    <main className="page-offset-nav min-h-screen bg-[#f4f1ec] text-[#130006]">
+    <main className="page-offset-nav min-h-screen w-full max-w-full overflow-x-hidden bg-[#f4f1ec] text-[#130006]">
       <div className="border-b border-[#3d0a21]/10 bg-[#130006] text-[#fdf9f4]">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-3 py-3 sm:px-6">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#d4af37]/80">Velisqa admin</p>
-            <p className="text-sm text-white/70">{user?.email}</p>
+            <p className="text-sm text-white/70 truncate max-w-[200px] sm:max-w-none">{user?.email}</p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
               onClick={() => void handleRefresh()}
-              className="rounded-full border border-white/20 px-3 py-1.5 text-xs font-semibold text-white/90 hover:bg-white/10"
+              className="rounded-full border border-white/20 px-3 py-1 text-xs font-semibold text-white/90 hover:bg-white/10"
             >
               Refresh
             </button>
             <Link
               to="/"
-              className="rounded-full border border-white/20 px-3 py-1.5 text-xs font-semibold text-white/90 hover:bg-white/10"
+              className="rounded-full border border-white/20 px-3 py-1 text-xs font-semibold text-white/90 hover:bg-white/10"
             >
               View shop
             </Link>
             <button
               type="button"
               onClick={() => logout()}
-              className="rounded-full bg-[#d4af37] px-3 py-1.5 text-xs font-semibold text-[#130006]"
+              className="rounded-full bg-[#d4af37] px-3 py-1 text-xs font-semibold text-[#130006]"
             >
               Sign out
             </button>
           </div>
         </div>
 
-        <nav className="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-4 pb-0 sm:px-6">
+        <nav className="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-3 pb-0 sm:px-6 no-scrollbar">
           {NAV.map((item) => {
             const active = item.match(location.pathname)
             const badgeCount = item.badgeKey ? counts?.[item.badgeKey] : 0
@@ -103,7 +103,7 @@ export default function AdminShell({
               <Link
                 key={item.to}
                 to={item.to}
-                className={`whitespace-nowrap rounded-t-xl px-4 py-3 text-xs font-bold uppercase tracking-[0.08em] transition ${
+                className={`whitespace-nowrap rounded-t-xl px-3.5 sm:px-4 py-2.5 sm:py-3 text-xs font-bold uppercase tracking-[0.08em] transition ${
                   active
                     ? 'bg-[#f4f1ec] text-[#130006]'
                     : 'text-white/75 hover:bg-white/10 hover:text-white'
@@ -119,14 +119,14 @@ export default function AdminShell({
 
       {openTasks > 0 && location.pathname !== '/admin/home' && (
         <div className="border-b border-amber-200 bg-amber-50">
-          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3 text-sm text-amber-950 sm:px-6">
-            <p>
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-3 py-3 text-sm text-amber-950 sm:px-6">
+            <p className="text-xs sm:text-sm">
               <strong>{openTasks} task{openTasks === 1 ? '' : 's'} need your attention</strong>
-              {counts?.paymentReviews ? ` · ${counts.paymentReviews} UPI proof${counts.paymentReviews === 1 ? '' : 's'} to review` : ''}
-              {counts?.needsShipment ? ` · ${counts.needsShipment} order${counts.needsShipment === 1 ? '' : 's'} ready to ship` : ''}
-              {counts?.pendingReviews ? ` · ${counts.pendingReviews} customer review${counts.pendingReviews === 1 ? '' : 's'} to moderate` : ''}
+              {counts?.paymentReviews ? ` · ${counts.paymentReviews} UPI proof${counts.paymentReviews === 1 ? '' : 's'}` : ''}
+              {counts?.needsShipment ? ` · ${counts.needsShipment} order${counts.needsShipment === 1 ? '' : 's'}` : ''}
+              {counts?.pendingReviews ? ` · ${counts.pendingReviews} review${counts.pendingReviews === 1 ? '' : 's'}` : ''}
             </p>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 text-xs sm:text-sm">
               {counts?.paymentReviews ? (
                 <Link to="/admin/payments" className="font-semibold text-[#6f334a] hover:underline">
                   Review payments →
@@ -147,16 +147,16 @@ export default function AdminShell({
         </div>
       )}
 
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+      <div className="mx-auto w-full max-w-6xl px-3 py-6 sm:px-6 sm:py-8 min-w-0">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h1 className="font-serif text-3xl font-semibold">{title}</h1>
-            {subtitle ? <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#514347]">{subtitle}</p> : null}
+            <h1 className="font-serif text-2xl sm:text-3xl font-semibold">{title}</h1>
+            {subtitle ? <p className="mt-1.5 max-w-2xl text-xs sm:text-sm leading-relaxed text-[#514347]">{subtitle}</p> : null}
           </div>
           {actions ? <div className="flex flex-wrap gap-2">{actions}</div> : null}
         </div>
 
-        <div className="mt-8">{children}</div>
+        <div className="mt-6 sm:mt-8 min-w-0 max-w-full">{children}</div>
       </div>
     </main>
   )

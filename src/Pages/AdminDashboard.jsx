@@ -102,6 +102,9 @@ function revokeNewItemPreview(item) {
 }
 
 function formatProductSaveError(message) {
+  if (message.includes('hover_image_url')) {
+    return `${message}\n\nRun supabase/add-hover-image.sql in the Supabase SQL Editor, then try again.`
+  }
   if (message.includes('gallery_urls')) {
     return `${message}\n\nRun supabase/add-product-gallery.sql in the Supabase SQL Editor, then try again.`
   }
@@ -139,6 +142,7 @@ export default function AdminDashboard() {
   const { confirm, ConfirmDialog } = useConfirm()
   const { notifyCatalogChange } = useCatalog()
   const fileInputId = useId()
+  const hoverFileInputId = useId()
 
   const [products, setProducts] = useState([])
   const [fetchError, setFetchError] = useState(null)
@@ -146,6 +150,7 @@ export default function AdminDashboard() {
   const [formNotice, setFormNotice] = useState('')
   const [form, setForm] = useState(emptyForm)
   const [galleryItems, setGalleryItems] = useState([])
+  const [hoverItemId, setHoverItemId] = useState(null)
   const [originalImageUrls, setOriginalImageUrls] = useState([])
   const [editingId, setEditingId] = useState(null)
   const [busy, setBusy] = useState(false)
@@ -206,13 +211,44 @@ export default function AdminDashboard() {
       items.forEach(revokeNewItemPreview)
       return []
     })
+    setHoverItemId(null)
     setOriginalImageUrls([])
   }
 
   function resetForm() {
     setForm(emptyForm)
     clearGalleryItems()
+    setHoverItemId(null)
     setEditingId(null)
+  }
+
+  function setAsCoverItem(id) {
+    setGalleryItems((items) => {
+      const idx = items.findIndex((item) => item.id === id)
+      if (idx <= 0) return items
+      const target = items[idx]
+      const rest = items.filter((item) => item.id !== id)
+      return [target, ...rest]
+    })
+  }
+
+  function handleHoverImageUpload(e) {
+    const files = Array.from(e.target.files ?? [])
+    e.target.value = ''
+    if (!files.length) return
+    const file = files[0]
+    if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+      showFormError(`${file.name}: use JPG, PNG, WebP, or GIF.`)
+      return
+    }
+    if (file.size > MAX_ORIGINAL_FILE_BYTES) {
+      showFormError(`${file.name} is too large (max 15 MB before compression).`)
+      return
+    }
+    const newItem = makeGalleryItemFromFile(file)
+    setGalleryItems((items) => [...items, newItem])
+    setHoverItemId(newItem.id)
+    showFormNotice(`Uploaded ${file.name} and set it as the Hover Image.`)
   }
 
   function startEdit(product) {
@@ -238,7 +274,21 @@ export default function AdminDashboard() {
     const urls = getProductImageUrls(product)
     const publicIds = getGalleryCloudinaryIds(product)
     setOriginalImageUrls(urls)
-    setGalleryItems(urls.map((url, index) => makeGalleryItemFromUrl(url, publicIds[index] ?? null)))
+    const items = urls.map((url, index) => makeGalleryItemFromUrl(url, publicIds[index] ?? null))
+    setGalleryItems(items)
+
+    if (product.hover_image_url) {
+      const match = items.find((item) => item.url === product.hover_image_url)
+      if (match) {
+        setHoverItemId(match.id)
+      } else {
+        const hoverItem = makeGalleryItemFromUrl(product.hover_image_url, product.hover_cloudinary_public_id ?? null)
+        setGalleryItems((current) => [...current, hoverItem])
+        setHoverItemId(hoverItem.id)
+      }
+    } else {
+      setHoverItemId(null)
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
@@ -355,11 +405,29 @@ export default function AdminDashboard() {
       const newFiles = galleryItems.filter((item) => item.kind === 'new').map((item) => item.file)
 
       const uploadedAssets = newFiles.length ? await uploadProductImages(newFiles, user?.id) : []
-      const allUrls = [...keptItems.map((item) => item.url), ...uploadedAssets.map((asset) => asset.url)]
-      const allPublicIds = [
-        ...keptItems.map((item) => item.publicId ?? null),
-        ...uploadedAssets.map((asset) => asset.publicId ?? null),
-      ]
+
+      let uploadIndex = 0
+      const itemAssetMap = new Map()
+
+      galleryItems.forEach((item) => {
+        if (item.kind === 'existing') {
+          itemAssetMap.set(item.id, { url: item.url, publicId: item.publicId ?? null })
+        } else {
+          const asset = uploadedAssets[uploadIndex++]
+          itemAssetMap.set(item.id, { url: asset.url, publicId: asset.publicId ?? null })
+        }
+      })
+
+      const finalAssets = galleryItems.map((item) => itemAssetMap.get(item.id)).filter(Boolean)
+      const allUrls = finalAssets.map((a) => a.url)
+      const allPublicIds = finalAssets.map((a) => a.publicId)
+
+      const primaryAsset = finalAssets[0] ?? { url: null, publicId: null }
+      let hoverAsset = { url: null, publicId: null }
+
+      if (hoverItemId && itemAssetMap.has(hoverItemId)) {
+        hoverAsset = itemAssetMap.get(hoverItemId)
+      }
 
       const badgeRaw = form.badge.trim()
 
@@ -379,9 +447,11 @@ export default function AdminDashboard() {
         colour: form.colour,
         styles: normalizeTextList(form.styles),
         search_keywords: normalizeTextList(form.search_keywords),
-        image_url: allUrls[0] ?? null,
+        image_url: primaryAsset.url,
+        hover_image_url: hoverAsset.url,
         gallery_urls: allUrls,
-        cloudinary_public_id: allPublicIds[0] ?? null,
+        cloudinary_public_id: primaryAsset.publicId,
+        hover_cloudinary_public_id: hoverAsset.publicId,
         gallery_cloudinary_ids: allPublicIds,
         ...availability,
         badge: badgeRaw === 'bestseller' || badgeRaw === 'new' ? badgeRaw : null,
@@ -405,10 +475,18 @@ export default function AdminDashboard() {
 
       let { error } = await persistProduct(row)
 
+      if (error?.message?.includes('hover_image_url') || error?.message?.includes('hover_cloudinary_public_id')) {
+        const legacyRow = { ...row }
+        delete legacyRow.hover_image_url
+        delete legacyRow.hover_cloudinary_public_id
+        ;({ error } = await persistProduct(legacyRow))
+      }
+
       if (error?.message?.includes('cloudinary')) {
         const legacyRow = { ...row }
         delete legacyRow.cloudinary_public_id
         delete legacyRow.gallery_cloudinary_ids
+        delete legacyRow.hover_cloudinary_public_id
         ;({ error } = await persistProduct(legacyRow))
       }
 
@@ -505,7 +583,7 @@ export default function AdminDashboard() {
   }
 
   const inputClass =
-    'w-full rounded-xl border border-[#847377]/25 bg-white px-4 py-2.5 text-sm text-[#130006] outline-none transition focus:border-[#3d0a21]/35 focus:ring-2 focus:ring-[#d4af37]/20'
+    'w-full max-w-full min-w-0 box-border rounded-xl border border-[#847377]/25 bg-white px-3.5 sm:px-4 py-2.5 text-sm text-[#130006] outline-none transition focus:border-[#3d0a21]/35 focus:ring-2 focus:ring-[#d4af37]/20'
 
   const filteredProducts = products.filter((p) => {
     const matchesCategory = selectedCategoryTab === 'all'
@@ -537,7 +615,7 @@ export default function AdminDashboard() {
             </div>
           )}
 
-          <section className="mb-10 rounded-2xl border border-[#d4af37]/15 bg-white/80 p-5 shadow-[0_16px_48px_rgba(19,0,6,0.05)] sm:p-6">
+          <section className="mb-10 w-full max-w-full min-w-0 box-border overflow-hidden rounded-2xl border border-[#d4af37]/15 bg-white/80 p-3.5 sm:p-6 shadow-[0_16px_48px_rgba(19,0,6,0.05)]">
             <h2 className="font-serif text-lg font-semibold">
               {editingId ? 'Edit product' : 'Add a new product'}
             </h2>
@@ -559,8 +637,8 @@ export default function AdminDashboard() {
               </p>
             ) : null}
 
-            <form onSubmit={handleSubmit} className="mt-4 grid gap-4 sm:grid-cols-2">
-              <label className="sm:col-span-2">
+            <form onSubmit={handleSubmit} className="mt-4 grid gap-4 w-full max-w-full min-w-0 box-border sm:grid-cols-2">
+              <label className="sm:col-span-2 block w-full max-w-full min-w-0">
                 <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
                   Name
                 </span>
@@ -838,7 +916,7 @@ export default function AdminDashboard() {
                 )}
               </div>
 
-              <label>
+              <label className="block w-full max-w-full min-w-0 box-border">
                 <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
                   Selling price (₹)
                 </span>
@@ -853,7 +931,7 @@ export default function AdminDashboard() {
                 />
               </label>
 
-              <label>
+              <label className="block w-full max-w-full min-w-0 box-border">
                 <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
                   MRP (₹)
                 </span>
@@ -869,7 +947,7 @@ export default function AdminDashboard() {
                 <p className="mt-1 text-xs text-[#847377]">Must not be lower than the selling price.</p>
               </label>
 
-              <label>
+              <label className="block w-full max-w-full min-w-0 box-border">
                 <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
                   Stock
                 </span>
@@ -884,14 +962,14 @@ export default function AdminDashboard() {
                 />
               </label>
 
-              <label className="flex items-start gap-3 rounded-xl border border-[#847377]/20 bg-[#fdf9f4] px-4 py-3 sm:col-span-2">
+              <label className="flex items-start gap-3 rounded-xl border border-[#847377]/20 bg-[#fdf9f4] p-3 sm:px-4 sm:py-3 sm:col-span-2 w-full max-w-full min-w-0 box-border overflow-hidden">
                 <input
                   type="checkbox"
                   className="mt-1 h-4 w-4 shrink-0 accent-[#3d0a21]"
                   checked={form.out_of_stock}
                   onChange={(e) => setForm((f) => ({ ...f, out_of_stock: e.target.checked }))}
                 />
-                <span className="text-sm leading-relaxed text-[#514347]">
+                <span className="text-xs sm:text-sm leading-relaxed text-[#514347] min-w-0 flex-1">
                   <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
                     Out of stock
                   </span>
@@ -900,7 +978,7 @@ export default function AdminDashboard() {
                 </span>
               </label>
 
-              <label className="sm:col-span-2">
+              <label className="sm:col-span-2 block w-full max-w-full min-w-0 box-border">
                 <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
                   Badge
                 </span>
@@ -921,7 +999,7 @@ export default function AdminDashboard() {
                 </p>
               </label>
 
-              <label>
+              <label className="block w-full max-w-full min-w-0 box-border">
                 <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
                   Mock Review Count (Admin)
                 </span>
@@ -935,7 +1013,7 @@ export default function AdminDashboard() {
                 />
               </label>
 
-              <label>
+              <label className="block w-full max-w-full min-w-0 box-border">
                 <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
                   Mock Average Rating (1.0 - 5.0)
                 </span>
@@ -951,7 +1029,7 @@ export default function AdminDashboard() {
                 />
               </label>
 
-              <label className="sm:col-span-2">
+              <label className="sm:col-span-2 block w-full max-w-full min-w-0 box-border">
                 <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
                   Category
                 </span>
@@ -972,7 +1050,7 @@ export default function AdminDashboard() {
                 </p>
               </label>
 
-              <label>
+              <label className="block w-full max-w-full min-w-0 box-border">
                 <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
                   Metal / material
                 </span>
@@ -989,7 +1067,7 @@ export default function AdminDashboard() {
                 </select>
               </label>
 
-              <label>
+              <label className="block w-full max-w-full min-w-0 box-border">
                 <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
                   Colour
                 </span>
@@ -1006,16 +1084,16 @@ export default function AdminDashboard() {
                 </select>
               </label>
 
-              <fieldset className="rounded-xl border border-[#847377]/20 bg-[#fdf9f4] p-4 sm:col-span-2">
+              <fieldset className="rounded-xl border border-[#847377]/20 bg-[#fdf9f4] p-3.5 sm:p-4 sm:col-span-2 w-full max-w-full min-w-0 box-border overflow-hidden">
                 <legend className="px-1 text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
                   Styles / occasions
                 </legend>
-                <div className="mt-1 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="mt-1 grid gap-2 sm:grid-cols-2 lg:grid-cols-4 min-w-0">
                   {STYLE_OPTIONS.map((style) => (
-                    <label key={style} className="flex items-center gap-2 text-sm text-[#514347]">
+                    <label key={style} className="flex items-center gap-2 text-sm text-[#514347] min-w-0">
                       <input
                         type="checkbox"
-                        className="h-4 w-4 accent-[#3d0a21]"
+                        className="h-4 w-4 accent-[#3d0a21] shrink-0"
                         checked={form.styles.includes(style)}
                         onChange={(event) => setForm((current) => ({
                           ...current,
@@ -1024,13 +1102,13 @@ export default function AdminDashboard() {
                             : current.styles.filter((item) => item !== style),
                         }))}
                       />
-                      {style}
+                      <span className="truncate">{style}</span>
                     </label>
                   ))}
                 </div>
               </fieldset>
 
-              <label className="sm:col-span-2">
+              <label className="sm:col-span-2 block w-full max-w-full min-w-0 box-border">
                 <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
                   Search keywords
                 </span>
@@ -1045,79 +1123,220 @@ export default function AdminDashboard() {
                 </p>
               </label>
 
-              <div className="sm:col-span-2">
-                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
-                  Product images ({galleryItems.length}/{MAX_IMAGES_PER_PRODUCT})
-                </span>
-                <label
-                  htmlFor={fileInputId}
-                  className={`flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-[#847377]/35 bg-[#fdf9f4] px-4 py-8 text-center transition hover:border-[#3d0a21]/35 hover:bg-white ${
-                    galleryItems.length >= MAX_IMAGES_PER_PRODUCT ? 'pointer-events-none opacity-50' : ''
-                  }`}
-                >
-                  <input
-                    id={fileInputId}
-                    type="file"
-                    accept="image/jpeg,image/png,image/webp,image/gif"
-                    multiple
-                    className="sr-only"
-                    disabled={galleryItems.length >= MAX_IMAGES_PER_PRODUCT}
-                    onChange={handleImagesChange}
-                  />
-                  <span className="text-sm font-medium text-[#130006]">Click to add images</span>
-                  <span className="mt-1 text-xs text-[#847377]">
-                    JPG, PNG, WebP or GIF · up to 15 MB each · auto-compressed to WebP
-                  </span>
-                </label>
+              <div className="sm:col-span-2 space-y-4 rounded-xl border border-[#d4af37]/20 bg-[#fdf9f4] p-3.5 sm:p-4 shadow-sm min-w-0 max-w-full overflow-hidden box-border">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-[#847377]/15 pb-3 min-w-0">
+                  <div className="min-w-0">
+                    <span className="block text-xs font-bold uppercase tracking-wide text-[#3d0a21] break-words whitespace-normal leading-snug">
+                      Product Images & Cover/Hover Roles ({galleryItems.length}/{MAX_IMAGES_PER_PRODUCT})
+                    </span>
+                    <p className="text-xs text-[#847377] mt-1 leading-relaxed break-words whitespace-normal">
+                      First image is Cover (Primary). Select any image below to set it as the Hover/Touch Image.
+                    </p>
+                  </div>
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto shrink-0">
+                    <label
+                      htmlFor={fileInputId}
+                      className={`cursor-pointer rounded-lg bg-[#3d0a21] px-3 py-2 text-xs font-semibold text-white text-center hover:bg-[#3d0a21]/90 transition ${
+                        galleryItems.length >= MAX_IMAGES_PER_PRODUCT ? 'pointer-events-none opacity-50' : ''
+                      }`}
+                    >
+                      <input
+                        id={fileInputId}
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/gif"
+                        multiple
+                        className="sr-only"
+                        disabled={galleryItems.length >= MAX_IMAGES_PER_PRODUCT}
+                        onChange={handleImagesChange}
+                      />
+                      + Add Gallery Images
+                    </label>
+                    <label
+                      htmlFor={hoverFileInputId}
+                      className={`cursor-pointer rounded-lg border border-[#3d0a21] bg-white px-3 py-2 text-xs font-semibold text-[#3d0a21] text-center hover:bg-[#f9f5f0] transition ${
+                        galleryItems.length >= MAX_IMAGES_PER_PRODUCT ? 'pointer-events-none opacity-50' : ''
+                      }`}
+                    >
+                      <input
+                        id={hoverFileInputId}
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/gif"
+                        className="sr-only"
+                        disabled={galleryItems.length >= MAX_IMAGES_PER_PRODUCT}
+                        onChange={handleHoverImageUpload}
+                      />
+                      + Upload Dedicated Hover Image
+                    </label>
+                  </div>
+                </div>
+
+                {/* Role Summary Grid */}
+                <div className="grid gap-3 sm:grid-cols-2 min-w-0">
+                  {/* Cover Image Preview */}
+                  <div className="flex items-center gap-3 rounded-lg border border-amber-300/60 bg-amber-50/60 p-2.5 min-w-0 overflow-hidden">
+                    {galleryItems[0] ? (
+                      <img
+                        src={galleryItems[0].kind === 'existing' ? galleryItems[0].url : galleryItems[0].preview}
+                        alt="Cover preview"
+                        className="h-12 w-12 sm:h-14 sm:w-14 rounded-lg object-cover border border-amber-400/50 shrink-0"
+                      />
+                    ) : (
+                      <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-lg bg-amber-100/70 flex items-center justify-center text-[10px] text-amber-900 font-bold shrink-0">
+                        No Cover
+                      </div>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <span className="inline-block rounded-full bg-amber-700 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white mb-1">
+                        COVER IMAGE (PRIMARY)
+                      </span>
+                      <p className="text-xs font-medium text-amber-950 leading-snug break-words whitespace-normal">
+                        {galleryItems[0] ? 'Image #1 (Shop thumbnail)' : 'Add image to set cover'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Hover Image Preview */}
+                  {(() => {
+                    const hoverItem = galleryItems.find((item) => item.id === hoverItemId)
+                    return (
+                      <div className="flex items-center gap-3 rounded-lg border border-indigo-300/60 bg-indigo-50/60 p-2.5 min-w-0 overflow-hidden">
+                        {hoverItem ? (
+                          <img
+                            src={hoverItem.kind === 'existing' ? hoverItem.url : hoverItem.preview}
+                            alt="Hover preview"
+                            className="h-12 w-12 sm:h-14 sm:w-14 rounded-lg object-cover border border-indigo-400/50 shrink-0"
+                          />
+                        ) : (
+                          <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-lg bg-indigo-100/70 flex items-center justify-center text-[10px] text-indigo-900 font-bold shrink-0">
+                            None
+                          </div>
+                        )}
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center justify-between gap-1 mb-1">
+                            <span className="inline-block rounded-full bg-indigo-700 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white">
+                              HOVER IMAGE (SECONDARY)
+                            </span>
+                            {hoverItem && (
+                              <button
+                                type="button"
+                                onClick={() => setHoverItemId(null)}
+                                className="text-[10px] font-bold text-red-700 hover:text-red-900 underline shrink-0"
+                              >
+                                Remove
+                              </button>
+                            )}
+                          </div>
+                          <p className="text-xs font-medium text-indigo-950 leading-snug break-words whitespace-normal">
+                            {hoverItem ? 'Active on desktop hover & mobile touch' : 'No hover image set (uses primary image only)'}
+                          </p>
+                        </div>
+                      </div>
+                    )
+                  })()}
+                </div>
 
                 {galleryItems.length > 0 && (
-                  <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-                    {galleryItems.map((item, idx) => (
-                      <li
-                        key={item.id}
-                        className="overflow-hidden rounded-xl border border-[#847377]/15 bg-[#f1ede8]"
-                      >
-                        <div className="relative">
-                          <img
-                            src={item.kind === 'existing' ? item.url : item.preview}
-                            alt=""
-                            className="aspect-[4/3] w-full object-cover"
-                          />
-                          {idx === 0 && (
-                            <span className="absolute left-2 top-2 rounded-full bg-[#3d0a21] px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] text-[#e9c349]">
-                              Cover
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex border-t border-[#847377]/15">
-                          <button
-                            type="button"
-                            disabled={idx === 0}
-                            onClick={() => moveGalleryItem(item.id, -1)}
-                            className="flex-1 py-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-[#514347] hover:bg-white disabled:opacity-30"
-                            aria-label="Move image earlier"
-                          >
-                            ←
-                          </button>
-                          <button
-                            type="button"
-                            disabled={idx === galleryItems.length - 1}
-                            onClick={() => moveGalleryItem(item.id, 1)}
-                            className="flex-1 border-x border-[#847377]/15 py-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-[#514347] hover:bg-white disabled:opacity-30"
-                            aria-label="Move image later"
-                          >
-                            →
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => removeGalleryItem(item.id)}
-                            className="flex-1 py-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-red-800 hover:bg-red-50"
-                          >
-                            Remove
-                          </button>
-                        </div>
-                      </li>
-                    ))}
+                  <ul className="mt-4 grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 min-w-0">
+                    {galleryItems.map((item, idx) => {
+                      const isCover = idx === 0
+                      const isHover = item.id === hoverItemId
+
+                      return (
+                        <li
+                          key={item.id}
+                          className={`overflow-hidden rounded-xl border bg-white shadow-sm transition min-w-0 ${
+                            isCover
+                              ? 'border-amber-400 ring-2 ring-amber-400/40'
+                              : isHover
+                              ? 'border-indigo-400 ring-2 ring-indigo-400/40'
+                              : 'border-[#847377]/15'
+                          }`}
+                        >
+                          <div className="relative">
+                            <img
+                              src={item.kind === 'existing' ? item.url : item.preview}
+                              alt=""
+                              className="aspect-[4/3] w-full object-cover"
+                            />
+                            <div className="absolute left-2 top-2 flex flex-wrap gap-1">
+                              {isCover && (
+                                <span className="rounded-full bg-amber-700 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow">
+                                  COVER
+                                </span>
+                              )}
+                              {isHover && (
+                                <span className="rounded-full bg-indigo-700 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow">
+                                  HOVER
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Role Actions */}
+                          <div className="p-2 border-t border-[#847377]/15 flex flex-wrap gap-1.5 bg-[#fdf9f4]">
+                            {!isCover && (
+                              <button
+                                type="button"
+                                onClick={() => setAsCoverItem(item.id)}
+                                className="rounded bg-amber-700 hover:bg-amber-800 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider transition"
+                              >
+                                Set Cover
+                              </button>
+                            )}
+
+                            {isHover ? (
+                              <button
+                                type="button"
+                                onClick={() => setHoverItemId(null)}
+                                className="rounded bg-indigo-100 hover:bg-indigo-200 text-indigo-950 text-[10px] font-bold px-2 py-1 uppercase tracking-wider transition border border-indigo-300"
+                              >
+                                Remove Hover
+                              </button>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => setHoverItemId(item.id)}
+                                className="rounded bg-indigo-700 hover:bg-indigo-800 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider transition"
+                              >
+                                Set Hover
+                              </button>
+                            )}
+                          </div>
+
+                          {/* Position Shift & Delete Controls */}
+                          <div className="flex border-t border-[#847377]/15 bg-[#f1ede8]">
+                            <button
+                              type="button"
+                              disabled={idx === 0}
+                              onClick={() => moveGalleryItem(item.id, -1)}
+                              className="flex-1 py-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-[#514347] hover:bg-white disabled:opacity-30"
+                              aria-label="Move image earlier"
+                            >
+                              ← Move
+                            </button>
+                            <button
+                              type="button"
+                              disabled={idx === galleryItems.length - 1}
+                              onClick={() => moveGalleryItem(item.id, 1)}
+                              className="flex-1 border-x border-[#847377]/15 py-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-[#514347] hover:bg-white disabled:opacity-30"
+                              aria-label="Move image later"
+                            >
+                              Move →
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (isHover) setHoverItemId(null)
+                                removeGalleryItem(item.id)
+                              }}
+                              className="flex-1 py-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-red-800 hover:bg-red-50"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </li>
+                      )
+                    })}
                   </ul>
                 )}
               </div>
