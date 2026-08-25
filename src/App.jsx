@@ -45,6 +45,7 @@ const AdminOrders = lazy(() => import('./Pages/AdminOrders'))
 const AdminReviews = lazy(() => import('./Pages/AdminReviews'))
 const AdminReturns = lazy(() => import('./Pages/AdminReturns'))
 const MyOrders = lazy(() => import('./Pages/MyOrders'))
+const Founders = lazy(() => import('./Pages/Founders'))
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -97,6 +98,7 @@ function App() {
           <Route path="/refund-cancellation" element={<RefundCancellation />} />
           <Route path="/shipping-returns" element={<Shipping />} />
           <Route path="/faq" element={<FAQ />} />
+          <Route path="/founders" element={<Founders />} />
           <Route path="/order" element={<Order />} />
           <Route path="/login" element={<Login />} />
           <Route path="/auth/callback" element={<AuthCallback />} />

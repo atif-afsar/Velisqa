@@ -109,6 +109,31 @@ export const pageSeo = {
     keywords: ["Velisqa FAQ", "buy artificial jewellery", "Velisqa WhatsApp order"],
     canonicalPath: "/faq",
   },
+  founders: {
+    title: "Velisqa Founders | Sameer Shameem & Atif Afsar",
+    description:
+      "Meet Sameer Shameem and Atif Afsar, the founding leaders behind Velisqa Jewellery. Discover their vision, journey, philosophy and the story behind Velisqa.",
+    keywords: [
+      "Velisqa founder",
+      "founders of Velisqa",
+      "who is the founder of Velisqa",
+      "Sameer Shameem",
+      "Atif Afsar",
+      "Velisqa Jewellery founder",
+      "Velisqa founders",
+      "Sameer Shameem Velisqa",
+      "Atif Afsar Velisqa",
+      "Velisqa leadership",
+      "Velisqa Jewellery story",
+      "founder of Velisqa Jewellery",
+      "who founded Velisqa Jewellery",
+      "Sameer Shameem founder of Velisqa",
+      "Atif Afsar founder of Velisqa",
+      "fine jewellery India",
+      "modern jewellery brand India",
+    ],
+    canonicalPath: "/founders",
+  },
   order: {
     title: "Order on WhatsApp | Velisqa Jewellery",
     description:

@@ -171,3 +171,36 @@ export function buildProductDetailSchema({ product, image, description, url }) {
 
   return schema;
 }
+
+export function buildFoundersPageSchema() {
+  const sameer = {
+    "@type": "Person",
+    name: "Sameer Shameem",
+    url: "https://sameer-portfolio-dun.vercel.app/",
+    jobTitle: "Founding Leader",
+    worksFor: { "@id": `${SITE_URL}/#organization` },
+    sameAs: ["https://www.linkedin.com/in/sameer-shameem-4309bb340"],
+    image: `${SITE_URL}/images/sameer-shameem.jpg`,
+  };
+
+  const atif = {
+    "@type": "Person",
+    name: "Atif Afsar",
+    url: "https://portfolio-rgzt.vercel.app/",
+    jobTitle: "Founding Leader",
+    worksFor: { "@id": `${SITE_URL}/#organization` },
+    sameAs: [
+      "https://www.linkedin.com/in/atif-afsar-64903b33a?originalSubdomain=in",
+    ],
+    image: `${SITE_URL}/images/atif-afsar.jpg`,
+  };
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${SITE_URL}/#organization`,
+    name: "Velisqa Jewellery",
+    url: SITE_URL,
+    founder: [sameer, atif],
+  };
+}
