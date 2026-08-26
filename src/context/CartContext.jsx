@@ -10,7 +10,7 @@ import {
 } from '../lib/cartStock'
 import { supabase } from '../lib/supabaseClient'
 import { getPrimaryImageUrl } from '../lib/productImages'
-import { trackMetaEvent } from '../lib/metaPixel'
+import { analytics } from '../lib/analytics'
 
 const CartContext = createContext(null)
 
@@ -70,13 +70,7 @@ export function CartProvider({ children }) {
 
       setLastAddedProductId(product.id)
       setIsCartDrawerOpen(true)
-      trackMetaEvent('AddToCart', {
-        content_ids: [product.id],
-        content_name: product.name,
-        content_type: 'product',
-        value: (Number(product.price) || 0) * quantity,
-        currency: 'INR',
-      })
+      analytics.addToCart(product, quantity)
       return { ok: true }
     },
     [items, persist, showToast],
@@ -116,7 +110,11 @@ export function CartProvider({ children }) {
 
   const removeFromCart = useCallback(
     (productId) => {
+      const removedItem = items.find((line) => line.productId === productId)
       persist(items.filter((line) => line.productId !== productId))
+      if (removedItem) {
+        analytics.removeFromCart(removedItem, removedItem.quantity)
+      }
     },
     [items, persist],
   )

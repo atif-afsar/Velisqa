@@ -60,10 +60,13 @@
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   </head>
   <body>
-    <!-- Google Tag Manager (noscript) -->
+    <!--
+      Google Tag Manager (noscript fallback).
+      The primary GTM + GA4 + Meta Pixel scripts are loaded dynamically
+      by src/lib/deferAnalytics.js AFTER user consent, using env-var IDs.
+    -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MX7RN85B"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

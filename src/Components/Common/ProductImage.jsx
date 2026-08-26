@@ -69,22 +69,6 @@ export default function ProductImage({
 
   const showHoverState = hasHoverImage && (isHovered || isTouchActive)
 
-  const handleTouchOrClick = (e) => {
-    if (!hasHoverImage) return
-
-    if (e.type === 'touchend' || (e.nativeEvent && e.nativeEvent.pointerType === 'touch')) {
-      if (!isTouchActive) {
-        // First tap reveals hover image without immediately navigating
-        e.preventDefault()
-        e.stopPropagation()
-        setIsTouchActive(true)
-      } else {
-        // Second tap allows normal link click navigation
-        setIsTouchActive(false)
-      }
-    }
-  }
-
   return (
     <span
       className={`relative block overflow-hidden bg-[#f1ede8] select-none ${className}`}
@@ -94,7 +78,6 @@ export default function ProductImage({
         setIsHovered(false)
         setIsTouchActive(false)
       }}
-      onTouchEnd={handleTouchOrClick}
     >
       {!loaded && (
         <span

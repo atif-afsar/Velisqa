@@ -33,6 +33,11 @@ const NAV = [
     label: 'Coupons',
     match: (path) => path.startsWith('/admin/coupons'),
   },
+  {
+    to: '/admin/analytics',
+    label: 'Analytics',
+    match: (path) => path.startsWith('/admin/analytics'),
+  },
 ]
 
 function NavBadge({ count }) {

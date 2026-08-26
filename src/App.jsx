@@ -10,7 +10,9 @@ import WishlistToast from './Components/Wishlist/WishlistToast'
 // import FloatingWhatsApp from './Components/WhatsApp/FloatingWhatsApp'
 import { Route, Routes, useLocation, Navigate } from 'react-router-dom'
 import { Suspense, lazy, useEffect } from 'react'
-import { trackMetaEvent } from './lib/metaPixel'
+import { analytics } from './lib/analytics'
+import { captureAttribution } from './lib/attribution'
+import ConsentBanner from './Components/Common/ConsentBanner'
 
 const Home = lazy(() => import('./Pages/Home'))
 const About = lazy(() => import('./Pages/About'))
@@ -46,15 +48,24 @@ const AdminReviews = lazy(() => import('./Pages/AdminReviews'))
 const AdminReturns = lazy(() => import('./Pages/AdminReturns'))
 const MyOrders = lazy(() => import('./Pages/MyOrders'))
 const Founders = lazy(() => import('./Pages/Founders'))
+const AdminAnalytics = lazy(() => import('./Pages/AdminAnalytics'))
 
 function ScrollToTop() {
   const { pathname } = useLocation()
 
   useEffect(() => {
     scrollToTop({ immediate: true })
-    trackMetaEvent('PageView')
+    analytics.pageView()
   }, [pathname])
 
+  return null
+}
+
+/** Capture UTM / click-ID attribution from the landing URL (once). */
+function AttributionCapture() {
+  useEffect(() => {
+    captureAttribution()
+  }, [])
   return null
 }
 
@@ -63,6 +74,7 @@ function App() {
     <>
       <SmoothScroll />
       <ScrollToTop />
+      <AttributionCapture />
       <PromoAnnouncementBar />
       <Navbar />
       <MiniCartDrawer />
@@ -160,11 +172,20 @@ function App() {
               </AdminRoute>
             }
           />
+          <Route
+            path="/admin/analytics"
+            element={
+              <AdminRoute>
+                <AdminAnalytics />
+              </AdminRoute>
+            }
+          />
           <Route path="/admin/dashboard" element={<Navigate to="/admin/home" replace />} />
           <Route path="/:slug" element={<SEOLanding />} />
         </Routes>
       </Suspense>
       {/* <FloatingWhatsApp /> */}
+      <ConsentBanner />
     </>
   )
 }

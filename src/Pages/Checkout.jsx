@@ -7,6 +7,7 @@ import { formatInr, getCartLineSubtotal, getProductStock } from '../lib/cartStoc
 import { supabase } from '../lib/supabaseClient'
 import { invokeEdgeFunction } from '../lib/invokeEdgeFunction'
 import { buildOrderEmailPayload, submitOrderEmail } from '../lib/orderEmail'
+import { analytics } from '../lib/analytics'
 
 const VALID_COUPONS = ['SAVE10', 'VELISQA5', 'FREE50']
 
@@ -72,6 +73,20 @@ export default function Checkout() {
   const deliveryCharge = paymentMethod === 'cod' ? 50 : 0
   const gstAmount = paymentMethod === 'cod' ? Math.round((subtotal - couponDiscountVal) * 0.02) : 0
   const finalTotal = Math.max(0, subtotal - couponDiscountVal + giftWrapFee + deliveryCharge + gstAmount)
+
+  // ── Analytics: begin_checkout (fires once per session) ──
+  useEffect(() => {
+    if (items.length > 0) {
+      analytics.beginCheckout({ items, total: finalTotal })
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── Analytics: payment method selection ──
+  useEffect(() => {
+    if (items.length > 0) {
+      analytics.addPaymentInfo({ items, total: finalTotal }, paymentMethod)
+    }
+  }, [paymentMethod]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Revalidate coupon from database on mount or subtotal change
   useEffect(() => {
@@ -313,6 +328,24 @@ export default function Checkout() {
         clearCart()
         localStorage.removeItem('velisqa:applied_coupon')
         localStorage.removeItem('velisqa:gift_wrap')
+
+        // ── Analytics: track purchase ──
+        analytics.purchase({
+          transaction_id: orderRef,
+          value: finalTotal,
+          shipping: deliveryCharge,
+          tax: gstAmount,
+          coupon: appliedCoupon || undefined,
+          items: items.map((line) => ({
+            id: line.productId,
+            name: line.name,
+            price: line.price,
+            quantity: line.quantity,
+          })),
+          customer_email: email.trim() || undefined,
+          customer_phone: phone.trim() || undefined,
+        })
+
         navigate(`/order-confirmation/${orderRef}?token=${accessToken}`)
       } else {
         // 3. Online payment flow: create Razorpay order and launch checkout
@@ -361,6 +394,24 @@ export default function Checkout() {
               clearCart()
               localStorage.removeItem('velisqa:applied_coupon')
               localStorage.removeItem('velisqa:gift_wrap')
+
+              // ── Analytics: track purchase ──
+              analytics.purchase({
+                transaction_id: orderRef,
+                value: finalTotal,
+                shipping: deliveryCharge,
+                tax: gstAmount,
+                coupon: appliedCoupon || undefined,
+                items: items.map((line) => ({
+                  id: line.productId,
+                  name: line.name,
+                  price: line.price,
+                  quantity: line.quantity,
+                })),
+                customer_email: email.trim() || undefined,
+                customer_phone: phone.trim() || undefined,
+              })
+
               navigate(`/order-confirmation/${orderRef}?token=${accessToken}`)
             } catch (err) {
               setCheckoutError(err.message || 'Payment verification failed.')

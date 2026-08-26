@@ -8,6 +8,7 @@ import { useCart } from '../context/CartContext'
 import { useProducts } from '../hooks/useProducts'
 import { formatInr, getCartLineSubtotal, getProductStock, isProductSoldOut } from '../lib/cartStock'
 import { supabase } from '../lib/supabaseClient'
+import { analytics } from '../lib/analytics'
 
 const VALID_COUPONS = ['SAVE10', 'VELISQA5', 'FREE50']
 
@@ -59,6 +60,13 @@ export default function Cart() {
       cancelled = true
     }
   }, [])
+
+  // Track view_cart event
+  useEffect(() => {
+    if (items.length > 0) {
+      analytics.viewCart({ items, total: cartTotal })
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const issues = localIssues.length ? localIssues : stockIssues
   const canCheckout = items.length > 0 && issues.length === 0 && !syncing

@@ -3,7 +3,8 @@ import SEOHead from '../Components/SEO/SEOHead'
 import { orderPrivateUrl } from '../lib/manualPayments'
 import { usePrivateOrder } from '../hooks/usePrivateOrder'
 import { formatInr } from '../lib/cartStock'
-import { useMemo } from 'react'
+import { useMemo, useEffect } from 'react'
+import { analytics } from '../lib/analytics'
 
 function getExpectedDeliveryDateRange() {
   const today = new Date()
@@ -19,6 +20,22 @@ function getExpectedDeliveryDateRange() {
 export default function ManualPaymentConfirmation() {
   const { accessToken, order, loading, error } = usePrivateOrder()
   const expectedDate = useMemo(() => getExpectedDeliveryDateRange(), [])
+
+  // Safety-net purchase tracking — deduplication prevents double-fire
+  // if Checkout.jsx already tracked the purchase.
+  useEffect(() => {
+    if (!order?.orderRef) return
+    analytics.purchase({
+      transaction_id: order.orderRef,
+      value: Number(order.total) || 0,
+      items: (order.items || []).map((item) => ({
+        id: item.productId || item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+      })),
+    })
+  }, [order?.orderRef]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (loading) {
     return (

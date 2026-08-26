@@ -23,7 +23,7 @@ import ProductReviews from '../Components/Product/ProductReviews'
 import { isProductSoldOut } from '../lib/cartStock'
 import { findCachedProduct } from '../lib/productCatalogCache'
 import { enrichProductWithApprovedReviewAggregates } from '../lib/productReviews'
-import { trackMetaEvent } from '../lib/metaPixel'
+import { analytics } from '../lib/analytics'
 
 function ProductDetailSkeleton() {
   return (
@@ -95,13 +95,7 @@ export default function ProductDetail() {
 
   useEffect(() => {
     if (!product?.id) return
-    trackMetaEvent('ViewContent', {
-      content_ids: [product.id],
-      content_name: product.name,
-      content_type: 'product',
-      value: Number(product.price) || 0,
-      currency: 'INR',
-    })
+    analytics.viewItem(product)
   }, [product?.id, product?.name, product?.price])
 
   useEffect(() => {
