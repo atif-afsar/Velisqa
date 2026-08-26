@@ -34,23 +34,23 @@ export default function ConsentBanner() {
       aria-label="Cookie consent"
     >
       <div
-        className="flex items-center justify-between gap-3 rounded-full border border-[#D4AF37]/30 bg-[#130006]/80 px-4 py-2.5 shadow-2xl backdrop-blur-md text-white sm:px-5 sm:py-3 transition-all duration-300"
+        className="flex items-center justify-between gap-3 rounded border border-[#D4AF37]/30 bg-[#130006]/85 px-4 py-2.5 shadow-2xl backdrop-blur-md text-white sm:px-5 sm:py-3 transition-all duration-300"
         style={{ animation: 'fadeInUp 0.3s ease-out' }}
       >
-        <p className="text-[11px] leading-tight text-white/80 sm:text-xs">
+        <p className="text-[11px] leading-tight text-white/85 sm:text-xs">
           We use cookies to improve your experience & ads.
         </p>
 
-        <div className="flex shrink-0 items-center gap-1.5">
+        <div className="flex shrink-0 items-center gap-2">
           <button
             onClick={handleNecessary}
-            className="rounded-full px-2.5 py-1 text-[10px] font-medium text-white/60 hover:text-white hover:bg-white/10 transition-colors sm:text-xs"
+            className="rounded-sm border border-white/20 px-2.5 py-1 text-[10px] font-medium text-white/70 hover:text-white hover:border-white/40 transition-colors sm:text-xs"
           >
             Decline
           </button>
           <button
             onClick={handleAccept}
-            className="rounded-full bg-[#D4AF37] px-3.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[#130006] hover:bg-[#e5c34a] shadow-sm transition-all sm:text-xs"
+            className="rounded-sm bg-[#D4AF37] px-3.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[#130006] hover:bg-[#e5c34a] shadow-sm transition-all sm:text-xs"
           >
             Accept
           </button>
