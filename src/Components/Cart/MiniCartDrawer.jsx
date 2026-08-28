@@ -10,7 +10,13 @@ import {
   getProductStock,
 } from '../../lib/cartStock'
 import { getPromoPriceDisplay } from '../../lib/promoPricing'
+import { isFreeGiftItem } from '../../lib/cartOffers'
+import { useProducts } from '../../hooks/useProducts'
+import { isProductSoldOut as isSoldOutCheck } from '../../lib/cartStock'
 import QuantityStepper from './QuantityStepper'
+import OfferProgressCard from '../Offers/OfferProgressCard'
+import FreeGiftCard from '../Offers/FreeGiftCard'
+import OfferToast from '../Offers/OfferToast'
 
 const primaryBtnClass =
   'flex h-10 w-full items-center justify-center rounded-full bg-[#3d0a21] px-4 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#f7ead0] shadow-[0_8px_20px_rgba(61,10,33,0.2)] transition hover:bg-[#2a0718] disabled:cursor-not-allowed disabled:opacity-50 sm:h-11 sm:text-xs sm:tracking-[0.1em]'
@@ -34,10 +40,26 @@ export default function MiniCartDrawer() {
     setQuantity,
     removeFromCart,
     syncStockFromServer,
+    freeGiftInCart,
+    eligibleSubtotal,
+    offerMilestone,
+    dismissOfferMilestone,
+    cartOffers,
+    addGiftToCart,
   } = useCart()
+  const { products } = useProducts()
   const drawerRef = useRef(null)
   const closeButtonRef = useRef(null)
   const previousFocusRef = useRef(null)
+
+  // Separate real items and the free gift
+  const realItems = items.filter((line) => !isFreeGiftItem(line))
+  const selectedGift = items.find(isFreeGiftItem)
+
+  // Filter products worth <= 400 that are in stock
+  const giftChoices = products
+    .filter((p) => Number(p.price) <= 400 && !isSoldOutCheck(p))
+    .slice(0, 4)
 
   useEffect(() => {
     if (!isCartDrawerOpen) return undefined
@@ -99,138 +121,211 @@ export default function MiniCartDrawer() {
   if (typeof document === 'undefined') return null
 
   return createPortal(
-    <AnimatePresence>
-      {isCartDrawerOpen && (
-        <div className="fixed inset-0 z-[170]">
-          <motion.button
-            type="button"
-            aria-label="Close shopping bag"
-            className="absolute inset-0 bg-[#130006]/55 backdrop-blur-[2px]"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={closeCartDrawer}
-          />
-          <motion.aside
-            ref={drawerRef}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="mini-cart-title"
-            onKeyDown={trapFocus}
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-y-0 right-0 flex w-full max-w-md flex-col bg-[#fdf9f4] text-[#130006] shadow-[-20px_0_60px_rgba(19,0,6,0.28)]"
-          >
-            <header className="flex items-start justify-between gap-3 border-b border-[#847377]/15 px-4 py-3.5 sm:items-center sm:px-5 sm:py-4">
-              <div className="min-w-0">
-                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#847377]">Velisqa bag</p>
-                <h2 id="mini-cart-title" className="font-serif text-xl leading-tight sm:text-2xl">
-                  Your bag{' '}
-                  <span className="text-sm font-normal text-[#847377] sm:text-base">({itemCount})</span>
-                </h2>
-              </div>
-              <button
-                ref={closeButtonRef}
-                type="button"
-                onClick={closeCartDrawer}
-                className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-[#847377]/20 text-lg leading-none text-[#514347] hover:border-[#3d0a21]/35 sm:h-10 sm:w-10"
-                aria-label="Close shopping bag"
-              >
-                ×
-              </button>
-            </header>
+    <>
+      {/* Offer milestone toast */}
+      <OfferToast
+        milestone={offerMilestone}
+        amountToGift={cartOffers?.amountToGift || 0}
+        onDismiss={dismissOfferMilestone}
+      />
 
-            {items.length === 0 ? (
-              <div className="flex flex-1 flex-col items-center justify-center px-5 text-center">
-                <p className="font-serif text-xl sm:text-2xl">Your bag is empty</p>
-                <p className="mt-2 max-w-xs text-sm leading-relaxed text-[#847377]">
-                  Explore the collection and add a piece you love.
-                </p>
-                <Link
-                  to="/collections#signature"
-                  onClick={closeCartDrawer}
-                  className={`${primaryBtnClass} mt-5 max-w-xs`}
-                >
-                  Shop collections
-                </Link>
-              </div>
-            ) : (
-              <>
-                <div className="flex-1 overflow-y-auto px-3.5 py-3 sm:px-4 sm:py-4">
-                  {syncing && (
-                    <p className="mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.1em] text-[#847377]">
-                      Checking latest stock…
-                    </p>
-                  )}
-                  <ul className="space-y-2.5 sm:space-y-3">
-                    {items.map((line) => (
-                      <MiniCartLine
-                        key={line.productId}
-                        line={line}
-                        issue={stockIssues.find((item) => item.line.productId === line.productId)}
-                        highlighted={line.productId === lastAddedProductId}
-                        onClose={closeCartDrawer}
-                        onQuantityChange={setQuantity}
-                        onRemove={removeFromCart}
-                      />
-                    ))}
-                  </ul>
+      <AnimatePresence>
+        {isCartDrawerOpen && (
+          <div className="fixed inset-0 z-[170]">
+            <motion.button
+              type="button"
+              aria-label="Close shopping bag"
+              className="absolute inset-0 bg-[#130006]/55 backdrop-blur-[2px]"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={closeCartDrawer}
+            />
+            <motion.aside
+              ref={drawerRef}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="mini-cart-title"
+              onKeyDown={trapFocus}
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute inset-y-0 right-0 flex w-full max-w-md flex-col bg-[#fdf9f4] text-[#130006] shadow-[-20px_0_60px_rgba(19,0,6,0.28)]"
+            >
+              <header className="flex items-start justify-between gap-3 border-b border-[#847377]/15 px-4 py-3.5 sm:items-center sm:px-5 sm:py-4">
+                <div className="min-w-0">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#847377]">Velisqa bag</p>
+                  <h2 id="mini-cart-title" className="font-serif text-xl leading-tight sm:text-2xl">
+                    Your bag{' '}
+                    <span className="text-sm font-normal text-[#847377] sm:text-base">({itemCount})</span>
+                  </h2>
                 </div>
+                <button
+                  ref={closeButtonRef}
+                  type="button"
+                  onClick={closeCartDrawer}
+                  className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-[#847377]/20 text-lg leading-none text-[#514347] hover:border-[#3d0a21]/35 sm:h-10 sm:w-10"
+                  aria-label="Close shopping bag"
+                >
+                  ×
+                </button>
+              </header>
 
-                <footer className="border-t border-[#847377]/15 bg-white px-4 py-3.5 sm:px-5 sm:py-4">
-                  {hasStockIssues && (
-                    <p className="mb-2.5 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-[11px] leading-relaxed text-amber-950">
-                      Update or remove unavailable quantities before checkout.
-                    </p>
-                  )}
-                  <div className="flex items-end justify-between gap-3">
-                    <div>
-                      <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#847377]">Bag subtotal</p>
-                      <p className="font-serif text-xl tabular-nums text-[#3d0a21] sm:text-2xl" aria-live="polite">
-                        {formatInr(cartTotal)}
+              {items.length === 0 ? (
+                <div className="flex flex-1 flex-col items-center justify-center px-5 text-center">
+                  <p className="font-serif text-xl sm:text-2xl">Your bag is empty</p>
+                  <p className="mt-2 max-w-xs text-sm leading-relaxed text-[#847377]">
+                    Explore the collection and add a piece you love.
+                  </p>
+                  <Link
+                    to="/collections#signature"
+                    onClick={closeCartDrawer}
+                    className={`${primaryBtnClass} mt-5 max-w-xs`}
+                  >
+                    Shop collections
+                  </Link>
+                </div>
+              ) : (
+                <>
+                  <div className="flex-1 overflow-y-auto px-3.5 py-3 sm:px-4 sm:py-4">
+                    {/* Offer Progress Card */}
+                    <div className="mb-3">
+                      <OfferProgressCard onNavigate={closeCartDrawer} compact />
+                    </div>
+
+                    {syncing && (
+                      <p className="mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.1em] text-[#847377]">
+                        Checking latest stock…
+                      </p>
+                    )}
+                    <ul className="space-y-2.5 sm:space-y-3">
+                      {realItems.map((line) => (
+                        <MiniCartLine
+                          key={line.productId}
+                          line={line}
+                          issue={stockIssues.find((item) => item.line.productId === line.productId)}
+                          highlighted={line.productId === lastAddedProductId}
+                          onClose={closeCartDrawer}
+                          onQuantityChange={setQuantity}
+                          onRemove={removeFromCart}
+                        />
+                      ))}
+                    </ul>
+
+                    {/* Free Gift Card */}
+                    {selectedGift && (
+                      <div className="mt-3">
+                        <FreeGiftCard variant="compact" giftItem={selectedGift} />
+                      </div>
+                    )}
+
+                    {/* Choose Free Gift Options (under 400) */}
+                    {cartOffers.freeGiftEligible && giftChoices.length > 0 && (
+                      <div className="mt-4 rounded-xl border border-dashed border-[#D4AF37]/35 bg-[#FFFDF7] p-3 sm:p-3.5 space-y-3">
+                        <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8B6914] flex items-center gap-1.5">
+                          <span>🎁</span> {freeGiftInCart ? 'Change Your Free Gift' : 'Select Your Free Gift'}
+                        </p>
+                        <div className="grid grid-cols-2 gap-2">
+                          {giftChoices.map((product) => {
+                            const isCurrentGift = items.some(
+                              (item) => item.productId === product.id && item.isFreeGift,
+                            )
+                            return (
+                              <div
+                                key={product.id}
+                                className={`flex flex-col justify-between rounded-lg border p-2 text-center shadow-xs transition ${
+                                  isCurrentGift ? 'border-[#D4AF37] bg-[#FFFDF0]' : 'border-[#847377]/10 bg-white'
+                                }`}
+                              >
+                                <div className="mx-auto h-12 w-12 overflow-hidden rounded-md bg-[#FAF9F6] border border-black/5">
+                                  {product.image_url ? (
+                                    <img src={product.image_url} alt="" className="h-full w-full object-cover" />
+                                  ) : (
+                                    <div className="grid h-full place-items-center text-[8px] text-[#847377]">
+                                      No Image
+                                    </div>
+                                  )}
+                                </div>
+                                <p className="mt-1.5 text-[10px] font-semibold text-[#130006] line-clamp-1">
+                                  {product.name}
+                                </p>
+                                <p className="text-[9px] text-[#847377] line-through mt-0.5">
+                                  {formatInr(product.price)}
+                                </p>
+                                <button
+                                  type="button"
+                                  disabled={isCurrentGift}
+                                  onClick={() => addGiftToCart(product)}
+                                  className={`mt-2 rounded-full py-1 text-[9px] font-bold uppercase tracking-wider transition-colors ${
+                                    isCurrentGift
+                                      ? 'bg-emerald-100 text-emerald-800 cursor-not-allowed'
+                                      : 'bg-[#8B6914] text-white hover:bg-[#6B5210]'
+                                  }`}
+                                >
+                                  {isCurrentGift ? 'Claimed' : 'Claim Free'}
+                                </button>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <footer className="border-t border-[#847377]/15 bg-white px-4 py-3.5 sm:px-5 sm:py-4">
+                    {hasStockIssues && (
+                      <p className="mb-2.5 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-[11px] leading-relaxed text-amber-950">
+                        Update or remove unavailable quantities before checkout.
+                      </p>
+                    )}
+                    <div className="flex items-end justify-between gap-3">
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#847377]">Bag subtotal</p>
+                        <p className="font-serif text-xl tabular-nums text-[#3d0a21] sm:text-2xl" aria-live="polite">
+                          {formatInr(eligibleSubtotal)}
+                        </p>
+                      </div>
+                      <p className="text-right text-[10px] leading-snug text-[#847377]">
+                        Taxes included
+                        <br />
+                        Free delivery
                       </p>
                     </div>
-                    <p className="text-right text-[10px] leading-snug text-[#847377]">
-                      Taxes included
-                      <br />
-                      Free delivery
-                    </p>
-                  </div>
 
-                  <button
-                    type="button"
-                    onClick={handleCheckout}
-                    disabled={hasStockIssues || syncing}
-                    className={`${primaryBtnClass} mt-3`}
-                  >
-                    Checkout securely
-                  </button>
-                  <div className="mt-2 grid grid-cols-2 gap-2">
-                    <Link
-                      to="/cart"
-                      onClick={closeCartDrawer}
-                      className={`${secondaryBtnClass} border-[#3d0a21]/20 text-[#3d0a21] hover:bg-[#fdf9f4]`}
-                    >
-                      View bag
-                    </Link>
                     <button
                       type="button"
-                      onClick={closeCartDrawer}
-                      className={`${secondaryBtnClass} border-[#847377]/20 text-[#514347] hover:bg-[#fafafa]`}
+                      onClick={handleCheckout}
+                      disabled={hasStockIssues || syncing}
+                      className={`${primaryBtnClass} mt-3`}
                     >
-                      <span className="sm:hidden">Continue</span>
-                      <span className="hidden sm:inline">Continue shopping</span>
+                      Checkout securely
                     </button>
-                  </div>
-                </footer>
-              </>
-            )}
-          </motion.aside>
-        </div>
-      )}
-    </AnimatePresence>,
+                    <div className="mt-2 grid grid-cols-2 gap-2">
+                      <Link
+                        to="/cart"
+                        onClick={closeCartDrawer}
+                        className={`${secondaryBtnClass} border-[#3d0a21]/20 text-[#3d0a21] hover:bg-[#fdf9f4]`}
+                      >
+                        View bag
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={closeCartDrawer}
+                        className={`${secondaryBtnClass} border-[#847377]/20 text-[#514347] hover:bg-[#fafafa]`}
+                      >
+                        <span className="sm:hidden">Continue</span>
+                        <span className="hidden sm:inline">Continue shopping</span>
+                      </button>
+                    </div>
+                  </footer>
+                </>
+              )}
+            </motion.aside>
+          </div>
+        )}
+      </AnimatePresence>
+    </>,
     document.body,
   )
 }

@@ -4,10 +4,12 @@ import SEOHead from '../Components/SEO/SEOHead'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 import { formatInr, getCartLineSubtotal, getProductStock } from '../lib/cartStock'
+import { isFreeGiftItem, CART_OFFERS } from '../lib/cartOffers'
 import { supabase } from '../lib/supabaseClient'
 import { invokeEdgeFunction } from '../lib/invokeEdgeFunction'
 import { buildOrderEmailPayload, submitOrderEmail } from '../lib/orderEmail'
 import { analytics } from '../lib/analytics'
+import OfferProgressCard from '../Components/Offers/OfferProgressCard'
 
 const VALID_COUPONS = ['SAVE10', 'VELISQA5', 'FREE50']
 
@@ -32,8 +34,10 @@ function getExpectedDeliveryDateRange() {
 
 export default function Checkout() {
   const navigate = useNavigate()
-  const { items, cartTotal, stockIssues, clearCart, syncing } = useCart()
+  const { items, cartTotal, stockIssues, clearCart, syncing, eligibleSubtotal, freeGiftInCart } = useCart()
   const { user, profile } = useAuth()
+
+  const selectedGift = items.find(isFreeGiftItem)
 
   // Form Fields State
   const [phone, setPhone] = useState('')
@@ -68,11 +72,15 @@ export default function Checkout() {
     return localStorage.getItem('velisqa:gift_wrap') === 'true'
   })
 
-  const subtotal = cartTotal
+  const subtotal = eligibleSubtotal
   const giftWrapFee = giftWrap ? 50 : 0
   const deliveryCharge = paymentMethod === 'cod' ? 50 : 0
   const gstAmount = paymentMethod === 'cod' ? Math.round((subtotal - couponDiscountVal) * 0.02) : 0
   const finalTotal = Math.max(0, subtotal - couponDiscountVal + giftWrapFee + deliveryCharge + gstAmount)
+
+  const onlineTotal = Math.max(0, subtotal - couponDiscountVal + giftWrapFee)
+  const codGst = Math.round((subtotal - couponDiscountVal) * 0.02)
+  const codTotal = Math.max(0, subtotal - couponDiscountVal + giftWrapFee + 50 + codGst)
 
   // ── Analytics: begin_checkout (fires once per session) ──
   useEffect(() => {
@@ -281,6 +289,7 @@ export default function Checkout() {
           productId: line.productId,
           quantity: line.quantity,
           imageUrl: line.imageUrl || null,
+          ...(isFreeGiftItem(line) ? { isFreeGift: true, price: 0 } : {}),
         }))
       })
 
@@ -463,174 +472,339 @@ export default function Checkout() {
             <form onSubmit={handleCheckoutSubmit} className="space-y-6 w-full min-w-0">
               
               {/* CONTACT DETAILS */}
-              <div className="rounded-2xl border border-[#D4AF37]/10 bg-white p-5 sm:p-6 shadow-sm space-y-4 w-full min-w-0">
-                <h3 className="font-serif text-base font-semibold text-[#3B0D23]">Contact Information</h3>
+              <div className="rounded-2xl border border-[#D4AF37]/15 bg-white p-5 sm:p-6 shadow-[0_8px_30px_rgb(0,0,0,0.02)] space-y-5 w-full min-w-0 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+                <div className="flex items-center gap-2.5 pb-3.5 border-b border-[#3B0D23]/5 mb-2">
+                  <div className="flex items-center justify-center w-7 h-7 rounded-full bg-[#3B0D23]/5 text-[#3B0D23]">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.206" />
+                    </svg>
+                  </div>
+                  <h3 className="font-serif text-base font-bold text-[#3B0D23] tracking-wide">Contact Information</h3>
+                </div>
                 
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <label className="block text-xs font-bold uppercase tracking-[0.08em] text-[#514347]">
-                    Mobile Number *
-                    <input
-                      type="tel"
-                      required
-                      placeholder="e.g. 9876543210"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="mt-1.5 w-full rounded-lg border border-[#3B0D23]/10 px-3.5 py-2.5 text-xs text-[#1A1A1A] outline-none focus:border-[#3B0D23]/30 font-medium"
-                    />
-                  </label>
-                  <label className="block text-xs font-bold uppercase tracking-[0.08em] text-[#514347]">
-                    Email Address
-                    <input
-                      type="email"
-                      placeholder="e.g. customer@gmail.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="mt-1.5 w-full rounded-lg border border-[#3B0D23]/10 px-3.5 py-2.5 text-xs text-[#1A1A1A] outline-none focus:border-[#3B0D23]/30 font-medium"
-                    />
-                  </label>
+                <div className="grid gap-5 grid-cols-1 sm:grid-cols-2">
+                  {/* Mobile Number */}
+                  <div className="space-y-1.5">
+                    <label className="block text-[11px] font-bold uppercase tracking-[0.06em] text-[#514347]">
+                      Mobile Number <span className="text-[#3B0D23]/60">*</span>
+                    </label>
+                    <div className="relative group">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#514347]/50 group-focus-within:text-[#3B0D23] transition-colors duration-200">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                      </div>
+                      <input
+                        type="tel"
+                        required
+                        placeholder="e.g. 9876543210"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        className="w-full rounded-xl border border-[#3B0D23]/10 pl-10 pr-3.5 py-3 text-base sm:text-sm text-[#1A1A1A] bg-white/50 backdrop-blur-[2px] outline-none transition-all duration-200 focus:border-[#3B0D23] focus:bg-white focus:ring-2 focus:ring-[#3B0D23]/10 font-medium placeholder-[#514347]/30"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Email Address */}
+                  <div className="space-y-1.5">
+                    <label className="block text-[11px] font-bold uppercase tracking-[0.06em] text-[#514347]">
+                      Email Address <span className="text-gray-400 font-normal">(Optional)</span>
+                    </label>
+                    <div className="relative group">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#514347]/50 group-focus-within:text-[#3B0D23] transition-colors duration-200">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                      <input
+                        type="email"
+                        placeholder="e.g. customer@gmail.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full rounded-xl border border-[#3B0D23]/10 pl-10 pr-3.5 py-3 text-base sm:text-sm text-[#1A1A1A] bg-white/50 backdrop-blur-[2px] outline-none transition-all duration-200 focus:border-[#3B0D23] focus:bg-white focus:ring-2 focus:ring-[#3B0D23]/10 font-medium placeholder-[#514347]/30"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
 
               {/* SHIPPING ADDRESS */}
-              <div className="rounded-2xl border border-[#D4AF37]/10 bg-white p-5 sm:p-6 shadow-sm space-y-4 w-full min-w-0">
-                <h3 className="font-serif text-base font-semibold text-[#3B0D23]">Delivery Address</h3>
+              <div className="rounded-2xl border border-[#D4AF37]/15 bg-white p-5 sm:p-6 shadow-[0_8px_30px_rgb(0,0,0,0.02)] space-y-5 w-full min-w-0 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+                <div className="flex items-center gap-2.5 pb-3.5 border-b border-[#3B0D23]/5 mb-2">
+                  <div className="flex items-center justify-center w-7 h-7 rounded-full bg-[#3B0D23]/5 text-[#3B0D23]">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <h3 className="font-serif text-base font-bold text-[#3B0D23] tracking-wide">Delivery Address</h3>
+                </div>
 
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <label className="block text-xs font-bold uppercase tracking-[0.08em] text-[#514347] sm:col-span-2">
-                    Full Name *
-                    <input
-                      type="text"
-                      required
-                      placeholder="Enter your full name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="mt-1.5 w-full rounded-lg border border-[#3B0D23]/10 px-3.5 py-2.5 text-xs text-[#1A1A1A] outline-none focus:border-[#3B0D23]/30 font-medium"
-                    />
-                  </label>
-
-                  <label className="block text-xs font-bold uppercase tracking-[0.08em] text-[#514347]">
-                    Pincode *
-                    <input
-                      type="text"
-                      required
-                      inputMode="numeric"
-                      placeholder="6-digit PIN code"
-                      value={pincode}
-                      onChange={handlePincodeChange}
-                      className="mt-1.5 w-full rounded-lg border border-[#3B0D23]/10 px-3.5 py-2.5 text-xs text-[#1A1A1A] outline-none focus:border-[#3B0D23]/30 font-medium"
-                    />
-                  </label>
-
-                  {/* Pincode Resolution Status */}
-                  <div className="flex items-end pb-1 text-xs">
-                    {resolvingPincode && <span className="text-[#847377] animate-pulse">Resolving location…</span>}
-                    {pincodeStatus === 'available' && <span className="text-emerald-700 font-medium">✓ {pincodeMessage}</span>}
-                    {pincodeStatus === 'invalid' && <span className="text-red-700 font-medium">{pincodeMessage}</span>}
+                <div className="grid gap-5 grid-cols-1 sm:grid-cols-2">
+                  {/* Full Name */}
+                  <div className="space-y-1.5 sm:col-span-2">
+                    <label className="block text-[11px] font-bold uppercase tracking-[0.06em] text-[#514347]">
+                      Full Name <span className="text-[#3B0D23]/60">*</span>
+                    </label>
+                    <div className="relative group">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#514347]/50 group-focus-within:text-[#3B0D23] transition-colors duration-200">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                      </div>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Enter your full name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="w-full rounded-xl border border-[#3B0D23]/10 pl-10 pr-3.5 py-3 text-base sm:text-sm text-[#1A1A1A] bg-white/50 backdrop-blur-[2px] outline-none transition-all duration-200 focus:border-[#3B0D23] focus:bg-white focus:ring-2 focus:ring-[#3B0D23]/10 font-medium placeholder-[#514347]/30"
+                      />
+                    </div>
                   </div>
 
-                  <label className="block text-xs font-bold uppercase tracking-[0.08em] text-[#514347] sm:col-span-2">
-                    Street Address *
-                    <textarea
-                      required
-                      rows={2}
-                      placeholder="House number, building name, street address"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                      className="mt-1.5 w-full rounded-lg border border-[#3B0D23]/10 px-3.5 py-2.5 text-xs text-[#1A1A1A] outline-none focus:border-[#3B0D23]/30 font-medium resize-none"
-                    />
-                  </label>
+                  {/* Pincode, City, State Nested Grid */}
+                  <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {/* Pincode */}
+                    <div className="space-y-1.5">
+                      <label className="block text-[11px] font-bold uppercase tracking-[0.06em] text-[#514347]">
+                        Pincode <span className="text-[#3B0D23]/60">*</span>
+                      </label>
+                      <div className="relative group">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#514347]/50 group-focus-within:text-[#3B0D23] transition-colors duration-200">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                        </div>
+                        <input
+                          type="text"
+                          required
+                          inputMode="numeric"
+                          placeholder="6-digit PIN"
+                          value={pincode}
+                          onChange={handlePincodeChange}
+                          className={`w-full rounded-xl border pl-10 pr-10 py-3 text-base sm:text-sm text-[#1A1A1A] bg-white/50 backdrop-blur-[2px] outline-none transition-all duration-200 focus:bg-white focus:ring-2 focus:ring-[#3B0D23]/10 font-medium placeholder-[#514347]/30 ${
+                            pincodeStatus === 'available'
+                              ? 'border-emerald-300 focus:border-emerald-600 focus:ring-emerald-600/10'
+                              : pincodeStatus === 'invalid'
+                              ? 'border-red-300 focus:border-red-600 focus:ring-red-600/10'
+                              : 'border-[#3B0D23]/10 focus:border-[#3B0D23]'
+                          }`}
+                        />
+                        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                          {resolvingPincode && (
+                            <svg className="animate-spin h-4 w-4 text-[#847377]" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                            </svg>
+                          )}
+                          {!resolvingPincode && pincodeStatus === 'available' && (
+                            <svg className="h-4 w-4 text-emerald-600 font-bold" fill="none" stroke="currentColor" strokeWidth="3.5" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                          {!resolvingPincode && pincodeStatus === 'invalid' && (
+                            <svg className="h-4 w-4 text-red-600 font-bold" fill="none" stroke="currentColor" strokeWidth="3.5" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          )}
+                        </div>
+                      </div>
+                      {(pincodeMessage || resolvingPincode) && (
+                        <div className="text-[11px] font-semibold mt-1">
+                          {resolvingPincode && <span className="text-[#847377] animate-pulse">Resolving location…</span>}
+                          {!resolvingPincode && pincodeStatus === 'available' && <span className="text-emerald-700">✓ {pincodeMessage}</span>}
+                          {!resolvingPincode && pincodeStatus === 'invalid' && <span className="text-red-700">✗ {pincodeMessage}</span>}
+                        </div>
+                      )}
+                    </div>
 
-                  <label className="block text-xs font-bold uppercase tracking-[0.08em] text-[#514347]">
-                    City
-                    <input
-                      type="text"
-                      placeholder="District / City"
-                      value={city}
-                      onChange={(e) => setCity(e.target.value)}
-                      className="mt-1.5 w-full rounded-lg border border-[#3B0D23]/10 bg-slate-50 px-3.5 py-2.5 text-xs text-[#1A1A1A] outline-none font-medium"
-                    />
-                  </label>
+                    {/* City */}
+                    <div className="space-y-1.5">
+                      <label className="block text-[11px] font-bold uppercase tracking-[0.06em] text-gray-400">
+                        City
+                      </label>
+                      <div className="relative group">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#514347]/40">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                          </svg>
+                        </div>
+                        <input
+                          type="text"
+                          placeholder="District / City"
+                          value={city}
+                          onChange={(e) => setCity(e.target.value)}
+                          className="w-full rounded-xl border border-[#3B0D23]/10 pl-10 pr-3.5 py-3 text-base sm:text-sm text-[#1A1A1A] bg-[#3B0D23]/[0.02] outline-none font-medium placeholder-[#514347]/30 focus:border-[#3B0D23] focus:bg-white focus:ring-2 focus:ring-[#3B0D23]/10 transition-all duration-200"
+                        />
+                      </div>
+                    </div>
 
-                  <label className="block text-xs font-bold uppercase tracking-[0.08em] text-[#514347]">
-                    State
-                    <input
-                      type="text"
-                      placeholder="State"
-                      value={state}
-                      onChange={(e) => setState(e.target.value)}
-                      className="mt-1.5 w-full rounded-lg border border-[#3B0D23]/10 bg-slate-50 px-3.5 py-2.5 text-xs text-[#1A1A1A] outline-none font-medium"
-                    />
-                  </label>
+                    {/* State */}
+                    <div className="space-y-1.5">
+                      <label className="block text-[11px] font-bold uppercase tracking-[0.06em] text-gray-400">
+                        State
+                      </label>
+                      <div className="relative group">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#514347]/40">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                          </svg>
+                        </div>
+                        <input
+                          type="text"
+                          placeholder="State"
+                          value={state}
+                          onChange={(e) => setState(e.target.value)}
+                          className="w-full rounded-xl border border-[#3B0D23]/10 pl-10 pr-3.5 py-3 text-base sm:text-sm text-[#1A1A1A] bg-[#3B0D23]/[0.02] outline-none font-medium placeholder-[#514347]/30 focus:border-[#3B0D23] focus:bg-white focus:ring-2 focus:ring-[#3B0D23]/10 transition-all duration-200"
+                        />
+                      </div>
+                    </div>
+                  </div>
 
-                  <label className="block text-xs font-bold uppercase tracking-[0.08em] text-[#514347] sm:col-span-2">
-                    Delivery Notes (Optional)
-                    <input
-                      type="text"
-                      placeholder="e.g. Ring bell, deliver to gate, etc."
-                      value={notes}
-                      onChange={(e) => setNotes(e.target.value)}
-                      className="mt-1.5 w-full rounded-lg border border-[#3B0D23]/10 px-3.5 py-2.5 text-xs text-[#1A1A1A] outline-none focus:border-[#3B0D23]/30 font-medium"
-                    />
-                  </label>
+                  {/* Street Address */}
+                  <div className="space-y-1.5 sm:col-span-2">
+                    <label className="block text-[11px] font-bold uppercase tracking-[0.06em] text-[#514347]">
+                      Street Address <span className="text-[#3B0D23]/60">*</span>
+                    </label>
+                    <div className="relative group">
+                      <div className="absolute top-3.5 left-3.5 flex items-start pointer-events-none text-[#514347]/50 group-focus-within:text-[#3B0D23] transition-colors duration-200">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                      </div>
+                      <textarea
+                        required
+                        rows={2.5}
+                        placeholder="House number, building name, street name/area"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        className="w-full rounded-xl border border-[#3B0D23]/10 pl-10 pr-3.5 py-3 text-base sm:text-sm text-[#1A1A1A] bg-white/50 backdrop-blur-[2px] outline-none transition-all duration-200 focus:border-[#3B0D23] focus:bg-white focus:ring-2 focus:ring-[#3B0D23]/10 font-medium placeholder-[#514347]/30 resize-none"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Delivery Notes */}
+                  <div className="space-y-1.5 sm:col-span-2">
+                    <label className="block text-[11px] font-bold uppercase tracking-[0.06em] text-[#514347]">
+                      Delivery Notes <span className="text-gray-400 font-normal">(Optional)</span>
+                    </label>
+                    <div className="relative group">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#514347]/50 group-focus-within:text-[#3B0D23] transition-colors duration-200">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="e.g. Deliver to security guard, ring bell twice, etc."
+                        value={notes}
+                        onChange={(e) => setNotes(e.target.value)}
+                        className="w-full rounded-xl border border-[#3B0D23]/10 pl-10 pr-3.5 py-3 text-base sm:text-sm text-[#1A1A1A] bg-white/50 backdrop-blur-[2px] outline-none transition-all duration-200 focus:border-[#3B0D23] focus:bg-white focus:ring-2 focus:ring-[#3B0D23]/10 font-medium placeholder-[#514347]/30"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
 
               {/* PAYMENT OPTION METHOD */}
-              <div className="rounded-2xl border border-[#D4AF37]/10 bg-white p-5 sm:p-6 shadow-sm space-y-4 w-full min-w-0">
-                <h3 className="font-serif text-base font-semibold text-[#3B0D23]">Payment Method</h3>
+              <div className="rounded-2xl border border-[#D4AF37]/15 bg-white p-5 sm:p-6 shadow-[0_8px_30px_rgb(0,0,0,0.02)] space-y-5 w-full min-w-0 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+                <div className="flex items-center gap-2.5 pb-3.5 border-b border-[#3B0D23]/5 mb-2">
+                  <div className="flex items-center justify-center w-7 h-7 rounded-full bg-[#3B0D23]/5 text-[#3B0D23]">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
+                  </div>
+                  <h3 className="font-serif text-base font-bold text-[#3B0D23] tracking-wide">Payment Method</h3>
+                </div>
 
-                <div className="flex flex-col gap-3">
-                  
+                <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
                   {/* Razorpay Online Option */}
-                  <button
-                    type="button"
+                  <div
                     onClick={() => setPaymentMethod('online')}
-                    className={`relative flex flex-col text-left p-5 pt-6 rounded-xl border-2 transition w-full ${
+                    className={`relative cursor-pointer flex gap-3.5 p-5 rounded-2xl border-2 transition-all duration-300 select-none ${
                       paymentMethod === 'online'
-                        ? 'border-[#3B0D23] bg-[#3B0D23]/5 shadow-[0_4px_16px_rgba(59,13,35,0.06)]'
-                        : 'border-[#3B0D23]/10 hover:border-[#3B0D23]/25 bg-white'
+                        ? 'border-[#3B0D23] bg-[#3B0D23]/[0.03] shadow-[0_8px_24px_rgba(59,13,35,0.06)]'
+                        : 'border-[#3B0D23]/10 hover:border-[#3B0D23]/25 bg-white hover:bg-slate-50/50'
                     }`}
                   >
                     {/* Recommended Gold Badge */}
-                    <div className="absolute -top-2.5 right-4 bg-[#D4AF37] text-white text-[9px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow-sm">
+                    <div className="absolute -top-3 right-4 bg-[#D4AF37] text-white text-[10px] font-extrabold uppercase tracking-wider px-3 py-0.5 rounded-full shadow-md z-10">
                       ★ Recommended: Free Delivery
                     </div>
 
-                    <div className="flex items-center justify-between w-full">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold uppercase tracking-[0.08em] text-[#3B0D23]">Online Payment</span>
-                        <span className="bg-emerald-100 text-emerald-800 text-[9px] font-extrabold px-1.5 py-0.5 rounded-sm uppercase tracking-wide">
-                          Free Delivery
+                    {/* Radio Indicator */}
+                    <div className="flex items-start pt-0.5">
+                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition-colors duration-200 ${
+                        paymentMethod === 'online' ? 'border-[#3B0D23] bg-white' : 'border-[#3B0D23]/20'
+                      }`}>
+                        {paymentMethod === 'online' && (
+                          <div className="w-2.5 h-2.5 rounded-full bg-[#3B0D23]" />
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex-1 flex flex-col min-w-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-sm font-bold uppercase tracking-[0.06em] text-[#3B0D23]">Online Payment</span>
+                          <span className="bg-emerald-100 text-emerald-800 text-[10px] font-extrabold px-1.5 py-0.5 rounded uppercase tracking-wide whitespace-nowrap">
+                            Save ₹50
+                          </span>
+                        </div>
+                        <span className="text-sm font-extrabold text-[#3B0D23] whitespace-nowrap">
+                          {formatInr(onlineTotal)}
                         </span>
                       </div>
-                      {paymentMethod === 'online' && <span className="text-emerald-700 text-xs font-semibold">✓ Selected</span>}
+                      <span className="text-xs text-[#514347]/80 mt-1 font-medium leading-relaxed">UPI, Cards, Net Banking & Wallets</span>
+                      <span className="text-[11px] text-emerald-700 mt-2 font-semibold flex items-center gap-1">
+                        <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Zero delivery & shipping charges</span>
+                      </span>
                     </div>
-                    <span className="text-[10px] text-[#514347] mt-1.5 font-medium">UPI, Cards, Net Banking & Wallets</span>
-                    <span className="text-[9px] text-emerald-700 mt-1.5 font-semibold flex items-center gap-1">
-                      ✓ Pay online now to enjoy zero shipping & delivery charges.
-                    </span>
-                  </button>
+                  </div>
 
                   {/* Cash on Delivery Option */}
-                  <button
-                    type="button"
+                  <div
                     onClick={() => setPaymentMethod('cod')}
-                    className={`flex flex-col text-left p-3.5 rounded-xl border transition w-full ${
+                    className={`relative cursor-pointer flex gap-3.5 p-5 rounded-2xl border-2 transition-all duration-300 select-none ${
                       paymentMethod === 'cod'
-                        ? 'border-amber-700 bg-amber-50/30 shadow-sm opacity-100'
-                        : 'border-[#3B0D23]/10 hover:border-[#3B0D23]/25 bg-gray-50/50 opacity-60'
+                        ? 'border-amber-700 bg-amber-50/20 shadow-[0_8px_24px_rgba(180,83,9,0.04)]'
+                        : 'border-[#3B0D23]/10 hover:border-[#3B0D23]/25 bg-white hover:bg-slate-50/50'
                     }`}
                   >
-                    <div className="flex items-center justify-between w-full">
-                      <span className="text-[11px] font-bold uppercase tracking-[0.08em] text-[#514347]">Cash On Delivery (COD)</span>
-                      {paymentMethod === 'cod' && <span className="text-amber-700 text-xs font-semibold">✓ Selected</span>}
+                    {/* Radio Indicator */}
+                    <div className="flex items-start pt-0.5">
+                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition-colors duration-200 ${
+                        paymentMethod === 'cod' ? 'border-amber-700 bg-white' : 'border-[#3B0D23]/20'
+                      }`}>
+                        {paymentMethod === 'cod' && (
+                          <div className="w-2.5 h-2.5 rounded-full bg-amber-700" />
+                        )}
+                      </div>
                     </div>
-                    <span className="text-[9px] text-[#847377] mt-1 font-medium">Pay in cash when order is delivered</span>
-                    <span className="text-[9px] text-amber-800 font-semibold mt-1.5 flex items-center gap-1">
-                      ⚠️ Delivery charges + GST will be added on COD
-                    </span>
-                  </button>
 
+                    {/* Content */}
+                    <div className="flex-1 flex flex-col min-w-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <span className="text-sm font-bold uppercase tracking-[0.06em] text-[#514347]">Cash On Delivery</span>
+                        <span className="text-sm font-extrabold text-amber-900 whitespace-nowrap">
+                          {formatInr(codTotal)}
+                        </span>
+                      </div>
+                      <span className="text-xs text-[#847377] mt-1 font-medium leading-relaxed">Pay in cash at your doorstep</span>
+                      <span className="text-[11px] text-amber-800 font-semibold mt-2.5 flex items-start gap-1.5 leading-tight">
+                        <svg className="w-4 h-4 shrink-0 text-amber-600 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <span>Delivery charges + 2% GST will be added</span>
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -662,14 +836,16 @@ export default function Checkout() {
             </form>
 
             {/* RIGHT COLUMN: Order Summary */}
-             <div className="rounded-2xl border border-[#D4AF37]/10 bg-white p-5 sm:p-6 shadow-sm self-start space-y-4 w-full min-w-0">
-              <h3 className="font-serif text-base font-semibold text-[#3B0D23] border-b border-[#D4AF37]/10 pb-2">
-                Order Summary ({items.length} {items.length === 1 ? 'item' : 'items'})
-              </h3>
+            <div className="space-y-4 self-start w-full min-w-0">
+              <OfferProgressCard compact />
+              <div className="rounded-2xl border border-[#D4AF37]/10 bg-white p-5 sm:p-6 shadow-sm space-y-4 w-full min-w-0">
+                <h3 className="font-serif text-base font-semibold text-[#3B0D23] border-b border-[#D4AF37]/10 pb-2">
+                  Order Summary ({items.filter(l => !isFreeGiftItem(l)).length} {items.filter(l => !isFreeGiftItem(l)).length === 1 ? 'item' : 'items'})
+                </h3>
 
               {/* Items List */}
               <ul className="divide-y divide-[#D4AF37]/10 max-h-[300px] overflow-y-auto pr-1">
-                {items.map((line) => (
+                {items.filter(l => !isFreeGiftItem(l)).map((line) => (
                   <li key={line.productId} className="flex gap-3 py-3 first:pt-0 last:pb-0">
                     <div className="h-16 w-12 shrink-0 overflow-hidden rounded-md bg-[#F8F6F3]">
                       {line.imageUrl && <img src={line.imageUrl} alt="" className="h-full w-full object-cover" />}
@@ -683,6 +859,25 @@ export default function Checkout() {
                     </p>
                   </li>
                 ))}
+                {/* Free Gift in order summary */}
+                {freeGiftInCart && selectedGift && (
+                  <li className="flex gap-3 py-3 border-t border-[#D4AF37]/20">
+                    <div className="h-16 w-12 shrink-0 overflow-hidden rounded-md bg-[#FFF5DC] grid place-items-center border border-black/5">
+                      {selectedGift.imageUrl ? (
+                        <img src={selectedGift.imageUrl} alt="" className="h-full w-full object-cover" />
+                      ) : (
+                        <span className="text-xl" role="img" aria-label="Gift">🎁</span>
+                      )}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-serif text-xs font-semibold text-[#3B0D23] line-clamp-1">{selectedGift.name}</p>
+                      <p className="text-[10px] text-[#8B6914] font-semibold mt-0.5">Worth {formatInr(selectedGift.giftValue || selectedGift.price)} · FREE</p>
+                    </div>
+                    <p className="shrink-0 text-xs font-bold tabular-nums text-[#8B6914]">
+                      ₹0
+                    </p>
+                  </li>
+                )}
               </ul>
 
               {/* Pricing breakdown */}
@@ -709,6 +904,12 @@ export default function Checkout() {
                   <div className="flex justify-between text-emerald-600 font-medium">
                     <span>Discount ({appliedCoupon})</span>
                     <span className="tabular-nums">- {formatInr(couponDiscountVal)}</span>
+                  </div>
+                )}
+                {selectedGift && (
+                  <div className="flex justify-between text-emerald-600 font-semibold">
+                    <span>Free Gift ({selectedGift.name})</span>
+                    <span className="tabular-nums">FREE</span>
                   </div>
                 )}
                 {giftWrap && (
@@ -775,10 +976,9 @@ export default function Checkout() {
                 </div>
               )}
             </div>
-
           </div>
-
         </div>
+      </div>
 
         {/* MOBILE STICKY BOTTOM CTA */}
         <div className="fixed bottom-0 left-0 right-0 z-30 border-t border-[#D4AF37]/10 bg-white p-4 lg:hidden shadow-[0_-4px_16px_rgba(19,0,6,0.05)] pb-safe-bottom">

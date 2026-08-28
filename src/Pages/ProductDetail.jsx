@@ -24,6 +24,7 @@ import { isProductSoldOut } from '../lib/cartStock'
 import { findCachedProduct } from '../lib/productCatalogCache'
 import { enrichProductWithApprovedReviewAggregates } from '../lib/productReviews'
 import { analytics } from '../lib/analytics'
+import ProductOfferBanner from '../Components/Offers/ProductOfferBanner'
 
 function ProductDetailSkeleton() {
   return (
@@ -254,6 +255,11 @@ export default function ProductDetail() {
               </div>
 
               <ProductDetailTrust soldOut={soldOut} />
+
+              {/* Shopping Benefits Offer Banner */}
+              <div className="mt-4">
+                <ProductOfferBanner productPrice={Number(product.price) || 0} />
+              </div>
 
               <ProductPurchasePanel
                 product={product}

@@ -7,8 +7,11 @@ import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 import { useProducts } from '../hooks/useProducts'
 import { formatInr, getCartLineSubtotal, getProductStock, isProductSoldOut } from '../lib/cartStock'
+import { isFreeGiftItem } from '../lib/cartOffers'
 import { supabase } from '../lib/supabaseClient'
 import { analytics } from '../lib/analytics'
+import OfferProgressCard from '../Components/Offers/OfferProgressCard'
+import FreeGiftCard from '../Components/Offers/FreeGiftCard'
 
 const VALID_COUPONS = ['SAVE10', 'VELISQA5', 'FREE50']
 
@@ -31,10 +34,24 @@ export default function Cart() {
     removeFromCart,
     clearCart,
     syncStockFromServer,
+    eligibleSubtotal,
+    freeGiftInCart,
+    addGiftToCart,
+    cartOffers,
   } = useCart()
+
+  // Filter out the free gift from regular item rendering
+  const realItems = items.filter((line) => !isFreeGiftItem(line))
+  const selectedGift = items.find(isFreeGiftItem)
 
   const { user } = useAuth()
   const { products } = useProducts()
+
+  // Filter products worth <= 400 that are in stock
+  const giftChoices = products
+    .filter((p) => Number(p.price) <= 400 && !isProductSoldOut(p))
+    .slice(0, 4)
+
   const [localIssues, setLocalIssues] = useState([])
   const [couponOpen, setCouponOpen] = useState(false)
 
@@ -71,16 +88,16 @@ export default function Cart() {
   const issues = localIssues.length ? localIssues : stockIssues
   const canCheckout = items.length > 0 && issues.length === 0 && !syncing
 
-  // Calculated pricing
-  const subtotal = cartTotal
+  // Calculated pricing — use eligibleSubtotal (excludes free gift)
+  const subtotal = eligibleSubtotal
   
   // Total MRP (1.4x of sale price)
   const totalMrp = useMemo(() => {
-    return items.reduce((sum, item) => {
+    return realItems.reduce((sum, item) => {
       const itemMrp = item.mrp || Math.round(item.price * 1.4)
       return sum + (itemMrp * item.quantity)
     }, 0)
-  }, [items])
+  }, [realItems])
 
   const discountOnMrp = totalMrp - subtotal
 
@@ -220,8 +237,10 @@ export default function Cart() {
               
               {/* LEFT COLUMN: Product Items */}
               <div className="space-y-4">
+                {/* Offer Progress Card */}
+                <OfferProgressCard />
                 
-                {items.map((line) => {
+                {realItems.map((line) => {
                   const stock = getProductStock({ stock: line.stock })
                   const lineIssue = issues.find((i) => i.line.productId === line.productId)
                   const comparePrice = line.mrp || Math.round(line.price * 1.4)
@@ -301,6 +320,63 @@ export default function Cart() {
                   )
                 })}
 
+                {/* Free Gift Card */}
+                {selectedGift && (
+                  <FreeGiftCard giftItem={selectedGift} />
+                )}
+
+                {/* Choose Free Gift Options (under 400) */}
+                {cartOffers.freeGiftEligible && giftChoices.length > 0 && (
+                  <div className="rounded-xl border border-dashed border-[#D4AF37]/35 bg-[#FFFDF7] p-4 sm:p-5 space-y-4 shadow-xs">
+                    <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.14em] text-[#8B6914] flex items-center gap-2">
+                      <span>🎁</span> {freeGiftInCart ? 'Change Your Free Gift' : 'Select Your Free Gift'}
+                    </p>
+                    <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+                      {giftChoices.map((product) => {
+                        const isCurrentGift = items.some(
+                          (item) => item.productId === product.id && item.isFreeGift,
+                        )
+                        return (
+                          <div
+                            key={product.id}
+                            className={`flex flex-col justify-between rounded-lg border p-3 text-center shadow-xs transition ${
+                              isCurrentGift ? 'border-[#D4AF37] bg-[#FFFDF0]' : 'border-[#847377]/10 bg-white'
+                            }`}
+                          >
+                            <div className="mx-auto h-16 w-16 overflow-hidden rounded-md bg-[#FAF9F6] border border-black/5">
+                              {product.image_url ? (
+                                <img src={product.image_url} alt="" className="h-full w-full object-cover" />
+                              ) : (
+                                <div className="grid h-full place-items-center text-[10px] text-[#847377]">
+                                  No Image
+                                </div>
+                              )}
+                            </div>
+                            <p className="mt-2.5 text-xs font-semibold text-[#130006] line-clamp-1">
+                              {product.name}
+                            </p>
+                            <p className="text-[10px] text-[#847377] line-through mt-0.5">
+                              {formatInr(product.price)}
+                            </p>
+                            <button
+                              type="button"
+                              disabled={isCurrentGift}
+                              onClick={() => addGiftToCart(product)}
+                              className={`mt-3 rounded-full py-1.5 text-[10px] font-bold uppercase tracking-wider transition-colors ${
+                                isCurrentGift
+                                  ? 'bg-emerald-100 text-emerald-800 cursor-not-allowed'
+                                  : 'bg-[#8B6914] text-white hover:bg-[#6B5210]'
+                              }`}
+                            >
+                              {isCurrentGift ? 'Claimed' : 'Claim Free'}
+                            </button>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
+
                 {/* Add a Gift wrap option */}
                 <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs flex items-center">
                   <label className="flex items-center gap-2.5 cursor-pointer text-xs sm:text-sm font-semibold text-slate-800">
@@ -373,7 +449,7 @@ export default function Cart() {
                 {/* PRICE DETAILS CARD */}
                 <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs space-y-4">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100 pb-2">
-                    PRICE DETAILS ({items.reduce((sum, item) => sum + item.quantity, 0)} ITEMS)
+                    PRICE DETAILS ({realItems.reduce((sum, item) => sum + item.quantity, 0)} ITEMS)
                   </h3>
 
                   <div className="space-y-3 text-xs sm:text-sm text-slate-700 font-medium">
@@ -389,6 +465,12 @@ export default function Cart() {
                       <div className="flex justify-between text-emerald-800 font-semibold">
                         <span>Coupon Discount ({appliedCoupon})</span>
                         <span className="tabular-nums">- {formatInr(couponDiscountVal)}</span>
+                      </div>
+                    )}
+                    {selectedGift && (
+                      <div className="flex justify-between text-emerald-800 font-semibold">
+                        <span>Free Gift ({selectedGift.name})</span>
+                        <span className="tabular-nums">FREE</span>
                       </div>
                     )}
                     {giftWrap && (

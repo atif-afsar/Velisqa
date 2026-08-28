@@ -4,6 +4,7 @@ import Hero from "./Hero";
 import HomeBrandSeo from "./HomeBrandSeo";
 import LazySection from "../Performance/LazySection";
 import VelisqaLoader from "../Common/VelisqaLoader";
+import CouponHomePopup from "./CouponHomePopup";
 
 const IconsOfElegance = lazy(() => import("./IconsOfElegance"));
 
@@ -58,6 +59,7 @@ export default function HomeContent() {
       <LazySection minHeight="280px">
         <HomeFooter />
       </LazySection>
+      <CouponHomePopup />
     </main>
   );
 }
