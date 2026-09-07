@@ -37,7 +37,10 @@ export function getTestEventCode() {
 }
 
 /** Tracked path to prevent duplicate PageViews on initial load, StrictMode, and remounts. */
-let lastTrackedPageViewPath = null
+let lastTrackedPageViewPath =
+  typeof window !== 'undefined' && typeof window.fbq === 'function'
+    ? window.location.pathname + window.location.search
+    : null
 
 /**
  * Fire a deduplicated Meta PageView.
