@@ -8,6 +8,7 @@
  */
 
 import { getConsent, hasConsentDecision } from './consent'
+import { trackMetaPageView } from './metaPixel'
 
 const GA4_ID = String(import.meta.env.VITE_GA4_MEASUREMENT_ID || '').trim()
 const GTM_ID = String(import.meta.env.VITE_GTM_ID || '').trim()
@@ -16,6 +17,7 @@ const META_PIXEL_ID = String(import.meta.env.VITE_META_PIXEL_ID || '').trim()
 const CLARITY_ID = String(import.meta.env.VITE_CLARITY_ID || '').trim()
 
 let analyticsLoaded = false
+let advertisingLoaded = false
 
 /**
  * Called once on app start. Loads tags immediately if consent is already
@@ -28,21 +30,25 @@ export function deferAnalytics() {
   window.addEventListener('velisqa:consent-update', handleConsentUpdate)
 
   if (hasConsentDecision()) {
-    scheduleLoad()
+    scheduleLoad(false)
   }
   // If no decision yet, tags will load when ConsentBanner dispatches the event
 }
 
 function handleConsentUpdate() {
-  if (!analyticsLoaded) {
-    scheduleLoad()
+  const consent = getConsent() || {}
+  // If either category is newly granted, load immediately without idle delay
+  if ((consent.analytics && !analyticsLoaded) || (consent.advertising && !advertisingLoaded)) {
+    scheduleLoad(true)
   }
 }
 
-function scheduleLoad() {
+function scheduleLoad(immediate = false) {
   const run = () => loadAllTags()
 
-  if ('requestIdleCallback' in window) {
+  if (immediate) {
+    run()
+  } else if ('requestIdleCallback' in window) {
     requestIdleCallback(run, { timeout: 2500 })
   } else {
     window.setTimeout(run, 1200)
@@ -50,23 +56,22 @@ function scheduleLoad() {
 }
 
 function loadAllTags() {
-  if (analyticsLoaded) return
-  analyticsLoaded = true
-
   const consent = getConsent() || {}
 
   // Always initialize dataLayer
   window.dataLayer = window.dataLayer || []
 
   // Analytics tags (GA4, GTM, Clarity) — require analytics consent
-  if (consent.analytics) {
+  if (consent.analytics && !analyticsLoaded) {
+    analyticsLoaded = true
     loadGtag()
     loadGtm()
     loadClarity()
   }
 
   // Advertising tags (Meta Pixel, Google Ads config) — require advertising consent
-  if (consent.advertising) {
+  if (consent.advertising && !advertisingLoaded) {
+    advertisingLoaded = true
     loadMetaPixel()
     loadGoogleAds()
   }
@@ -111,21 +116,23 @@ function loadGoogleAds() {
 }
 
 function loadMetaPixel() {
-  if (!META_PIXEL_ID || window.fbq) return
+  if (!META_PIXEL_ID || document.getElementById('velisqa-meta-pixel')) return
 
-  const fbq = function (...args) {
-    if (fbq.callMethod) {
-      fbq.callMethod(...args)
-    } else {
-      fbq.queue.push(args)
+  if (!window.fbq) {
+    const fbq = function (...args) {
+      if (fbq.callMethod) {
+        fbq.callMethod(...args)
+      } else {
+        fbq.queue.push(args)
+      }
     }
+    fbq.push = fbq
+    fbq.loaded = true
+    fbq.version = '2.0'
+    fbq.queue = []
+    window.fbq = fbq
+    window._fbq = fbq
   }
-  fbq.push = fbq
-  fbq.loaded = true
-  fbq.version = '2.0'
-  fbq.queue = []
-  window.fbq = fbq
-  window._fbq = fbq
 
   const script = document.createElement('script')
   script.id = 'velisqa-meta-pixel'
@@ -133,8 +140,8 @@ function loadMetaPixel() {
   script.src = 'https://connect.facebook.net/en_US/fbevents.js'
   document.head.appendChild(script)
 
-  fbq('init', META_PIXEL_ID)
-  fbq('track', 'PageView')
+  window.fbq('init', META_PIXEL_ID)
+  trackMetaPageView()
 }
 
 function loadClarity() {

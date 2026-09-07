@@ -35,6 +35,9 @@ Deno.serve(async (req: Request) => {
       currency = 'INR',
       customer_email,
       customer_phone,
+      content_ids,
+      event_source_url,
+      test_event_code,
     } = body
 
     if (!event_id) {
@@ -52,6 +55,9 @@ Deno.serve(async (req: Request) => {
       grand_total: Number(value) || 0,
       customer_email: customer_email || null,
       customer_phone: customer_phone || null,
+      content_ids: Array.isArray(content_ids) ? content_ids : undefined,
+      event_source_url: event_source_url || undefined,
+      test_event_code: test_event_code || undefined,
     })
 
     return jsonResponse({ ok: true, ...result })

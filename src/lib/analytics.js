@@ -15,10 +15,12 @@
 
 import { trackGoogleAdsConversion } from './googleAds'
 import {
+  trackMetaPageView,
   trackMetaViewContent,
   trackMetaAddToCart,
   trackInitiateCheckout as metaInitiateCheckout,
   trackMetaPurchase,
+  getTestEventCode,
 } from './metaPixel'
 import { invokeEdgeFunction } from './invokeEdgeFunction'
 
@@ -136,11 +138,8 @@ export const analytics = {
       page_title: document.title,
       ...data,
     })
-    // Meta PageView is fired automatically by the pixel init,
-    // but we also fire on SPA route changes
-    if (typeof window.fbq === 'function') {
-      window.fbq('track', 'PageView')
-    }
+    // Meta PageView is handled with route deduplication to prevent duplicates on mount & SPA routing
+    trackMetaPageView()
   },
 
   /**
@@ -347,15 +346,17 @@ export const analytics = {
 
 async function sendMetaCAPI(order, items) {
   try {
+    const testCode = getTestEventCode()
     await invokeEdgeFunction('meta-conversions', {
       event_name: 'Purchase',
       event_id: order.transaction_id,
       event_source_url: window.location.href,
       value: Number(order.value) || 0,
       currency: 'INR',
-      content_ids: items.map((item) => item.item_id),
+      content_ids: items.map((item) => String(item.item_id || item.id)),
       customer_email: order.customer_email || null,
       customer_phone: order.customer_phone || null,
+      test_event_code: testCode || undefined,
     })
   } catch {
     // Meta CAPI is best-effort — don't block the purchase flow
