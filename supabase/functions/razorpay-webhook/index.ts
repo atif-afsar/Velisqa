@@ -2,7 +2,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 import crypto from "node:crypto"
 import { corsHeaders, jsonResponse } from '../_shared/http.ts'
 import { createNimbusPostShipment, isValidAwb } from '../_shared/nimbuspost.ts'
-import { sendMetaPurchase } from '../_shared/meta.ts'
+import { recordAndSendMetaPurchase } from '../_shared/meta.ts'
 
 function verifyWebhookSignature(rawBody: string, signature: string, secret: string): boolean {
   const generatedSignature = crypto
@@ -145,6 +145,7 @@ Deno.serve(async (request) => {
           shipping_status,
           nimbuspost_awb,
           order_items (
+            product_id,
             product_name,
             quantity,
             unit_price
@@ -212,11 +213,11 @@ Deno.serve(async (request) => {
           }
         }
 
-        // Fire Meta Pixel purchase event
+        // Fire Meta Conversions API purchase event (idempotent)
         try {
-          await sendMetaPurchase(order)
+          await recordAndSendMetaPurchase(adminClient, order)
         } catch (metaError) {
-          console.error('Meta Pixel Purchase event failed in webhook:', metaError)
+          console.error('Meta CAPI Purchase event failed in webhook:', metaError)
         }
       }
     } else if (eventType === 'payment.failed') {

@@ -17,7 +17,8 @@
  */
 
 import { corsHeaders, jsonResponse } from '../_shared/http.ts'
-import { sendMetaPurchase } from '../_shared/meta.ts'
+import { createAdminClient } from '../_shared/admin.ts'
+import { recordAndSendMetaPurchase } from '../_shared/meta.ts'
 
 Deno.serve(async (req: Request) => {
   // Handle CORS preflight
@@ -31,38 +32,61 @@ Deno.serve(async (req: Request) => {
     const {
       event_name,
       event_id,
-      value,
-      currency = 'INR',
-      customer_email,
-      customer_phone,
-      content_ids,
-      event_source_url,
       test_event_code,
     } = body
 
     if (!event_id) {
-      return jsonResponse({ error: 'event_id (transaction_id) is required.' }, 400)
+      return jsonResponse({ error: 'event_id (order_ref) is required.' }, 400)
     }
 
-    // Currently only Purchase events are supported via this endpoint.
-    // Other events can be added here in the future.
+    // Currently only Purchase events are supported via this endpoint
     if (event_name !== 'Purchase') {
       return jsonResponse({ skipped: true, reason: `Event "${event_name}" not supported yet.` })
     }
 
-    const result = await sendMetaPurchase({
-      order_ref: event_id,
-      grand_total: Number(value) || 0,
-      customer_email: customer_email || null,
-      customer_phone: customer_phone || null,
-      content_ids: Array.isArray(content_ids) ? content_ids : undefined,
-      event_source_url: event_source_url || undefined,
+    // Authoritative verification: check actual order in Supabase
+    const adminClient = createAdminClient()
+    const { data: order, error: orderError } = await adminClient
+      .from('orders')
+      .select(`
+        id,
+        order_ref,
+        grand_total,
+        customer_email,
+        customer_phone,
+        payment_status,
+        payment_method,
+        order_status,
+        order_items (
+          product_id
+        )
+      `)
+      .eq('order_ref', event_id)
+      .maybeSingle()
+
+    if (orderError || !order) {
+      return jsonResponse({ error: 'Order not found.' }, 404)
+    }
+
+    // For online payments, require verified 'paid' status
+    if (order.payment_method === 'online' && order.payment_status !== 'paid') {
+      return jsonResponse({ skipped: true, reason: 'Payment for online order has not been verified.' }, 400)
+    }
+
+    // For cancelled orders, skip
+    if (order.order_status === 'cancelled') {
+      return jsonResponse({ skipped: true, reason: 'Cancelled order cannot trigger Purchase event.' }, 400)
+    }
+
+    // Idempotently send to Meta Conversions API
+    const result = await recordAndSendMetaPurchase(adminClient, {
+      ...order,
       test_event_code: test_event_code || undefined,
     })
 
     return jsonResponse({ ok: true, ...result })
   } catch (err) {
     console.error('[meta-conversions]', err)
-    return jsonResponse({ error: err.message || 'Meta CAPI event failed.' }, 500)
+    return jsonResponse({ error: err instanceof Error ? err.message : 'Meta CAPI event failed.' }, 500)
   }
 })

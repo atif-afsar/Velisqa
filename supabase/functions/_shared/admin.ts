@@ -1,11 +1,19 @@
 import { createClient } from 'npm:@supabase/supabase-js@2'
 
+export function createAdminClient() {
+  const supabaseUrl = Deno.env.get('SUPABASE_URL')
+  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+  if (!supabaseUrl || !serviceRoleKey) {
+    throw new Error('Supabase function secrets are incomplete.')
+  }
+  return createClient(supabaseUrl, serviceRoleKey)
+}
+
 export async function requireAdmin(request: Request) {
   const supabaseUrl = Deno.env.get('SUPABASE_URL')
   const anonKey = Deno.env.get('SUPABASE_ANON_KEY')
-  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
 
-  if (!supabaseUrl || !anonKey || !serviceRoleKey) {
+  if (!supabaseUrl || !anonKey) {
     throw new Error('Supabase function secrets are incomplete.')
   }
 
@@ -22,7 +30,7 @@ export async function requireAdmin(request: Request) {
 
   if (userError || !user) throw new Error('Authentication required.')
 
-  const adminClient = createClient(supabaseUrl, serviceRoleKey)
+  const adminClient = createAdminClient()
   const { data: profile } = await adminClient
     .from('profiles')
     .select('role')

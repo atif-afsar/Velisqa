@@ -1,7 +1,7 @@
 import { corsHeaders, jsonResponse } from '../_shared/http.ts'
 import { requireAdmin } from '../_shared/admin.ts'
 import { createNimbusPostShipment, isValidAwb } from '../_shared/nimbuspost.ts'
-import { sendMetaPurchase } from '../_shared/meta.ts'
+import { recordAndSendMetaPurchase } from '../_shared/meta.ts'
 
 function buildShipmentPatch(shipment: Awaited<ReturnType<typeof createNimbusPostShipment>>) {
   const patch: Record<string, unknown> = {}
@@ -44,6 +44,7 @@ Deno.serve(async (request) => {
         payment_method,
         payment_status,
         order_items (
+          product_id,
           product_name,
           quantity,
           unit_price
@@ -127,7 +128,7 @@ Deno.serve(async (request) => {
 
     let metaResult: unknown
     try {
-      metaResult = await sendMetaPurchase(order)
+      metaResult = await recordAndSendMetaPurchase(adminClient, order)
     } catch (metaError) {
       console.error('Meta Purchase event failed:', metaError)
       metaResult = { error: metaError instanceof Error ? metaError.message : 'Unknown Meta error' }

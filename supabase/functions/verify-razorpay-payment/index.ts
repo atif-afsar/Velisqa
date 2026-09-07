@@ -2,7 +2,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 import crypto from "node:crypto"
 import { corsHeaders, jsonResponse } from '../_shared/http.ts'
 import { createNimbusPostShipment, isValidAwb } from '../_shared/nimbuspost.ts'
-import { sendMetaPurchase } from '../_shared/meta.ts'
+import { recordAndSendMetaPurchase } from '../_shared/meta.ts'
 
 function verifySignature(orderId: string, paymentId: string, signature: string, secret: string): boolean {
   const text = `${orderId}|${paymentId}`
@@ -79,6 +79,7 @@ Deno.serve(async (request) => {
         shipping_status,
         nimbuspost_awb,
         order_items (
+          product_id,
           product_name,
           quantity,
           unit_price
@@ -159,12 +160,12 @@ Deno.serve(async (request) => {
       }
     }
 
-    // 5. Send Meta Pixel purchase event
+    // 5. Send Meta Conversions API purchase event (idempotent)
     let metaResult: any = null
     try {
-      metaResult = await sendMetaPurchase(order)
+      metaResult = await recordAndSendMetaPurchase(adminClient, order)
     } catch (metaError) {
-      console.error('Meta Pixel Purchase event failed:', metaError)
+      console.error('Meta CAPI Purchase event failed:', metaError)
     }
 
     return jsonResponse({
