@@ -81,7 +81,7 @@ function canShip(order) {
 function matchesFilter(order, filter) {
   if (filter === 'all') return true
   if (filter === 'needs_shipment') {
-    return canShip(order) || isStuckShipment(order) || isPendingAwbSync(order) || isInvalidAwbStored(order)
+    return canShip(order) || isStuckShipment(order) || isPendingAwbSync(order) || isInvalidAwbStored(order) || (order.payment_method === 'online' && order.payment_status !== 'paid' && order.order_status !== 'cancelled')
   }
   if (filter === 'in_transit') {
     return Boolean(effectiveAwb(order)) && order.shipping_status !== 'delivered' && order.shipping_status !== 'rto'
@@ -249,6 +249,49 @@ export default function AdminOrders() {
       await refresh({ silent: true })
     }
     endBusy()
+  }
+
+  async function confirmPaymentInOrders(order) {
+    const ok = await confirm({
+      title: 'Confirm payment for order?',
+      message: `Mark ${order.order_ref} as paid? This will confirm payment in database and enable NimbusPost shipping.`,
+      confirmLabel: 'Confirm Paid',
+      variant: 'primary',
+    })
+    if (!ok) return
+
+    startBusy(order.id, 'confirm_pay')
+    setError('')
+    setActionNotice('')
+    try {
+      const { error: updateError } = await supabase
+        .from('orders')
+        .update({
+          payment_status: 'paid',
+          order_status: order.order_status === 'placed' ? 'confirmed' : order.order_status,
+          razorpay_payment_id: order.razorpay_payment_id || `pay_manual_${Date.now()}`,
+        })
+        .eq('id', order.id)
+
+      if (updateError) throw updateError
+
+      await supabase
+        .from('payments')
+        .update({
+          status: 'paid',
+          captured_at: new Date().toISOString(),
+          provider_payment_id: order.razorpay_payment_id || `pay_manual_${Date.now()}`,
+        })
+        .eq('order_id', order.id)
+
+      setActionNoticeVariant('success')
+      setActionNotice(`Payment confirmed for ${order.order_ref}! You can now ship via NimbusPost below.`)
+      await refresh({ silent: true })
+    } catch (err) {
+      setError(err?.message || 'Failed to update payment status.')
+    } finally {
+      endBusy()
+    }
   }
 
   async function copyTrackingLink(order) {
@@ -456,6 +499,23 @@ export default function AdminOrders() {
                   </p>
                 )}
               </div>
+
+              {order.payment_method === 'online' && order.payment_status !== 'paid' && order.order_status !== 'cancelled' && (
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-300 bg-amber-50 p-3.5 text-xs text-amber-950">
+                  <div>
+                    <p className="font-semibold text-amber-900">Online Payment Pending ({order.payment_status})</p>
+                    <p className="text-amber-800 mt-0.5">Payment has not yet been confirmed. Confirming payment will unlock shipping with NimbusPost.</p>
+                  </div>
+                  <button
+                    type="button"
+                    disabled={isBusy(order.id)}
+                    onClick={() => void confirmPaymentInOrders(order)}
+                    className="rounded-full bg-[#2d6a4f] px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-white hover:bg-[#1b4332] disabled:opacity-50 transition-colors shadow-sm"
+                  >
+                    {isBusy(order.id, 'confirm_pay') ? 'Confirming…' : '✓ Confirm Paid & Unlock Ship'}
+                  </button>
+                </div>
+              )}
 
               {order.order_status === 'cancelled' && (
                 <p className="mt-4 rounded-xl border border-[#130006]/10 bg-[#f1ede8] px-4 py-3 text-sm text-[#514347]">

@@ -26,7 +26,7 @@ Deno.serve(async (request) => {
 
   try {
     const { adminClient, user } = await requireAdmin(request)
-    const { orderId } = await request.json()
+    const { orderId, razorpayPaymentId } = await request.json()
     if (!orderId) return jsonResponse({ success: false, message: 'orderId is required.' }, 400)
 
     const { data: order, error: orderError } = await adminClient
@@ -54,20 +54,26 @@ Deno.serve(async (request) => {
       .single()
 
     if (orderError || !order) throw orderError || new Error('Order not found.')
-    if (order.payment_status !== 'payment_submitted') {
-      return jsonResponse({ success: false, message: 'This payment is no longer awaiting review.' }, 409)
+    const validPendingStatuses = ['payment_submitted', 'awaiting_payment', 'pending']
+    if (!validPendingStatuses.includes(order.payment_status)) {
+      return jsonResponse({ success: false, message: 'This payment is already processed or not awaiting review.' }, 409)
+    }
+
+    const orderPatch: Record<string, unknown> = {
+      payment_status: 'paid',
+      order_status: order.order_status === 'placed' ? 'confirmed' : order.order_status,
+      payment_reviewed_at: new Date().toISOString(),
+      payment_reviewed_by: user.id,
+      rejection_reason: null,
+    }
+    if (razorpayPaymentId) {
+      orderPatch.razorpay_payment_id = razorpayPaymentId
     }
 
     const { data: paidOrder, error: payError } = await adminClient
       .from('orders')
-      .update({
-        payment_status: 'paid',
-        payment_reviewed_at: new Date().toISOString(),
-        payment_reviewed_by: user.id,
-        rejection_reason: null,
-      })
+      .update(orderPatch)
       .eq('id', order.id)
-      .eq('payment_status', 'payment_submitted')
       .select('id')
       .maybeSingle()
 
@@ -75,6 +81,16 @@ Deno.serve(async (request) => {
     if (!paidOrder) {
       return jsonResponse({ success: false, message: 'This payment is no longer awaiting review.' }, 409)
     }
+
+    // Also update public.payments if record exists
+    await adminClient
+      .from('payments')
+      .update({
+        status: 'paid',
+        captured_at: new Date().toISOString(),
+        ...(razorpayPaymentId ? { provider_payment_id: razorpayPaymentId } : {}),
+      })
+      .eq('order_id', order.id)
 
     let shipment: Awaited<ReturnType<typeof createNimbusPostShipment>> | null = null
     let shipmentWarning: string | null = null

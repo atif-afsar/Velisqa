@@ -35,8 +35,8 @@ Deno.serve(async (request) => {
   if (request.method !== 'POST') return jsonResponse({ success: false, message: 'Method not allowed.' }, 405)
 
   try {
-    const { orderId, accessToken, razorpay_order_id, razorpay_payment_id, razorpay_signature } = await request.json()
-    if (!orderId || !accessToken || !razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+    const { orderId, orderRef, accessToken, razorpay_order_id, razorpay_payment_id, razorpay_signature } = await request.json()
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
       return jsonResponse({ success: false, message: 'Missing payment signature verification parameters.' }, 400)
     }
 
@@ -61,7 +61,7 @@ Deno.serve(async (request) => {
     const adminClient = createClient(url, serviceKey)
 
     // Fetch the order to ensure it matches
-    const { data: order, error: orderError } = await adminClient
+    let orderQuery = adminClient
       .from('orders')
       .select(`
         id,
@@ -85,13 +85,21 @@ Deno.serve(async (request) => {
           unit_price
         )
       `)
-      .eq('id', orderId)
-      .eq('order_access_token', accessToken)
       .eq('is_enquiry', false)
-      .maybeSingle()
+
+    if (razorpay_order_id) {
+      orderQuery = orderQuery.eq('razorpay_order_id', razorpay_order_id)
+    } else if (orderRef) {
+      orderQuery = orderQuery.eq('order_ref', orderRef)
+    } else if (orderId) {
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderId)
+      orderQuery = isUuid ? orderQuery.eq('id', orderId) : orderQuery.eq('order_ref', orderId)
+    }
+
+    const { data: order, error: orderError } = await orderQuery.maybeSingle()
 
     if (orderError || !order) {
-      throw orderError || new Error('Order not found or token has expired.')
+      throw orderError || new Error(`Order not found for Razorpay Order ${razorpay_order_id}`)
     }
 
     // Check if already paid

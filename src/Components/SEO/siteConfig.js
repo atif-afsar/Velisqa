@@ -5,7 +5,7 @@ export const TAGLINE = "Crafted to Captivate";
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/images/logo.png`;
 export const INSTAGRAM_URL = "https://www.instagram.com/velisqa.in/";
 export const WHATSAPP_PHONE = "+919336072590";
-export const CONTACT_EMAIL = "velisqa.in@gmail.com";
+export const CONTACT_EMAIL = import.meta.env.VITE_ADMIN_EMAIL || "velisqa.in@gmail.com";
 
 export const STATIC_ROUTES = [
   { path: "/", priority: "1.0", changefreq: "weekly" },

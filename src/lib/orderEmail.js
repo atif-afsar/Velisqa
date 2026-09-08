@@ -18,7 +18,7 @@ function buildSingleOrderBody({
   enquiryType = 'order',
 }) {
   const isEnquiry = enquiryType === 'enquiry'
-  const paymentLabel = paymentMethod === 'online' ? 'Manual UPI QR payment' : 'Cash on delivery'
+  const paymentLabel = paymentMethod === 'online' ? 'Online Payment (Razorpay)' : paymentMethod === 'upi' ? 'Manual UPI QR payment' : 'Cash on delivery'
   const giftWrap = customer?.giftWrap === true || customer?.giftWrap === 'true'
 
   const lines = [
@@ -85,7 +85,7 @@ function buildCartOrderBody({ orderRef, cartItems, stockWarnings, paymentMethod,
       .join('\n')
   })
 
-  const paymentLabel = paymentMethod === 'online' ? 'Manual UPI QR payment' : 'Cash on delivery'
+  const paymentLabel = paymentMethod === 'online' ? 'Online Payment (Razorpay)' : paymentMethod === 'upi' ? 'Manual UPI QR payment' : 'Cash on delivery'
   const giftWrap = customer?.giftWrap === true || customer?.giftWrap === 'true'
   const giftWrapFee = giftWrap ? 50 : 0
   const grandTotal = getCheckoutGrandTotal(productsSubtotal) + giftWrapFee
