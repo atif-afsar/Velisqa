@@ -391,6 +391,12 @@ export default function Checkout() {
           },
           handler: async (response) => {
             setSubmittingLabel('Confirming your payment…')
+
+            // Immediately clear cart so user doesn't see old items
+            clearCart()
+            localStorage.removeItem('velisqa:applied_coupon')
+            localStorage.removeItem('velisqa:gift_wrap')
+
             try {
               const { error: verifyError } = await invokeEdgeFunction('verify-razorpay-payment', {
                 orderId: orderRef,
@@ -448,31 +454,30 @@ export default function Checkout() {
                 },
               }).catch((err) => console.error('Failed to send order confirmation email:', err))
 
-              clearCart()
-              localStorage.removeItem('velisqa:applied_coupon')
-              localStorage.removeItem('velisqa:gift_wrap')
-
               // ── Analytics: track purchase ──
-              analytics.purchase({
-                transaction_id: orderRef,
-                value: finalTotal,
-                shipping: deliveryCharge,
-                tax: gstAmount,
-                coupon: appliedCoupon || undefined,
-                items: items.map((line) => ({
-                  id: line.productId,
-                  name: line.name,
-                  price: line.price,
-                  quantity: line.quantity,
-                })),
-                customer_email: email.trim() || undefined,
-                customer_phone: phone.trim() || undefined,
-              })
-
-              navigate(`/order-confirmation/${orderRef}?token=${accessToken}`)
+              try {
+                analytics.purchase({
+                  transaction_id: orderRef,
+                  value: finalTotal,
+                  shipping: deliveryCharge,
+                  tax: gstAmount,
+                  coupon: appliedCoupon || undefined,
+                  items: items.map((line) => ({
+                    id: line.productId,
+                    name: line.name,
+                    price: line.price,
+                    quantity: line.quantity,
+                  })),
+                  customer_email: email.trim() || undefined,
+                  customer_phone: phone.trim() || undefined,
+                })
+              } catch (analyticsErr) {
+                console.warn('Analytics track error:', analyticsErr)
+              }
             } catch (err) {
-              setCheckoutError(err.message || 'Payment verification failed.')
-              setIsSubmitting(false)
+              console.error('Payment confirmation background error:', err)
+            } finally {
+              navigate(`/order-confirmation/${orderRef}?token=${accessToken}`, { replace: true })
             }
           },
         }
