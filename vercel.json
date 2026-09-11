@@ -1,7 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/((?!assets/|images/|robots.txt|sitemap.xml).*)",
+      "source": "/((?!assets/|images/|robots.txt|sitemap.xml|meta-catalog.csv).*)",
       "destination": "/index.html"
     }
   ],
@@ -25,7 +25,7 @@
       ]
     },
     {
-      "source": "/(robots.txt|sitemap.xml)",
+      "source": "/(robots.txt|sitemap.xml|meta-catalog.csv)",
       "headers": [
         {
           "key": "Cache-Control",
