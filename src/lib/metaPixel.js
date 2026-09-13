@@ -97,15 +97,27 @@ export function trackMetaEvent(eventName, parameters = {}, options = {}) {
   return true
 }
 
+/** Check if an ID is a valid catalog product ID (filters out virtual gift tokens, etc.). */
+function isValidCatalogId(id) {
+  if (!id) return false
+  const str = String(id).trim()
+  return str.length > 0 && !str.startsWith('VELISQA_FREE_GIFT')
+}
+
 /** Track Meta ViewContent (product page view). */
 export function trackMetaViewContent(product) {
   const productId = String(product.item_id || product.id || '')
+  if (!isValidCatalogId(productId)) return false
+
+  const price = Number(product.price) || 0
+
   return trackMetaEvent('ViewContent', {
-    content_ids: productId ? [productId] : [],
+    content_ids: [productId],
     content_name: product.item_name || product.name || '',
     content_type: 'product',
     content_category: product.item_category || product.category || '',
-    value: Number(product.price) || 0,
+    contents: [{ id: productId, quantity: 1, item_price: price }],
+    value: price,
     currency: 'INR',
   })
 }
@@ -113,14 +125,16 @@ export function trackMetaViewContent(product) {
 /** Track Meta AddToCart. */
 export function trackMetaAddToCart(product, quantity = 1) {
   const productId = String(product.item_id || product.id || '')
+  if (!isValidCatalogId(productId)) return false
+
   const qty = Number(quantity) || 1
   const price = Number(product.price) || 0
 
   return trackMetaEvent('AddToCart', {
-    content_ids: productId ? [productId] : [],
+    content_ids: [productId],
     content_name: product.item_name || product.name || '',
     content_type: 'product',
-    contents: productId ? [{ id: productId, quantity: qty, item_price: price }] : undefined,
+    contents: [{ id: productId, quantity: qty, item_price: price }],
     value: price * qty,
     currency: 'INR',
   })
@@ -128,7 +142,7 @@ export function trackMetaAddToCart(product, quantity = 1) {
 
 /** Track Meta InitiateCheckout. */
 export function trackInitiateCheckout({ value, itemCount, contentIds = [] }) {
-  const ids = (contentIds || []).map(String).filter(Boolean)
+  const ids = (contentIds || []).map(String).filter(isValidCatalogId)
   return trackMetaEvent('InitiateCheckout', {
     value: Number(value) || 0,
     currency: 'INR',
@@ -143,7 +157,8 @@ export function trackInitiateCheckout({ value, itemCount, contentIds = [] }) {
  * @param {{ transaction_id: string, value: number, items: Array<{ id?: string, item_id?: string, name?: string, price?: number, quantity?: number }> }} order
  */
 export function trackMetaPurchase(order) {
-  const items = order.items || []
+  const rawItems = order.items || []
+  const items = rawItems.filter((item) => isValidCatalogId(item.item_id || item.id))
   const contentIds = items.map((item) => String(item.item_id || item.id)).filter(Boolean)
   const contents = items.map((item) => ({
     id: String(item.item_id || item.id),

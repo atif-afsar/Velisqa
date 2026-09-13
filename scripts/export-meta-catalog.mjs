@@ -17,11 +17,11 @@ function loadEnv() {
 }
 
 const env = loadEnv()
-const supabaseUrl = env.VITE_SUPABASE_URL
-const supabaseKey = env.VITE_SUPABASE_ANON_KEY
+const supabaseUrl = process.env.VITE_SUPABASE_URL || env.VITE_SUPABASE_URL
+const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || env.VITE_SUPABASE_ANON_KEY
 
 if (!supabaseUrl || !supabaseKey) {
-  console.error('Missing Supabase credentials in .env')
+  console.error('Missing Supabase credentials (VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY)')
   process.exit(1)
 }
 

@@ -133,7 +133,12 @@ export default function ProductDetail() {
         return
       }
 
-      if (cached) {
+      if (!error && !data) {
+        // Product was explicitly not found or deleted from DB
+        setNotFound(true)
+        setProduct(null)
+      } else if (cached) {
+        // Only fallback to cache on network error
         setProduct(cached)
         setNotFound(false)
       } else {
