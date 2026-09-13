@@ -33,8 +33,13 @@ export async function sendMetaPurchase(order: {
     }
   }
 
+  const rawValue = Number(order.grand_total)
+  if (isNaN(rawValue) || rawValue <= 0) {
+    return { skipped: true, reason: 'Order value must be greater than 0 for Meta CAPI Purchase.' }
+  }
+
   const customData: Record<string, unknown> = {
-    value: Number(order.grand_total),
+    value: Number(rawValue.toFixed(2)),
     currency: 'INR',
     order_id: order.order_ref,
   }
@@ -87,7 +92,8 @@ export async function recordAndSendMetaPurchase(
   order: {
     id: string
     order_ref: string
-    grand_total: number
+    grand_total?: number | null
+    value?: number | null
     customer_email?: string | null
     customer_phone?: string | null
     order_status?: string | null
@@ -110,17 +116,23 @@ export async function recordAndSendMetaPurchase(
   }
 
   // 2. Extract content_ids from order_items if not explicitly provided
-  let contentIds = order.content_ids
+  let contentIds = (order.content_ids || [])
+    .filter((id) => id && !id.startsWith('VELISQA_FREE_GIFT'))
   if ((!contentIds || contentIds.length === 0) && order.order_items && Array.isArray(order.order_items)) {
     contentIds = order.order_items
       .map((item: any) => String(item.product_id || ''))
-      .filter(Boolean)
+      .filter((id) => Boolean(id) && !id.startsWith('VELISQA_FREE_GIFT'))
+  }
+
+  const resolvedTotal = Number(order.grand_total ?? order.value ?? 0)
+  if (isNaN(resolvedTotal) || resolvedTotal <= 0) {
+    return { skipped: true, reason: 'Order grand_total must be greater than 0 for Meta CAPI.' }
   }
 
   // 3. Send to Meta Conversions API
   const metaResult = await sendMetaPurchase({
     order_ref: order.order_ref,
-    grand_total: Number(order.grand_total) || 0,
+    grand_total: resolvedTotal,
     customer_email: order.customer_email || null,
     customer_phone: order.customer_phone || null,
     content_ids: contentIds,

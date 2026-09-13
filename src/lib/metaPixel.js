@@ -143,13 +143,17 @@ export function trackMetaAddToCart(product, quantity = 1) {
 /** Track Meta InitiateCheckout. */
 export function trackInitiateCheckout({ value, itemCount, contentIds = [] }) {
   const ids = (contentIds || []).map(String).filter(isValidCatalogId)
-  return trackMetaEvent('InitiateCheckout', {
-    value: Number(value) || 0,
+  const numValue = Number(value) || 0
+  const params = {
     currency: 'INR',
     num_items: Number(itemCount) || 0,
     content_ids: ids,
     content_type: 'product',
-  })
+  }
+  if (numValue > 0) {
+    params.value = Number(numValue.toFixed(2))
+  }
+  return trackMetaEvent('InitiateCheckout', params)
 }
 
 /**
@@ -157,20 +161,23 @@ export function trackInitiateCheckout({ value, itemCount, contentIds = [] }) {
  * @param {{ transaction_id: string, value: number, items: Array<{ id?: string, item_id?: string, name?: string, price?: number, quantity?: number }> }} order
  */
 export function trackMetaPurchase(order) {
+  const numValue = Number(order.value) || 0
+  if (numValue <= 0) return false
+
   const rawItems = order.items || []
   const items = rawItems.filter((item) => isValidCatalogId(item.item_id || item.id))
   const contentIds = items.map((item) => String(item.item_id || item.id)).filter(Boolean)
   const contents = items.map((item) => ({
     id: String(item.item_id || item.id),
     quantity: Number(item.quantity) || 1,
-    item_price: Number(item.price) || 0,
+    item_price: Number((Number(item.price) || 0).toFixed(2)),
   }))
   const numItems = items.reduce((sum, item) => sum + (Number(item.quantity) || 1), 0)
 
   return trackMetaEvent(
     'Purchase',
     {
-      value: Number(order.value) || 0,
+      value: Number(numValue.toFixed(2)),
       currency: 'INR',
       content_type: 'product',
       content_ids: contentIds,
