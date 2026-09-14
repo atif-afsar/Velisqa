@@ -23,6 +23,7 @@ import {
   readRecentSearches,
   rememberSearch,
 } from '../../lib/popularSearches'
+import { analytics } from '../../lib/analytics'
 
 import { PRODUCT_CATEGORIES } from '../../lib/productCategories'
 import { getPrimaryImageUrl } from '../../lib/productImages'
@@ -305,6 +306,7 @@ export default function SearchDialog({
     if (clean.length < 2) return
 
     rememberSearch(clean)
+    analytics.search(clean)
 
     navigate(
       `/search?q=${encodeURIComponent(

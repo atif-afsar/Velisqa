@@ -6,6 +6,7 @@ import { buildBreadcrumbSchema } from "../Components/SEO/schemaBuilders";
 import { pageSeo } from "../Components/SEO/seoData";
 import { legalNav } from "../Components/Legal/legalContent";
 import WhatsAppCTA from "../Components/WhatsApp/WhatsAppCTA";
+import { analytics } from "../lib/analytics";
 import {
   AREA_SERVED,
   BRAND_ORIGIN,
@@ -42,6 +43,7 @@ function ChannelLink({ channel }) {
       className={className}
       target={channel.external ? "_blank" : undefined}
       rel={channel.external ? "noreferrer" : undefined}
+      onClick={() => analytics.contact(channel.label || channel.value || 'direct')}
     >
       {channel.value}
     </a>

@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { loadWishlistIds, saveWishlistIds } from '../lib/wishlistStorage'
+import { analytics } from '../lib/analytics'
 
 const WishlistContext = createContext(null)
 
@@ -39,6 +40,7 @@ export function WishlistProvider({ children }) {
 
       persist([product.id, ...ids])
       showToast(`Saved “${product.name}” to wishlist`)
+      analytics.addToWishlist(product)
       return { added: true }
     },
     [ids, persist, showToast],

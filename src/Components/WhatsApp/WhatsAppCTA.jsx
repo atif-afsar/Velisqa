@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { buildWhatsAppMessage, createWhatsAppLink } from "./whatsapp";
+import { analytics } from "../../lib/analytics";
 
 export default function WhatsAppCTA({ productName, productUrl, children, intent = "inquiry", className = "" }) {
   const href = createWhatsAppLink(buildWhatsAppMessage({ productName, productUrl, intent }));
@@ -20,6 +21,7 @@ export default function WhatsAppCTA({ productName, productUrl, children, intent 
       href={href}
       target="_blank"
       rel="noreferrer"
+      onClick={() => analytics.contact('whatsapp')}
       whileHover={{ y: -2, scale: 1.01 }}
       whileTap={{ scale: 0.985 }}
       className={`${baseStyles} ${visual} ${premiumStyles} ${accent} ${className}`}

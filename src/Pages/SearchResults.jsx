@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import ProductCard from '../Components/Product/ProductCard'
 import SEOHead from '../Components/SEO/SEOHead'
@@ -7,6 +7,7 @@ import ProductFilters, { ProductFilterSidebar } from '../Components/Collections/
 import { useProducts } from '../hooks/useProducts'
 import { searchProducts } from '../lib/productSearch'
 import { POPULAR_SEARCHES, rememberSearch } from '../lib/popularSearches'
+import { analytics } from '../lib/analytics'
 import {
   EMPTY_PRODUCT_FILTERS,
   filterAndSortProducts,
@@ -19,6 +20,12 @@ export default function SearchResults() {
   const [searchParams, setSearchParams] = useSearchParams()
   const query = (searchParams.get('q') || '').trim()
   const { products, loading, error } = useProducts()
+
+  useEffect(() => {
+    if (query && query.length >= 2) {
+      analytics.search(query)
+    }
+  }, [query])
 
   const searchMatches = useMemo(
     () => query.length >= 2 ? searchProducts(products, query) : [],

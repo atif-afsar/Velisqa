@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import { enrichAuthError, signInWithGoogle } from '../lib/auth'
+import { analytics } from '../lib/analytics'
 
 export function useEmailAuthForm({ onSignedIn } = {}) {
   const [isSignup, setIsSignup] = useState(false)
@@ -37,6 +38,7 @@ export function useEmailAuthForm({ onSignedIn } = {}) {
           return
         }
 
+        analytics.signUp('email')
         setFormNotice('Account created. You can sign in now.')
         setIsSignup(false)
       } else {
@@ -50,6 +52,7 @@ export function useEmailAuthForm({ onSignedIn } = {}) {
           return
         }
 
+        analytics.login('email')
         onSignedIn?.()
       }
     } finally {

@@ -188,6 +188,65 @@ export function trackMetaPurchase(order) {
   )
 }
 
+/** Track Meta AddPaymentInfo (payment details added or selected in checkout). */
+export function trackMetaAddPaymentInfo({ value, contentIds = [], contents = [], currency = 'INR' } = {}) {
+  const ids = (contentIds || []).map(String).filter(isValidCatalogId)
+  const numValue = Number(value) || 0
+  const params = {
+    currency,
+    content_type: 'product',
+  }
+  if (ids.length > 0) params.content_ids = ids
+  if (Array.isArray(contents) && contents.length > 0) params.contents = contents
+  if (numValue > 0) params.value = Number(numValue.toFixed(2))
+
+  return trackMetaEvent('AddPaymentInfo', params)
+}
+
+/** Track Meta AddToWishlist. */
+export function trackMetaAddToWishlist(product) {
+  const productId = String(product.item_id || product.id || '')
+  if (!isValidCatalogId(productId)) return false
+
+  const price = Number(product.price) || 0
+
+  return trackMetaEvent('AddToWishlist', {
+    content_ids: [productId],
+    content_name: product.item_name || product.name || '',
+    content_category: product.item_category || product.category || '',
+    content_type: 'product',
+    contents: [{ id: productId, quantity: 1, item_price: price }],
+    value: price,
+    currency: 'INR',
+  })
+}
+
+/** Track Meta Search (when a user searches products). */
+export function trackMetaSearch(searchTerm) {
+  const query = String(searchTerm || '').trim()
+  if (!query) return false
+
+  return trackMetaEvent('Search', {
+    search_string: query,
+  })
+}
+
+/** Track Meta CompleteRegistration (sign up). */
+export function trackMetaCompleteRegistration(method = 'email') {
+  return trackMetaEvent('CompleteRegistration', {
+    content_name: method,
+    status: true,
+    currency: 'INR',
+  })
+}
+
+/** Track Meta Contact (WhatsApp, phone, or email outreach). */
+export function trackMetaContact(method = 'general') {
+  return trackMetaEvent('Contact', {
+    content_name: method,
+  })
+}
+
 /** Track custom PaymentProofSubmitted event. */
 export function trackPaymentProofSubmitted({ orderRef, value }) {
   return trackMetaEvent(
@@ -200,3 +259,4 @@ export function trackPaymentProofSubmitted({ orderRef, value }) {
     { custom: true },
   )
 }
+

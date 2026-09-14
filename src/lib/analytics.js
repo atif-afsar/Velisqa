@@ -20,6 +20,11 @@ import {
   trackMetaAddToCart,
   trackInitiateCheckout as metaInitiateCheckout,
   trackMetaPurchase,
+  trackMetaAddPaymentInfo,
+  trackMetaAddToWishlist,
+  trackMetaSearch,
+  trackMetaCompleteRegistration,
+  trackMetaContact,
   getTestEventCode,
 } from './metaPixel'
 import { invokeEdgeFunction } from './invokeEdgeFunction'
@@ -256,6 +261,29 @@ export const analytics = {
       payment_type: paymentType,
       items: cartToGA4Items(cart.items),
     })
+    trackMetaAddPaymentInfo({
+      value: cart.total,
+      contentIds: (cart.items || []).map((line) => line.productId || line.id),
+      contents: (cart.items || []).map((line) => ({
+        id: String(line.productId || line.id),
+        quantity: Number(line.quantity) || 1,
+        item_price: Number(line.price) || 0,
+      })),
+    })
+  },
+
+  /**
+   * Track adding product to wishlist.
+   * @param {object} product
+   */
+  addToWishlist(product) {
+    const item = toGA4Item(product)
+    trackEvent('add_to_wishlist', {
+      currency: 'INR',
+      value: item.price,
+      items: [item],
+    })
+    trackMetaAddToWishlist(item)
   },
 
   /**
@@ -323,6 +351,7 @@ export const analytics = {
    */
   search(searchTerm) {
     trackEvent('search', { search_term: searchTerm })
+    trackMetaSearch(searchTerm)
   },
 
   /**
@@ -339,6 +368,16 @@ export const analytics = {
    */
   signUp(method) {
     trackEvent('sign_up', { method })
+    trackMetaCompleteRegistration(method)
+  },
+
+  /**
+   * Track customer contact (WhatsApp, phone, email, contact form).
+   * @param {string} method
+   */
+  contact(method = 'general') {
+    trackEvent('contact', { method })
+    trackMetaContact(method)
   },
 }
 
