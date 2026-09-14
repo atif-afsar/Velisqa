@@ -89,25 +89,27 @@ export default function AdminAnalytics() {
       const { start, end } = getDateRange(range)
       const { data, error: fetchErr } = await supabase
         .from('orders')
-        .select('id, order_ref, grand_total, payment_status, payment_method, created_at, utm_source, utm_medium, utm_campaign, line_items, device_type, city, state')
+        .select(`
+          id,
+          order_ref,
+          grand_total,
+          payment_status,
+          payment_method,
+          created_at,
+          order_items (
+            product_name,
+            quantity,
+            unit_price,
+            line_total
+          )
+        `)
+        .eq('is_enquiry', false)
         .gte('created_at', start)
         .lte('created_at', end)
         .order('created_at', { ascending: false })
 
-      if (fetchErr) {
-        // Some columns might not exist yet — retry with fewer columns
-        const { data: fallbackData, error: fallbackErr } = await supabase
-          .from('orders')
-          .select('id, order_ref, grand_total, payment_status, payment_method, created_at, line_items')
-          .gte('created_at', start)
-          .lte('created_at', end)
-          .order('created_at', { ascending: false })
-
-        if (fallbackErr) throw fallbackErr
-        setOrders(fallbackData || [])
-      } else {
-        setOrders(data || [])
-      }
+      if (fetchErr) throw fetchErr
+      setOrders(data || [])
     } catch (err) {
       setError(err.message)
       setOrders([])
@@ -175,16 +177,18 @@ export default function AdminAnalytics() {
   const topProducts = useMemo(() => {
     const productMap = {}
     for (const o of orders) {
-      const items = o.line_items || []
+      const items = o.order_items || o.line_items || []
       for (const item of items) {
-        const name = item.name || item.product_name || 'Unknown'
-        const id = item.product_id || item.productId || name
+        const name = item.product_name || item.name || 'Unknown'
+        const id = item.product_name || item.product_id || item.productId || name
         if (!productMap[id]) {
           productMap[id] = { name, purchases: 0, revenue: 0, quantity: 0 }
         }
+        const qty = Number(item.quantity) || 1
+        const lineRev = Number(item.line_total) || ((Number(item.unit_price || item.price) || 0) * qty)
         productMap[id].purchases += 1
-        productMap[id].quantity += Number(item.quantity) || 1
-        productMap[id].revenue += (Number(item.price) || 0) * (Number(item.quantity) || 1)
+        productMap[id].quantity += qty
+        productMap[id].revenue += lineRev
       }
     }
     return Object.values(productMap).sort((a, b) => b.revenue - a.revenue).slice(0, 10)
