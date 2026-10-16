@@ -1,65 +1,24 @@
-import { lazy } from "react";
-import { useHomeShopPreload } from "../../hooks/useHomeShopPreload";
-import Hero from "./Hero";
-import HomeBrandSeo from "./HomeBrandSeo";
-import LazySection from "../Performance/LazySection";
-import VelisqaLoader from "../Common/VelisqaLoader";
-import CouponHomePopup from "./CouponHomePopup";
+import Hero from './Hero'
+import CategoryTiles from './CategoryTiles'
+import ProductShowcase from './ProductShowcase'
+import EditorialBlock from './EditorialBlock'
+import TrustStrip from './TrustStrip'
+import ReviewsUgc from './ReviewsUgc'
+import NewsletterBand from './NewsletterBand'
+import HomeBrandSeo from './HomeBrandSeo'
 
-const IconsOfElegance = lazy(() => import("./IconsOfElegance"));
-
-const HomeShopGrid = lazy(() => import("./HomeShopGrid"));
-const Ethos = lazy(() => import("./Ethos"));
-const BestSellers = lazy(() => import("./BestSellers"));
-const SunKissed = lazy(() => import("./SunKissed"));
-const Atelier = lazy(() => import("./Atelier"));
-const Testimonial = lazy(() => import("./Testimonial"));
-const BeginStory = lazy(() => import("./BeginStory"));
-const HomeFooter = lazy(() => import("./HomeFooter"));
-
+/** Short, editorial homepage. Renders immediately — no full-screen loader. */
 export default function HomeContent() {
-  const homeShopCatalog = useHomeShopPreload();
-
-  if (homeShopCatalog.loading) {
-    return <VelisqaLoader fullScreen={true} />;
-  }
-
   return (
-    <main className="bg-[#f9f5f0] text-[#130006]">
+    <main className="page-offset-nav bg-paper text-ink">
       <Hero />
-      <LazySection minHeight="220px" rootMargin="400px">
-        <IconsOfElegance />
-      </LazySection>
-      <LazySection minHeight="520px" rootMargin="500px">
-        <HomeShopGrid
-          products={homeShopCatalog.products}
-          loading={homeShopCatalog.loading}
-          error={homeShopCatalog.error}
-        />
-      </LazySection>
-      <LazySection minHeight="620px">
-        <Ethos />
-      </LazySection>
-      <LazySection minHeight="720px">
-        <BestSellers />
-      </LazySection>
-      <LazySection minHeight="760px">
-        <SunKissed />
-      </LazySection>
-      <LazySection minHeight="520px">
-        <Atelier />
-      </LazySection>
-      <LazySection minHeight="420px">
-        <Testimonial />
-      </LazySection>
-      <LazySection minHeight="480px">
-        <BeginStory />
-      </LazySection>
+      <CategoryTiles />
+      <ProductShowcase />
+      <EditorialBlock />
+      <TrustStrip />
+      <ReviewsUgc />
       <HomeBrandSeo />
-      <LazySection minHeight="280px">
-        <HomeFooter />
-      </LazySection>
-      <CouponHomePopup />
+      <NewsletterBand />
     </main>
-  );
+  )
 }

@@ -61,3 +61,19 @@ export function formatReviewCount(count) {
   }
   return String(count)
 }
+
+/**
+ * Short, editorial product name for cards and headings.
+ * Catalogue names often carry marketplace-style suffixes
+ * ("Velisqa Gold Heart Necklace for Women | Minimal ... Jewelry"); keep the first phrase.
+ */
+export function displayProductName(name) {
+  let text = String(name || '').trim()
+  if (!text) return 'Velisqa piece'
+  text = text.replace(/^velisqa\s*[|:–-]?\s*/i, '')
+  text = text.split(/\s[|–—]\s|\s-\s/)[0]
+  text = text.replace(/\s+for\s+(women|girls|her|men)\b.*$/i, '')
+  text = text.trim()
+  if (!text) return String(name).trim()
+  return text.charAt(0).toUpperCase() + text.slice(1)
+}

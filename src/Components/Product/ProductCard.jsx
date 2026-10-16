@@ -1,117 +1,119 @@
-import { memo } from 'react'
+import { memo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getPrimaryImageUrl, getHoverImageUrl } from '../../lib/productImages'
-import ProductImage from '../Common/ProductImage'
-import ProductPromoBadge from './ProductPromoBadge'
-import ProductPriceDisplay from './ProductPriceDisplay'
-import ProductCardActions from './ProductCardActions'
-import ProductRating from './ProductRating'
-import ProductBadgeLabel from './ProductBadgeLabel'
-import ProductWishlistButton from './ProductWishlistButton'
-import ProductSoldOutBadge from './ProductSoldOutBadge'
+import { getPromoPriceDisplay, formatInr } from '../../lib/promoPricing'
+import { getProductBadge, getProductRating, getProductReviewCount, displayProductName } from '../../lib/productDisplay'
 import { isProductSoldOut } from '../../lib/cartStock'
+import { productPath } from '../../lib/productUrl'
+import { useCart } from '../../context/CartContext'
+import ProductImage from '../Common/ProductImage'
+import ProductWishlistButton from './ProductWishlistButton'
+import { BagIcon, StarIcon } from '../UI/Icons'
 
-function ProductCard({ product, priority = false, variant = 'default' }) {
-  const detailPath = `/product/${product.id}`
-  const imageUrl = getPrimaryImageUrl(product)
-  const hoverImageUrl = getHoverImageUrl(product)
+const SIZES = '(min-width: 1280px) 22vw, (min-width: 1024px) 28vw, (min-width: 768px) 30vw, 46vw'
+
+function CardBadge({ product, soldOut, discountPercent }) {
+  if (soldOut) return <span className="badge">Sold out</span>
+  const badge = getProductBadge(product)
+  if (badge === 'new') return <span className="badge badge-accent">New</span>
+  if (badge === 'bestseller') return <span className="badge">Bestseller</span>
+  if (discountPercent >= 10) return <span className="badge">−{discountPercent}%</span>
+  return null
+}
+
+/**
+ * Product tile: 4:5 image with hover swap, wishlist, quick add, name, price and (real) rating.
+ * `variant` is accepted for backwards compatibility with older call sites.
+ */
+function ProductCard({ product, priority = false, sizes = SIZES }) {
+  const { addToCart } = useCart()
+  const [adding, setAdding] = useState(false)
+  const href = productPath(product)
+  const name = displayProductName(product.name)
   const soldOut = isProductSoldOut(product)
-  const catalog = variant === 'catalog'
+  const { sale, compare, hasPromo, discountPercent } = getPromoPriceDisplay(product)
+  const rating = getProductRating(product)
+  const reviewCount = getProductReviewCount(product)
+
+  function quickAdd(event) {
+    event.preventDefault()
+    event.stopPropagation()
+    if (adding || soldOut) return
+    setAdding(true)
+    addToCart(product, 1)
+    window.setTimeout(() => setAdding(false), 600)
+  }
 
   return (
-    <article
-      className={
-        catalog
-          ? 'group flex h-full flex-col max-w-safe'
-          : 'group flex h-full flex-col overflow-visible rounded-xl border border-slate-200/80 bg-white p-2.5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#C9A96E]/80 hover:shadow-md sm:p-3 max-w-safe'
-      }
-    >
-      <div className={`relative shrink-0 ${catalog ? 'isolate overflow-hidden' : ''}`}>
-        <Link
-          to={detailPath}
-          className={`relative block overflow-hidden bg-[#FAF9F6] ${
-            catalog ? '' : 'aspect-[4/5] rounded-lg bg-[#FAF9F6]'
-          }`}
-          aria-label={`View ${product.name}`}
-        >
-          <ProductPromoBadge product={product} />
-          {soldOut && <ProductSoldOutBadge />}
-          {!catalog && <ProductBadgeLabel product={product} placement="image" />}
+    <article className="group relative flex h-full min-w-0 flex-col">
+      <div className="relative">
+        <Link to={href} className="block" tabIndex={-1} aria-hidden="true">
           <ProductImage
-            src={imageUrl}
-            hoverSrc={hoverImageUrl}
-            alt={product.name}
-            width={catalog ? 720 : 500}
-            responsiveWidths={catalog ? [400, 560, 720, 960] : [320, 500, 720]}
-            sizes={
-              catalog
-                ? '(min-width: 1280px) 18vw, (min-width: 1024px) 22vw, (min-width: 640px) 30vw, 46vw'
-                : '(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 50vw'
-            }
-            aspect={catalog ? '3 / 4' : '4 / 5'}
+            src={getPrimaryImageUrl(product)}
+            hoverSrc={getHoverImageUrl(product)}
+            alt=""
+            width={600}
+            responsiveWidths={[360, 480, 600, 800]}
+            sizes={sizes}
+            aspect="4 / 5"
             priority={priority}
-            className={catalog ? 'w-full' : 'h-full w-full'}
-            imgClassName={`object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03] ${catalog ? '' : 'rounded-lg group-hover:scale-105'}`}
+            className="w-full"
+            imgClassName="img-zoom"
           />
         </Link>
 
-        <div className={`absolute z-10 ${catalog ? 'right-2 top-2' : 'right-2 top-2 sm:right-3 sm:top-3'}`}>
-          <ProductWishlistButton product={product} size="sm" />
+        <div className="pointer-events-none absolute left-2.5 top-2.5 sm:left-3 sm:top-3">
+          <CardBadge product={product} soldOut={soldOut} discountPercent={hasPromo ? discountPercent : 0} />
         </div>
+        <div className="absolute right-1 top-1 sm:right-1.5 sm:top-1.5">
+          <ProductWishlistButton product={product} />
+        </div>
+
+        {!soldOut && (
+          <>
+            {/* Desktop: quick-add bar revealed on hover / focus */}
+            <button
+              type="button"
+              onClick={quickAdd}
+              className="btn btn-light absolute inset-x-3 bottom-3 hidden min-h-11 translate-y-2 opacity-0 shadow-sm transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 focus-visible:translate-y-0 focus-visible:opacity-100 md:flex"
+              aria-label={`Quick add ${name} to bag`}
+            >
+              {adding ? 'Added' : 'Quick add'}
+            </button>
+            {/* Touch: compact bag button */}
+            <button
+              type="button"
+              onClick={quickAdd}
+              className="absolute bottom-2 right-2 grid h-11 w-11 place-items-center rounded-full bg-paper/95 text-ink shadow-sm md:hidden"
+              aria-label={`Add ${name} to bag`}
+            >
+              <BagIcon size={18} />
+            </button>
+          </>
+        )}
       </div>
 
-      <div
-        className={
-          catalog
-            ? 'flex flex-1 flex-col pt-3'
-            : 'flex flex-1 flex-col items-stretch overflow-visible px-1 pb-2 pt-2.5 text-center sm:px-1.5 sm:pb-2.5 sm:pt-3'
-        }
-      >
-
-
-        <Link to={detailPath} className="block w-full shrink-0">
-          <h4
-            className={
-              catalog
-                ? 'line-clamp-2 text-sm font-semibold leading-snug text-slate-900 sm:text-base hover:text-[#8B6914] transition-colors'
-                : 'line-clamp-2 min-h-[2.5rem] font-sans text-sm font-bold leading-snug text-slate-900 transition hover:text-[#8B6914] sm:min-h-[2.75rem] sm:text-base lg:text-lg'
-            }
-          >
-            {product.name}
-          </h4>
-        </Link>
-
-        {!catalog && (
-          <div
-            className={
-              'mt-1 flex min-h-[2.1rem] shrink-0 items-center justify-center sm:mt-1.5 sm:min-h-[2.35rem]'
-            }
-          >
-            <ProductPriceDisplay product={product} size="card" />
-          </div>
+      <div className="flex flex-1 flex-col pt-3">
+        <h3 className="text-[0.8125rem] leading-snug text-ink sm:text-sm">
+          <Link to={href} className="line-clamp-2 hover:text-accent-ink">
+            {name}
+          </Link>
+        </h3>
+        <p className="mt-1.5 flex flex-wrap items-baseline gap-x-2 text-[0.8125rem] sm:text-sm">
+          <span className="type-price text-ink">{formatInr(sale)}</span>
+          {hasPromo && (
+            <>
+              <span className="sr-only">, was</span>
+              <s className="text-muted">{formatInr(compare)}</s>
+            </>
+          )}
+        </p>
+        {reviewCount > 0 && rating > 0 && (
+          <p className="mt-1 flex items-center gap-1 text-xs text-muted" aria-label={`Rated ${rating} out of 5 from ${reviewCount} reviews`}>
+            <StarIcon size={12} className="text-ink" />
+            {rating.toFixed(1)} <span>({reviewCount})</span>
+          </p>
         )}
-
-        {!catalog && (
-          <div className="mt-1.5">
-            <ProductRating product={product} className="justify-center" size="card" />
-          </div>
-        )}
-
-        {catalog && (
-          <div className="mt-1.5 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-            <ProductPriceDisplay product={product} size="compact" />
-          </div>
-        )}
-
-        {catalog && (
-          <div className="mt-1.5">
-            <ProductRating product={product} className="justify-start" size="compact" />
-          </div>
-        )}
-
-        <div className={`${catalog ? 'mt-3' : 'mt-auto w-full shrink-0 pt-2 sm:pt-2.5'}`}>
-          <ProductCardActions product={product} />
-        </div>
       </div>
     </article>
   )

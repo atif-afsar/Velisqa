@@ -1,0 +1,72 @@
+{
+  "campaign-hero-a": {
+    "width": 2400,
+    "height": 3600,
+    "widths": [
+      480,
+      768,
+      1080,
+      1440,
+      1920,
+      2400
+    ],
+    "placeholder": "data:image/webp;base64,UklGRuQAAABXRUJQVlA4INgAAACQBgCdASoYACQAPuVYqE2pJKQiNVgMASAciWMAwqFtAc+jzdWiZU5IfJDKYkrvzmvxdJQWY4eSypa6XDxgAP7ZUqKHLKRVq9+eeYxPpJFPJHOs8PSj/x7ORwrWk5AAxCZFhAlOzYWlv8XudopZfh6io+Ev/7BsUWFYp4Strq0c+v+kBVNYciL9VlO96Q4Yz1eHxnik2jy11cVE8TY/gBaBokX+No5qlJ7U3Acii8sB9ec6Jdh3BXTzhAJMpYJ/rHY3UAhyruWtPzGc2Fy0SSGchEPFgAUwAAA=",
+    "hash": "2816ef3e70c8"
+  },
+  "campaign-hero-b": {
+    "width": 2400,
+    "height": 3600,
+    "widths": [
+      480,
+      768,
+      1080,
+      1440,
+      1920,
+      2400
+    ],
+    "placeholder": "data:image/webp;base64,UklGRs4AAABXRUJQVlA4IMIAAAAQBgCdASoYACQAPu1wrVMppiOipWmZMB2JYwDG+AgC3YDQe9ioMT79nFWZ3O5E8Gcd7ox2yANT9AAA044d/GZiHfVVd4U5wCaLLj3ondpWj6bpO2/dQUsYHDmAocdE4OtzMxwLyO1EIIuSfeHR2VmoEChAzsJoHO32v7GAr7vlzITMuNVfd0KafSebJwVx/CRi7lAV25qWROUKisHpgELGZ9rd7bUIvGEd8wYuJTxkvgkWvcySczhDSQgz8SggIhoAAA==",
+    "hash": "12492ddff6dd"
+  },
+  "campaign-hero-desktop": {
+    "width": 2800,
+    "height": 1750,
+    "widths": [
+      480,
+      768,
+      1080,
+      1440,
+      1920,
+      2400
+    ],
+    "placeholder": "data:image/webp;base64,UklGRq4AAABXRUJQVlA4IKIAAABwBACdASoYAA8APu1iqU2ppaOiMAgBMB2JZQCw7YxsmBVNaboavBBh/F3YAAD+qZqhbbScS8PVhsOEYC0qD5+DpiIgbWNdILN0ZrdWofjHfZY6DZAi5oKv/E7VRX2SLJv1CM0twIW6UV7t920hTSjDzNB6k3Pqv+gusk9NtQk5zPd7CbHbqzGH4Ogt8bSHfHq4WVryXe2uFzqbINJzOwgAAAA=",
+    "hash": "41b0dc1c806d"
+  },
+  "editorial-necklace": {
+    "width": 2400,
+    "height": 2505,
+    "widths": [
+      480,
+      768,
+      1080,
+      1440,
+      1920,
+      2400
+    ],
+    "placeholder": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAADQBACdASoYABkAPu1ip06ppSMiMBgMATAdiWMAxkAM8kDn5Mvvylqs21MIdnd9YAD0C+WqprwQvgLk1DUDeuOXVP3CGaA3JBWL97MtVkQkVTQnCGWY5rlAhcXclu0WIuT0D51g64XNDJ5xRkAAAA==",
+    "hash": "e7755d301a2d"
+  },
+  "editorial-story": {
+    "width": 2400,
+    "height": 2059,
+    "widths": [
+      480,
+      768,
+      1080,
+      1440,
+      1920,
+      2400
+    ],
+    "placeholder": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAABwBQCdASoYABUAPu1mqk8ppaOiKA1RMB2JYwDE2BDhQef0r/FYa7PfqadSfEELOxQJC9WAAP7nKTM891OD1ZAcdNhzOumi4BgtzWrLHOxdWoAE/xTlo/IQ7alOgXklGSHcJ8V4+/0YfPZ+UO8//8f52m2hZo/GSoUA9NH+ceLPgJt+k16VNx/YWTNAwY0qGTyAAA==",
+    "hash": "a0273a5d70e9"
+  }
+}

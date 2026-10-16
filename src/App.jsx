@@ -1,4 +1,3 @@
-import SmoothScroll from './Components/SmoothScroll'
 import AccountRoute from './Components/AccountRoute'
 import AdminRoute from './Components/AdminRoute'
 import { scrollToTop } from './lib/smoothScrollState'
@@ -7,12 +6,12 @@ import PromoAnnouncementBar from './Components/Common/PromoAnnouncementBar'
 import CartToast from './Components/Cart/CartToast'
 import MiniCartDrawer from './Components/Cart/MiniCartDrawer'
 import WishlistToast from './Components/Wishlist/WishlistToast'
-// import FloatingWhatsApp from './Components/WhatsApp/FloatingWhatsApp'
 import { Route, Routes, useLocation, Navigate } from 'react-router-dom'
 import { Suspense, lazy, useEffect } from 'react'
 import { analytics } from './lib/analytics'
 import { captureAttribution } from './lib/attribution'
 import ConsentBanner from './Components/Common/ConsentBanner'
+import SiteFooter from './Components/SiteFooter'
 
 const Home = lazy(() => import('./Pages/Home'))
 const About = lazy(() => import('./Pages/About'))
@@ -72,7 +71,6 @@ function AttributionCapture() {
 function App() {
   return (
     <>
-      <SmoothScroll />
       <ScrollToTop />
       <AttributionCapture />
       <PromoAnnouncementBar />
@@ -80,7 +78,7 @@ function App() {
       <MiniCartDrawer />
       <CartToast />
       <WishlistToast />
-      <Suspense fallback={<div className="min-h-[60vh] bg-[#fdf9f4]" aria-label="Loading page" />}>
+      <Suspense fallback={<div className="min-h-[60vh] bg-paper" aria-label="Loading page" />}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -184,7 +182,7 @@ function App() {
           <Route path="/:slug" element={<SEOLanding />} />
         </Routes>
       </Suspense>
-      {/* <FloatingWhatsApp /> */}
+      <SiteFooter />
       <ConsentBanner />
     </>
   )
