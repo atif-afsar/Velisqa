@@ -8,6 +8,7 @@ import { orderPrivateUrl } from '../lib/manualPayments'
 import { trackPaymentProofSubmitted } from '../lib/metaPixel'
 import { usePrivateOrder } from '../hooks/usePrivateOrder'
 import { invokeEdgeFunction } from '../lib/invokeEdgeFunction'
+import { loadRazorpay } from '../lib/loadRazorpay'
 
 export default function ManualPayment() {
   const navigate = useNavigate()
@@ -28,7 +29,7 @@ export default function ManualPayment() {
 
   // Automatically trigger Razorpay checkout on load once order details are ready
   useEffect(() => {
-    if (order && order.paymentStatus === 'pending' && !rzpActive && !initializing && !verifying && !paymentError) {
+    if (order && ['pending', 'awaiting_payment'].includes(order.paymentStatus) && order.paymentMethod !== 'cod' && !rzpActive && !initializing && !verifying && !paymentError) {
       void startRazorpayCheckout()
     }
   }, [order])
@@ -39,7 +40,7 @@ export default function ManualPayment() {
     
     try {
       const { data, error: initError } = await invokeEdgeFunction('create-razorpay-order', {
-        orderId: order.id,
+        orderId: order.orderRef,
         accessToken,
       })
 
@@ -49,11 +50,7 @@ export default function ManualPayment() {
         return
       }
 
-      if (!window.Razorpay) {
-        setPaymentError('Razorpay SDK failed to load. Please refresh the page and try again.')
-        setInitializing(false)
-        return
-      }
+      const Razorpay = await loadRazorpay()
 
       const options = {
         key: data.razorpayKeyId,
@@ -68,7 +65,7 @@ export default function ManualPayment() {
           contact: order.customerPhone,
         },
         theme: {
-          color: '#3d0a21',
+          color: '#111111',
         },
         handler: async function (response) {
           setRzpActive(false)
@@ -102,7 +99,7 @@ export default function ManualPayment() {
         },
       }
 
-      const rzp = new window.Razorpay(options)
+      const rzp = new Razorpay(options)
       setRzpActive(true)
       rzp.open()
     } catch (err) {

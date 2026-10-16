@@ -4,7 +4,7 @@
  * Loads GA4, GTM, Meta Pixel, Google Ads, and Microsoft Clarity after the
  * browser is idle, respecting user consent choices.
  *
- * Tags are loaded from environment variables — nothing is hard-coded.
+ * Tag IDs come from environment variables (Clarity falls back to the live project ID).
  */
 
 import { getConsent, hasConsentDecision } from './consent'
@@ -14,7 +14,8 @@ const GA4_ID = String(import.meta.env.VITE_GA4_MEASUREMENT_ID || '').trim()
 const GTM_ID = String(import.meta.env.VITE_GTM_ID || '').trim()
 const ADS_ID = String(import.meta.env.VITE_GOOGLE_ADS_ID || '').trim()
 const META_PIXEL_ID = String(import.meta.env.VITE_META_PIXEL_ID || '').trim()
-const CLARITY_ID = String(import.meta.env.VITE_CLARITY_ID || '').trim()
+// Clarity was previously hard-coded in index.html; keep that project as the default.
+const CLARITY_ID = String(import.meta.env.VITE_CLARITY_ID || 'yf152wy8t4').trim()
 
 let analyticsLoaded = false
 let advertisingLoaded = false

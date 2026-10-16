@@ -7,6 +7,7 @@ import { formatInr, getCartLineSubtotal, getProductStock } from '../lib/cartStoc
 import { isFreeGiftItem, CART_OFFERS } from '../lib/cartOffers'
 import { supabase } from '../lib/supabaseClient'
 import { invokeEdgeFunction } from '../lib/invokeEdgeFunction'
+import { loadRazorpay, preloadRazorpay } from '../lib/loadRazorpay'
 import { buildOrderEmailPayload, submitOrderEmail } from '../lib/orderEmail'
 import { analytics } from '../lib/analytics'
 import OfferProgressCard from '../Components/Offers/OfferProgressCard'
@@ -88,6 +89,11 @@ export default function Checkout() {
       analytics.beginCheckout({ items, total: finalTotal })
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Warm the payment SDK while the shopper fills in the form.
+  useEffect(() => {
+    if (paymentMethod === 'online') preloadRazorpay()
+  }, [paymentMethod])
 
   // ── Analytics: payment method selection ──
   useEffect(() => {
@@ -367,9 +373,11 @@ export default function Checkout() {
 
         if (rzpError) throw new Error(rzpError)
 
+        const Razorpay = await loadRazorpay()
+
         const options = {
           key: razorpayData.razorpayKeyId,
-          amount: razorpayData.amountPaise,
+          amount: razorpayData.amount,
           currency: 'INR',
           name: 'VELISQA',
           description: `Order Ref: ${orderRef}`,
@@ -381,7 +389,7 @@ export default function Checkout() {
             email: email || undefined,
           },
           theme: {
-            color: '#3B0D23',
+            color: '#111111',
           },
           modal: {
             ondismiss: () => {
@@ -408,21 +416,9 @@ export default function Checkout() {
               })
 
               if (verifyError) {
+                // Payment status is only ever set server-side; the Razorpay webhook
+                // confirms the order if this verification call failed.
                 console.warn('verify-razorpay-payment warning:', verifyError)
-                // Fallback direct update using user session if edge function returned a non-fatal warning
-                try {
-                  await supabase
-                    .from('orders')
-                    .update({
-                      payment_status: 'paid',
-                      order_status: 'confirmed',
-                      razorpay_payment_id: response.razorpay_payment_id,
-                      razorpay_signature: response.razorpay_signature,
-                    })
-                    .eq('order_ref', orderRef)
-                } catch (fallbackErr) {
-                  console.error('Fallback order update error:', fallbackErr)
-                }
               }
 
               // Send order notification email in the background to admin inbox via FormSubmit
@@ -482,7 +478,7 @@ export default function Checkout() {
           },
         }
 
-        const rzp = new window.Razorpay(options)
+        const rzp = new Razorpay(options)
         rzp.open()
       }
 
