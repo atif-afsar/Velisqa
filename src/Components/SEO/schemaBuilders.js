@@ -1,3 +1,4 @@
+import { productPath } from "../../lib/productUrl";
 import {
   CONTACT_EMAIL,
   DEFAULT_OG_IMAGE,
@@ -202,5 +203,19 @@ export function buildFoundersPageSchema() {
     name: "Velisqa Jewellery",
     url: SITE_URL,
     founder: [sameer, atif],
+  };
+}
+
+/** ItemList for category / listing pages (summary-page pattern: URLs only). */
+export function buildItemListSchema(products, { name } = {}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    ...(name ? { name } : {}),
+    itemListElement: (products ?? []).slice(0, 30).map((product, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      url: `${SITE_URL}${productPath(product)}`,
+    })),
   };
 }

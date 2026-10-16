@@ -1,19 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import ProductCard from '../Components/Product/ProductCard'
 import SEOHead from '../Components/SEO/SEOHead'
-import ProductFilters, { ProductFilterSidebar } from '../Components/Collections/ProductFilters'
+import ProductListing from '../Components/Collections/ProductListing'
 import { useProducts } from '../hooks/useProducts'
 import { searchProducts } from '../lib/productSearch'
 import { POPULAR_SEARCHES, rememberSearch } from '../lib/popularSearches'
 import { analytics } from '../lib/analytics'
-import {
-  EMPTY_PRODUCT_FILTERS,
-  filterAndSortProducts,
-  getProductFacetOptions,
-  readProductFilters,
-  writeProductFilters,
-} from '../lib/productFilters'
 
 export default function SearchResults() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -21,32 +13,10 @@ export default function SearchResults() {
   const { products, loading, error } = useProducts()
 
   useEffect(() => {
-    if (query && query.length >= 2) {
-      analytics.search(query)
-    }
+    if (query && query.length >= 2) analytics.search(query)
   }, [query])
 
-  const searchMatches = useMemo(
-    () => query.length >= 2 ? searchProducts(products, query) : [],
-    [products, query],
-  )
-  const facets = useMemo(() => getProductFacetOptions(searchMatches), [searchMatches])
-  const filters = useMemo(
-    () => readProductFilters(searchParams, facets),
-    [searchParams, facets],
-  )
-  const results = useMemo(
-    () => filterAndSortProducts(searchMatches, filters),
-    [searchMatches, filters],
-  )
-
-  function updateFilters(nextFilters) {
-    setSearchParams(writeProductFilters(searchParams, nextFilters))
-  }
-
-  function clearFilters() {
-    setSearchParams(writeProductFilters(searchParams, EMPTY_PRODUCT_FILTERS))
-  }
+  const matches = useMemo(() => (query.length >= 2 ? searchProducts(products, query) : []), [products, query])
 
   function submitSearch(value) {
     const clean = value.trim()
@@ -64,94 +34,34 @@ export default function SearchResults() {
   const description = query
     ? `Browse Velisqa jewellery matching ${query}. Discover rings, necklaces, earrings and more.`
     : 'Search Velisqa jewellery by product, category, metal, colour, style, or price.'
+  const showResults = query.length >= 2 && (matches.length > 0 || loading)
 
   return (
     <>
-      <SEOHead
-        title={title}
-        description={description}
-        canonicalPath="/search"
-        noindex
-      />
+      <SEOHead title={title} description={description} canonicalPath="/search" noindex />
 
       <main className="page-offset-nav min-h-[70vh] bg-paper text-ink">
-        <header className="border-b border-muted/10 bg-[radial-gradient(circle_at_top,rgba(17, 17, 17,0.12),transparent_60%)]">
-          <div className="container-stitch px-4 py-8 text-center sm:px-6 sm:py-12">
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">Discover Velisqa</p>
-            <h1 className="mt-2 font-serif text-3xl sm:text-4xl">Search jewellery</h1>
-            <SearchForm key={query} initialValue={query} onSubmit={submitSearch} />
-          </div>
+        <header className="container-lux pb-8 pt-8 text-center sm:pt-12">
+          <p className="eyebrow text-muted">Search</p>
+          <h1 className="type-display mt-4">{query ? `“${query}”` : 'Search jewellery'}</h1>
+          <SearchForm key={query} initialValue={query} onSubmit={submitSearch} />
         </header>
 
-        <section className="container-stitch px-4 py-8 sm:px-6 sm:py-12">
-          {error && products.length > 0 && (
-            <p className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-              Showing saved catalogue results while the latest products reload.
-            </p>
-          )}
-
-          {loading && products.length === 0 ? (
-            <div className="grid grid-cols-2 gap-3 sm:gap-7 lg:grid-cols-3">
-              {Array.from({ length: 6 }).map((_, index) => (
-                <div key={index} className="aspect-[3/5] animate-pulse rounded-lg bg-[#eee6de]" />
-              ))}
-            </div>
-          ) : query.length < 2 ? (
-            <SearchAlternatives onChoose={chooseSearch} />
-          ) : searchMatches.length > 0 ? (
-            <>
-              <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted">Search results</p>
-                  <h2 className="mt-1 font-serif text-2xl">“{query}”</h2>
-                </div>
-                <p className="text-sm text-muted">
-                  {results.length} piece{results.length === 1 ? '' : 's'} found
+        {showResults ? (
+          <ProductListing products={matches} loading={loading} error={error} />
+        ) : (
+          <section className="container-lux pb-24">
+            {query.length >= 2 && (
+              <div className="mx-auto max-w-xl pb-8 text-center">
+                <p className="font-serif text-2xl">No pieces matched “{query}”</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted">
+                  Try a broader category, a metal such as gold or silver, or one of these popular searches.
                 </p>
               </div>
-              <ProductFilters
-                facets={facets}
-                filters={filters}
-                onChange={updateFilters}
-                onClear={clearFilters}
-                resultCount={results.length}
-              />
-              {results.length > 0 ? (
-                <div className="flex items-start gap-7">
-                  <ProductFilterSidebar
-                    facets={facets}
-                    filters={filters}
-                    onChange={updateFilters}
-                    onClear={clearFilters}
-                  />
-                  <div className="grid min-w-0 flex-1 grid-cols-2 items-stretch gap-x-3 gap-y-6 sm:gap-x-7 sm:gap-y-10 lg:grid-cols-3 xl:grid-cols-4">
-                    {results.map((product, index) => (
-                      <ProductCard key={product.id} product={product} priority={index < 4} />
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <div className="rounded-2xl border border-line bg-white/55 px-5 py-12 text-center">
-                  <p className="font-serif text-xl">No search results match these filters</p>
-                  <p className="mt-2 text-sm text-muted">Remove one filter or clear all to see more pieces.</p>
-                  <button type="button" onClick={clearFilters} className="mt-5 rounded-full bg-ink px-5 py-2.5 text-xs font-bold uppercase tracking-[0.12em] text-white">
-                    Clear all filters
-                  </button>
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="mx-auto max-w-xl py-10 text-center">
-              <p className="font-serif text-2xl">No pieces matched “{query}”</p>
-              <p className="mt-2 text-sm leading-relaxed text-muted">
-                Try a broader category, a metal such as gold or silver, or one of these popular searches.
-              </p>
-              <div className="mt-6">
-                <SearchAlternatives onChoose={chooseSearch} compact />
-              </div>
-            </div>
-          )}
-        </section>
+            )}
+            <SearchAlternatives onChoose={chooseSearch} compact={query.length >= 2} />
+          </section>
+        )}
       </main>
     </>
   )
@@ -167,7 +77,7 @@ function SearchAlternatives({ onChoose, compact = false }) {
             key={item.query}
             type="button"
             onClick={() => onChoose(item.query)}
-            className="rounded-full border border-ink/20 bg-white px-4 py-2 text-xs font-medium text-body transition hover:border-ink/45 hover:text-ink"
+            className="inline-flex min-h-10 items-center border border-line px-4 text-xs text-body transition hover:border-ink hover:text-ink"
           >
             {item.label}
           </button>
@@ -194,9 +104,9 @@ function SearchForm({ initialValue, onSubmit }) {
         value={value}
         onChange={(event) => setValue(event.target.value)}
         placeholder="Try “gold ring” or “gifts under 1500”"
-        className="min-h-12 min-w-0 flex-1 rounded-full border border-ink/20 bg-white px-5 text-sm outline-none focus:border-ink/45 focus:ring-2 focus:ring-accent/20"
+        className="field min-w-0 flex-1"
       />
-      <button type="submit" className="min-h-12 shrink-0 rounded-full bg-ink px-5 text-xs font-bold uppercase tracking-[0.12em] text-white sm:px-7">
+      <button type="submit" className="btn btn-primary shrink-0">
         Search
       </button>
     </form>

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
-import { Link, NavLink, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import CartNavLink from './Cart/CartNavLink'
 import WishlistNavLink from './Wishlist/WishlistNavLink'
 import AccountNavMenu from './Nav/AccountNavMenu'
@@ -290,19 +290,23 @@ export default function Navbar() {
                 <ChevronDownIcon size={14} className={`transition-transform ${megaOpen ? 'rotate-180' : ''}`} />
               </button>
             </div>
-            {PRIMARY_LINKS.map((l) => (
-              <NavLink
-                key={l.label}
-                to={l.to}
-                className={({ isActive }) =>
-                  `link-underline inline-flex min-h-11 items-center text-[0.8125rem] font-medium uppercase tracking-[0.14em] ${
-                    isActive && !l.to.includes('?') ? 'text-ink' : 'text-body hover:text-ink'
-                  }`
-                }
-              >
-                {l.label}
-              </NavLink>
-            ))}
+            {PRIMARY_LINKS.map((l) => {
+              // Query-string links (New in, Bestsellers) are active only when the sort matches.
+              const [path, query = ''] = l.to.split('?')
+              const active = pathname === path && (query ? search === `?${query}` : true)
+              return (
+                <Link
+                  key={l.label}
+                  to={l.to}
+                  aria-current={active ? 'page' : undefined}
+                  className={`link-underline inline-flex min-h-11 items-center text-[0.8125rem] font-medium uppercase tracking-[0.14em] ${
+                    active ? 'text-ink' : 'text-body hover:text-ink'
+                  }`}
+                >
+                  {l.label}
+                </Link>
+              )
+            })}
           </nav>
         </div>
 

@@ -84,6 +84,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/models" element={<Models />} />
           <Route path="/collections" element={<Collections />} />
+          <Route path="/collections/:slug" element={<Collections />} />
           <Route path="/search" element={<SearchResults />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/cart" element={<Cart />} />
