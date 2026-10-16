@@ -117,27 +117,19 @@ export async function fetchApprovedReviewAggregatesByProductIds(productIds = [])
   return aggregateMap
 }
 
+/**
+ * Ratings shown on the storefront come only from approved customer reviews.
+ * products.rating / review_count may still include legacy admin-entered "mock" counts,
+ * so they are always replaced here (0 when a product has no approved reviews).
+ */
 export function applyReviewAggregatesToProducts(products, aggregateMap) {
-  if (!Array.isArray(products) || !aggregateMap?.size) return products
-
+  if (!Array.isArray(products)) return products
   return products.map((product) => {
-    const live = aggregateMap.get(product.id)
-    if (!live) return product
-
-    const mockCount = Number(product.mock_review_count || 0)
-    const mockRating = product.mock_rating != null ? Number(product.mock_rating) : 0
-    const realCount = Number(live.review_count || 0)
-    const realRating = Number(live.rating || 0)
-
-    const totalCount = realCount + mockCount
-    const totalRating = totalCount > 0
-      ? Math.round(((realRating * realCount + mockRating * mockCount) / totalCount) * 10) / 10
-      : null
-
+    const live = aggregateMap?.get(product.id)
     return {
       ...product,
-      rating: totalRating,
-      review_count: totalCount,
+      rating: live ? Number(live.rating) || null : null,
+      review_count: live ? Number(live.review_count) || 0 : 0,
     }
   })
 }
@@ -148,8 +140,24 @@ export async function enrichProductsWithApprovedReviewAggregates(products) {
     const aggregateMap = await fetchApprovedReviewAggregatesByProductIds(products.map((p) => p.id))
     return applyReviewAggregatesToProducts(products, aggregateMap)
   } catch {
-    return products
+    return applyReviewAggregatesToProducts(products, new Map())
   }
+}
+
+/** Most recent approved reviews across the catalogue (homepage reviews strip). */
+export async function fetchLatestApprovedReviews(limit = 6) {
+  const { data, error } = await supabase
+    .from('product_reviews')
+    .select(`${REVIEW_LIST_SELECT}, product_id`)
+    .eq('status', 'approved')
+    .gte('rating', 4)
+    .order('created_at', { ascending: false })
+    .limit(limit)
+  if (error) {
+    if (isReviewSchemaMissing(error)) return []
+    throw error
+  }
+  return data ?? []
 }
 
 export async function enrichProductWithApprovedReviewAggregates(product) {

@@ -66,8 +66,12 @@ export function filterAndSortProducts(products, filters = EMPTY_PRODUCT_FILTERS)
           return (Number(b.product.price) || 0) - (Number(a.product.price) || 0)
         case 'rating-desc':
           return getProductRating(b.product) - getProductRating(a.product)
-        case 'best-selling':
-          return getProductReviewCount(b.product) - getProductReviewCount(a.product)
+        case 'best-selling': {
+          // Admin-flagged bestsellers first, then by number of real reviews.
+          const flagged = Number(b.product?.badge === 'bestseller') - Number(a.product?.badge === 'bestseller')
+          if (flagged) return flagged
+          return getProductReviewCount(b.product) - getProductReviewCount(a.product) || a.index - b.index
+        }
         default:
           return a.index - b.index
       }
