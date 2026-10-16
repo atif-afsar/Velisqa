@@ -1,22 +1,16 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { Link, Navigate, useLocation, useParams, useSearchParams } from 'react-router-dom'
+import { Link, Navigate, useParams, useSearchParams } from 'react-router-dom'
 import SEOHead from '../Components/SEO/SEOHead'
-import { buildBreadcrumbSchema, buildItemListSchema } from '../Components/SEO/schemaBuilders'
 import ProductListing from '../Components/Collections/ProductListing'
 import { useProducts } from '../hooks/useProducts'
 import { normalizeProductCategory } from '../lib/productCategories'
+import { collectionHead } from '../lib/seoHeads'
 import { SHOP_CATEGORIES, categoryPath, findShopCategoryBySlug } from '../data/shopCategories'
-
-const SORT_TITLES = {
-  newest: { title: 'New arrivals', intro: 'The latest pieces from the Velisqa studio.' },
-  'best-selling': { title: 'Bestsellers', intro: 'The pieces our customers return to again and again.' },
-}
 
 /** /collections and /collections/:slug — editorial header + filterable product grid. */
 export default function Collections() {
   const { slug } = useParams()
   const [searchParams] = useSearchParams()
-  const { pathname } = useLocation()
   const { products, loading, error } = useProducts()
   const chipsRef = useRef(null)
 
@@ -46,30 +40,17 @@ export default function Collections() {
   // Unknown category slug → shop all.
   if (slug && !category) return <Navigate to="/collections" replace />
 
-  const sortView = !category ? SORT_TITLES[searchParams.get('sort')] : null
-  const title = category?.label ?? sortView?.title ?? 'Shop all jewellery'
-  const intro =
-    category?.intro ??
-    sortView?.intro ??
-    'Necklaces, earrings, rings, bracelets and bangles — modern pieces in gold and silver tones, designed in India.'
-
-  const crumbs = [
-    { name: 'Home', path: '/' },
-    { name: 'Shop', path: '/collections' },
-    ...(category ? [{ name: category.label, path: pathname }] : []),
-  ]
+  const head = collectionHead(category, scoped, searchParams.get('sort'))
+  const { heading: title, intro, crumbs } = head
 
   return (
     <>
       <SEOHead
-        title={category ? `${category.seoTitle} | Velisqa` : 'Shop All Jewellery — Necklaces, Earrings, Rings & More | Velisqa'}
-        description={
-          category?.seoDescription ??
-          'Shop Velisqa jewellery for women: necklaces, earrings, rings, bracelets and bangles in gold and silver tones. Free shipping on prepaid orders across India.'
-        }
-        canonicalPath={category ? categoryPath(category) : '/collections'}
-        image={category ? category.image(1200) : undefined}
-        schema={[buildBreadcrumbSchema(crumbs), buildItemListSchema(scoped, { name: title })]}
+        title={head.title}
+        description={head.metaDescription}
+        canonicalPath={head.canonicalPath}
+        image={head.image}
+        schema={head.schema}
       />
       <main className="page-offset-nav bg-paper">
         <header className="container-lux pb-8 pt-8 text-center sm:pt-12 lg:pb-10">

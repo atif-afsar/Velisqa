@@ -8,15 +8,16 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "node scripts/build-media.mjs && vite build && node scripts/prerender.mjs",
     "optimize:images": "node scripts/optimize-images.mjs",
     "thumbnails": "node scripts/generate-thumbnails.mjs",
-    "sitemap": "node scripts/generate-sitemap.mjs",
     "export:catalog": "node scripts/export-meta-catalog.mjs",
     "seed:catalog": "node scripts/seed-signature-products.mjs",
     "check:google": "node scripts/check-google-provider.mjs",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "media": "node scripts/build-media.mjs",
+    "prerender": "node scripts/prerender.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.106.0",

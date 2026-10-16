@@ -3,7 +3,7 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 import SEOHead from '../Components/SEO/SEOHead'
 import { SITE_URL } from '../Components/SEO/siteConfig'
-import { buildBreadcrumbSchema, buildProductDetailSchema } from '../Components/SEO/schemaBuilders'
+import { productHead } from '../lib/seoHeads'
 import { PRODUCT_POLICY_SECTIONS, SIZE_GUIDES } from '../lib/productPolicies'
 import { useCatalog } from '../context/CatalogContext'
 import { useCart } from '../context/CartContext'
@@ -211,22 +211,14 @@ export default function ProductDetail() {
   const soldOut = isProductSoldOut(product)
   const stock = getProductStock(product)
   const images = getProductImageUrls(product)
-  const primaryImage = getPrimaryImageUrl(product)
-  const canonical = productPath(product)
-  const url = `${SITE_URL}${canonical}`
+  const url = `${SITE_URL}${productPath(product)}`
   const { sale, compare, hasPromo, discountPercent } = getPromoPriceDisplay(product)
   const rating = getProductRating(product)
   const reviewCount = getProductReviewCount(product)
   const badge = getProductBadge(product)
-  const description =
-    product.description?.trim() ||
-    `${name} by Velisqa — ${category ? category.toLowerCase() : 'jewellery'} with a polished finish, designed for everyday wear.`
+  const head = productHead(product)
+  const { description, crumbs } = head
   const sizeGuide = SIZE_GUIDES[category]
-  const crumbs = [
-    { name: 'Home', path: '/' },
-    { name: shopCategory?.label ?? 'Shop', path: shopCategory ? categoryPath(shopCategory) : '/collections' },
-    { name, path: canonical },
-  ]
 
   function handleAdd() {
     if (adding || soldOut) return
@@ -244,15 +236,12 @@ export default function ProductDetail() {
   return (
     <>
       <SEOHead
-        title={`${name} — ${shopCategory?.label ?? 'Jewellery'} | Velisqa`}
-        description={`${description.replace(/\s+/g, ' ').slice(0, 140)}${description.length > 140 ? '…' : ''} ${formatInr(sale)}.`}
-        canonicalPath={canonical}
-        image={primaryImage || undefined}
-        type="product"
-        schema={[
-          buildProductDetailSchema({ product, name, images, description: description.slice(0, 500), url }),
-          buildBreadcrumbSchema(crumbs),
-        ]}
+        title={head.title}
+        description={head.metaDescription}
+        canonicalPath={head.canonicalPath}
+        image={head.image}
+        type={head.type}
+        schema={head.schema}
       />
       <main className="page-offset-nav bg-paper text-ink">
         <div className="container-lux pt-4 lg:pt-6">

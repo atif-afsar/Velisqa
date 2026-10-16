@@ -2,6 +2,7 @@ import { productPath } from "../../lib/productUrl";
 import {
   CONTACT_EMAIL,
   DEFAULT_OG_IMAGE,
+  LOGO_URL,
   INSTAGRAM_URL,
   SITE_URL,
   WHATSAPP_PHONE,
@@ -15,17 +16,17 @@ export function buildOrganizationSchema() {
     name: "VELISQA",
     alternateName: ["Velisqa", "Velisqa Jewellery", "VELISQA Jewellery"],
     url: SITE_URL,
-    logo: DEFAULT_OG_IMAGE,
+    logo: LOGO_URL,
     image: DEFAULT_OG_IMAGE,
     description:
-      "Velisqa is a luxury artificial jewellery and premium fashion jewellery brand. Shop rings, necklaces, bangles, and earrings with WhatsApp ordering across India.",
+      "Velisqa is a modern fashion jewellery brand from India. Shop necklaces, earrings, rings, bracelets and bangles online with secure payment and delivery across India.",
     slogan: "Crafted to Captivate",
     email: CONTACT_EMAIL,
     telephone: WHATSAPP_PHONE,
     sameAs: [INSTAGRAM_URL],
     priceRange: "₹₹₹",
     currenciesAccepted: "INR",
-    paymentAccepted: "Cash, UPI, Bank Transfer",
+    paymentAccepted: "UPI, Credit Card, Debit Card, Net Banking, Cash on Delivery",
     areaServed: { "@type": "Country", name: "India" },
     address: {
       "@type": "PostalAddress",
@@ -55,7 +56,7 @@ export function buildOrganizationSchema() {
       contactType: "customer service",
       areaServed: "IN",
       availableLanguage: ["English", "Hindi"],
-      url: `${SITE_URL}/order`,
+      url: `${SITE_URL}/contact`,
     },
     brand: { "@type": "Brand", name: "VELISQA" },
   };
@@ -92,34 +93,6 @@ export function buildBreadcrumbSchema(items) {
       position: index + 1,
       name: item.name,
       item: `${SITE_URL}${item.path}`,
-    })),
-  };
-}
-
-export function buildProductSchema(products) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    name: "Velisqa Jewellery Collection",
-    description: "Premium artificial jewellery including necklaces, rings, bangles, and earrings.",
-    itemListElement: products.map((product, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      item: {
-        "@type": "Product",
-        name: `Velisqa ${product.name}`,
-        image: product.image.startsWith("http") ? product.image : `${SITE_URL}${product.image}`,
-        description: product.description,
-        brand: { "@type": "Brand", name: "Velisqa" },
-        category: product.category,
-        offers: {
-          "@type": "Offer",
-          priceCurrency: "INR",
-          availability: "https://schema.org/InStock",
-          url: `${SITE_URL}/order`,
-          seller: { "@id": `${SITE_URL}/#organization` },
-        },
-      },
     })),
   };
 }

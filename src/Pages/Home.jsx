@@ -1,18 +1,12 @@
 import HomeContent from "../Components/Home/HomeContent";
 import SEOHead from "../Components/SEO/SEOHead";
-import { buildBreadcrumbSchema, buildProductSchema } from "../Components/SEO/schemaBuilders";
-import { pageSeo, seoProducts } from "../Components/SEO/seoData";
+import { pageSeo } from "../Components/SEO/seoData";
 
 export default function Home() {
+  // Organization + WebSite (with SearchAction) JSON-LD are added by SEOHead on every page.
   return (
     <>
-      <SEOHead
-        {...pageSeo.home}
-        schema={[
-          buildProductSchema(seoProducts),
-          buildBreadcrumbSchema([{ name: "Home", path: "/" }]),
-        ]}
-      />
+      <SEOHead {...pageSeo.home} />
       <HomeContent />
     </>
   );

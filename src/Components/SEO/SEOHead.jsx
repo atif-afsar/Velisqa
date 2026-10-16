@@ -117,13 +117,9 @@ export default function SEOHead({
       name: "twitter:image",
       content: image,
     });
-    upsertMeta('meta[name="twitter:site"]', () => document.createElement("meta"), {
-      name: "twitter:site",
-      content: "@velisqa.in",
-    });
     upsertMeta('meta[property="og:image:alt"]', () => document.createElement("meta"), {
       property: "og:image:alt",
-      content: "Velisqa Jewellery logo",
+      content: title,
     });
     upsertMeta('meta[name="author"]', () => document.createElement("meta"), {
       name: "author",

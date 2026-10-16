@@ -14,9 +14,9 @@ const BRAND_KEYWORDS = [
 
 export const pageSeo = {
   home: {
-    title: "Velisqa Jewellery | Premium Artificial & Modern Jewellery India",
+    title: "Velisqa Jewellery | Modern Jewellery for Women — Necklaces, Earrings & Rings",
     description:
-      "Velisqa Jewellery — luxury artificial jewellery for women. Shop premium rings, necklaces, bangles & earrings. Order on WhatsApp. Crafted to Captivate.",
+      "Shop Velisqa: modern fashion jewellery for women in India. Necklaces, earrings, rings, bracelets and bangles in gold and silver tones. Free shipping on prepaid orders.",
     keywords: [
       ...BRAND_KEYWORDS,
       "rings",
@@ -142,39 +142,6 @@ export const pageSeo = {
     canonicalPath: "/order",
   },
 };
-
-export const seoProducts = [
-  {
-    name: "Centre Stone Pendant",
-    category: "Necklace",
-    image: `${SITE_URL}/images/img2.webp`,
-    description: "Velisqa centre stone pendant necklace — premium artificial jewellery with handset AD stones and modern luxury styling.",
-  },
-  {
-    name: "Solaris Necklace",
-    category: "Necklace",
-    image: `${SITE_URL}/images/img3.webp`,
-    description: "Velisqa Solaris necklace — statement fashion jewellery for women in India.",
-  },
-  {
-    name: "Obsidian Bangle",
-    category: "Bracelet",
-    image: `${SITE_URL}/images/img4.webp`,
-    description: "Velisqa Obsidian bangle — luxury artificial bracelet for festive and occasion wear.",
-  },
-  {
-    name: "Crimson Sovereign Ring",
-    category: "Rings",
-    image: `${SITE_URL}/images/img5.webp`,
-    description: "Velisqa Crimson Sovereign ring — premium artificial ring with ruby-tone CZ centrepiece for bold women's jewellery looks.",
-  },
-  {
-    name: "Aethelgard Earrings",
-    category: "Earrings",
-    image: `${SITE_URL}/images/img6.webp`,
-    description: "Velisqa Aethelgard earrings — bridal and occasion artificial jewellery by Velisqa.",
-  },
-];
 
 export const landingPages = [
   {

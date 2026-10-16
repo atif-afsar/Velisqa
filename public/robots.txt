@@ -1,4 +1,15 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /cart
+Disallow: /checkout
+Disallow: /account
+Disallow: /login
+Disallow: /auth/
+Disallow: /pay/
+Disallow: /order-confirmation/
+Disallow: /orders/
+Disallow: /wishlist
+Disallow: /search
 
 Sitemap: https://www.velisqa.com/sitemap.xml
