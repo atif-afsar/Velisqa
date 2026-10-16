@@ -1,4 +1,4 @@
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "../../lib/motion";
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { submitCreatorApplication } from "../../lib/creatorApplications";
@@ -13,9 +13,9 @@ import {
 const EASE = [0.16, 1, 0.3, 1];
 
 const fieldClass =
-  "w-full border border-[#130006]/20 bg-white/80 px-4 py-3 text-sm text-[#130006] outline-none transition focus:border-[#d4af37] focus:ring-2 focus:ring-[#d4af37]/15 placeholder:text-[#847377]/45 rounded-lg";
+  "w-full border border-ink/20 bg-white/80 px-4 py-3 text-sm text-ink outline-none transition focus:border-line focus:ring-2 focus:ring-accent/15 placeholder:text-muted/45 rounded-lg";
 
-const labelClass = "label-stitch text-[0.68rem] uppercase tracking-[0.14em] text-[#514347]";
+const labelClass = "label-stitch text-[0.68rem] uppercase tracking-[0.14em] text-body";
 
 const initialForm = {
   fullName: "",
@@ -121,7 +121,7 @@ export default function CreatorRegistrationForm() {
   }
 
   return (
-    <section id="register" className="scroll-mt-28 bg-[#f7f3ee] py-20 md:py-28">
+    <section id="register" className="scroll-mt-28 bg-mist py-20 md:py-28">
       <div className="container-stitch">
         <motion.div
           className="mx-auto mb-12 max-w-2xl text-center"
@@ -130,9 +130,9 @@ export default function CreatorRegistrationForm() {
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease: EASE }}
         >
-          <p className="mb-4 type-label text-[#d4af37]">Join Us</p>
-          <h2 className="type-section text-[#130006]">Creator Registration</h2>
-          <p className="body-stitch mt-5 text-[#514347]">
+          <p className="mb-4 type-label text-muted">Join Us</p>
+          <h2 className="type-section text-ink">Creator Registration</h2>
+          <p className="body-stitch mt-5 text-body">
             Tell us about yourself and your audience. Applications are reviewed within 48 hours —
             approved creators receive their welcome kit shortly after.
           </p>
@@ -147,10 +147,10 @@ export default function CreatorRegistrationForm() {
             transition={{ duration: 0.6, ease: EASE }}
           >
             <motion.div
-              className="sticky top-28 rounded-2xl border border-[#130006]/8 bg-[#fdf9f4] p-6 shadow-[0_20px_48px_-16px_rgba(19,0,6,0.08)] sm:p-8"
+              className="sticky top-28 rounded-2xl border border-ink/8 bg-paper p-6 shadow-[0_20px_48px_-16px_rgba(17, 17, 17,0.08)] sm:p-8"
               layout
             >
-              <p className="label-stitch text-[0.68rem] uppercase tracking-[0.14em] text-[#847377]">
+              <p className="label-stitch text-[0.68rem] uppercase tracking-[0.14em] text-muted">
                 Your detected tier
               </p>
 
@@ -164,14 +164,14 @@ export default function CreatorRegistrationForm() {
                     transition={{ duration: 0.3, ease: EASE }}
                     className="mt-4"
                   >
-                    <h3 className="type-section text-2xl text-[#130006]">{detectedTier.name}</h3>
-                    <p className="mt-1 text-sm text-[#847377]">
+                    <h3 className="type-section text-2xl text-ink">{detectedTier.name}</h3>
+                    <p className="mt-1 text-sm text-muted">
                       {formatFollowerCount(form.followerCount)} followers · {detectedTier.range} tier
                     </p>
                     <ul className="mt-5 space-y-2.5">
                       {detectedTier.perks.slice(0, 3).map((perk) => (
-                        <li key={perk} className="flex gap-2 text-[0.82rem] text-[#514347]">
-                          <span className="text-[#d4af37]" aria-hidden="true">
+                        <li key={perk} className="flex gap-2 text-[0.82rem] text-body">
+                          <span className="text-muted" aria-hidden="true">
                             ✦
                           </span>
                           {perk}
@@ -184,7 +184,7 @@ export default function CreatorRegistrationForm() {
                     key="empty"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="mt-4 text-sm leading-relaxed text-[#847377]"
+                    className="mt-4 text-sm leading-relaxed text-muted"
                   >
                     Enter your follower count to see which tier you qualify for. Minimum 1,000
                     followers required.
@@ -193,12 +193,12 @@ export default function CreatorRegistrationForm() {
               </AnimatePresence>
 
               <motion.div
-                className="mt-8 border-t border-[#130006]/8 pt-6"
+                className="mt-8 border-t border-ink/8 pt-6"
                 initial={reduceMotion ? false : { opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
               >
-                <p className="mb-3 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[#847377]">
+                <p className="mb-3 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-muted">
                   All tiers at a glance
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -207,8 +207,8 @@ export default function CreatorRegistrationForm() {
                       key={tier.id}
                       className={`rounded-full px-2.5 py-1 text-[0.62rem] font-medium uppercase tracking-wider ${
                         detectedTier?.id === tier.id
-                          ? "bg-[#d4af37]/20 text-[#3d0a21]"
-                          : "bg-[#130006]/5 text-[#847377]"
+                          ? "bg-mist text-ink"
+                          : "bg-ink/5 text-muted"
                       }`}
                     >
                       {tier.range}
@@ -232,20 +232,20 @@ export default function CreatorRegistrationForm() {
                   key="success"
                   initial={reduceMotion ? false : { opacity: 0, scale: 0.98 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="rounded-2xl border border-[#d4af37]/30 bg-[#fdf9f4] p-8 text-center shadow-[0_20px_48px_-16px_rgba(19,0,6,0.08)] sm:p-12"
+                  className="rounded-2xl border border-line bg-paper p-8 text-center shadow-[0_20px_48px_-16px_rgba(17, 17, 17,0.08)] sm:p-12"
                 >
                   <span className="text-4xl" aria-hidden="true">
                     ✨
                   </span>
-                  <h3 className="mt-4 type-section text-[#130006]">Application Submitted</h3>
-                  <p className="body-stitch mx-auto mt-3 max-w-md text-[#514347]">
+                  <h3 className="mt-4 type-section text-ink">Application Submitted</h3>
+                  <p className="body-stitch mx-auto mt-3 max-w-md text-body">
                     Your application was sent via WhatsApp. Our team will confirm your tier and next
                     steps shortly.
                   </p>
                   <button
                     type="button"
                     onClick={() => setResult(null)}
-                    className="tap-target mt-8 rounded-full border border-[#130006]/20 px-8 py-3 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-[#130006] transition hover:border-[#130006]/40"
+                    className="tap-target mt-8 rounded-full border border-ink/20 px-8 py-3 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-ink transition hover:border-ink/40"
                   >
                     Submit Another
                   </button>
@@ -254,7 +254,7 @@ export default function CreatorRegistrationForm() {
                 <motion.form
                   key="form"
                   onSubmit={handleSubmit}
-                  className="rounded-2xl border border-[#130006]/8 bg-[#fdf9f4] p-6 shadow-[0_20px_48px_-16px_rgba(19,0,6,0.08)] sm:p-8 md:p-10"
+                  className="rounded-2xl border border-ink/8 bg-paper p-6 shadow-[0_20px_48px_-16px_rgba(17, 17, 17,0.08)] sm:p-8 md:p-10"
                   noValidate
                 >
                   {result?.ok === false && (
@@ -389,9 +389,9 @@ export default function CreatorRegistrationForm() {
                         type="checkbox"
                         checked={form.agreed}
                         onChange={(e) => updateField("agreed", e.target.checked)}
-                        className="mt-1 h-4 w-4 shrink-0 rounded border-[#130006]/30 accent-[#3d0a21]"
+                        className="mt-1 h-4 w-4 shrink-0 rounded border-ink/30 accent-ink"
                       />
-                      <span className="text-[0.82rem] leading-relaxed text-[#514347]">
+                      <span className="text-[0.82rem] leading-relaxed text-body">
                         I agree to create authentic UGC content featuring VELISQA jewellery, follow
                         campaign guidelines, and understand that perks are tier-based and subject to
                         approval.
@@ -405,13 +405,13 @@ export default function CreatorRegistrationForm() {
                   </motion.div>
 
                   <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <p className="text-[0.75rem] text-[#847377]">
+                    <p className="text-[0.75rem] text-muted">
                       Minimum 1,000 followers · Review within 48 hrs
                     </p>
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="tap-target w-full rounded-full bg-[#3d0a21] px-10 py-4 label-stitch text-[0.72rem] uppercase tracking-[0.16em] text-[#fdf9f4] transition hover:bg-[#2a0718] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                      className="tap-target w-full rounded-full bg-ink px-10 py-4 label-stitch text-[0.72rem] uppercase tracking-[0.16em] text-white transition hover:bg-ink disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                     >
                       {submitting ? "Submitting…" : "Submit Application"}
                     </button>
@@ -431,7 +431,7 @@ function Field({ label, error, required, children }) {
     <motion.div className="flex flex-col gap-2">
       <label className={labelClass}>
         {label}
-        {required && <span className="text-[#d4af37]"> *</span>}
+        {required && <span className="text-muted"> *</span>}
       </label>
       {children}
       {error && (

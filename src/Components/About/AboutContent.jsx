@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import HomeFooter from "../Home/HomeFooter";
+import { motion } from "../../lib/motion";
 
 /* ─── animation ──────────────────────────────────────────── */
 const fade = {
@@ -39,7 +38,7 @@ const VALUES = [
 /* ─── component ──────────────────────────────────────────── */
 export default function AboutContent() {
   return (
-    <main className="page-offset-nav bg-[#fdf9f4] text-[#130006]">
+    <main className="page-offset-nav bg-paper text-ink">
       {/* ══════════ 1. HERO — light, text-based, minimal ══════════ */}
       <motion.section
         className="px-4 pb-16 pt-12 sm:px-6 sm:pb-20 sm:pt-16 md:pb-24 md:pt-20"
@@ -49,14 +48,14 @@ export default function AboutContent() {
       >
         <div className="container-stitch">
           <motion.div variants={fade} className="mx-auto max-w-3xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#d4af37]">
+            <p className="text-xs font-bold uppercase tracking-[0.25em] text-muted">
               Our Story
             </p>
-            <h1 className="mt-4 font-serif text-4xl font-bold text-[#130006] sm:text-5xl md:text-6xl">
+            <h1 className="mt-4 font-serif text-4xl font-bold text-ink sm:text-5xl md:text-6xl">
               About Velisqa
             </h1>
-            <div className="mx-auto mt-6 h-px w-16 bg-[#d4af37]/40" />
-            <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-[#514347]">
+            <div className="mx-auto mt-6 h-px w-16 bg-mist" />
+            <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-body">
               A modern jewellery brand from India, crafting premium fashion
               jewellery that feels timeless, personal, and relevant.
             </p>
@@ -91,26 +90,26 @@ export default function AboutContent() {
       >
         <div className="container-stitch grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
           <motion.div variants={fade}>
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#d4af37]">
+            <p className="text-xs font-bold uppercase tracking-[0.25em] text-muted">
               Who We Are
             </p>
-            <h2 className="mt-3 font-serif text-2xl font-bold text-[#130006] sm:text-3xl">
+            <h2 className="mt-3 font-serif text-2xl font-bold text-ink sm:text-3xl">
               A Modern Jewellery Brand from India
             </h2>
-            <p className="mt-5 text-[15px] leading-[1.8] text-[#514347]">
+            <p className="mt-5 text-[15px] leading-[1.8] text-body">
               Velisqa was born from a simple belief — that premium fashion
               jewellery should be elegant, accessible, and deeply personal.
               Founded in Aligarh, Uttar Pradesh, we set out to create a brand
               that speaks to today&apos;s generation without losing the timeless
               charm that makes jewellery special.
             </p>
-            <p className="mt-4 text-[15px] leading-[1.8] text-[#514347]">
+            <p className="mt-4 text-[15px] leading-[1.8] text-body">
               Every piece is crafted with precision — from hand-selected AD
               stones and crystal accents to polished gold-tone plating that
               catches the light beautifully. We create pieces that feel right
               for every moment, every milestone, every story.
             </p>
-            <p className="mt-5 text-xs font-semibold uppercase tracking-[0.2em] text-[#847377]">
+            <p className="mt-5 text-xs font-semibold uppercase tracking-[0.2em] text-muted">
               Established 2026 · Aligarh, India
             </p>
           </motion.div>
@@ -131,7 +130,7 @@ export default function AboutContent() {
 
       {/* thin divider */}
       <div className="container-stitch">
-        <div className="h-px w-full bg-[#130006]/6" />
+        <div className="h-px w-full bg-ink/6" />
       </div>
 
       {/* ══════════ 3. OUR MISSION — image + text reversed ══════════ */}
@@ -159,20 +158,20 @@ export default function AboutContent() {
           </motion.div>
 
           <motion.div variants={fade} className="order-1 lg:order-2">
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#d4af37]">
+            <p className="text-xs font-bold uppercase tracking-[0.25em] text-muted">
               Our Mission
             </p>
-            <h2 className="mt-3 font-serif text-2xl font-bold text-[#130006] sm:text-3xl">
+            <h2 className="mt-3 font-serif text-2xl font-bold text-ink sm:text-3xl">
               Making Premium Jewellery Accessible
             </h2>
-            <p className="mt-5 text-[15px] leading-[1.8] text-[#514347]">
+            <p className="mt-5 text-[15px] leading-[1.8] text-body">
               We believe you shouldn&apos;t have to choose between quality and
               affordability. From statement necklaces for your wedding reception
               to minimal everyday rings — Velisqa is designed for women who want
               jewellery that moves with their life.
             </p>
-            <blockquote className="mt-5 border-l-2 border-[#d4af37]/30 pl-5">
-              <p className="text-[15px] italic leading-relaxed text-[#3d0a21]/70">
+            <blockquote className="mt-5 border-l-2 border-line pl-5">
+              <p className="text-[15px] italic leading-relaxed text-ink/70">
                 &ldquo;Jewellery that feels timeless, personal, and
                 relevant.&rdquo;
               </p>
@@ -183,7 +182,7 @@ export default function AboutContent() {
 
       {/* thin divider */}
       <div className="container-stitch">
-        <div className="h-px w-full bg-[#130006]/6" />
+        <div className="h-px w-full bg-ink/6" />
       </div>
 
       {/* ══════════ 4. OUR VISION — soft bg, centered ══════════ */}
@@ -198,13 +197,13 @@ export default function AboutContent() {
           variants={fade}
           className="container-stitch mx-auto max-w-2xl text-center"
         >
-          <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#d4af37]">
+          <p className="text-xs font-bold uppercase tracking-[0.25em] text-muted">
             Our Vision
           </p>
-          <h2 className="mt-3 font-serif text-2xl font-bold text-[#130006] sm:text-3xl">
+          <h2 className="mt-3 font-serif text-2xl font-bold text-ink sm:text-3xl">
             To Become India&apos;s Most Loved Modern Jewellery Brand
           </h2>
-          <p className="mt-5 text-[15px] leading-[1.8] text-[#514347]">
+          <p className="mt-5 text-[15px] leading-[1.8] text-body">
             We envision a world where every woman can own jewellery that makes
             her feel special — without compromise. Contemporary design,
             artisanal quality, and genuine care defining the jewellery experience
@@ -223,10 +222,10 @@ export default function AboutContent() {
       >
         <div className="container-stitch">
           <motion.div variants={fade} className="text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#d4af37]">
+            <p className="text-xs font-bold uppercase tracking-[0.25em] text-muted">
               What We Stand For
             </p>
-            <h2 className="mt-3 font-serif text-2xl font-bold text-[#130006] sm:text-3xl">
+            <h2 className="mt-3 font-serif text-2xl font-bold text-ink sm:text-3xl">
               Our Values
             </h2>
           </motion.div>
@@ -239,12 +238,12 @@ export default function AboutContent() {
               <motion.article
                 key={v.title}
                 variants={fade}
-                className="rounded-xl border border-[#130006]/6 bg-white/60 p-6 transition hover:border-[#d4af37]/20 hover:shadow-[0_4px_20px_rgba(19,0,6,0.04)] sm:p-7"
+                className="rounded-xl border border-ink/6 bg-white/60 p-6 transition hover:border-line hover:shadow-[0_4px_20px_rgba(17, 17, 17,0.04)] sm:p-7"
               >
-                <h3 className="font-serif text-lg font-bold text-[#130006]">
+                <h3 className="font-serif text-lg font-bold text-ink">
                   {v.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-[#514347]">
+                <p className="mt-2 text-sm leading-relaxed text-body">
                   {v.desc}
                 </p>
               </motion.article>
@@ -255,7 +254,7 @@ export default function AboutContent() {
 
       {/* thin divider */}
       <div className="container-stitch">
-        <div className="h-px w-full bg-[#130006]/6" />
+        <div className="h-px w-full bg-ink/6" />
       </div>
 
       {/* ══════════ 6. FOUNDERS — minimal cards ══════════ */}
@@ -268,16 +267,16 @@ export default function AboutContent() {
       >
         <div className="container-stitch">
           <motion.div variants={fade} className="mx-auto max-w-2xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#d4af37]">
+            <p className="text-xs font-bold uppercase tracking-[0.25em] text-muted">
               The People Behind Velisqa
             </p>
-            <h2 className="mt-3 font-serif text-2xl font-bold text-[#130006] sm:text-3xl">
+            <h2 className="mt-3 font-serif text-2xl font-bold text-ink sm:text-3xl">
               Meet Our Founders
             </h2>
-            <p className="mt-4 text-[15px] leading-[1.8] text-[#514347]">
+            <p className="mt-4 text-[15px] leading-[1.8] text-body">
               Velisqa was founded by{" "}
-              <strong className="text-[#130006]">Sameer Shameem</strong> and{" "}
-              <strong className="text-[#130006]">Atif Afsar</strong> — two
+              <strong className="text-ink">Sameer Shameem</strong> and{" "}
+              <strong className="text-ink">Atif Afsar</strong> — two
               people with a shared vision of building a modern jewellery brand
               that combines timeless elegance with contemporary expression.
             </p>
@@ -304,12 +303,12 @@ export default function AboutContent() {
               <motion.div
                 key={f.name}
                 variants={fade}
-                className="rounded-xl border border-[#130006]/6 bg-white/60 p-6 text-center transition hover:border-[#d4af37]/20"
+                className="rounded-xl border border-ink/6 bg-white/60 p-6 text-center transition hover:border-line"
               >
-                <h3 className="font-serif text-lg font-bold text-[#130006]">
+                <h3 className="font-serif text-lg font-bold text-ink">
                   {f.name}
                 </h3>
-                <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#847377]">
+                <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted">
                   Founding Leader
                 </p>
                 <div className="mt-4 flex items-center justify-center gap-4">
@@ -317,7 +316,7 @@ export default function AboutContent() {
                     href={f.portfolio}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-xs font-bold text-[#130006] transition hover:text-[#d4af37]"
+                    className="text-xs font-bold text-ink transition hover:text-accent-ink"
                   >
                     Portfolio →
                   </a>
@@ -325,7 +324,7 @@ export default function AboutContent() {
                     href={f.linkedin}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-xs font-bold text-[#847377] transition hover:text-[#130006]"
+                    className="text-xs font-bold text-muted transition hover:text-ink"
                   >
                     LinkedIn ↗
                   </a>
@@ -337,7 +336,7 @@ export default function AboutContent() {
           <motion.div variants={fade} className="mt-6 text-center">
             <Link
               to="/founders"
-              className="text-sm font-semibold text-[#130006] transition hover:text-[#d4af37]"
+              className="text-sm font-semibold text-ink transition hover:text-accent-ink"
             >
               Learn more about our founders →
             </Link>
@@ -355,10 +354,10 @@ export default function AboutContent() {
       >
         <div className="container-stitch">
           <motion.div variants={fade} className="mx-auto max-w-2xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#d4af37]">
+            <p className="text-xs font-bold uppercase tracking-[0.25em] text-muted">
               Why Velisqa
             </p>
-            <h2 className="mt-3 font-serif text-2xl font-bold text-[#130006] sm:text-3xl">
+            <h2 className="mt-3 font-serif text-2xl font-bold text-ink sm:text-3xl">
               What Makes Us Different
             </h2>
           </motion.div>
@@ -385,13 +384,13 @@ export default function AboutContent() {
               },
             ].map((item) => (
               <motion.div key={item.num} variants={fade} className="text-center">
-                <span className="font-serif text-3xl text-[#d4af37]/25">
+                <span className="font-serif text-3xl text-muted">
                   {item.num}
                 </span>
-                <h3 className="mt-2 text-[11px] font-bold uppercase tracking-[0.2em] text-[#130006]">
+                <h3 className="mt-2 text-[11px] font-bold uppercase tracking-[0.2em] text-ink">
                   {item.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-[#514347]">
+                <p className="mt-2 text-sm leading-relaxed text-body">
                   {item.desc}
                 </p>
               </motion.div>
@@ -412,22 +411,22 @@ export default function AboutContent() {
           variants={fade}
           className="container-stitch mx-auto max-w-2xl text-center"
         >
-          <h2 className="font-serif text-2xl font-bold text-[#130006] sm:text-3xl">
+          <h2 className="font-serif text-2xl font-bold text-ink sm:text-3xl">
             Ready to Discover Velisqa?
           </h2>
-          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-[#514347]">
+          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-body">
             Explore our collections and find the piece that tells your story.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
               to="/collections"
-              className="inline-flex items-center gap-2 bg-[#130006] px-7 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white transition hover:bg-[#3d0a21]"
+              className="inline-flex items-center gap-2 bg-ink px-7 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white transition hover:bg-ink"
             >
               Explore Collections →
             </Link>
             <Link
               to="/contact"
-              className="inline-flex items-center gap-2 border border-[#130006]/15 px-7 py-3 text-xs font-bold uppercase tracking-[0.16em] text-[#130006] transition hover:border-[#130006]/30"
+              className="inline-flex items-center gap-2 border border-ink/15 px-7 py-3 text-xs font-bold uppercase tracking-[0.16em] text-ink transition hover:border-ink/30"
             >
               Contact Us
             </Link>
@@ -436,7 +435,6 @@ export default function AboutContent() {
       </motion.section>
 
       {/* ══════════ FOOTER ══════════ */}
-      <HomeFooter />
     </main>
   );
 }

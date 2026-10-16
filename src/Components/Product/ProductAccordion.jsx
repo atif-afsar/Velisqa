@@ -12,7 +12,7 @@ const iconPaths = {
 function PolicyIcon({ name }) {
   const d = iconPaths[name] ?? iconPaths.document
   return (
-    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#d4af37]/30 bg-[#3d0a21]/5 text-[#3d0a21] sm:h-10 sm:w-10">
+    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-line bg-ink/5 text-ink sm:h-10 sm:w-10">
       <svg className="h-4 w-4 sm:h-[18px] sm:w-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden>
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={d} />
       </svg>
@@ -23,7 +23,7 @@ function PolicyIcon({ name }) {
 function PlusToggle({ open }) {
   return (
     <span
-      className="relative flex h-[52px] w-[52px] shrink-0 items-center justify-center self-stretch bg-[#130006] transition-colors duration-300 group-hover:bg-[#2a0718] sm:h-[58px] sm:w-[58px]"
+      className="relative flex h-[52px] w-[52px] shrink-0 items-center justify-center self-stretch bg-ink transition-colors duration-300 group-hover:bg-ink sm:h-[58px] sm:w-[58px]"
       aria-hidden
     >
       <span className="absolute h-[2px] w-4 rounded-full bg-white" />
@@ -54,7 +54,7 @@ export function AccordionItem({ id, title, icon, children, defaultOpen = false }
         >
           <span className="flex flex-1 items-center gap-3 px-5 py-4">
             {icon && <PolicyIcon name={icon} />}
-            <span className="min-w-0 flex-1 font-serif text-base leading-snug text-[#130006] transition-colors group-hover:text-[#6f334a] sm:text-lg">
+            <span className="min-w-0 flex-1 font-serif text-base leading-snug text-ink transition-colors group-hover:text-ink sm:text-lg">
               {title}
             </span>
           </span>
@@ -84,19 +84,19 @@ export default function ProductAccordion({ description, policySections, footerLi
       className={
         compact
           ? 'mt-6'
-          : 'overflow-hidden rounded-2xl border border-[#d4af37]/22 bg-[#fbf7f1] p-4 shadow-[0_24px_64px_-32px_rgba(19,0,6,0.18)] sm:p-6'
+          : 'overflow-hidden rounded-2xl border border-line bg-mist p-4 shadow-[0_24px_64px_-32px_rgba(17, 17, 17,0.18)] sm:p-6'
       }
     >
       {!compact && (
         <div className="mb-4 px-1">
-          <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#847377]">Product information</p>
-          <p className="mt-1 font-serif text-lg text-[#130006] sm:text-xl">Details &amp; policies</p>
+          <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-muted">Product information</p>
+          <p className="mt-1 font-serif text-lg text-ink sm:text-xl">Details &amp; policies</p>
         </div>
       )}
 
       <div className="space-y-3">
         <AccordionItem id="about" title="Description" icon={compact ? null : 'document'} defaultOpen>
-          <p className="text-sm leading-[1.75] text-[#514347] sm:text-[0.9375rem]">{description}</p>
+          <p className="text-sm leading-[1.75] text-body sm:text-[0.9375rem]">{description}</p>
         </AccordionItem>
 
         {policySections.map((section) => (
@@ -107,10 +107,10 @@ export default function ProductAccordion({ description, policySections, footerLi
             icon={compact ? null : section.icon}
             defaultOpen={false}
           >
-            <ul className="space-y-3 text-sm leading-[1.7] text-[#514347]">
+            <ul className="space-y-3 text-sm leading-[1.7] text-body">
               {section.items.map((item) => (
                 <li key={item} className="flex gap-3">
-                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#d4af37]" aria-hidden />
+                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-ink" aria-hidden />
                   <span>{item}</span>
                 </li>
               ))}

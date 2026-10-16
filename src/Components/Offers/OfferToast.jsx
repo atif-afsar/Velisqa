@@ -87,7 +87,7 @@ export default function OfferToast({ milestone, amountToGift = 0, onDismiss }) {
       aria-live="polite"
     >
       <div
-        className={`offer-toast pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-xl border border-[#D4AF37]/30 bg-[#FFFCF0] px-4 py-3 shadow-[0_12px_40px_rgba(19,0,6,0.18)] transition-all duration-300 ${
+        className={`offer-toast pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-xl border border-line bg-[#FFFCF0] px-4 py-3 shadow-[0_12px_40px_rgba(17, 17, 17,0.18)] transition-all duration-300 ${
           visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
         }`}
       >
@@ -95,11 +95,11 @@ export default function OfferToast({ milestone, amountToGift = 0, onDismiss }) {
           {msg.icon}
         </span>
         <div className="min-w-0 flex-1">
-          <p className="text-xs sm:text-sm font-bold text-[#3d0a21]">
+          <p className="text-xs sm:text-sm font-bold text-ink">
             {msg.title}
           </p>
           {bodyText && (
-            <p className="mt-0.5 text-[10px] sm:text-[11px] leading-relaxed text-[#514347]">
+            <p className="mt-0.5 text-[10px] sm:text-[11px] leading-relaxed text-body">
               {bodyText}
             </p>
           )}
@@ -107,7 +107,7 @@ export default function OfferToast({ milestone, amountToGift = 0, onDismiss }) {
         <button
           type="button"
           onClick={handleDismiss}
-          className="shrink-0 text-lg leading-none text-[#847377] hover:text-[#3d0a21] transition"
+          className="shrink-0 text-lg leading-none text-muted hover:text-ink transition"
           aria-label="Dismiss notification"
         >
           ×

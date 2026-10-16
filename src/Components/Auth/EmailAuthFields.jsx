@@ -1,7 +1,7 @@
 import GoogleSignInButton from './GoogleSignInButton'
 
 export const EMAIL_AUTH_INPUT_CLASS =
-  'w-full rounded-xl border border-[#847377]/25 bg-white/80 px-4 py-3 text-[#130006] shadow-sm outline-none transition placeholder:text-[#847377]/60 focus:border-[#3d0a21]/40 focus:ring-2 focus:ring-[#d4af37]/25'
+  'w-full rounded-xl border border-muted/25 bg-white/80 px-4 py-3 text-ink shadow-sm outline-none transition placeholder:text-muted/60 focus:border-ink/40 focus:ring-2 focus:ring-accent/25'
 
 export default function EmailAuthFields({
   idPrefix = 'auth',
@@ -25,12 +25,12 @@ export default function EmailAuthFields({
   toggleSignupLabel = 'Create an account',
 }) {
   const inputClass = compact
-    ? 'w-full rounded-xl border border-[#847377]/25 bg-white/80 px-4 py-2.5 text-sm text-[#130006] outline-none transition placeholder:text-[#847377]/60 focus:border-[#3d0a21]/40 focus:ring-2 focus:ring-[#d4af37]/25'
+    ? 'w-full rounded-xl border border-muted/25 bg-white/80 px-4 py-2.5 text-sm text-ink outline-none transition placeholder:text-muted/60 focus:border-ink/40 focus:ring-2 focus:ring-accent/25'
     : EMAIL_AUTH_INPUT_CLASS
 
   const buttonClass = compact
-    ? 'rounded-xl bg-[#3d0a21] px-4 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-[#fdf9f4] transition hover:bg-[#2a0718] disabled:opacity-60'
-    : 'rounded-xl bg-[#3d0a21] px-4 py-3 text-sm font-semibold uppercase tracking-[0.12em] text-[#fdf9f4] transition hover:bg-[#2a0718] disabled:opacity-60'
+    ? 'rounded-xl bg-ink px-4 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-ink disabled:opacity-60'
+    : 'rounded-xl bg-ink px-4 py-3 text-sm font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-ink disabled:opacity-60'
 
   return (
     <>
@@ -49,11 +49,11 @@ export default function EmailAuthFields({
       <GoogleSignInButton onClick={onGoogleLogin} disabled={busy} />
 
       <div className={`${compact ? 'my-5' : 'my-6'} flex items-center gap-3`}>
-        <span className="h-px flex-1 bg-[#d4af37]/25" />
-        <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#847377]">
+        <span className="h-px flex-1 bg-mist" />
+        <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">
           {compact ? 'or email' : 'or use email'}
         </span>
-        <span className="h-px flex-1 bg-[#d4af37]/25" />
+        <span className="h-px flex-1 bg-mist" />
       </div>
 
       <form onSubmit={onSubmit} className={compact ? 'grid gap-3' : 'grid gap-4'}>
@@ -101,11 +101,11 @@ export default function EmailAuthFields({
         </button>
       </form>
 
-      <p className={`${compact ? 'mt-4 text-xs' : 'mt-6 text-sm'} text-center text-[#514347]`}>
+      <p className={`${compact ? 'mt-4 text-xs' : 'mt-6 text-sm'} text-center text-body`}>
         {isSignup ? 'Already have an account?' : 'New here?'}{' '}
         <button
           type="button"
-          className="font-semibold text-[#3d0a21] underline-offset-4 hover:underline"
+          className="font-semibold text-ink underline-offset-4 hover:underline"
           onClick={onToggleMode}
         >
           {isSignup ? toggleSignInLabel : toggleSignupLabel}

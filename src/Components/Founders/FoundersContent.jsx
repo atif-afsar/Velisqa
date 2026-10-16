@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import HomeFooter from "../Home/HomeFooter";
+import { motion } from "../../lib/motion";
 
 /* ─── animation variants ──────────────────────────────────── */
 const fade = {
@@ -92,7 +91,7 @@ function GoldDivider() {
   return (
     <div
       aria-hidden
-      className="mx-auto h-px w-full max-w-3xl bg-[linear-gradient(90deg,transparent,rgba(212,175,55,0.45)_50%,transparent)]"
+      className="mx-auto h-px w-full max-w-3xl bg-[linear-gradient(90deg,transparent,rgba(17, 17, 17,0.45)_50%,transparent)]"
     />
   );
 }
@@ -116,7 +115,7 @@ function FounderCard({ founder, reverse }) {
             reverse ? "lg:[direction:ltr]" : ""
           }`}
         >
-          <div className="luxury-arch relative aspect-[3/4] overflow-hidden rounded-b-2xl shadow-[0_20px_60px_rgba(19,0,6,0.18)]">
+          <div className="luxury-arch relative aspect-[3/4] overflow-hidden rounded-b-2xl shadow-[0_20px_60px_rgba(17, 17, 17,0.18)]">
             <img
               src={founder.image}
               alt={founder.alt}
@@ -128,7 +127,7 @@ function FounderCard({ founder, reverse }) {
             {/* subtle gold border accent */}
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-0 rounded-b-2xl border border-[#d4af37]/15"
+              className="pointer-events-none absolute inset-0 rounded-b-2xl border border-line"
               style={{
                 borderTopLeftRadius: "1000px",
                 borderTopRightRadius: "1000px",
@@ -139,20 +138,20 @@ function FounderCard({ founder, reverse }) {
 
         {/* Info */}
         <div className={reverse ? "lg:[direction:ltr]" : ""}>
-          <p className="type-label text-[#d4af37]">{founder.role}</p>
-          <h2 className="mt-2 font-serif text-3xl font-bold tracking-wide text-[#130006] sm:text-4xl md:text-[2.75rem]">
+          <p className="type-label text-muted">{founder.role}</p>
+          <h2 className="mt-2 font-serif text-3xl font-bold tracking-wide text-ink sm:text-4xl md:text-[2.75rem]">
             {founder.name}
           </h2>
 
           {/* Quote */}
-          <blockquote className="mt-6 border-l-2 border-[#d4af37]/40 pl-5">
-            <p className="type-quote text-lg italic text-[#3d0a21]/80 sm:text-xl md:text-2xl">
+          <blockquote className="mt-6 border-l-2 border-line pl-5">
+            <p className="type-quote text-lg italic text-ink/80 sm:text-xl md:text-2xl">
               &ldquo;{founder.philosophy}&rdquo;
             </p>
           </blockquote>
 
-          <p className="type-body-luxury mt-6 text-[#514347]">{founder.bio}</p>
-          <p className="type-body-luxury mt-4 text-[#514347]/80">
+          <p className="type-body-luxury mt-6 text-body">{founder.bio}</p>
+          <p className="type-body-luxury mt-4 text-body/80">
             {founder.bioExtra}
           </p>
 
@@ -162,7 +161,7 @@ function FounderCard({ founder, reverse }) {
               href={founder.portfolio}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 border border-[#d4af37]/50 px-6 py-3 text-xs font-bold uppercase tracking-[0.16em] text-[#3d0a21] transition hover:border-[#d4af37] hover:bg-[#d4af37]/10"
+              className="inline-flex items-center gap-2 border border-line px-6 py-3 text-xs font-bold uppercase tracking-[0.16em] text-ink transition hover:border-line hover:bg-mist"
             >
               View Portfolio
               <span aria-hidden>→</span>
@@ -171,7 +170,7 @@ function FounderCard({ founder, reverse }) {
               href={founder.linkedin}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 text-xs font-bold uppercase tracking-[0.16em] text-[#847377] transition hover:text-[#3d0a21]"
+              className="inline-flex items-center gap-2 px-6 py-3 text-xs font-bold uppercase tracking-[0.16em] text-muted transition hover:text-ink"
             >
               LinkedIn
               <svg
@@ -198,19 +197,19 @@ function FounderCard({ founder, reverse }) {
 
 function FaqItem({ faq, isOpen, onToggle }) {
   return (
-    <div className="border-b border-[#d4af37]/15">
+    <div className="border-b border-line">
       <button
         type="button"
         onClick={onToggle}
         className="tap-target flex w-full items-center justify-between gap-4 py-5 text-left"
         aria-expanded={isOpen}
       >
-        <span className="font-serif text-base font-bold text-[#130006] sm:text-lg">
+        <span className="font-serif text-base font-bold text-ink sm:text-lg">
           {faq.q}
         </span>
         <span
           aria-hidden
-          className={`shrink-0 text-[#d4af37] transition-transform duration-300 ${
+          className={`shrink-0 text-muted transition-transform duration-300 ${
             isOpen ? "rotate-45" : ""
           }`}
         >
@@ -236,7 +235,7 @@ function FaqItem({ faq, isOpen, onToggle }) {
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
         className="overflow-hidden"
       >
-        <p className="pb-5 text-sm font-semibold leading-relaxed text-[#514347] sm:text-[0.95rem]">
+        <p className="pb-5 text-sm font-semibold leading-relaxed text-body sm:text-[0.95rem]">
           {faq.a}
         </p>
       </motion.div>
@@ -250,18 +249,18 @@ export default function FoundersContent() {
   const [openFaq, setOpenFaq] = useState(null);
 
   return (
-    <main className="page-offset-nav bg-[#f9f5f0] text-[#130006]">
+    <main className="page-offset-nav bg-mist text-ink">
       {/* ══════════ 1. HERO ══════════ */}
-      <section className="relative overflow-hidden border-b border-[#d4af37]/15 bg-[#3d0a21] px-4 py-20 text-[#f7ead0] sm:px-6 sm:py-24 md:py-32 lg:py-40">
+      <section className="relative overflow-hidden border-b border-line bg-ink px-4 py-20 text-white sm:px-6 sm:py-24 md:py-32 lg:py-40">
         {/* radial glow */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_80%_at_50%_-20%,rgba(212,175,55,0.18),transparent_55%)]"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_80%_at_50%_-20%,rgba(17, 17, 17,0.18),transparent_55%)]"
         />
         {/* secondary glow */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_50%_100%,rgba(61,10,33,0.6),transparent_70%)]"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_50%_100%,rgba(17, 17, 17,0.6),transparent_70%)]"
         />
 
         <motion.div
@@ -272,14 +271,14 @@ export default function FoundersContent() {
         >
           <motion.p
             variants={fade}
-            className="type-label text-[#d4af37]"
+            className="type-label text-muted"
           >
             THE PEOPLE BEHIND VELISQA
           </motion.p>
 
           <motion.h1
             variants={fade}
-            className="mt-5 font-serif text-4xl font-bold tracking-wide text-[#fdf9f4] sm:text-5xl md:text-6xl lg:text-7xl"
+            className="mt-5 font-serif text-4xl font-bold tracking-wide text-white sm:text-5xl md:text-6xl lg:text-7xl"
           >
             The Minds Behind Velisqa
           </motion.h1>
@@ -297,7 +296,7 @@ export default function FoundersContent() {
 
       {/* ══════════ 2. INTRO ══════════ */}
       <motion.section
-        className="responsive-section bg-[#f9f5f0]"
+        className="responsive-section bg-mist"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
@@ -308,25 +307,25 @@ export default function FoundersContent() {
             variants={fade}
             className="mx-auto max-w-3xl text-center"
           >
-            <h2 className="font-serif text-2xl font-bold text-[#130006] sm:text-3xl md:text-4xl">
+            <h2 className="font-serif text-2xl font-bold text-ink sm:text-3xl md:text-4xl">
               Meet the Visionary Pillars&nbsp;of&nbsp;Velisqa
             </h2>
-            <p className="type-body-luxury mx-auto mt-5 max-w-2xl text-[#514347]">
+            <p className="type-body-luxury mx-auto mt-5 max-w-2xl text-body">
               Every jewellery house is built with more than precious metals and
               beautiful designs. Behind every collection is a point of view, a
               purpose, and people who believe in creating something worth
               remembering.
             </p>
-            <p className="type-body-luxury mx-auto mt-4 max-w-2xl text-[#514347]">
+            <p className="type-body-luxury mx-auto mt-4 max-w-2xl text-body">
               At Velisqa, that vision is carried forward by{" "}
-              <strong className="text-[#130006]">
+              <strong className="text-ink">
                 Sameer Shameem and Atif Afsar
               </strong>{" "}
               — the founding leaders and defining pillars behind the brand.
             </p>
 
-            <blockquote className="mx-auto mt-8 max-w-lg border-y border-[#d4af37]/20 py-6">
-              <p className="type-quote text-lg text-[#3d0a21] sm:text-xl">
+            <blockquote className="mx-auto mt-8 max-w-lg border-y border-line py-6">
+              <p className="type-quote text-lg text-ink sm:text-xl">
                 Two minds. One vision.
                 <br />A jewellery house built to last.
               </p>
@@ -339,7 +338,7 @@ export default function FoundersContent() {
 
       {/* ══════════ 3. FOUNDER PROFILES ══════════ */}
       <motion.div
-        className="responsive-section space-y-20 bg-[#f9f5f0] sm:space-y-28 lg:space-y-32"
+        className="responsive-section space-y-20 bg-mist sm:space-y-28 lg:space-y-32"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.1 }}
@@ -354,7 +353,7 @@ export default function FoundersContent() {
 
       {/* ══════════ 4. TWO PILLARS ONE VELISQA ══════════ */}
       <motion.section
-        className="responsive-section bg-[#f9f5f0]"
+        className="responsive-section bg-mist"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
@@ -362,10 +361,10 @@ export default function FoundersContent() {
       >
         <div className="container-stitch px-4 sm:px-6">
           <motion.div variants={fade} className="text-center">
-            <h2 className="font-serif text-2xl font-bold text-[#130006] sm:text-3xl md:text-4xl">
+            <h2 className="font-serif text-2xl font-bold text-ink sm:text-3xl md:text-4xl">
               Two Pillars. One Velisqa.
             </h2>
-            <p className="type-body-luxury mx-auto mt-4 max-w-2xl text-[#514347]">
+            <p className="type-body-luxury mx-auto mt-4 max-w-2xl text-body">
               Sameer Shameem and Atif Afsar bring different strengths to the same
               ambition. Where one helps shape the vision, the other helps turn
               that vision into movement. Together, they represent the thinking,
@@ -381,12 +380,12 @@ export default function FoundersContent() {
               <motion.div
                 key={p.label}
                 variants={fade}
-                className="rounded-2xl border border-[#d4af37]/15 bg-white/50 p-6 text-center shadow-[0_8px_32px_rgba(19,0,6,0.04)] backdrop-blur-sm transition hover:border-[#d4af37]/30 hover:shadow-[0_12px_40px_rgba(19,0,6,0.08)]"
+                className="rounded-2xl border border-line bg-white/50 p-6 text-center shadow-[0_8px_32px_rgba(17, 17, 17,0.04)] backdrop-blur-sm transition hover:border-line hover:shadow-[0_12px_40px_rgba(17, 17, 17,0.08)]"
               >
-                <p className="font-serif text-lg font-bold text-[#3d0a21]">
+                <p className="font-serif text-lg font-bold text-ink">
                   {p.label}
                 </p>
-                <p className="mt-1 text-sm font-semibold text-[#847377]">
+                <p className="mt-1 text-sm font-semibold text-muted">
                   {p.desc}
                 </p>
               </motion.div>
@@ -395,7 +394,7 @@ export default function FoundersContent() {
 
           <motion.p
             variants={fade}
-            className="type-body-luxury mx-auto mt-10 max-w-2xl text-center text-[#514347]"
+            className="type-body-luxury mx-auto mt-10 max-w-2xl text-center text-body"
           >
             Velisqa is being built with the belief that jewellery is more than an
             accessory. It can carry memories, celebrate milestones, express
@@ -408,7 +407,7 @@ export default function FoundersContent() {
 
       {/* ══════════ 5. THE VELISQA STORY ══════════ */}
       <motion.section
-        className="responsive-section bg-[#3d0a21] text-[#f7ead0]"
+        className="responsive-section bg-ink text-white"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
@@ -416,15 +415,15 @@ export default function FoundersContent() {
       >
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_0%,rgba(212,175,55,0.08),transparent_70%)]"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_0%,rgba(17, 17, 17,0.08),transparent_70%)]"
         />
         <div className="container-stitch relative px-4 sm:px-6">
           <motion.div
             variants={fade}
             className="mx-auto max-w-3xl text-center"
           >
-            <p className="type-label text-[#d4af37]">OUR JOURNEY</p>
-            <h2 className="mt-4 font-serif text-2xl font-bold text-[#fdf9f4] sm:text-3xl md:text-4xl">
+            <p className="type-label text-muted">OUR JOURNEY</p>
+            <h2 className="mt-4 font-serif text-2xl font-bold text-white sm:text-3xl md:text-4xl">
               The Velisqa Story
             </h2>
             <h3 className="mt-2 text-base font-semibold text-white/50 sm:text-lg">
@@ -434,7 +433,7 @@ export default function FoundersContent() {
               Velisqa was created with a vision to bring together the beauty of
               fine jewellery and the expectations of today&apos;s generation. The
               brand is built around a simple idea:{" "}
-              <strong className="text-[#d4af37]">
+              <strong className="text-muted">
                 jewellery should feel timeless, personal, and relevant.
               </strong>
             </p>
@@ -451,7 +450,7 @@ export default function FoundersContent() {
 
       {/* ══════════ 6. MEET THE PEOPLE ══════════ */}
       <motion.section
-        className="responsive-section bg-[#f9f5f0]"
+        className="responsive-section bg-mist"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
@@ -459,10 +458,10 @@ export default function FoundersContent() {
       >
         <div className="container-stitch px-4 sm:px-6">
           <motion.div variants={fade} className="text-center">
-            <h2 className="font-serif text-2xl font-bold text-[#130006] sm:text-3xl md:text-4xl">
+            <h2 className="font-serif text-2xl font-bold text-ink sm:text-3xl md:text-4xl">
               Meet the People Behind the Jewellery
             </h2>
-            <p className="type-body-luxury mx-auto mt-4 max-w-2xl text-[#514347]">
+            <p className="type-body-luxury mx-auto mt-4 max-w-2xl text-body">
               A brand becomes meaningful when customers can connect with the
               people and ideas behind it. Explore the individual journeys of
               Sameer Shameem and Atif Afsar, learn about their work, and discover
@@ -478,9 +477,9 @@ export default function FoundersContent() {
               <motion.div
                 key={f.id}
                 variants={fade}
-                className="group rounded-2xl border border-[#d4af37]/15 bg-white/60 p-6 shadow-[0_8px_32px_rgba(19,0,6,0.04)] backdrop-blur-sm transition hover:border-[#d4af37]/30 hover:shadow-[0_16px_48px_rgba(19,0,6,0.1)] sm:p-8"
+                className="group rounded-2xl border border-line bg-white/60 p-6 shadow-[0_8px_32px_rgba(17, 17, 17,0.04)] backdrop-blur-sm transition hover:border-line hover:shadow-[0_16px_48px_rgba(17, 17, 17,0.1)] sm:p-8"
               >
-                <div className="mx-auto mb-5 h-20 w-20 overflow-hidden rounded-full border-2 border-[#d4af37]/25">
+                <div className="mx-auto mb-5 h-20 w-20 overflow-hidden rounded-full border-2 border-line">
                   <img
                     src={f.image}
                     alt={f.alt}
@@ -490,10 +489,10 @@ export default function FoundersContent() {
                     className="h-full w-full object-cover"
                   />
                 </div>
-                <h3 className="text-center font-serif text-xl font-bold text-[#130006]">
+                <h3 className="text-center font-serif text-xl font-bold text-ink">
                   {f.name}
                 </h3>
-                <p className="mt-1 text-center text-xs font-bold uppercase tracking-[0.16em] text-[#847377]">
+                <p className="mt-1 text-center text-xs font-bold uppercase tracking-[0.16em] text-muted">
                   {f.role} · Velisqa Jewellery
                 </p>
                 <div className="mt-5 flex flex-col items-center gap-2">
@@ -501,7 +500,7 @@ export default function FoundersContent() {
                     href={f.portfolio}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 text-sm font-bold text-[#3d0a21] transition hover:text-[#d4af37]"
+                    className="inline-flex items-center gap-1.5 text-sm font-bold text-ink transition hover:text-accent-ink"
                   >
                     View Portfolio
                     <span aria-hidden>→</span>
@@ -510,7 +509,7 @@ export default function FoundersContent() {
                     href={f.linkedin}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-xs font-bold uppercase tracking-[0.12em] text-[#847377] transition hover:text-[#3d0a21]"
+                    className="text-xs font-bold uppercase tracking-[0.12em] text-muted transition hover:text-ink"
                   >
                     LinkedIn ↗
                   </a>
@@ -525,7 +524,7 @@ export default function FoundersContent() {
 
       {/* ══════════ 7. FAQ ══════════ */}
       <motion.section
-        className="responsive-section bg-[#f9f5f0]"
+        className="responsive-section bg-mist"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.15 }}
@@ -533,15 +532,15 @@ export default function FoundersContent() {
       >
         <div className="container-stitch px-4 sm:px-6">
           <motion.div variants={fade} className="text-center">
-            <p className="type-label text-[#d4af37]">FREQUENTLY ASKED</p>
-            <h2 className="mt-3 font-serif text-2xl font-bold text-[#130006] sm:text-3xl md:text-4xl">
+            <p className="type-label text-muted">FREQUENTLY ASKED</p>
+            <h2 className="mt-3 font-serif text-2xl font-bold text-ink sm:text-3xl md:text-4xl">
               Questions About Our Founders
             </h2>
           </motion.div>
 
           <motion.div
             variants={fade}
-            className="mx-auto mt-10 max-w-2xl rounded-2xl border border-[#d4af37]/15 bg-white/50 px-6 py-2 shadow-[0_8px_32px_rgba(19,0,6,0.04)] backdrop-blur-sm sm:px-8"
+            className="mx-auto mt-10 max-w-2xl rounded-2xl border border-line bg-white/50 px-6 py-2 shadow-[0_8px_32px_rgba(17, 17, 17,0.04)] backdrop-blur-sm sm:px-8"
           >
             {FAQS.map((faq, i) => (
               <FaqItem
@@ -558,10 +557,10 @@ export default function FoundersContent() {
       <GoldDivider />
 
       {/* ══════════ 8. FINAL CTA ══════════ */}
-      <section className="relative overflow-hidden bg-[#3d0a21] px-4 py-20 text-[#f7ead0] sm:px-6 sm:py-24 md:py-28">
+      <section className="relative overflow-hidden bg-ink px-4 py-20 text-white sm:px-6 sm:py-24 md:py-28">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_80%_at_50%_-20%,rgba(212,175,55,0.14),transparent_55%)]"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_80%_at_50%_-20%,rgba(17, 17, 17,0.14),transparent_55%)]"
         />
         <motion.div
           className="container-stitch relative flex flex-col items-center text-center"
@@ -570,12 +569,12 @@ export default function FoundersContent() {
           viewport={{ once: true, amount: 0.3 }}
           variants={stagger}
         >
-          <motion.p variants={fade} className="type-label text-[#d4af37]">
+          <motion.p variants={fade} className="type-label text-muted">
             VELISQA JEWELLERY
           </motion.p>
           <motion.h2
             variants={fade}
-            className="mt-4 font-serif text-2xl font-bold text-[#fdf9f4] sm:text-3xl md:text-4xl lg:text-5xl"
+            className="mt-4 font-serif text-2xl font-bold text-white sm:text-3xl md:text-4xl lg:text-5xl"
           >
             Discover the Vision.
             <br />
@@ -595,7 +594,7 @@ export default function FoundersContent() {
           >
             <Link
               to="/collections"
-              className="inline-flex items-center gap-2 border border-[#d4af37] bg-[#d4af37]/10 px-8 py-3.5 text-xs font-bold uppercase tracking-[0.18em] text-[#d4af37] transition hover:bg-[#d4af37]/20"
+              className="inline-flex items-center gap-2 border border-line bg-mist px-8 py-3.5 text-xs font-bold uppercase tracking-[0.18em] text-muted transition hover:bg-mist"
             >
               Explore Collections
               <span aria-hidden>→</span>
@@ -611,7 +610,6 @@ export default function FoundersContent() {
       </section>
 
       {/* ══════════ FOOTER ══════════ */}
-      <HomeFooter />
     </main>
   );
 }

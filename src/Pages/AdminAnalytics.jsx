@@ -42,14 +42,14 @@ function MetricCard({ label, value, sublabel, highlight = false }) {
     <div
       className={`rounded-2xl border p-5 shadow-sm ${
         highlight
-          ? 'border-[#D4AF37]/30 bg-gradient-to-br from-[#3B0D23]/5 to-[#D4AF37]/5'
-          : 'border-[#d4af37]/15 bg-white'
+          ? 'border-line bg-gradient-to-br from-ink/5 to-ink/5'
+          : 'border-line bg-white'
       }`}
     >
-      <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#847377]">{label}</p>
-      <p className="mt-2 font-serif text-2xl font-semibold text-[#130006] sm:text-3xl">{value}</p>
+      <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted">{label}</p>
+      <p className="mt-2 font-serif text-2xl font-semibold text-ink sm:text-3xl">{value}</p>
       {sublabel && (
-        <p className="mt-1 text-xs text-[#847377]">{sublabel}</p>
+        <p className="mt-1 text-xs text-muted">{sublabel}</p>
       )}
     </div>
   )
@@ -61,10 +61,10 @@ function FunnelStep({ label, count, width, color }) {
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between text-xs">
-        <span className="font-medium text-[#514347]">{label}</span>
-        <span className="font-bold text-[#130006]">{count}</span>
+        <span className="font-medium text-body">{label}</span>
+        <span className="font-bold text-ink">{count}</span>
       </div>
-      <div className="h-3 w-full rounded-full bg-[#f0ebe5]">
+      <div className="h-3 w-full rounded-full bg-mist">
         <div
           className="h-full rounded-full transition-all duration-700"
           style={{ width: `${width}%`, backgroundColor: color, minWidth: count > 0 ? '8px' : '0' }}
@@ -212,8 +212,8 @@ export default function AdminAnalytics() {
     const total = metrics.totalOrders
     const paid = metrics.paidOrders
     return [
-      { label: 'Orders Placed', count: total, color: '#3B0D23' },
-      { label: 'Paid / COD Confirmed', count: paid, color: '#D4AF37' },
+      { label: 'Orders Placed', count: total, color: '#111111' },
+      { label: 'Paid / COD Confirmed', count: paid, color: '#1fa79a' },
     ]
   }, [metrics])
 
@@ -237,8 +237,8 @@ export default function AdminAnalytics() {
             onClick={() => setRange(opt.key)}
             className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-all ${
               range === opt.key
-                ? 'bg-[#3B0D23] text-white shadow-md'
-                : 'bg-white border border-[#d4af37]/20 text-[#514347] hover:border-[#d4af37]/50'
+                ? 'bg-ink text-white shadow-md'
+                : 'bg-white border border-line text-body hover:border-line'
             }`}
           >
             {opt.label}
@@ -257,7 +257,7 @@ export default function AdminAnalytics() {
 
       {loading ? (
         <div className="flex items-center justify-center py-20">
-          <svg className="animate-spin h-8 w-8 text-[#3B0D23]" viewBox="0 0 24 24" fill="none">
+          <svg className="animate-spin h-8 w-8 text-ink" viewBox="0 0 24 24" fill="none">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
@@ -270,7 +270,7 @@ export default function AdminAnalytics() {
         <div className="space-y-8">
           {/* ── Overview Cards ─────────────────────── */}
           <section>
-            <h2 className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-[#847377]">Overview</h2>
+            <h2 className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-muted">Overview</h2>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:gap-4">
               <MetricCard label="Total Orders" value={metrics.totalOrders} highlight />
               <MetricCard label="Revenue" value={formatInr(metrics.revenue)} highlight />
@@ -285,7 +285,7 @@ export default function AdminAnalytics() {
 
           {/* ── Payment Split ─────────────────────── */}
           <section>
-            <h2 className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-[#847377]">Payment Method</h2>
+            <h2 className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-muted">Payment Method</h2>
             <div className="grid grid-cols-2 gap-3">
               <MetricCard
                 label="COD"
@@ -302,8 +302,8 @@ export default function AdminAnalytics() {
 
           {/* ── Funnel ────────────────────────────── */}
           <section>
-            <h2 className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-[#847377]">Order Funnel</h2>
-            <div className="rounded-2xl border border-[#d4af37]/15 bg-white p-5 space-y-3">
+            <h2 className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-muted">Order Funnel</h2>
+            <div className="rounded-2xl border border-line bg-white p-5 space-y-3">
               {funnel.map((step) => (
                 <FunnelStep
                   key={step.label}
@@ -313,7 +313,7 @@ export default function AdminAnalytics() {
                   color={step.color}
                 />
               ))}
-              <p className="text-[10px] text-[#847377] pt-2">
+              <p className="text-[10px] text-muted pt-2">
                 For the full visitor → purchase funnel, check{' '}
                 <a
                   href="https://analytics.google.com"
@@ -330,11 +330,11 @@ export default function AdminAnalytics() {
           {/* ── Top Products ──────────────────────── */}
           {topProducts.length > 0 && (
             <section>
-              <h2 className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-[#847377]">Top Products</h2>
-              <div className="overflow-x-auto rounded-2xl border border-[#d4af37]/15 bg-white">
+              <h2 className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-muted">Top Products</h2>
+              <div className="overflow-x-auto rounded-2xl border border-line bg-white">
                 <table className="w-full text-left text-sm">
                   <thead>
-                    <tr className="border-b border-[#f0ebe5] text-[10px] font-bold uppercase tracking-[0.14em] text-[#847377]">
+                    <tr className="border-b border-line text-[10px] font-bold uppercase tracking-[0.14em] text-muted">
                       <th className="px-4 py-3">Product</th>
                       <th className="px-4 py-3 text-right">Qty Sold</th>
                       <th className="px-4 py-3 text-right">Revenue</th>
@@ -342,10 +342,10 @@ export default function AdminAnalytics() {
                   </thead>
                   <tbody>
                     {topProducts.map((p, i) => (
-                      <tr key={i} className="border-b border-[#f0ebe5]/60 last:border-0">
-                        <td className="px-4 py-3 font-medium text-[#130006]">{p.name}</td>
-                        <td className="px-4 py-3 text-right text-[#514347]">{p.quantity}</td>
-                        <td className="px-4 py-3 text-right font-semibold text-[#130006]">{formatInr(p.revenue)}</td>
+                      <tr key={i} className="border-b border-line last:border-0">
+                        <td className="px-4 py-3 font-medium text-ink">{p.name}</td>
+                        <td className="px-4 py-3 text-right text-body">{p.quantity}</td>
+                        <td className="px-4 py-3 text-right font-semibold text-ink">{formatInr(p.revenue)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -357,11 +357,11 @@ export default function AdminAnalytics() {
           {/* ── Traffic Sources ───────────────────── */}
           {trafficSources.length > 0 && trafficSources[0].source !== 'Direct' && (
             <section>
-              <h2 className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-[#847377]">Traffic Sources</h2>
-              <div className="overflow-x-auto rounded-2xl border border-[#d4af37]/15 bg-white">
+              <h2 className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-muted">Traffic Sources</h2>
+              <div className="overflow-x-auto rounded-2xl border border-line bg-white">
                 <table className="w-full text-left text-sm">
                   <thead>
-                    <tr className="border-b border-[#f0ebe5] text-[10px] font-bold uppercase tracking-[0.14em] text-[#847377]">
+                    <tr className="border-b border-line text-[10px] font-bold uppercase tracking-[0.14em] text-muted">
                       <th className="px-4 py-3">Source / Medium</th>
                       <th className="px-4 py-3 text-right">Orders</th>
                       <th className="px-4 py-3 text-right">Revenue</th>
@@ -369,10 +369,10 @@ export default function AdminAnalytics() {
                   </thead>
                   <tbody>
                     {trafficSources.map((s, i) => (
-                      <tr key={i} className="border-b border-[#f0ebe5]/60 last:border-0">
-                        <td className="px-4 py-3 font-medium text-[#130006]">{s.source} / {s.medium}</td>
-                        <td className="px-4 py-3 text-right text-[#514347]">{s.orders}</td>
-                        <td className="px-4 py-3 text-right font-semibold text-[#130006]">{formatInr(s.revenue)}</td>
+                      <tr key={i} className="border-b border-line last:border-0">
+                        <td className="px-4 py-3 font-medium text-ink">{s.source} / {s.medium}</td>
+                        <td className="px-4 py-3 text-right text-body">{s.orders}</td>
+                        <td className="px-4 py-3 text-right font-semibold text-ink">{formatInr(s.revenue)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -384,11 +384,11 @@ export default function AdminAnalytics() {
           {/* ── Campaign Performance ──────────────── */}
           {campaigns.length > 1 && (
             <section>
-              <h2 className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-[#847377]">Campaign Performance</h2>
-              <div className="overflow-x-auto rounded-2xl border border-[#d4af37]/15 bg-white">
+              <h2 className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-muted">Campaign Performance</h2>
+              <div className="overflow-x-auto rounded-2xl border border-line bg-white">
                 <table className="w-full text-left text-sm">
                   <thead>
-                    <tr className="border-b border-[#f0ebe5] text-[10px] font-bold uppercase tracking-[0.14em] text-[#847377]">
+                    <tr className="border-b border-line text-[10px] font-bold uppercase tracking-[0.14em] text-muted">
                       <th className="px-4 py-3">Campaign</th>
                       <th className="px-4 py-3 text-right">Orders</th>
                       <th className="px-4 py-3 text-right">Revenue</th>
@@ -396,10 +396,10 @@ export default function AdminAnalytics() {
                   </thead>
                   <tbody>
                     {campaigns.map((c, i) => (
-                      <tr key={i} className="border-b border-[#f0ebe5]/60 last:border-0">
-                        <td className="px-4 py-3 font-medium text-[#130006]">{c.campaign}</td>
-                        <td className="px-4 py-3 text-right text-[#514347]">{c.orders}</td>
-                        <td className="px-4 py-3 text-right font-semibold text-[#130006]">{formatInr(c.revenue)}</td>
+                      <tr key={i} className="border-b border-line last:border-0">
+                        <td className="px-4 py-3 font-medium text-ink">{c.campaign}</td>
+                        <td className="px-4 py-3 text-right text-body">{c.orders}</td>
+                        <td className="px-4 py-3 text-right font-semibold text-ink">{formatInr(c.revenue)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -409,11 +409,11 @@ export default function AdminAnalytics() {
           )}
 
           {/* ── External dashboards ──────────────── */}
-          <section className="rounded-2xl border border-[#d4af37]/15 bg-gradient-to-r from-[#f8f6f3] to-white p-6">
-            <h2 className="mb-3 text-xs font-bold uppercase tracking-[0.14em] text-[#847377]">
+          <section className="rounded-2xl border border-line bg-gradient-to-r from-mist to-white p-6">
+            <h2 className="mb-3 text-xs font-bold uppercase tracking-[0.14em] text-muted">
               Full Analytics Dashboards
             </h2>
-            <p className="mb-4 text-sm leading-relaxed text-[#514347]">
+            <p className="mb-4 text-sm leading-relaxed text-body">
               For detailed visitor analytics, traffic sources, conversion funnels, device reports,
               and campaign performance, use the platform dashboards directly:
             </p>

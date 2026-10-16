@@ -94,8 +94,8 @@ export default function ProductPurchasePanel({
           aria-pressed={wishlisted}
           className={`tap-target flex w-full h-10 items-center justify-center gap-1.5 rounded-sm border text-[11px] font-bold uppercase tracking-[0.08em] transition ${
             wishlisted
-              ? 'border-[#3d0a21]/30 bg-[#3d0a21]/5 text-[#3d0a21]'
-              : 'border-[#130006]/15 bg-white text-[#514347] hover:border-[#3d0a21]/25'
+              ? 'border-ink/30 bg-ink/5 text-ink'
+              : 'border-ink/15 bg-white text-body hover:border-ink/25'
           }`}
         >
           <svg
@@ -142,7 +142,7 @@ export default function ProductPurchasePanel({
           type="button"
           onClick={handleAdd}
           disabled={adding}
-          className="tap-target flex h-11 w-full items-center justify-center rounded-lg bg-slate-900 text-sm font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-[#8B6914] active:scale-[0.99] disabled:opacity-60 shrink-0 font-sans"
+          className="tap-target flex h-11 w-full items-center justify-center rounded-lg bg-slate-900 text-sm font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-ink active:scale-[0.99] disabled:opacity-60 shrink-0 font-sans"
         >
           {adding ? 'Adding…' : 'Add to bag'}
         </button>
@@ -151,10 +151,10 @@ export default function ProductPurchasePanel({
       {itemCount > 0 && (
         <Link
           to="/cart"
-          className="tap-target flex w-full h-11 items-center justify-center gap-2 rounded-lg border border-slate-900 bg-white text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-900 transition hover:bg-[#F5EFE6] hover:border-[#C9A96E]"
+          className="tap-target flex w-full h-11 items-center justify-center gap-2 rounded-lg border border-slate-900 bg-white text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-900 transition hover:bg-mist hover:border-line"
         >
           View bag
-          <span className="rounded-full bg-[#8B6914] px-2 py-0.5 text-xs text-white">
+          <span className="rounded-full bg-ink px-2 py-0.5 text-xs text-white">
             {itemCount}
           </span>
         </Link>
@@ -170,13 +170,13 @@ export default function ProductPurchasePanel({
             placeholder="Enter 6-digit Pincode"
             value={pincodeInput}
             onChange={(e) => setPincodeInput(e.target.value.replace(/\D/g, '').slice(0, 6))}
-            className="flex-1 min-w-0 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-xs font-medium text-slate-900 outline-none focus:border-[#C9A96E] focus:ring-1 focus:ring-[#C9A96E]"
+            className="flex-1 min-w-0 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-xs font-medium text-slate-900 outline-none focus:border-line focus:ring-1 focus:ring-accent"
           />
           <button
             type="button"
             onClick={checkPincode}
             disabled={pincodeInput.length !== 6 || checkingPincode}
-            className="rounded-lg bg-slate-900 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#8B6914] disabled:opacity-50 transition shrink-0 shadow-xs"
+            className="rounded-lg bg-slate-900 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-ink disabled:opacity-50 transition shrink-0 shadow-xs"
           >
             {checkingPincode ? 'Checking…' : 'Check'}
           </button>

@@ -3,17 +3,18 @@ import { useCart } from '../../context/CartContext'
 import { isProductSoldOut } from '../../lib/cartStock'
 import { SITE_URL } from '../SEO/siteConfig'
 import BuyNowButton from '../WhatsApp/BuyNowButton'
+import { productPath } from '../../lib/productUrl'
 
 /** Palmonas-style minimal add button — shared across product cards. */
 export const PRODUCT_ADD_BTN_CLASS =
-  'flex h-10 w-full items-center justify-center rounded-lg border border-slate-900 bg-white px-3 text-xs sm:text-sm font-semibold tracking-wider text-slate-900 transition duration-200 hover:bg-[#8B6914] hover:text-white hover:border-[#8B6914] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 shadow-2xs'
+  'flex h-10 w-full items-center justify-center rounded-lg border border-slate-900 bg-white px-3 text-xs sm:text-sm font-semibold tracking-wider text-slate-900 transition duration-200 hover:bg-ink hover:text-white hover:border-line active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 shadow-2xs'
 
 /** Product card footer: add to cart, or out-of-stock + enquire. */
 export default function ProductCardActions({ product }) {
   const { addToCart } = useCart()
   const [adding, setAdding] = useState(false)
   const soldOut = isProductSoldOut(product)
-  const productUrl = product.id ? `${SITE_URL}/product/${product.id}` : null
+  const productUrl = product.id ? `${SITE_URL}${productPath(product)}` : null
 
   function handleAdd(e) {
     e.preventDefault()
@@ -27,7 +28,7 @@ export default function ProductCardActions({ product }) {
   if (soldOut) {
     return (
       <div className="w-full shrink-0 space-y-1.5" onClick={(e) => e.stopPropagation()} role="presentation">
-        <p className={`${PRODUCT_ADD_BTN_CLASS} cursor-default border-[#847377]/35 bg-[#fafafa] text-[#847377]`}>
+        <p className={`${PRODUCT_ADD_BTN_CLASS} cursor-default border-muted/35 bg-[#fafafa] text-muted`}>
           Out of stock
         </p>
         <BuyNowButton

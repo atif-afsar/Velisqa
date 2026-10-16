@@ -385,8 +385,8 @@ export default function AdminOrders() {
               onClick={() => setFilter(item.id)}
               className={`rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.08em] ${
                 filter === item.id
-                  ? 'bg-[#3d0a21] text-white'
-                  : 'border border-[#3d0a21]/20 bg-white text-[#514347]'
+                  ? 'bg-ink text-white'
+                  : 'border border-ink/20 bg-white text-body'
               }`}
             >
               {item.label}
@@ -397,7 +397,7 @@ export default function AdminOrders() {
       </div>
 
       {activeFilter?.hint ? (
-        <p className="mt-3 text-sm text-[#514347]">{activeFilter.hint}</p>
+        <p className="mt-3 text-sm text-body">{activeFilter.hint}</p>
       ) : null}
 
       {error && (
@@ -415,11 +415,11 @@ export default function AdminOrders() {
       )}
 
       {loading ? (
-        <p className="text-sm text-[#514347]">Loading orders…</p>
+        <p className="text-sm text-body">Loading orders…</p>
       ) : visibleOrders.length === 0 ? (
-        <div className="rounded-2xl border border-[#d4af37]/15 bg-white p-8 text-center">
+        <div className="rounded-2xl border border-line bg-white p-8 text-center">
           <p className="font-serif text-xl">Nothing in this list</p>
-          <p className="mx-auto mt-2 max-w-md text-sm text-[#514347]">
+          <p className="mx-auto mt-2 max-w-md text-sm text-body">
             {filter === 'needs_shipment'
               ? 'New COD orders from the website will show here. Online orders ship automatically after payment verification.'
               : 'Try another tab or refresh after a customer places an order.'}
@@ -428,59 +428,59 @@ export default function AdminOrders() {
       ) : (
         <div className="space-y-4">
           {visibleOrders.map((order) => (
-            <article key={order.id} className="rounded-2xl border border-[#d4af37]/15 bg-white p-5 shadow-sm sm:p-6">
+            <article key={order.id} className="rounded-2xl border border-line bg-white p-5 shadow-sm sm:p-6">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
-                    <p className="font-mono text-sm font-semibold text-[#3d0a21]">{order.order_ref}</p>
-                    <span className="rounded-full bg-[#f1ede8] px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-[#514347]">
+                    <p className="font-mono text-sm font-semibold text-ink">{order.order_ref}</p>
+                    <span className="rounded-full bg-mist px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-body">
                       {order.payment_method === 'cod' ? 'COD' : 'UPI'}
                     </span>
                     {order.gift_wrap && (
-                      <span className="rounded-full bg-[#B76E79]/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-[#3B0D23]">
+                      <span className="rounded-full bg-accent-tint px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-ink">
                         🎁 Gift Wrapped
                       </span>
                     )}
                   </div>
                   <p className="mt-1 text-sm font-semibold">{order.customer_name}</p>
-                  <p className="text-xs text-[#514347]">
+                  <p className="text-xs text-body">
                     {order.customer_phone}
                     {order.delivery_city ? ` · ${order.delivery_city}` : ''}
                     {order.delivery_pincode ? ` · ${order.delivery_pincode}` : ''}
                   </p>
-                  <p className="mt-2 text-xs text-[#847377]">
+                  <p className="mt-2 text-xs text-muted">
                     Placed {new Date(order.created_at).toLocaleString('en-IN')}
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="font-serif text-2xl font-semibold text-[#3d0a21]">{formatInr(order.grand_total)}</p>
-                  <p className="mt-1 text-xs text-[#514347]">
+                  <p className="font-serif text-2xl font-semibold text-ink">{formatInr(order.grand_total)}</p>
+                  <p className="mt-1 text-xs text-body">
                     {order.payment_method === 'cod' ? 'Collect on delivery' : 'Online payment'}
                   </p>
                   {order.razorpay_payment_id && (
-                    <p className="mt-1 font-mono text-[9px] text-[#847377]" aria-label="Transaction ID">
+                    <p className="mt-1 font-mono text-[9px] text-muted" aria-label="Transaction ID">
                       Txn: {order.razorpay_payment_id}
                     </p>
                   )}
                 </div>
               </div>
 
-              <div className="mt-4 grid gap-3 border-t border-[#d4af37]/15 pt-4 sm:grid-cols-3">
+              <div className="mt-4 grid gap-3 border-t border-line pt-4 sm:grid-cols-3">
                 <StatusPill label="Payment" value={PAYMENT_STATUS_LABELS[order.payment_status] || order.payment_status} />
                 <StatusPill label="Shipping" value={SHIPPING_STATUS_LABELS[order.shipping_status] || order.shipping_status} />
                 <StatusPill label="Order" value={ORDER_STATUS_LABELS[order.order_status] || order.order_status} />
               </div>
 
-              <div className="mt-4 border-t border-[#d4af37]/15 pt-4">
-                <h3 className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#847377]">
+              <div className="mt-4 border-t border-line pt-4">
+                <h3 className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted">
                   Products ordered
                 </h3>
                 <div className="mt-3">
                   <AdminOrderItems items={order.order_items} />
                 </div>
                 {order.delivery_address && (
-                  <p className="mt-4 text-xs leading-relaxed text-[#514347]">
-                    <span className="font-semibold text-[#130006]">Ship to: </span>
+                  <p className="mt-4 text-xs leading-relaxed text-body">
+                    <span className="font-semibold text-ink">Ship to: </span>
                     {order.delivery_address}
                     {[order.delivery_city, order.delivery_pincode].filter(Boolean).length > 0 && (
                       <>
@@ -491,7 +491,7 @@ export default function AdminOrders() {
                     {order.gift_wrap && (
                       <>
                         <br />
-                        <span className="inline-block mt-2 font-bold text-[#3B0D23] bg-[#B76E79]/10 px-2.5 py-1 rounded border border-[#B76E79]/20">
+                        <span className="inline-block mt-2 font-bold text-ink bg-accent-tint px-2.5 py-1 rounded border border-line">
                           🎁 GIFT WRAP REQUIRED (+₹50)
                         </span>
                       </>
@@ -518,7 +518,7 @@ export default function AdminOrders() {
               )}
 
               {order.order_status === 'cancelled' && (
-                <p className="mt-4 rounded-xl border border-[#130006]/10 bg-[#f1ede8] px-4 py-3 text-sm text-[#514347]">
+                <p className="mt-4 rounded-xl border border-ink/10 bg-mist px-4 py-3 text-sm text-body">
                   This order was cancelled. The customer should not expect delivery.
                 </p>
               )}
@@ -554,7 +554,7 @@ export default function AdminOrders() {
               )}
 
               {(effectiveAwb(order) || order.courier_name) && (
-                <div className="mt-4 rounded-xl bg-[#f0f7f4] p-4 text-sm text-[#514347]">
+                <div className="mt-4 rounded-xl bg-[#f0f7f4] p-4 text-sm text-body">
                   <p className="font-semibold text-[#1b4332]">Shipped via NimbusPost</p>
                   {order.courier_name && <p className="mt-2">Courier: <strong>{order.courier_name}</strong></p>}
                   {effectiveAwb(order) && (
@@ -565,7 +565,7 @@ export default function AdminOrders() {
                       href={order.tracking_url}
                       target="_blank"
                       rel="noreferrer"
-                      className="mt-2 inline-flex font-semibold text-[#6f334a] hover:underline"
+                      className="mt-2 inline-flex font-semibold text-ink hover:underline"
                     >
                       Open NimbusPost tracking →
                     </a>
@@ -589,7 +589,7 @@ export default function AdminOrders() {
                     type="button"
                     disabled={isBusy(order.id)}
                     onClick={() => void cancelOrder(order)}
-                    className="min-h-10 rounded-full border border-[#3d0a21]/25 bg-[#3d0a21]/5 px-4 text-xs font-bold uppercase tracking-[0.08em] text-[#3d0a21] disabled:opacity-50 sm:mr-auto"
+                    className="min-h-10 rounded-full border border-ink/25 bg-ink/5 px-4 text-xs font-bold uppercase tracking-[0.08em] text-ink disabled:opacity-50 sm:mr-auto"
                   >
                     {isBusy(order.id, 'cancel')
                       ? 'Cancelling…'
@@ -610,7 +610,7 @@ export default function AdminOrders() {
                   type="button"
                   disabled={isBusy(order.id)}
                   onClick={() => void copyTrackingLink(order)}
-                  className="min-h-10 rounded-full border border-[#3d0a21]/20 px-4 text-xs font-bold uppercase tracking-[0.08em] text-[#3d0a21] disabled:opacity-50"
+                  className="min-h-10 rounded-full border border-ink/20 px-4 text-xs font-bold uppercase tracking-[0.08em] text-ink disabled:opacity-50"
                 >
                   {copiedId === order.id ? 'Link copied' : 'Copy customer tracking link'}
                 </button>
@@ -660,7 +660,7 @@ export default function AdminOrders() {
             type="button"
             disabled={loadingMore}
             onClick={() => void loadMore()}
-            className="min-h-11 rounded-full border border-[#3d0a21]/20 bg-white px-6 text-xs font-bold uppercase tracking-[0.08em] text-[#3d0a21] disabled:opacity-50"
+            className="min-h-11 rounded-full border border-ink/20 bg-white px-6 text-xs font-bold uppercase tracking-[0.08em] text-ink disabled:opacity-50"
           >
             {loadingMore ? 'Loading more…' : `Load more orders (${orders.length} of ${totalCount})`}
           </button>
@@ -672,9 +672,9 @@ export default function AdminOrders() {
 
 function StatusPill({ label, value }) {
   return (
-    <div className="rounded-lg border border-[#130006]/8 bg-[#fbf7f1] px-3 py-2">
-      <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#847377]">{label}</p>
-      <p className="mt-0.5 text-sm font-semibold capitalize text-[#130006]" aria-label={`${label}: ${value}`}>
+    <div className="rounded-lg border border-ink/8 bg-mist px-3 py-2">
+      <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted">{label}</p>
+      <p className="mt-0.5 text-sm font-semibold capitalize text-ink" aria-label={`${label}: ${value}`}>
         {value}
       </p>
     </div>

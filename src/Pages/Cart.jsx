@@ -216,7 +216,7 @@ export default function Cart() {
         description="Review your premium shopping bag and check out securely."
         canonicalPath="/cart"
       />
-      <main className="page-offset-nav min-h-[75vh] bg-[#FAF9F6] text-slate-900 pb-16 font-sans">
+      <main className="page-offset-nav min-h-[75vh] bg-mist text-slate-900 pb-16 font-sans">
         <div className="mx-auto max-w-[1200px] px-4 py-8 sm:px-6 lg:px-8">
           
           <h1 className="sr-only">Shopping Bag</h1>
@@ -227,7 +227,7 @@ export default function Cart() {
               <p className="text-sm sm:text-base font-semibold mt-4 text-slate-700">Your bag is currently empty.</p>
               <Link
                 to="/collections"
-                className="mt-6 inline-flex h-11 items-center justify-center rounded-lg bg-slate-900 px-6 text-xs sm:text-sm font-bold uppercase tracking-wider text-white transition hover:bg-[#8B6914] shadow-xs"
+                className="mt-6 inline-flex h-11 items-center justify-center rounded-lg bg-slate-900 px-6 text-xs sm:text-sm font-bold uppercase tracking-wider text-white transition hover:bg-ink shadow-xs"
               >
                 Browse Collections
               </Link>
@@ -261,7 +261,7 @@ export default function Cart() {
                         {/* Product Image */}
                         <Link
                           to={`/product/${line.productId}`}
-                          className="h-24 w-24 shrink-0 overflow-hidden rounded-lg bg-[#FAF9F6] border border-slate-200"
+                          className="h-24 w-24 shrink-0 overflow-hidden rounded-lg bg-mist border border-slate-200"
                         >
                           {line.imageUrl ? (
                             <img
@@ -281,7 +281,7 @@ export default function Cart() {
                         <div className="min-w-0 flex-1 space-y-1">
                           <Link
                             to={`/product/${line.productId}`}
-                            className="font-sans text-sm sm:text-base font-bold text-slate-900 hover:text-[#8B6914] transition-colors line-clamp-1 pr-6"
+                            className="font-sans text-sm sm:text-base font-bold text-slate-900 hover:text-accent-ink transition-colors line-clamp-1 pr-6"
                           >
                             {line.name}
                           </Link>
@@ -298,7 +298,7 @@ export default function Cart() {
 
                           <div className="flex items-center gap-2 pt-1 text-xs text-slate-500">
                             <span>Style:</span>
-                            <span className="font-semibold text-slate-800 bg-[#F5EFE6] px-2 py-0.5 rounded border border-[#E8DCC8]">Single</span>
+                            <span className="font-semibold text-slate-800 bg-mist px-2 py-0.5 rounded border border-line">Single</span>
                           </div>
 
                           {lineIssue && (
@@ -327,8 +327,8 @@ export default function Cart() {
 
                 {/* Choose Free Gift Options (under 400) */}
                 {cartOffers.freeGiftEligible && giftChoices.length > 0 && (
-                  <div className="rounded-xl border border-dashed border-[#D4AF37]/35 bg-[#FFFDF7] p-4 sm:p-5 space-y-4 shadow-xs">
-                    <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.14em] text-[#8B6914] flex items-center gap-2">
+                  <div className="rounded-xl border border-dashed border-line bg-[#FFFDF7] p-4 sm:p-5 space-y-4 shadow-xs">
+                    <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.14em] text-accent-ink flex items-center gap-2">
                       <span>🎁</span> {freeGiftInCart ? 'Change Your Free Gift' : 'Select Your Free Gift'}
                     </p>
                     <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -340,22 +340,22 @@ export default function Cart() {
                           <div
                             key={product.id}
                             className={`flex flex-col justify-between rounded-lg border p-3 text-center shadow-xs transition ${
-                              isCurrentGift ? 'border-[#D4AF37] bg-[#FFFDF0]' : 'border-[#847377]/10 bg-white'
+                              isCurrentGift ? 'border-line bg-[#FFFDF0]' : 'border-muted/10 bg-white'
                             }`}
                           >
-                            <div className="mx-auto h-16 w-16 overflow-hidden rounded-md bg-[#FAF9F6] border border-black/5">
+                            <div className="mx-auto h-16 w-16 overflow-hidden rounded-md bg-mist border border-black/5">
                               {product.image_url ? (
                                 <img src={product.image_url} alt="" className="h-full w-full object-cover" />
                               ) : (
-                                <div className="grid h-full place-items-center text-[10px] text-[#847377]">
+                                <div className="grid h-full place-items-center text-[10px] text-muted">
                                   No Image
                                 </div>
                               )}
                             </div>
-                            <p className="mt-2.5 text-xs font-semibold text-[#130006] line-clamp-1">
+                            <p className="mt-2.5 text-xs font-semibold text-ink line-clamp-1">
                               {product.name}
                             </p>
-                            <p className="text-[10px] text-[#847377] line-through mt-0.5">
+                            <p className="text-[10px] text-muted line-through mt-0.5">
                               {formatInr(product.price)}
                             </p>
                             <button
@@ -365,7 +365,7 @@ export default function Cart() {
                               className={`mt-3 rounded-full py-1.5 text-[10px] font-bold uppercase tracking-wider transition-colors ${
                                 isCurrentGift
                                   ? 'bg-emerald-100 text-emerald-800 cursor-not-allowed'
-                                  : 'bg-[#8B6914] text-white hover:bg-[#6B5210]'
+                                  : 'bg-ink text-white hover:bg-ink'
                               }`}
                             >
                               {isCurrentGift ? 'Claimed' : 'Claim Free'}
@@ -384,9 +384,9 @@ export default function Cart() {
                       type="checkbox"
                       checked={giftWrap}
                       onChange={handleGiftWrapChange}
-                      className="h-4 w-4 rounded border-slate-300 text-[#8B6914] focus:ring-[#C9A96E]"
+                      className="h-4 w-4 rounded border-slate-300 text-accent-ink focus:ring-accent"
                     />
-                    <span>Add a <span className="text-[#8B6914] font-bold">gift wrap</span> &amp; a message with this item (+ ₹50)</span>
+                    <span>Add a <span className="text-accent-ink font-bold">gift wrap</span> &amp; a message with this item (+ ₹50)</span>
                   </label>
                 </div>
 
@@ -505,7 +505,7 @@ export default function Cart() {
                     type="button"
                     onClick={handleCheckoutClick}
                     disabled={!canCheckout}
-                    className="w-full flex h-12 items-center justify-center gap-2 rounded-lg bg-slate-900 text-sm font-bold uppercase tracking-wider text-white shadow-xs transition hover:bg-[#8B6914] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50 font-sans"
+                    className="w-full flex h-12 items-center justify-center gap-2 rounded-lg bg-slate-900 text-sm font-bold uppercase tracking-wider text-white shadow-xs transition hover:bg-ink active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50 font-sans"
                   >
                     <span>🔒</span>
                     <span>Checkout securely</span>
@@ -546,7 +546,7 @@ export default function Cart() {
             
             {/* Header */}
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-              <h3 className="text-base font-bold text-[#1A1A1A]">Apply Coupon</h3>
+              <h3 className="text-base font-bold text-ink">Apply Coupon</h3>
               <button
                 type="button"
                 onClick={() => {
@@ -567,12 +567,12 @@ export default function Cart() {
                   placeholder="Enter coupon code here"
                   value={couponInput}
                   onChange={(e) => setCouponInput(e.target.value)}
-                  className="flex-1 rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#3d0a21]/30 text-[#1A1A1A]"
+                  className="flex-1 rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-ink/30 text-ink"
                 />
                 <button
                   type="button"
                   onClick={() => handleApplyCouponCode(couponInput)}
-                  className="rounded border border-gray-300 px-4 py-2 text-xs font-bold text-[#514347] hover:bg-gray-50 transition shrink-0"
+                  className="rounded border border-gray-300 px-4 py-2 text-xs font-bold text-body hover:bg-gray-50 transition shrink-0"
                 >
                   Apply
                 </button>
@@ -582,22 +582,22 @@ export default function Cart() {
 
             {/* Best Available Offers */}
             <div className="mt-6 space-y-3">
-              <h4 className="text-xs font-bold text-[#8a8a8a] uppercase tracking-wider">Best Available Offers</h4>
+              <h4 className="text-xs font-bold text-muted uppercase tracking-wider">Best Available Offers</h4>
               
               <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1">
                 
                 {/* SAVE10 Offer */}
-                <div className="rounded-lg border border-[#D4AF37]/20 bg-[#F8F6F3]/50 p-4 flex flex-col justify-between gap-3 text-left">
+                <div className="rounded-lg border border-line bg-mist/50 p-4 flex flex-col justify-between gap-3 text-left">
                   <div>
-                    <p className="text-xs font-bold text-[#1A1A1A]">Only for Today - Flat 10% Off</p>
+                    <p className="text-xs font-bold text-ink">Only for Today - Flat 10% Off</p>
                     <p className="text-[10px] text-gray-500 mt-0.5">Applicable on select Silver &amp; Demi-fine Jewellery orders above ₹1999.</p>
                   </div>
-                  <div className="flex items-center justify-between border-t border-dashed border-[#D4AF37]/20 pt-2.5">
+                  <div className="flex items-center justify-between border-t border-dashed border-line pt-2.5">
                     <span className="font-mono text-xs font-extrabold text-emerald-800 bg-emerald-50 px-2 py-1 rounded">SAVE10</span>
                     <button
                       type="button"
                       onClick={() => handleApplyCouponCode('SAVE10')}
-                      className="rounded bg-[#B76E79]/20 text-[#3B0D23] font-bold text-[10px] px-3.5 py-1.5 hover:bg-[#B76E79]/30 transition uppercase tracking-wider"
+                      className="rounded bg-accent-tint text-ink font-bold text-[10px] px-3.5 py-1.5 hover:bg-accent-tint transition uppercase tracking-wider"
                     >
                       Apply
                     </button>
@@ -605,17 +605,17 @@ export default function Cart() {
                 </div>
 
                 {/* FREE50 Offer */}
-                <div className="rounded-lg border border-[#D4AF37]/20 bg-[#F8F6F3]/50 p-4 flex flex-col justify-between gap-3 text-left">
+                <div className="rounded-lg border border-line bg-mist/50 p-4 flex flex-col justify-between gap-3 text-left">
                   <div>
-                    <p className="text-xs font-bold text-[#1A1A1A]">FLAT ₹50 Off on your order</p>
+                    <p className="text-xs font-bold text-ink">FLAT ₹50 Off on your order</p>
                     <p className="text-[10px] text-gray-500 mt-0.5">Applicable on first jewellery order above ₹999.</p>
                   </div>
-                  <div className="flex items-center justify-between border-t border-dashed border-[#D4AF37]/20 pt-2.5">
+                  <div className="flex items-center justify-between border-t border-dashed border-line pt-2.5">
                     <span className="font-mono text-xs font-extrabold text-emerald-800 bg-emerald-50 px-2 py-1 rounded">FREE50</span>
                     <button
                       type="button"
                       onClick={() => handleApplyCouponCode('FREE50')}
-                      className="rounded bg-[#B76E79]/20 text-[#3B0D23] font-bold text-[10px] px-3.5 py-1.5 hover:bg-[#B76E79]/30 transition uppercase tracking-wider"
+                      className="rounded bg-accent-tint text-ink font-bold text-[10px] px-3.5 py-1.5 hover:bg-accent-tint transition uppercase tracking-wider"
                     >
                       Apply
                     </button>
@@ -623,17 +623,17 @@ export default function Cart() {
                 </div>
 
                 {/* VELISQA5 Offer */}
-                <div className="rounded-lg border border-[#D4AF37]/20 bg-[#F8F6F3]/50 p-4 flex flex-col justify-between gap-3 text-left">
+                <div className="rounded-lg border border-line bg-mist/50 p-4 flex flex-col justify-between gap-3 text-left">
                   <div>
-                    <p className="text-xs font-bold text-[#1A1A1A]">FLAT 5% Off on jewellery</p>
+                    <p className="text-xs font-bold text-ink">FLAT 5% Off on jewellery</p>
                     <p className="text-[10px] text-gray-500 mt-0.5">Applicable on orders above ₹1499.</p>
                   </div>
-                  <div className="flex items-center justify-between border-t border-dashed border-[#D4AF37]/20 pt-2.5">
+                  <div className="flex items-center justify-between border-t border-dashed border-line pt-2.5">
                     <span className="font-mono text-xs font-extrabold text-emerald-800 bg-emerald-50 px-2 py-1 rounded">VELISQA5</span>
                     <button
                       type="button"
                       onClick={() => handleApplyCouponCode('VELISQA5')}
-                      className="rounded bg-[#B76E79]/20 text-[#3B0D23] font-bold text-[10px] px-3.5 py-1.5 hover:bg-[#B76E79]/30 transition uppercase tracking-wider"
+                      className="rounded bg-accent-tint text-ink font-bold text-[10px] px-3.5 py-1.5 hover:bg-accent-tint transition uppercase tracking-wider"
                     >
                       Apply
                     </button>

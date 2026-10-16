@@ -16,7 +16,7 @@ export default function QuantityStepper({ value, max, onChange, disabled = false
 
   return (
     <div
-      className={`inline-flex items-center rounded-full border border-[#847377]/25 bg-white ${disabled ? 'opacity-50' : ''}`}
+      className={`inline-flex items-center rounded-full border border-muted/25 bg-white ${disabled ? 'opacity-50' : ''}`}
       role="group"
       aria-label="Quantity"
     >
@@ -24,19 +24,19 @@ export default function QuantityStepper({ value, max, onChange, disabled = false
         type="button"
         disabled={disabled || value <= 1}
         onClick={() => change(-1)}
-        className={`${btnClass} rounded-l-full font-medium text-[#514347] transition hover:bg-[#f9f5f0] disabled:cursor-not-allowed disabled:opacity-40`}
+        className={`${btnClass} rounded-l-full font-medium text-body transition hover:bg-mist disabled:cursor-not-allowed disabled:opacity-40`}
         aria-label="Decrease quantity"
       >
         −
       </button>
-      <span className="min-w-[2rem] px-2 text-center text-sm font-semibold tabular-nums text-[#130006]">
+      <span className="min-w-[2rem] px-2 text-center text-sm font-semibold tabular-nums text-ink">
         {value}
       </span>
       <button
         type="button"
         disabled={disabled || (max != null && value >= max)}
         onClick={() => change(1)}
-        className={`${btnClass} rounded-r-full font-medium text-[#514347] transition hover:bg-[#f9f5f0] disabled:cursor-not-allowed disabled:opacity-40`}
+        className={`${btnClass} rounded-r-full font-medium text-body transition hover:bg-mist disabled:cursor-not-allowed disabled:opacity-40`}
         aria-label="Increase quantity"
       >
         +

@@ -6,7 +6,7 @@ export default function AdminRoute({ children }) {
 
   if (loading) {
     return (
-      <div className="page-offset-nav flex min-h-[40vh] items-center justify-center bg-[#f9f5f0] text-[#514347]">
+      <div className="page-offset-nav flex min-h-[40vh] items-center justify-center bg-mist text-body">
         Loading…
       </div>
     )

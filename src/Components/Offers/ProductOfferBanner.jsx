@@ -28,28 +28,28 @@ export default function ProductOfferBanner({ productPrice = 0 }) {
 
   return (
     <div
-      className="rounded-xl border border-[#D4AF37]/15 bg-[#FFFDF5] p-3.5 sm:p-4 space-y-2.5"
+      className="rounded-xl border border-line bg-[#FFFDF5] p-3.5 sm:p-4 space-y-2.5"
       role="complementary"
       aria-label="Shopping benefits"
     >
       {/* Header */}
-      <p className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.12em] text-[#8B6914]">
-        <span className="text-[#D4AF37]">✦</span>
+      <p className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.12em] text-accent-ink">
+        <span className="text-muted">✦</span>
         Special Shopping Benefits
       </p>
 
       {/* Offer list */}
       <div className="space-y-1.5">
-        <div className="flex items-center gap-2 text-[11px] sm:text-xs text-[#3d0a21]">
-          <span className={`shrink-0 w-4 text-center ${cartOffers.couponEligible ? 'text-[#8B6914]' : 'text-[#847377]'}`}>
+        <div className="flex items-center gap-2 text-[11px] sm:text-xs text-ink">
+          <span className={`shrink-0 w-4 text-center ${cartOffers.couponEligible ? 'text-accent-ink' : 'text-muted'}`}>
             {cartOffers.couponEligible ? '✓' : '○'}
           </span>
           <span className={cartOffers.couponEligible ? 'font-semibold' : ''}>
             Shop {formatOfferAmount(coupon.threshold)} → Get {coupon.label}
           </span>
         </div>
-        <div className="flex items-center gap-2 text-[11px] sm:text-xs text-[#3d0a21]">
-          <span className={`shrink-0 w-4 text-center ${cartOffers.freeGiftEligible ? 'text-[#8B6914]' : 'text-[#847377]'}`}>
+        <div className="flex items-center gap-2 text-[11px] sm:text-xs text-ink">
+          <span className={`shrink-0 w-4 text-center ${cartOffers.freeGiftEligible ? 'text-accent-ink' : 'text-muted'}`}>
             {cartOffers.freeGiftEligible ? '✓' : '○'}
           </span>
           <span className={cartOffers.freeGiftEligible ? 'font-semibold' : ''}>
@@ -60,7 +60,7 @@ export default function ProductOfferBanner({ productPrice = 0 }) {
 
       {/* Dynamic nudge */}
       {showDynamicNudge && (
-        <p className="text-[10px] sm:text-[11px] text-[#8B6914] font-semibold leading-relaxed pt-1 border-t border-[#D4AF37]/10">
+        <p className="text-[10px] sm:text-[11px] text-accent-ink font-semibold leading-relaxed pt-1 border-t border-line">
           Add this to your bag and you're {formatOfferAmount(hypotheticalAmountToGift)} away from unlocking your FREE {formatOfferAmount(freeGift.value)}+ gift
         </p>
       )}
@@ -69,10 +69,10 @@ export default function ProductOfferBanner({ productPrice = 0 }) {
       {itemCount > 0 && (
         <Link
           to="/cart"
-          className="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.08em] text-[#3d0a21] hover:text-[#8B6914] transition pt-0.5"
+          className="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.08em] text-ink hover:text-accent-ink transition pt-0.5"
         >
           View Bag
-          <span className="rounded-full bg-[#8B6914] px-1.5 py-0.5 text-[9px] text-white font-bold">
+          <span className="rounded-full bg-ink px-1.5 py-0.5 text-[9px] text-white font-bold">
             {itemCount}
           </span>
         </Link>

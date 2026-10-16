@@ -4,7 +4,7 @@ import { formatInr } from '../../lib/cartStock'
 export default function AdminOrderItems({ items, showImages = true }) {
   if (!items?.length) {
     return (
-      <p className="text-sm text-[#847377]">No products recorded for this order.</p>
+      <p className="text-sm text-muted">No products recorded for this order.</p>
     )
   }
 
@@ -13,16 +13,16 @@ export default function AdminOrderItems({ items, showImages = true }) {
       {items.map((item, index) => (
         <li
           key={`${item.product_name}-${index}`}
-          className="flex items-start gap-3 rounded-xl border border-[#130006]/6 bg-[#fbf7f1] p-3"
+          className="flex items-start gap-3 rounded-xl border border-ink/6 bg-mist p-3"
         >
           {showImages && item.image_url ? (
             <img
               src={item.image_url}
               alt=""
-              className="h-14 w-12 shrink-0 rounded-md bg-[#f1ede8] object-cover"
+              className="h-14 w-12 shrink-0 rounded-md bg-mist object-cover"
             />
           ) : showImages ? (
-            <div className="flex h-14 w-12 shrink-0 items-center justify-center rounded-md bg-[#f1ede8] text-[10px] text-[#847377]">
+            <div className="flex h-14 w-12 shrink-0 items-center justify-center rounded-md bg-mist text-[10px] text-muted">
               No img
             </div>
           ) : null}
@@ -30,18 +30,18 @@ export default function AdminOrderItems({ items, showImages = true }) {
             {item.product_url ? (
               <Link
                 to={item.product_url}
-                className="text-sm font-semibold text-[#130006] hover:text-[#6f334a] hover:underline"
+                className="text-sm font-semibold text-ink hover:text-ink hover:underline"
               >
                 {item.product_name}
               </Link>
             ) : (
-              <p className="text-sm font-semibold text-[#130006]">{item.product_name}</p>
+              <p className="text-sm font-semibold text-ink">{item.product_name}</p>
             )}
-            <p className="mt-0.5 text-xs text-[#514347]">
+            <p className="mt-0.5 text-xs text-body">
               Qty {item.quantity} × {formatInr(item.unit_price)}
             </p>
           </div>
-          <p className="shrink-0 text-sm font-semibold tabular-nums text-[#3d0a21]">
+          <p className="shrink-0 text-sm font-semibold tabular-nums text-ink">
             {formatInr(item.line_total)}
           </p>
         </li>

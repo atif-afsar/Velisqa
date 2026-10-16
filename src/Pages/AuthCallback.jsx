@@ -51,23 +51,23 @@ export default function AuthCallback() {
   }, [navigate])
 
   return (
-    <main className="page-offset-nav flex min-h-[50vh] items-center justify-center bg-[#f9f5f0] px-4">
+    <main className="page-offset-nav flex min-h-[50vh] items-center justify-center bg-mist px-4">
       <div className="max-w-sm text-center">
         {error ? (
           <>
-            <p className="font-serif text-xl text-[#130006]">Sign-in failed</p>
-            <p className="mt-3 text-sm text-[#514347]">{error}</p>
+            <p className="font-serif text-xl text-ink">Sign-in failed</p>
+            <p className="mt-3 text-sm text-body">{error}</p>
             <Link
               to="/login"
-              className="mt-6 inline-flex rounded-full bg-[#3d0a21] px-6 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-[#fdf9f4]"
+              className="mt-6 inline-flex rounded-full bg-ink px-6 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-white"
             >
               Back to sign in
             </Link>
           </>
         ) : (
           <>
-            <p className="font-serif text-xl text-[#130006]">Signing you in…</p>
-            <p className="mt-2 text-sm text-[#847377]">Completing Google sign-in.</p>
+            <p className="font-serif text-xl text-ink">Signing you in…</p>
+            <p className="mt-2 text-sm text-muted">Completing Google sign-in.</p>
           </>
         )}
       </div>

@@ -25,7 +25,7 @@ export default function OfferProgressBar({ subtotal = 0, compact = false }) {
     <div className="offer-progress-bar-container w-full" role="group" aria-label="Shopping benefits progress">
       {/* Progress track */}
       <div
-        className="relative h-2 w-full rounded-full bg-[#ebe6df] overflow-hidden"
+        className="relative h-2 w-full rounded-full bg-mist overflow-hidden"
         role="progressbar"
         aria-valuenow={Math.round(clampedSubtotal)}
         aria-valuemin={0}
@@ -38,10 +38,10 @@ export default function OfferProgressBar({ subtotal = 0, compact = false }) {
           style={{
             width: `${percent}%`,
             background: giftReached
-              ? 'linear-gradient(90deg, #D4AF37, #E9C349)'
+              ? 'linear-gradient(90deg, #1fa79a, #1fa79a)'
               : couponReached
-                ? 'linear-gradient(90deg, #D4AF37, #C9A96E)'
-                : 'linear-gradient(90deg, #847377, #a08589)',
+                ? 'linear-gradient(90deg, #1fa79a, #1fa79a)'
+                : 'linear-gradient(90deg, #6b6b6b, #a08589)',
           }}
         />
 
@@ -52,7 +52,7 @@ export default function OfferProgressBar({ subtotal = 0, compact = false }) {
         >
           <div
             className={`h-full w-full rounded-full transition-colors duration-300 ${
-              couponReached ? 'bg-[#D4AF37]' : 'bg-[#b9b0a8]'
+              couponReached ? 'bg-ink' : 'bg-[#b9b0a8]'
             }`}
           />
         </div>
@@ -66,10 +66,10 @@ export default function OfferProgressBar({ subtotal = 0, compact = false }) {
             className="absolute flex flex-col items-center -translate-x-1/2"
             style={{ left: `${couponPos}%` }}
           >
-            <span className={couponReached ? 'text-[#8B6914]' : 'text-[#847377]'}>
+            <span className={couponReached ? 'text-accent-ink' : 'text-muted'}>
               {formatOfferAmount(coupon.threshold)}
             </span>
-            <span className={`mt-0.5 uppercase tracking-[0.06em] whitespace-nowrap ${couponReached ? 'text-[#8B6914] font-bold' : 'text-[#847377]'}`}>
+            <span className={`mt-0.5 uppercase tracking-[0.06em] whitespace-nowrap ${couponReached ? 'text-accent-ink font-bold' : 'text-muted'}`}>
               {coupon.label}
             </span>
           </div>
@@ -79,10 +79,10 @@ export default function OfferProgressBar({ subtotal = 0, compact = false }) {
             className="absolute flex flex-col items-end right-0"
             style={{ right: '0px' }}
           >
-            <span className={giftReached ? 'text-[#8B6914]' : 'text-[#847377]'}>
+            <span className={giftReached ? 'text-accent-ink' : 'text-muted'}>
               {formatOfferAmount(freeGift.threshold)}
             </span>
-            <span className={`mt-0.5 uppercase tracking-[0.06em] whitespace-nowrap ${giftReached ? 'text-[#8B6914] font-bold' : 'text-[#847377]'}`}>
+            <span className={`mt-0.5 uppercase tracking-[0.06em] whitespace-nowrap ${giftReached ? 'text-accent-ink font-bold' : 'text-muted'}`}>
               🎁 Free Gift
             </span>
           </div>

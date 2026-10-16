@@ -1,3 +1,5 @@
+import { productPath } from './productUrl'
+
 /**
  * VELISQA Cart Offers — Centralized Configuration & Calculation
  *
@@ -125,7 +127,7 @@ export function buildFreeGiftLineItem(product) {
     price: 0,
     mrp: null,
     imageUrl: product.image_url || product.imageUrl,
-    productUrl: `/product/${product.id}`,
+    productUrl: productPath(product),
     stock: 999,
     outOfStock: false,
     quantity: 1,

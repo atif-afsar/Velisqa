@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import SEOHead from "../Components/SEO/SEOHead";
 import WhatsAppCTA from "../Components/WhatsApp/WhatsAppCTA";
-import HomeFooter from "../Components/Home/HomeFooter";
 import { buildBreadcrumbSchema } from "../Components/SEO/schemaBuilders";
 import { pageSeo } from "../Components/SEO/seoData";
 
@@ -17,11 +16,11 @@ export default function Order() {
           ]),
         ]}
       />
-      <main className="page-offset-nav bg-[#f9f5f0] text-[#130006]">
+      <main className="page-offset-nav bg-mist text-ink">
         <section className="container-stitch px-4 py-12 text-center sm:py-16 md:py-20">
-          <p className="type-label text-[#847377]">Private Concierge</p>
+          <p className="type-label text-muted">Private Concierge</p>
           <h1 className="mt-3 type-section">Order Velisqa on WhatsApp</h1>
-          <p className="mx-auto mt-5 max-w-xl type-body-luxury text-[#514347]">
+          <p className="mx-auto mt-5 max-w-xl type-body-luxury text-body">
             Reserve necklaces, rings, bangles, and earrings with our concierge. Share your preferred
             piece, occasion, and city — we confirm pricing, availability, and delivery on WhatsApp.
           </p>
@@ -31,32 +30,31 @@ export default function Order() {
             </WhatsAppCTA>
             <Link
               to="/collections"
-              className="tap-target inline-flex items-center justify-center rounded-full border border-[#3d0a21] px-8 py-4 type-button text-[#3d0a21] transition hover:bg-[#3d0a21]/5"
+              className="tap-target inline-flex items-center justify-center rounded-full border border-ink px-8 py-4 type-button text-ink transition hover:bg-ink/5"
             >
               Browse Collections
             </Link>
           </div>
-          <p className="mx-auto mt-8 max-w-lg text-xs font-medium text-[#847377]">
+          <p className="mx-auto mt-8 max-w-lg text-xs font-medium text-muted">
             Prefer to read first? Visit our{" "}
-            <Link to="/faq" className="text-[#6f334a] underline-offset-2 hover:underline">
+            <Link to="/faq" className="text-ink underline-offset-2 hover:underline">
               FAQ
             </Link>
             ,{" "}
-            <Link to="/contact" className="text-[#6f334a] underline-offset-2 hover:underline">
+            <Link to="/contact" className="text-ink underline-offset-2 hover:underline">
               Contact
             </Link>
             , or our{" "}
-            <Link to="/shipping-delivery" className="text-[#6f334a] underline-offset-2 hover:underline">
+            <Link to="/shipping-delivery" className="text-ink underline-offset-2 hover:underline">
               Shipping &amp; Delivery
             </Link>{" "}
             and{" "}
-            <Link to="/refund-cancellation" className="text-[#6f334a] underline-offset-2 hover:underline">
+            <Link to="/refund-cancellation" className="text-ink underline-offset-2 hover:underline">
               Refund &amp; Cancellation
             </Link>{" "}
             policies.
           </p>
         </section>
-        <HomeFooter />
       </main>
     </>
   );

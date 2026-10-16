@@ -498,21 +498,21 @@ export default function Checkout() {
         canonicalPath="/checkout"
         noindex
       />
-      <main className="page-offset-nav min-h-screen bg-[#F8F6F3] text-[#1A1A1A] pb-24 lg:pb-8 w-full overflow-x-hidden">
+      <main className="page-offset-nav min-h-screen bg-mist text-ink pb-24 lg:pb-8 w-full overflow-x-hidden">
         
         {/* Mobile Header Bar */}
-        <div className="flex items-center justify-between border-b border-[#3B0D23]/5 bg-white px-4 py-3 lg:hidden">
-          <Link to="/cart" className="text-xs font-bold text-[#847377] uppercase tracking-[0.1em]">&larr; Back</Link>
-          <span className="font-serif text-base font-bold text-[#3B0D23]">VELISQA</span>
+        <div className="flex items-center justify-between border-b border-ink/5 bg-white px-4 py-3 lg:hidden">
+          <Link to="/cart" className="text-xs font-bold text-muted uppercase tracking-[0.1em]">&larr; Back</Link>
+          <span className="font-serif text-base font-bold text-ink">VELISQA</span>
           <span className="w-10"></span> {/* Spacer */}
         </div>
 
         <div className="container-stitch mx-auto max-w-[1280px] py-6 w-full overflow-hidden min-w-0">
           
           {/* Desktop Heading */}
-          <div className="hidden lg:flex items-center justify-between mb-8 border-b border-[#3B0D23]/5 pb-4">
-            <h1 className="font-serif text-2xl font-semibold text-[#3B0D23]">Secure Checkout</h1>
-            <Link to="/cart" className="text-xs font-bold uppercase tracking-[0.1em] text-[#847377] hover:text-[#3B0D23]">&larr; Back to Bag</Link>
+          <div className="hidden lg:flex items-center justify-between mb-8 border-b border-ink/5 pb-4">
+            <h1 className="font-serif text-2xl font-semibold text-ink">Secure Checkout</h1>
+            <Link to="/cart" className="text-xs font-bold uppercase tracking-[0.1em] text-muted hover:text-ink">&larr; Back to Bag</Link>
           </div>
 
           <div className="grid gap-8 lg:grid-cols-[1fr_420px] w-full min-w-0">
@@ -521,24 +521,24 @@ export default function Checkout() {
             <form onSubmit={handleCheckoutSubmit} className="space-y-6 w-full min-w-0">
               
               {/* CONTACT DETAILS */}
-              <div className="rounded-2xl border border-[#D4AF37]/15 bg-white p-5 sm:p-6 shadow-[0_8px_30px_rgb(0,0,0,0.02)] space-y-5 w-full min-w-0 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-                <div className="flex items-center gap-2.5 pb-3.5 border-b border-[#3B0D23]/5 mb-2">
-                  <div className="flex items-center justify-center w-7 h-7 rounded-full bg-[#3B0D23]/5 text-[#3B0D23]">
+              <div className="rounded-2xl border border-line bg-white p-5 sm:p-6 shadow-[0_8px_30px_rgb(0,0,0,0.02)] space-y-5 w-full min-w-0 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+                <div className="flex items-center gap-2.5 pb-3.5 border-b border-ink/5 mb-2">
+                  <div className="flex items-center justify-center w-7 h-7 rounded-full bg-ink/5 text-ink">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.206" />
                     </svg>
                   </div>
-                  <h3 className="font-serif text-base font-bold text-[#3B0D23] tracking-wide">Contact Information</h3>
+                  <h3 className="font-serif text-base font-bold text-ink tracking-wide">Contact Information</h3>
                 </div>
                 
                 <div className="grid gap-5 grid-cols-1 sm:grid-cols-2">
                   {/* Mobile Number */}
                   <div className="space-y-1.5">
-                    <label className="block text-[11px] font-bold uppercase tracking-[0.06em] text-[#514347]">
-                      Mobile Number <span className="text-[#3B0D23]/60">*</span>
+                    <label className="block text-[11px] font-bold uppercase tracking-[0.06em] text-body">
+                      Mobile Number <span className="text-ink/60">*</span>
                     </label>
                     <div className="relative group">
-                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#514347]/50 group-focus-within:text-[#3B0D23] transition-colors duration-200">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-body/50 group-focus-within:text-ink transition-colors duration-200">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                         </svg>
@@ -549,18 +549,18 @@ export default function Checkout() {
                         placeholder="e.g. 9876543210"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        className="w-full rounded-xl border border-[#3B0D23]/10 pl-10 pr-3.5 py-3 text-base sm:text-sm text-[#1A1A1A] bg-white/50 backdrop-blur-[2px] outline-none transition-all duration-200 focus:border-[#3B0D23] focus:bg-white focus:ring-2 focus:ring-[#3B0D23]/10 font-medium placeholder-[#514347]/30"
+                        className="w-full rounded-xl border border-ink/10 pl-10 pr-3.5 py-3 text-base sm:text-sm text-ink bg-white/50 backdrop-blur-[2px] outline-none transition-all duration-200 focus:border-ink focus:bg-white focus:ring-2 focus:ring-ink/10 font-medium placeholder-body/30"
                       />
                     </div>
                   </div>
 
                   {/* Email Address */}
                   <div className="space-y-1.5">
-                    <label className="block text-[11px] font-bold uppercase tracking-[0.06em] text-[#514347]">
+                    <label className="block text-[11px] font-bold uppercase tracking-[0.06em] text-body">
                       Email Address <span className="text-gray-400 font-normal">(Optional)</span>
                     </label>
                     <div className="relative group">
-                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#514347]/50 group-focus-within:text-[#3B0D23] transition-colors duration-200">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-body/50 group-focus-within:text-ink transition-colors duration-200">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
@@ -570,7 +570,7 @@ export default function Checkout() {
                         placeholder="e.g. customer@gmail.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full rounded-xl border border-[#3B0D23]/10 pl-10 pr-3.5 py-3 text-base sm:text-sm text-[#1A1A1A] bg-white/50 backdrop-blur-[2px] outline-none transition-all duration-200 focus:border-[#3B0D23] focus:bg-white focus:ring-2 focus:ring-[#3B0D23]/10 font-medium placeholder-[#514347]/30"
+                        className="w-full rounded-xl border border-ink/10 pl-10 pr-3.5 py-3 text-base sm:text-sm text-ink bg-white/50 backdrop-blur-[2px] outline-none transition-all duration-200 focus:border-ink focus:bg-white focus:ring-2 focus:ring-ink/10 font-medium placeholder-body/30"
                       />
                     </div>
                   </div>
@@ -578,25 +578,25 @@ export default function Checkout() {
               </div>
 
               {/* SHIPPING ADDRESS */}
-              <div className="rounded-2xl border border-[#D4AF37]/15 bg-white p-5 sm:p-6 shadow-[0_8px_30px_rgb(0,0,0,0.02)] space-y-5 w-full min-w-0 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-                <div className="flex items-center gap-2.5 pb-3.5 border-b border-[#3B0D23]/5 mb-2">
-                  <div className="flex items-center justify-center w-7 h-7 rounded-full bg-[#3B0D23]/5 text-[#3B0D23]">
+              <div className="rounded-2xl border border-line bg-white p-5 sm:p-6 shadow-[0_8px_30px_rgb(0,0,0,0.02)] space-y-5 w-full min-w-0 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+                <div className="flex items-center gap-2.5 pb-3.5 border-b border-ink/5 mb-2">
+                  <div className="flex items-center justify-center w-7 h-7 rounded-full bg-ink/5 text-ink">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                   </div>
-                  <h3 className="font-serif text-base font-bold text-[#3B0D23] tracking-wide">Delivery Address</h3>
+                  <h3 className="font-serif text-base font-bold text-ink tracking-wide">Delivery Address</h3>
                 </div>
 
                 <div className="grid gap-5 grid-cols-1 sm:grid-cols-2">
                   {/* Full Name */}
                   <div className="space-y-1.5 sm:col-span-2">
-                    <label className="block text-[11px] font-bold uppercase tracking-[0.06em] text-[#514347]">
-                      Full Name <span className="text-[#3B0D23]/60">*</span>
+                    <label className="block text-[11px] font-bold uppercase tracking-[0.06em] text-body">
+                      Full Name <span className="text-ink/60">*</span>
                     </label>
                     <div className="relative group">
-                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#514347]/50 group-focus-within:text-[#3B0D23] transition-colors duration-200">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-body/50 group-focus-within:text-ink transition-colors duration-200">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
@@ -607,7 +607,7 @@ export default function Checkout() {
                         placeholder="Enter your full name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="w-full rounded-xl border border-[#3B0D23]/10 pl-10 pr-3.5 py-3 text-base sm:text-sm text-[#1A1A1A] bg-white/50 backdrop-blur-[2px] outline-none transition-all duration-200 focus:border-[#3B0D23] focus:bg-white focus:ring-2 focus:ring-[#3B0D23]/10 font-medium placeholder-[#514347]/30"
+                        className="w-full rounded-xl border border-ink/10 pl-10 pr-3.5 py-3 text-base sm:text-sm text-ink bg-white/50 backdrop-blur-[2px] outline-none transition-all duration-200 focus:border-ink focus:bg-white focus:ring-2 focus:ring-ink/10 font-medium placeholder-body/30"
                       />
                     </div>
                   </div>
@@ -616,11 +616,11 @@ export default function Checkout() {
                   <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
                     {/* Pincode */}
                     <div className="space-y-1.5">
-                      <label className="block text-[11px] font-bold uppercase tracking-[0.06em] text-[#514347]">
-                        Pincode <span className="text-[#3B0D23]/60">*</span>
+                      <label className="block text-[11px] font-bold uppercase tracking-[0.06em] text-body">
+                        Pincode <span className="text-ink/60">*</span>
                       </label>
                       <div className="relative group">
-                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#514347]/50 group-focus-within:text-[#3B0D23] transition-colors duration-200">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-body/50 group-focus-within:text-ink transition-colors duration-200">
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                             <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -633,17 +633,17 @@ export default function Checkout() {
                           placeholder="6-digit PIN"
                           value={pincode}
                           onChange={handlePincodeChange}
-                          className={`w-full rounded-xl border pl-10 pr-10 py-3 text-base sm:text-sm text-[#1A1A1A] bg-white/50 backdrop-blur-[2px] outline-none transition-all duration-200 focus:bg-white focus:ring-2 focus:ring-[#3B0D23]/10 font-medium placeholder-[#514347]/30 ${
+                          className={`w-full rounded-xl border pl-10 pr-10 py-3 text-base sm:text-sm text-ink bg-white/50 backdrop-blur-[2px] outline-none transition-all duration-200 focus:bg-white focus:ring-2 focus:ring-ink/10 font-medium placeholder-body/30 ${
                             pincodeStatus === 'available'
                               ? 'border-emerald-300 focus:border-emerald-600 focus:ring-emerald-600/10'
                               : pincodeStatus === 'invalid'
                               ? 'border-red-300 focus:border-red-600 focus:ring-red-600/10'
-                              : 'border-[#3B0D23]/10 focus:border-[#3B0D23]'
+                              : 'border-ink/10 focus:border-ink'
                           }`}
                         />
                         <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                           {resolvingPincode && (
-                            <svg className="animate-spin h-4 w-4 text-[#847377]" fill="none" viewBox="0 0 24 24">
+                            <svg className="animate-spin h-4 w-4 text-muted" fill="none" viewBox="0 0 24 24">
                               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                             </svg>
@@ -662,7 +662,7 @@ export default function Checkout() {
                       </div>
                       {(pincodeMessage || resolvingPincode) && (
                         <div className="text-[11px] font-semibold mt-1">
-                          {resolvingPincode && <span className="text-[#847377] animate-pulse">Resolving location…</span>}
+                          {resolvingPincode && <span className="text-muted animate-pulse">Resolving location…</span>}
                           {!resolvingPincode && pincodeStatus === 'available' && <span className="text-emerald-700">✓ {pincodeMessage}</span>}
                           {!resolvingPincode && pincodeStatus === 'invalid' && <span className="text-red-700">✗ {pincodeMessage}</span>}
                         </div>
@@ -675,7 +675,7 @@ export default function Checkout() {
                         City
                       </label>
                       <div className="relative group">
-                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#514347]/40">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-body/40">
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                           </svg>
@@ -685,7 +685,7 @@ export default function Checkout() {
                           placeholder="District / City"
                           value={city}
                           onChange={(e) => setCity(e.target.value)}
-                          className="w-full rounded-xl border border-[#3B0D23]/10 pl-10 pr-3.5 py-3 text-base sm:text-sm text-[#1A1A1A] bg-[#3B0D23]/[0.02] outline-none font-medium placeholder-[#514347]/30 focus:border-[#3B0D23] focus:bg-white focus:ring-2 focus:ring-[#3B0D23]/10 transition-all duration-200"
+                          className="w-full rounded-xl border border-ink/10 pl-10 pr-3.5 py-3 text-base sm:text-sm text-ink bg-ink/[0.02] outline-none font-medium placeholder-body/30 focus:border-ink focus:bg-white focus:ring-2 focus:ring-ink/10 transition-all duration-200"
                         />
                       </div>
                     </div>
@@ -696,7 +696,7 @@ export default function Checkout() {
                         State
                       </label>
                       <div className="relative group">
-                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#514347]/40">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-body/40">
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                           </svg>
@@ -706,7 +706,7 @@ export default function Checkout() {
                           placeholder="State"
                           value={state}
                           onChange={(e) => setState(e.target.value)}
-                          className="w-full rounded-xl border border-[#3B0D23]/10 pl-10 pr-3.5 py-3 text-base sm:text-sm text-[#1A1A1A] bg-[#3B0D23]/[0.02] outline-none font-medium placeholder-[#514347]/30 focus:border-[#3B0D23] focus:bg-white focus:ring-2 focus:ring-[#3B0D23]/10 transition-all duration-200"
+                          className="w-full rounded-xl border border-ink/10 pl-10 pr-3.5 py-3 text-base sm:text-sm text-ink bg-ink/[0.02] outline-none font-medium placeholder-body/30 focus:border-ink focus:bg-white focus:ring-2 focus:ring-ink/10 transition-all duration-200"
                         />
                       </div>
                     </div>
@@ -714,11 +714,11 @@ export default function Checkout() {
 
                   {/* Street Address */}
                   <div className="space-y-1.5 sm:col-span-2">
-                    <label className="block text-[11px] font-bold uppercase tracking-[0.06em] text-[#514347]">
-                      Street Address <span className="text-[#3B0D23]/60">*</span>
+                    <label className="block text-[11px] font-bold uppercase tracking-[0.06em] text-body">
+                      Street Address <span className="text-ink/60">*</span>
                     </label>
                     <div className="relative group">
-                      <div className="absolute top-3.5 left-3.5 flex items-start pointer-events-none text-[#514347]/50 group-focus-within:text-[#3B0D23] transition-colors duration-200">
+                      <div className="absolute top-3.5 left-3.5 flex items-start pointer-events-none text-body/50 group-focus-within:text-ink transition-colors duration-200">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                         </svg>
@@ -729,18 +729,18 @@ export default function Checkout() {
                         placeholder="House number, building name, street name/area"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
-                        className="w-full rounded-xl border border-[#3B0D23]/10 pl-10 pr-3.5 py-3 text-base sm:text-sm text-[#1A1A1A] bg-white/50 backdrop-blur-[2px] outline-none transition-all duration-200 focus:border-[#3B0D23] focus:bg-white focus:ring-2 focus:ring-[#3B0D23]/10 font-medium placeholder-[#514347]/30 resize-none"
+                        className="w-full rounded-xl border border-ink/10 pl-10 pr-3.5 py-3 text-base sm:text-sm text-ink bg-white/50 backdrop-blur-[2px] outline-none transition-all duration-200 focus:border-ink focus:bg-white focus:ring-2 focus:ring-ink/10 font-medium placeholder-body/30 resize-none"
                       />
                     </div>
                   </div>
 
                   {/* Delivery Notes */}
                   <div className="space-y-1.5 sm:col-span-2">
-                    <label className="block text-[11px] font-bold uppercase tracking-[0.06em] text-[#514347]">
+                    <label className="block text-[11px] font-bold uppercase tracking-[0.06em] text-body">
                       Delivery Notes <span className="text-gray-400 font-normal">(Optional)</span>
                     </label>
                     <div className="relative group">
-                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#514347]/50 group-focus-within:text-[#3B0D23] transition-colors duration-200">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-body/50 group-focus-within:text-ink transition-colors duration-200">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
@@ -750,7 +750,7 @@ export default function Checkout() {
                         placeholder="e.g. Deliver to security guard, ring bell twice, etc."
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
-                        className="w-full rounded-xl border border-[#3B0D23]/10 pl-10 pr-3.5 py-3 text-base sm:text-sm text-[#1A1A1A] bg-white/50 backdrop-blur-[2px] outline-none transition-all duration-200 focus:border-[#3B0D23] focus:bg-white focus:ring-2 focus:ring-[#3B0D23]/10 font-medium placeholder-[#514347]/30"
+                        className="w-full rounded-xl border border-ink/10 pl-10 pr-3.5 py-3 text-base sm:text-sm text-ink bg-white/50 backdrop-blur-[2px] outline-none transition-all duration-200 focus:border-ink focus:bg-white focus:ring-2 focus:ring-ink/10 font-medium placeholder-body/30"
                       />
                     </div>
                   </div>
@@ -758,14 +758,14 @@ export default function Checkout() {
               </div>
 
               {/* PAYMENT OPTION METHOD */}
-              <div className="rounded-2xl border border-[#D4AF37]/15 bg-white p-5 sm:p-6 shadow-[0_8px_30px_rgb(0,0,0,0.02)] space-y-5 w-full min-w-0 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-                <div className="flex items-center gap-2.5 pb-3.5 border-b border-[#3B0D23]/5 mb-2">
-                  <div className="flex items-center justify-center w-7 h-7 rounded-full bg-[#3B0D23]/5 text-[#3B0D23]">
+              <div className="rounded-2xl border border-line bg-white p-5 sm:p-6 shadow-[0_8px_30px_rgb(0,0,0,0.02)] space-y-5 w-full min-w-0 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+                <div className="flex items-center gap-2.5 pb-3.5 border-b border-ink/5 mb-2">
+                  <div className="flex items-center justify-center w-7 h-7 rounded-full bg-ink/5 text-ink">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                     </svg>
                   </div>
-                  <h3 className="font-serif text-base font-bold text-[#3B0D23] tracking-wide">Payment Method</h3>
+                  <h3 className="font-serif text-base font-bold text-ink tracking-wide">Payment Method</h3>
                 </div>
 
                 <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
@@ -774,22 +774,22 @@ export default function Checkout() {
                     onClick={() => setPaymentMethod('online')}
                     className={`relative cursor-pointer flex gap-3.5 p-5 rounded-2xl border-2 transition-all duration-300 select-none ${
                       paymentMethod === 'online'
-                        ? 'border-[#3B0D23] bg-[#3B0D23]/[0.03] shadow-[0_8px_24px_rgba(59,13,35,0.06)]'
-                        : 'border-[#3B0D23]/10 hover:border-[#3B0D23]/25 bg-white hover:bg-slate-50/50'
+                        ? 'border-ink bg-ink/[0.03] shadow-[0_8px_24px_rgba(59,13,35,0.06)]'
+                        : 'border-ink/10 hover:border-ink/25 bg-white hover:bg-slate-50/50'
                     }`}
                   >
                     {/* Recommended Gold Badge */}
-                    <div className="absolute -top-3 right-4 bg-[#D4AF37] text-white text-[10px] font-extrabold uppercase tracking-wider px-3 py-0.5 rounded-full shadow-md z-10">
+                    <div className="absolute -top-3 right-4 bg-ink text-white text-[10px] font-extrabold uppercase tracking-wider px-3 py-0.5 rounded-full shadow-md z-10">
                       ★ Recommended: Free Delivery
                     </div>
 
                     {/* Radio Indicator */}
                     <div className="flex items-start pt-0.5">
                       <div className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition-colors duration-200 ${
-                        paymentMethod === 'online' ? 'border-[#3B0D23] bg-white' : 'border-[#3B0D23]/20'
+                        paymentMethod === 'online' ? 'border-ink bg-white' : 'border-ink/20'
                       }`}>
                         {paymentMethod === 'online' && (
-                          <div className="w-2.5 h-2.5 rounded-full bg-[#3B0D23]" />
+                          <div className="w-2.5 h-2.5 rounded-full bg-ink" />
                         )}
                       </div>
                     </div>
@@ -798,16 +798,16 @@ export default function Checkout() {
                     <div className="flex-1 flex flex-col min-w-0">
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-sm font-bold uppercase tracking-[0.06em] text-[#3B0D23]">Online Payment</span>
+                          <span className="text-sm font-bold uppercase tracking-[0.06em] text-ink">Online Payment</span>
                           <span className="bg-emerald-100 text-emerald-800 text-[10px] font-extrabold px-1.5 py-0.5 rounded uppercase tracking-wide whitespace-nowrap">
                             Save ₹50
                           </span>
                         </div>
-                        <span className="text-sm font-extrabold text-[#3B0D23] whitespace-nowrap">
+                        <span className="text-sm font-extrabold text-ink whitespace-nowrap">
                           {formatInr(onlineTotal)}
                         </span>
                       </div>
-                      <span className="text-xs text-[#514347]/80 mt-1 font-medium leading-relaxed">UPI, Cards, Net Banking & Wallets</span>
+                      <span className="text-xs text-body/80 mt-1 font-medium leading-relaxed">UPI, Cards, Net Banking & Wallets</span>
                       <span className="text-[11px] text-emerald-700 mt-2 font-semibold flex items-center gap-1">
                         <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -823,13 +823,13 @@ export default function Checkout() {
                     className={`relative cursor-pointer flex gap-3.5 p-5 rounded-2xl border-2 transition-all duration-300 select-none ${
                       paymentMethod === 'cod'
                         ? 'border-amber-700 bg-amber-50/20 shadow-[0_8px_24px_rgba(180,83,9,0.04)]'
-                        : 'border-[#3B0D23]/10 hover:border-[#3B0D23]/25 bg-white hover:bg-slate-50/50'
+                        : 'border-ink/10 hover:border-ink/25 bg-white hover:bg-slate-50/50'
                     }`}
                   >
                     {/* Radio Indicator */}
                     <div className="flex items-start pt-0.5">
                       <div className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition-colors duration-200 ${
-                        paymentMethod === 'cod' ? 'border-amber-700 bg-white' : 'border-[#3B0D23]/20'
+                        paymentMethod === 'cod' ? 'border-amber-700 bg-white' : 'border-ink/20'
                       }`}>
                         {paymentMethod === 'cod' && (
                           <div className="w-2.5 h-2.5 rounded-full bg-amber-700" />
@@ -840,12 +840,12 @@ export default function Checkout() {
                     {/* Content */}
                     <div className="flex-1 flex flex-col min-w-0">
                       <div className="flex items-start justify-between gap-2">
-                        <span className="text-sm font-bold uppercase tracking-[0.06em] text-[#514347]">Cash On Delivery</span>
+                        <span className="text-sm font-bold uppercase tracking-[0.06em] text-body">Cash On Delivery</span>
                         <span className="text-sm font-extrabold text-amber-900 whitespace-nowrap">
                           {formatInr(codTotal)}
                         </span>
                       </div>
-                      <span className="text-xs text-[#847377] mt-1 font-medium leading-relaxed">Pay in cash at your doorstep</span>
+                      <span className="text-xs text-muted mt-1 font-medium leading-relaxed">Pay in cash at your doorstep</span>
                       <span className="text-[11px] text-amber-800 font-semibold mt-2.5 flex items-start gap-1.5 leading-tight">
                         <svg className="w-4 h-4 shrink-0 text-amber-600 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -877,7 +877,7 @@ export default function Checkout() {
               <button
                 type="submit"
                 disabled={isSubmitting || pincodeStatus === 'invalid'}
-                className="hidden lg:flex w-full h-10 items-center justify-center rounded-sm bg-[#3B0D23] text-xs font-bold uppercase tracking-[0.1em] text-white hover:bg-[#2A0718] disabled:cursor-not-allowed disabled:opacity-50 shadow-md"
+                className="hidden lg:flex w-full h-10 items-center justify-center rounded-sm bg-ink text-xs font-bold uppercase tracking-[0.1em] text-white hover:bg-ink disabled:cursor-not-allowed disabled:opacity-50 shadow-md"
               >
                 {paymentMethod === 'online' ? `Pay ${formatInr(finalTotal)} Securely` : 'Place COD Order'}
               </button>
@@ -887,30 +887,30 @@ export default function Checkout() {
             {/* RIGHT COLUMN: Order Summary */}
             <div className="space-y-4 self-start w-full min-w-0">
               <OfferProgressCard compact />
-              <div className="rounded-2xl border border-[#D4AF37]/10 bg-white p-5 sm:p-6 shadow-sm space-y-4 w-full min-w-0">
-                <h3 className="font-serif text-base font-semibold text-[#3B0D23] border-b border-[#D4AF37]/10 pb-2">
+              <div className="rounded-2xl border border-line bg-white p-5 sm:p-6 shadow-sm space-y-4 w-full min-w-0">
+                <h3 className="font-serif text-base font-semibold text-ink border-b border-line pb-2">
                   Order Summary ({items.filter(l => !isFreeGiftItem(l)).length} {items.filter(l => !isFreeGiftItem(l)).length === 1 ? 'item' : 'items'})
                 </h3>
 
               {/* Items List */}
-              <ul className="divide-y divide-[#D4AF37]/10 max-h-[300px] overflow-y-auto pr-1">
+              <ul className="divide-y divide-line max-h-[300px] overflow-y-auto pr-1">
                 {items.filter(l => !isFreeGiftItem(l)).map((line) => (
                   <li key={line.productId} className="flex gap-3 py-3 first:pt-0 last:pb-0">
-                    <div className="h-16 w-12 shrink-0 overflow-hidden rounded-md bg-[#F8F6F3]">
+                    <div className="h-16 w-12 shrink-0 overflow-hidden rounded-md bg-mist">
                       {line.imageUrl && <img src={line.imageUrl} alt="" className="h-full w-full object-cover" />}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="font-serif text-xs font-semibold text-[#3B0D23] line-clamp-1">{line.name}</p>
-                      <p className="text-[10px] text-[#847377] mt-0.5">Qty: {line.quantity}</p>
+                      <p className="font-serif text-xs font-semibold text-ink line-clamp-1">{line.name}</p>
+                      <p className="text-[10px] text-muted mt-0.5">Qty: {line.quantity}</p>
                     </div>
-                    <p className="shrink-0 text-xs font-medium tabular-nums text-[#3B0D23]">
+                    <p className="shrink-0 text-xs font-medium tabular-nums text-ink">
                       {formatInr(getCartLineSubtotal(line))}
                     </p>
                   </li>
                 ))}
                 {/* Free Gift in order summary */}
                 {freeGiftInCart && selectedGift && (
-                  <li className="flex gap-3 py-3 border-t border-[#D4AF37]/20">
+                  <li className="flex gap-3 py-3 border-t border-line">
                     <div className="h-16 w-12 shrink-0 overflow-hidden rounded-md bg-[#FFF5DC] grid place-items-center border border-black/5">
                       {selectedGift.imageUrl ? (
                         <img src={selectedGift.imageUrl} alt="" className="h-full w-full object-cover" />
@@ -919,10 +919,10 @@ export default function Checkout() {
                       )}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="font-serif text-xs font-semibold text-[#3B0D23] line-clamp-1">{selectedGift.name}</p>
-                      <p className="text-[10px] text-[#8B6914] font-semibold mt-0.5">Worth {formatInr(selectedGift.giftValue || selectedGift.price)} · FREE</p>
+                      <p className="font-serif text-xs font-semibold text-ink line-clamp-1">{selectedGift.name}</p>
+                      <p className="text-[10px] text-accent-ink font-semibold mt-0.5">Worth {formatInr(selectedGift.giftValue || selectedGift.price)} · FREE</p>
                     </div>
-                    <p className="shrink-0 text-xs font-bold tabular-nums text-[#8B6914]">
+                    <p className="shrink-0 text-xs font-bold tabular-nums text-accent-ink">
                       ₹0
                     </p>
                   </li>
@@ -930,7 +930,7 @@ export default function Checkout() {
               </ul>
 
               {/* Pricing breakdown */}
-              <div className="space-y-2.5 border-t border-[#D4AF37]/10 pt-3 text-xs text-[#514347]">
+              <div className="space-y-2.5 border-t border-line pt-3 text-xs text-body">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
                   <span className="font-medium tabular-nums">{formatInr(subtotal)}</span>
@@ -968,7 +968,7 @@ export default function Checkout() {
                   </div>
                 )}
                 {pincodeStatus === 'available' && (
-                  <div className="flex justify-between border-t border-dashed border-[#D4AF37]/10 pt-2 text-[10px] text-emerald-800">
+                  <div className="flex justify-between border-t border-dashed border-line pt-2 text-[10px] text-emerald-800">
                     <span>Expected Delivery</span>
                     <span className="font-semibold">{expectedDate}</span>
                   </div>
@@ -976,7 +976,7 @@ export default function Checkout() {
               </div>
 
               {/* Apply Coupon widget */}
-              <div className="border-t border-[#D4AF37]/10 pt-3">
+              <div className="border-t border-line pt-3">
                 {appliedCoupon ? (
                   <div className="flex items-center justify-between rounded-lg bg-emerald-50 border border-emerald-100 px-3 py-2 text-xs text-emerald-800">
                     <span className="font-semibold">✓ Code "{appliedCoupon}" applied</span>
@@ -997,11 +997,11 @@ export default function Checkout() {
                         placeholder="Enter coupon code"
                         value={checkoutCouponInput}
                         onChange={(e) => setCheckoutCouponInput(e.target.value)}
-                        className="flex-1 rounded border border-gray-200 px-3 py-1.5 text-xs outline-none focus:border-[#3B0D23]/30 text-[#1A1A1A]"
+                        className="flex-1 rounded border border-gray-200 px-3 py-1.5 text-xs outline-none focus:border-ink/30 text-ink"
                       />
                       <button
                         type="submit"
-                        className="rounded bg-[#3B0D23] px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-white hover:bg-[#2A0718] transition shrink-0"
+                        className="rounded bg-ink px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-white hover:bg-ink transition shrink-0"
                       >
                         Apply
                       </button>
@@ -1013,7 +1013,7 @@ export default function Checkout() {
                 )}
               </div>
 
-              <div className="border-t border-[#D4AF37]/10 pt-3 flex justify-between font-serif text-base font-bold text-[#3B0D23]">
+              <div className="border-t border-line pt-3 flex justify-between font-serif text-base font-bold text-ink">
                 <span>Grand Total</span>
                 <span className="tabular-nums">{formatInr(finalTotal)}</span>
               </div>
@@ -1030,12 +1030,12 @@ export default function Checkout() {
       </div>
 
         {/* MOBILE STICKY BOTTOM CTA */}
-        <div className="fixed bottom-0 left-0 right-0 z-30 border-t border-[#D4AF37]/10 bg-white p-4 lg:hidden shadow-[0_-4px_16px_rgba(19,0,6,0.05)] pb-safe-bottom">
+        <div className="fixed bottom-0 left-0 right-0 z-30 border-t border-line bg-white p-4 lg:hidden shadow-[0_-4px_16px_rgba(17, 17, 17,0.05)] pb-safe-bottom">
           <div className="mx-auto flex max-w-md items-center justify-between gap-4">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#847377]">Total Amount</p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-muted">Total Amount</p>
               <div className="flex flex-col">
-                <p className="font-serif text-lg font-bold text-[#3B0D23] tabular-nums">{formatInr(finalTotal)}</p>
+                <p className="font-serif text-lg font-bold text-ink tabular-nums">{formatInr(finalTotal)}</p>
                 {paymentMethod === 'cod' && (
                   <span className="text-[8px] font-bold text-amber-800 whitespace-nowrap leading-none mt-0.5">
                     Includes ₹50 Delivery Fee & 2% GST
@@ -1048,7 +1048,7 @@ export default function Checkout() {
               type="button"
               disabled={isSubmitting || pincodeStatus === 'invalid'}
               onClick={() => void handleCheckoutSubmit()}
-              className="flex-1 flex h-10 items-center justify-center rounded-sm bg-[#3B0D23] text-xs font-bold uppercase tracking-[0.15em] text-white hover:bg-[#2A0718] disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex-1 flex h-10 items-center justify-center rounded-sm bg-ink text-xs font-bold uppercase tracking-[0.15em] text-white hover:bg-ink disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isSubmitting ? (
                 <span className="flex items-center gap-1.5">

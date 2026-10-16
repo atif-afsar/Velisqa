@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import HomeFooter from "../Components/Home/HomeFooter";
+import { motion } from "../lib/motion";
 import SEOHead from "../Components/SEO/SEOHead";
 import { buildBreadcrumbSchema } from "../Components/SEO/schemaBuilders";
 import { pageSeo } from "../Components/SEO/seoData";
@@ -27,7 +26,7 @@ const fade = {
 
 function ChannelLink({ channel }) {
   const className =
-    "mt-1 inline-block text-sm font-semibold text-[#130006] transition hover:text-[#6f334a] sm:text-base";
+    "mt-1 inline-block text-sm font-semibold text-ink transition hover:text-ink sm:text-base";
 
   if (channel.internal) {
     return (
@@ -62,22 +61,22 @@ export default function Contact() {
           ]),
         ]}
       />
-      <main className="page-offset-nav bg-[#f9f5f0] text-[#130006]">
-        <section className="relative overflow-hidden border-b border-[#d4af37]/15 bg-[#3d0a21] px-4 py-14 text-[#f7ead0] sm:px-6 sm:py-16 md:py-20">
+      <main className="page-offset-nav bg-mist text-ink">
+        <section className="relative overflow-hidden border-b border-line bg-ink px-4 py-14 text-white sm:px-6 sm:py-16 md:py-20">
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_80%_at_50%_-20%,rgba(212,175,55,0.18),transparent_55%)]"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_80%_at_50%_-20%,rgba(17, 17, 17,0.18),transparent_55%)]"
           />
           <div className="container-stitch relative">
             <motion.div initial="hidden" animate="visible" variants={fade}>
               <Link
                 to="/"
-                className="mb-6 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[#d4af37]/80 transition hover:text-[#d4af37] sm:text-[11px]"
+                className="mb-6 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted transition hover:text-accent-ink sm:text-[11px]"
               >
                 ← Back to Home
               </Link>
-              <p className="type-label text-[#d4af37]">{CONTACT_PAGE.eyebrow}</p>
-              <h1 className="mt-3 font-serif text-3xl font-bold tracking-wide text-[#fdf9f4] sm:text-4xl md:text-5xl">
+              <p className="type-label text-muted">{CONTACT_PAGE.eyebrow}</p>
+              <h1 className="mt-3 font-serif text-3xl font-bold tracking-wide text-white sm:text-4xl md:text-5xl">
                 {CONTACT_PAGE.title}
               </h1>
               <p className="mt-4 max-w-2xl text-sm font-semibold leading-relaxed text-white/70 sm:text-base">
@@ -100,9 +99,9 @@ export default function Contact() {
             <aside className="lg:sticky lg:top-24 lg:self-start">
               <nav
                 aria-label="Help and policies"
-                className="rounded-2xl border border-[#d4af37]/15 bg-white/60 p-4 shadow-[0_12px_40px_rgba(19,0,6,0.06)] backdrop-blur-sm sm:p-5"
+                className="rounded-2xl border border-line bg-white/60 p-4 shadow-[0_12px_40px_rgba(17, 17, 17,0.06)] backdrop-blur-sm sm:p-5"
               >
-                <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.22em] text-[#847377]">
+                <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.22em] text-muted">
                   Help & Policies
                 </p>
                 <ul className="flex flex-col gap-1">
@@ -114,8 +113,8 @@ export default function Contact() {
                           to={item.path}
                           className={`tap-target block rounded-lg px-3 py-2.5 text-xs font-bold tracking-wide transition ${
                             active
-                              ? "bg-[#3d0a21] text-[#d4af37] shadow-sm"
-                              : "text-[#514347] hover:bg-[#f1ede8] hover:text-[#130006]"
+                              ? "bg-ink text-white shadow-sm"
+                              : "text-body hover:bg-mist hover:text-ink"
                           }`}
                           aria-current={active ? "page" : undefined}
                         >
@@ -133,13 +132,13 @@ export default function Contact() {
                 {CONTACT_CHANNELS.map((channel) => (
                   <article
                     key={channel.id}
-                    className="rounded-2xl border border-[#847377]/10 bg-white/50 p-5 shadow-[0_8px_32px_rgba(19,0,6,0.04)] sm:p-6"
+                    className="rounded-2xl border border-muted/10 bg-white/50 p-5 shadow-[0_8px_32px_rgba(17, 17, 17,0.04)] sm:p-6"
                   >
-                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#847377]">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted">
                       {channel.label}
                     </p>
                     <ChannelLink channel={channel} />
-                    <p className="mt-3 text-sm font-semibold leading-relaxed text-[#514347]">
+                    <p className="mt-3 text-sm font-semibold leading-relaxed text-body">
                       {channel.description}
                     </p>
                   </article>
@@ -148,49 +147,49 @@ export default function Contact() {
 
               <motion.section
                 variants={fade}
-                className="rounded-2xl border border-[#847377]/10 bg-white/50 p-5 shadow-[0_8px_32px_rgba(19,0,6,0.04)] sm:p-7 md:p-8"
+                className="rounded-2xl border border-muted/10 bg-white/50 p-5 shadow-[0_8px_32px_rgba(17, 17, 17,0.04)] sm:p-7 md:p-8"
               >
-                <h2 className="font-serif text-xl font-bold text-[#130006] sm:text-2xl">
+                <h2 className="font-serif text-xl font-bold text-ink sm:text-2xl">
                   Flagship Salon — Mumbai
                 </h2>
-                <address className="mt-4 not-italic space-y-1 text-sm font-semibold leading-relaxed text-[#514347] sm:text-[0.95rem]">
+                <address className="mt-4 not-italic space-y-1 text-sm font-semibold leading-relaxed text-body sm:text-[0.95rem]">
                   {SALON_ADDRESS_LINES.map((line) => (
                     <p key={line}>{line}</p>
                   ))}
                 </address>
                 <dl className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
                   <div>
-                    <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#847377]">
+                    <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">
                       Hours
                     </dt>
-                    <dd className="mt-1 font-semibold text-[#514347]">{SALON_HOURS}</dd>
+                    <dd className="mt-1 font-semibold text-body">{SALON_HOURS}</dd>
                   </div>
                   <div>
-                    <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#847377]">
+                    <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">
                       Visits
                     </dt>
-                    <dd className="mt-1 font-semibold text-[#514347]">{SALON_NOTE}</dd>
+                    <dd className="mt-1 font-semibold text-body">{SALON_NOTE}</dd>
                   </div>
                   <div>
-                    <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#847377]">
+                    <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">
                       Brand origin
                     </dt>
-                    <dd className="mt-1 font-semibold text-[#514347]">{BRAND_ORIGIN}</dd>
+                    <dd className="mt-1 font-semibold text-body">{BRAND_ORIGIN}</dd>
                   </div>
                   <div>
-                    <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#847377]">
+                    <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">
                       Service area
                     </dt>
-                    <dd className="mt-1 font-semibold text-[#514347]">{AREA_SERVED}</dd>
+                    <dd className="mt-1 font-semibold text-body">{AREA_SERVED}</dd>
                   </div>
                 </dl>
               </motion.section>
 
               <motion.section
                 variants={fade}
-                className="rounded-2xl border border-[#847377]/10 bg-white/50 p-5 shadow-[0_8px_32px_rgba(19,0,6,0.04)] sm:p-7 md:p-8"
+                className="rounded-2xl border border-muted/10 bg-white/50 p-5 shadow-[0_8px_32px_rgba(17, 17, 17,0.04)] sm:p-7 md:p-8"
               >
-                <h2 className="font-serif text-xl font-bold text-[#130006] sm:text-2xl">Social</h2>
+                <h2 className="font-serif text-xl font-bold text-ink sm:text-2xl">Social</h2>
                 <ul className="mt-4 space-y-3">
                   {SOCIAL_LINKS.map((social) => (
                     <li key={social.id}>
@@ -200,10 +199,10 @@ export default function Contact() {
                         rel="noreferrer"
                         className="group flex flex-wrap items-baseline justify-between gap-2"
                       >
-                        <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#847377]">
+                        <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">
                           {social.label}
                         </span>
-                        <span className="text-sm font-semibold text-[#130006] transition group-hover:text-[#6f334a]">
+                        <span className="text-sm font-semibold text-ink transition group-hover:text-ink">
                           {social.handle}
                         </span>
                       </a>
@@ -214,24 +213,24 @@ export default function Contact() {
 
               <motion.section
                 variants={fade}
-                className="rounded-2xl border border-[#847377]/10 bg-white/50 p-5 shadow-[0_8px_32px_rgba(19,0,6,0.04)] sm:p-7 md:p-8"
+                className="rounded-2xl border border-muted/10 bg-white/50 p-5 shadow-[0_8px_32px_rgba(17, 17, 17,0.04)] sm:p-7 md:p-8"
               >
-                <h2 className="font-serif text-xl font-bold text-[#130006] sm:text-2xl">
+                <h2 className="font-serif text-xl font-bold text-ink sm:text-2xl">
                   Ordering & payments
                 </h2>
-                <ul className="mt-4 space-y-3 text-sm font-semibold leading-relaxed text-[#514347] sm:text-[0.95rem]">
+                <ul className="mt-4 space-y-3 text-sm font-semibold leading-relaxed text-body sm:text-[0.95rem]">
                   <li>{PAYMENT_METHODS}.</li>
                   <li>Concierge languages: {LANGUAGES}.</li>
                   <li>
                     For shipping timelines see our{" "}
-                    <Link to="/shipping-delivery" className="text-[#6f334a] underline-offset-2 hover:underline">
+                    <Link to="/shipping-delivery" className="text-ink underline-offset-2 hover:underline">
                       Shipping & Delivery Policy
                     </Link>
                     .
                   </li>
                   <li>
                     For returns and refunds see our{" "}
-                    <Link to="/refund-cancellation" className="text-[#6f334a] underline-offset-2 hover:underline">
+                    <Link to="/refund-cancellation" className="text-ink underline-offset-2 hover:underline">
                       Refund & Cancellation Policy
                     </Link>
                     .
@@ -241,10 +240,10 @@ export default function Contact() {
 
               <motion.div
                 variants={fade}
-                className="flex flex-col items-stretch justify-between gap-4 rounded-2xl border border-[#d4af37]/20 bg-gradient-to-br from-[#3d0a21] to-[#4c172f] p-6 text-[#f7ead0] sm:flex-row sm:items-center sm:p-8"
+                className="flex flex-col items-stretch justify-between gap-4 rounded-2xl border border-line bg-gradient-to-br from-ink to-[#4c172f] p-6 text-white sm:flex-row sm:items-center sm:p-8"
               >
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#d4af37]">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted">
                     Fastest response
                   </p>
                   <p className="mt-2 font-serif text-lg font-bold sm:text-xl">
@@ -259,7 +258,6 @@ export default function Contact() {
           </motion.div>
         </div>
 
-        <HomeFooter />
       </main>
     </>
   );

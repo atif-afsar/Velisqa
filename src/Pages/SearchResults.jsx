@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import ProductCard from '../Components/Product/ProductCard'
 import SEOHead from '../Components/SEO/SEOHead'
-import HomeFooter from '../Components/Home/HomeFooter'
 import ProductFilters, { ProductFilterSidebar } from '../Components/Collections/ProductFilters'
 import { useProducts } from '../hooks/useProducts'
 import { searchProducts } from '../lib/productSearch'
@@ -75,10 +74,10 @@ export default function SearchResults() {
         noindex
       />
 
-      <main className="page-offset-nav min-h-[70vh] bg-[#fdf9f4] text-[#130006]">
-        <header className="border-b border-[#847377]/10 bg-[radial-gradient(circle_at_top,rgba(212,175,55,0.12),transparent_60%)]">
+      <main className="page-offset-nav min-h-[70vh] bg-paper text-ink">
+        <header className="border-b border-muted/10 bg-[radial-gradient(circle_at_top,rgba(17, 17, 17,0.12),transparent_60%)]">
           <div className="container-stitch px-4 py-8 text-center sm:px-6 sm:py-12">
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#847377]">Discover Velisqa</p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">Discover Velisqa</p>
             <h1 className="mt-2 font-serif text-3xl sm:text-4xl">Search jewellery</h1>
             <SearchForm key={query} initialValue={query} onSubmit={submitSearch} />
           </div>
@@ -103,10 +102,10 @@ export default function SearchResults() {
             <>
               <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">Search results</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted">Search results</p>
                   <h2 className="mt-1 font-serif text-2xl">“{query}”</h2>
                 </div>
-                <p className="text-sm text-[#847377]">
+                <p className="text-sm text-muted">
                   {results.length} piece{results.length === 1 ? '' : 's'} found
                 </p>
               </div>
@@ -132,10 +131,10 @@ export default function SearchResults() {
                   </div>
                 </div>
               ) : (
-                <div className="rounded-2xl border border-[#d4af37]/20 bg-white/55 px-5 py-12 text-center">
+                <div className="rounded-2xl border border-line bg-white/55 px-5 py-12 text-center">
                   <p className="font-serif text-xl">No search results match these filters</p>
-                  <p className="mt-2 text-sm text-[#847377]">Remove one filter or clear all to see more pieces.</p>
-                  <button type="button" onClick={clearFilters} className="mt-5 rounded-full bg-[#3d0a21] px-5 py-2.5 text-xs font-bold uppercase tracking-[0.12em] text-[#f7ead0]">
+                  <p className="mt-2 text-sm text-muted">Remove one filter or clear all to see more pieces.</p>
+                  <button type="button" onClick={clearFilters} className="mt-5 rounded-full bg-ink px-5 py-2.5 text-xs font-bold uppercase tracking-[0.12em] text-white">
                     Clear all filters
                   </button>
                 </div>
@@ -144,7 +143,7 @@ export default function SearchResults() {
           ) : (
             <div className="mx-auto max-w-xl py-10 text-center">
               <p className="font-serif text-2xl">No pieces matched “{query}”</p>
-              <p className="mt-2 text-sm leading-relaxed text-[#847377]">
+              <p className="mt-2 text-sm leading-relaxed text-muted">
                 Try a broader category, a metal such as gold or silver, or one of these popular searches.
               </p>
               <div className="mt-6">
@@ -154,7 +153,6 @@ export default function SearchResults() {
           )}
         </section>
       </main>
-      <HomeFooter />
     </>
   )
 }
@@ -162,14 +160,14 @@ export default function SearchResults() {
 function SearchAlternatives({ onChoose, compact = false }) {
   return (
     <div className={compact ? '' : 'mx-auto max-w-3xl py-8 text-center'}>
-      {!compact && <h2 className="font-serif text-2xl text-[#130006]">Popular searches</h2>}
+      {!compact && <h2 className="font-serif text-2xl text-ink">Popular searches</h2>}
       <div className="mt-4 flex flex-wrap justify-center gap-2">
         {POPULAR_SEARCHES.map((item) => (
           <button
             key={item.query}
             type="button"
             onClick={() => onChoose(item.query)}
-            className="rounded-full border border-[#3d0a21]/20 bg-white px-4 py-2 text-xs font-medium text-[#514347] transition hover:border-[#3d0a21]/45 hover:text-[#130006]"
+            className="rounded-full border border-ink/20 bg-white px-4 py-2 text-xs font-medium text-body transition hover:border-ink/45 hover:text-ink"
           >
             {item.label}
           </button>
@@ -196,9 +194,9 @@ function SearchForm({ initialValue, onSubmit }) {
         value={value}
         onChange={(event) => setValue(event.target.value)}
         placeholder="Try “gold ring” or “gifts under 1500”"
-        className="min-h-12 min-w-0 flex-1 rounded-full border border-[#3d0a21]/20 bg-white px-5 text-sm outline-none focus:border-[#3d0a21]/45 focus:ring-2 focus:ring-[#d4af37]/20"
+        className="min-h-12 min-w-0 flex-1 rounded-full border border-ink/20 bg-white px-5 text-sm outline-none focus:border-ink/45 focus:ring-2 focus:ring-accent/20"
       />
-      <button type="submit" className="min-h-12 shrink-0 rounded-full bg-[#3d0a21] px-5 text-xs font-bold uppercase tracking-[0.12em] text-[#f7ead0] sm:px-7">
+      <button type="submit" className="min-h-12 shrink-0 rounded-full bg-ink px-5 text-xs font-bold uppercase tracking-[0.12em] text-white sm:px-7">
         Search
       </button>
     </form>

@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion } from '../../lib/motion'
 import { useEffect, useId, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link, useLocation } from 'react-router-dom'
@@ -55,7 +55,7 @@ export default function SignInRequiredModal({ open, onClose }) {
         >
           <button
             type="button"
-            className="absolute inset-0 cursor-default bg-[#130006]/75 backdrop-blur-[2px]"
+            className="absolute inset-0 cursor-default bg-ink/75 backdrop-blur-[2px]"
             onClick={onClose}
             aria-label="Close sign in"
           />
@@ -65,29 +65,29 @@ export default function SignInRequiredModal({ open, onClose }) {
             aria-modal="true"
             aria-labelledby={titleId}
             data-lenis-prevent
-            className="relative z-10 flex max-h-[min(92dvh,100%)] w-full max-w-md flex-col overflow-hidden rounded-t-2xl border border-[#d4af37]/20 bg-[#fbf7f1] shadow-[0_24px_80px_rgba(19,0,6,0.35)] sm:max-h-[min(88vh,720px)] sm:rounded-2xl"
+            className="relative z-10 flex max-h-[min(92dvh,100%)] w-full max-w-md flex-col overflow-hidden rounded-t-2xl border border-line bg-mist shadow-[0_24px_80px_rgba(17, 17, 17,0.35)] sm:max-h-[min(88vh,720px)] sm:rounded-2xl"
             initial={{ y: '100%', opacity: 0.9 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: '100%', opacity: 0 }}
             transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex shrink-0 items-start justify-between gap-3 border-b border-[#d4af37]/15 px-4 py-3.5 sm:px-6 sm:py-4">
+            <div className="flex shrink-0 items-start justify-between gap-3 border-b border-line px-4 py-3.5 sm:px-6 sm:py-4">
               <div className="min-w-0 flex-1 pr-2">
-                <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#847377] sm:text-[10px]">
+                <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-muted sm:text-[10px]">
                   Velisqa
                 </p>
-                <h2 id={titleId} className="mt-1 font-serif text-lg leading-tight text-[#130006] sm:text-2xl">
+                <h2 id={titleId} className="mt-1 font-serif text-lg leading-tight text-ink sm:text-2xl">
                   Sign in to checkout
                 </h2>
-                <p className="mt-1 text-xs leading-relaxed text-[#514347] sm:text-sm">
+                <p className="mt-1 text-xs leading-relaxed text-body sm:text-sm">
                   Sign in to checkout. Your bag is saved on this device until you complete your order.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={onClose}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#130006]/10 text-xl leading-none text-[#130006] transition hover:bg-[#130006]/5"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-ink/10 text-xl leading-none text-ink transition hover:bg-ink/5"
                 aria-label="Close"
               >
                 &times;
@@ -96,11 +96,11 @@ export default function SignInRequiredModal({ open, onClose }) {
 
             <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 sm:px-6 sm:py-5">
               <SignInForm idPrefix="modal-signin" />
-              <p className="mt-4 text-center text-[10px] text-[#847377]">
+              <p className="mt-4 text-center text-[10px] text-muted">
                 Prefer the full page?{' '}
                 <Link
                   to={`/login?next=${encodeURIComponent(loginNext)}`}
-                  className="font-semibold text-[#6f334a] underline-offset-2 hover:underline"
+                  className="font-semibold text-ink underline-offset-2 hover:underline"
                 >
                   Open sign in page
                 </Link>

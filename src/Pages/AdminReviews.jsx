@@ -89,8 +89,8 @@ export default function AdminReviews() {
             }}
             className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-[0.1em] ${
               filter === item
-                ? 'bg-[#3d0a21] text-[#f7ead0]'
-                : 'border border-[#847377]/20 bg-white text-[#514347]'
+                ? 'bg-ink text-white'
+                : 'border border-muted/20 bg-white text-body'
             }`}
           >
             {item}
@@ -102,7 +102,7 @@ export default function AdminReviews() {
       {notice && <p className="mb-5 rounded-xl border border-[#2d6a4f]/20 bg-[#edf7f1] px-4 py-3 text-sm text-[#1f4334]">{notice}</p>}
 
       {loading ? (
-        <p className="text-sm text-[#847377]">Loading reviews…</p>
+        <p className="text-sm text-muted">Loading reviews…</p>
       ) : reviews.length === 0 ? (
         <div className="rounded-2xl border border-[#2d6a4f]/20 bg-[#edf7f1] p-8 text-center">
           <p className="font-serif text-xl text-[#1f4334]">No {filter === 'all' ? '' : filter} reviews</p>
@@ -111,13 +111,13 @@ export default function AdminReviews() {
       ) : (
         <div className="space-y-4">
           {reviews.map((review) => (
-            <article key={review.id} className="rounded-2xl border border-[#847377]/15 bg-white p-5 shadow-sm">
+            <article key={review.id} className="rounded-2xl border border-muted/15 bg-white p-5 shadow-sm">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="min-w-0">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#847377]">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted">
                     {review.products?.name || 'Deleted product'}
                   </p>
-                  <div className="mt-1 text-sm tracking-[0.08em] text-[#d4af37]" aria-label={`${review.rating} stars`}>
+                  <div className="mt-1 text-sm tracking-[0.08em] text-muted" aria-label={`${review.rating} stars`}>
                     {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
                   </div>
                   <h2 className="mt-1 font-serif text-xl">{review.title}</h2>
@@ -133,7 +133,7 @@ export default function AdminReviews() {
                 </span>
               </div>
 
-              <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-[#514347]">{review.body}</p>
+              <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-body">{review.body}</p>
 
               {review.image_urls?.length > 0 && (
                 <div className="mt-4 flex flex-wrap gap-2">
@@ -145,8 +145,8 @@ export default function AdminReviews() {
                 </div>
               )}
 
-              <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-[#847377]/10 pt-4 text-xs text-[#847377]">
-                <span className="font-semibold text-[#514347]">{review.reviewer_name}</span>
+              <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-muted/10 pt-4 text-xs text-muted">
+                <span className="font-semibold text-body">{review.reviewer_name}</span>
                 {review.is_verified_purchase && <span className="font-semibold text-[#2d6a4f]">✓ Verified purchase</span>}
                 <span>Order {review.order_id.slice(0, 8)}</span>
                 <time dateTime={review.created_at}>{new Date(review.created_at).toLocaleString('en-IN')}</time>
@@ -184,7 +184,7 @@ export default function AdminReviews() {
 
 function ActionButton({ children, tone = 'default', ...props }) {
   const tones = {
-    default: 'border-[#847377]/25 text-[#514347]',
+    default: 'border-muted/25 text-body',
     approve: 'border-[#2d6a4f]/25 bg-[#edf7f1] text-[#1f4334]',
     reject: 'border-red-200 bg-red-50 text-red-700',
   }

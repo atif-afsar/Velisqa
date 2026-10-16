@@ -13,13 +13,13 @@ export default function WishlistToast() {
       role="status"
       aria-live="polite"
     >
-      <div className="pointer-events-auto flex w-full max-w-sm items-center gap-2 rounded-xl border border-[#3d0a21]/15 bg-white px-4 py-3 text-sm text-[#130006] shadow-[0_16px_48px_rgba(19,0,6,0.15)]">
+      <div className="pointer-events-auto flex w-full max-w-sm items-center gap-2 rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink shadow-[0_16px_48px_rgba(17, 17, 17,0.15)]">
         <p className="flex-1 leading-snug">{toast.message}</p>
         {wishlistCount > 0 && (
           <Link
             to="/wishlist"
             onClick={dismissToast}
-            className="shrink-0 rounded-full border border-[#3d0a21]/20 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.08em] text-[#3d0a21] transition hover:bg-[#3d0a21]/5"
+            className="shrink-0 rounded-full border border-ink/20 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.08em] text-ink transition hover:bg-ink/5"
           >
             View ({wishlistCount})
           </Link>

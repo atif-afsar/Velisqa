@@ -1,5 +1,6 @@
 import { getPrimaryImageUrl } from './productImages'
 import { SITE_URL } from '../Components/SEO/siteConfig'
+import { productPath } from './productUrl'
 
 export function formatInr(amount) {
   return `₹${Number(amount).toLocaleString('en-IN')}`
@@ -26,7 +27,7 @@ export function productToCartLine(product, quantity = 1) {
     price: Number(product.price) || 0,
     mrp: Number(product.mrp) > Number(product.price) ? Number(product.mrp) : null,
     imageUrl: getPrimaryImageUrl(product),
-    productUrl: product.id ? `${SITE_URL}/product/${product.id}` : null,
+    productUrl: product.id ? `${SITE_URL}${productPath(product)}` : null,
     stock: getProductStock(product),
     outOfStock: isProductSoldOut(product),
     quantity: Math.max(1, Math.floor(quantity)),

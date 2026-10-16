@@ -69,11 +69,11 @@ export default function AdminShell({
   const openTasks = counts?.totalOpen || 0
 
   return (
-    <main className="page-offset-nav min-h-screen w-full max-w-full overflow-x-hidden bg-[#f4f1ec] text-[#130006]">
-      <div className="border-b border-[#3d0a21]/10 bg-[#130006] text-[#fdf9f4]">
+    <main className="page-offset-nav min-h-screen w-full max-w-full overflow-x-hidden bg-[#f4f1ec] text-ink">
+      <div className="border-b border-ink/10 bg-ink text-white">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-3 py-3 sm:px-6">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#d4af37]/80">Velisqa admin</p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted">Velisqa admin</p>
             <p className="text-sm text-white/70 truncate max-w-[200px] sm:max-w-none">{user?.email}</p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -93,7 +93,7 @@ export default function AdminShell({
             <button
               type="button"
               onClick={() => logout()}
-              className="rounded-full bg-[#d4af37] px-3 py-1 text-xs font-semibold text-[#130006]"
+              className="rounded-full bg-ink px-3 py-1 text-xs font-semibold text-white"
             >
               Sign out
             </button>
@@ -110,7 +110,7 @@ export default function AdminShell({
                 to={item.to}
                 className={`whitespace-nowrap rounded-t-xl px-3.5 sm:px-4 py-2.5 sm:py-3 text-xs font-bold uppercase tracking-[0.08em] transition ${
                   active
-                    ? 'bg-[#f4f1ec] text-[#130006]'
+                    ? 'bg-[#f4f1ec] text-ink'
                     : 'text-white/75 hover:bg-white/10 hover:text-white'
                 }`}
               >
@@ -133,17 +133,17 @@ export default function AdminShell({
             </p>
             <div className="flex flex-wrap gap-2 text-xs sm:text-sm">
               {counts?.paymentReviews ? (
-                <Link to="/admin/payments" className="font-semibold text-[#6f334a] hover:underline">
+                <Link to="/admin/payments" className="font-semibold text-ink hover:underline">
                   Review payments →
                 </Link>
               ) : null}
               {counts?.needsShipment ? (
-                <Link to="/admin/orders" className="font-semibold text-[#6f334a] hover:underline">
+                <Link to="/admin/orders" className="font-semibold text-ink hover:underline">
                   Ship orders →
                 </Link>
               ) : null}
               {counts?.pendingReviews ? (
-                <Link to="/admin/reviews" className="font-semibold text-[#6f334a] hover:underline">
+                <Link to="/admin/reviews" className="font-semibold text-ink hover:underline">
                   Moderate reviews →
                 </Link>
               ) : null}
@@ -156,7 +156,7 @@ export default function AdminShell({
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <h1 className="font-serif text-2xl sm:text-3xl font-semibold">{title}</h1>
-            {subtitle ? <p className="mt-1.5 max-w-2xl text-xs sm:text-sm leading-relaxed text-[#514347]">{subtitle}</p> : null}
+            {subtitle ? <p className="mt-1.5 max-w-2xl text-xs sm:text-sm leading-relaxed text-body">{subtitle}</p> : null}
           </div>
           {actions ? <div className="flex flex-wrap gap-2">{actions}</div> : null}
         </div>

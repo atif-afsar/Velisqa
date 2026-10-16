@@ -39,7 +39,7 @@ export default function ProductImage({
   if (!src) {
     return (
       <span
-        className={`flex items-center justify-center bg-[#f1ede8] text-xs text-[#847377] ${className}`}
+        className={`flex items-center justify-center bg-mist text-xs text-muted ${className}`}
         style={{ aspectRatio: aspect }}
       >
         No image
@@ -71,7 +71,7 @@ export default function ProductImage({
 
   return (
     <span
-      className={`relative block overflow-hidden bg-[#f1ede8] select-none ${className}`}
+      className={`relative block overflow-hidden bg-mist select-none ${className}`}
       style={{ aspectRatio: aspect }}
       onMouseEnter={() => hasHoverImage && setIsHovered(true)}
       onMouseLeave={() => {
@@ -82,7 +82,7 @@ export default function ProductImage({
       {!loaded && (
         <span
           aria-hidden
-          className="absolute inset-0 animate-pulse bg-gradient-to-br from-[#f1ede8] via-[#e7e1d9] to-[#f1ede8]"
+          className="absolute inset-0 animate-pulse bg-gradient-to-br from-mist via-[#e7e1d9] to-mist"
         />
       )}
 

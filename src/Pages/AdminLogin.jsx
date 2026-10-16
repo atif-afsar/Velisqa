@@ -64,22 +64,22 @@ export default function AdminLogin() {
   }
 
   const inputClass =
-    'w-full rounded-xl border border-[#847377]/25 bg-white/80 px-4 py-3 text-[#130006] shadow-sm outline-none transition placeholder:text-[#847377]/60 focus:border-[#3d0a21]/40 focus:ring-2 focus:ring-[#d4af37]/25'
+    'w-full rounded-xl border border-muted/25 bg-white/80 px-4 py-3 text-ink shadow-sm outline-none transition placeholder:text-muted/60 focus:border-ink/40 focus:ring-2 focus:ring-accent/25'
 
   return (
-    <main className="min-h-screen bg-[#130006] text-[#f7ead0]">
+    <main className="min-h-screen bg-ink text-white">
       <div className="page-offset-nav">
         <div className="container-stitch px-4 py-10 sm:py-14">
           <Link
             to="/"
-            className="mb-8 inline-flex text-[10px] font-bold uppercase tracking-[0.2em] text-[#d4af37]/80 transition hover:text-[#d4af37]"
+            className="mb-8 inline-flex text-[10px] font-bold uppercase tracking-[0.2em] text-muted transition hover:text-accent-ink"
           >
             ← Back to home
           </Link>
 
-          <div className="mx-auto max-w-md rounded-2xl border border-[#d4af37]/25 bg-[#3d0a21]/90 p-6 shadow-[0_24px_60px_rgba(0,0,0,0.35)] backdrop-blur-sm sm:p-8">
-            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#847377]">Staff only</p>
-            <h1 className="mt-2 font-serif text-2xl font-semibold tracking-wide text-[#fdf9f4] sm:text-3xl">
+          <div className="mx-auto max-w-md rounded-2xl border border-line bg-ink/90 p-6 shadow-[0_24px_60px_rgba(0,0,0,0.35)] backdrop-blur-sm sm:p-8">
+            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted">Staff only</p>
+            <h1 className="mt-2 font-serif text-2xl font-semibold tracking-wide text-white sm:text-3xl">
               Admin sign in
             </h1>
             <p className="mt-2 text-sm text-white/60">Use credentials for a profile with role &quot;admin&quot;.</p>
@@ -114,7 +114,7 @@ export default function AdminLogin() {
               <button
                 type="submit"
                 disabled={busy}
-                className="rounded-xl bg-[#d4af37] px-4 py-3 text-sm font-semibold uppercase tracking-[0.12em] text-[#130006] transition hover:bg-[#e9c349] disabled:opacity-60"
+                className="rounded-xl bg-ink px-4 py-3 text-sm font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-ink disabled:opacity-60"
               >
                 {busy ? 'Signing in…' : 'Enter dashboard'}
               </button>

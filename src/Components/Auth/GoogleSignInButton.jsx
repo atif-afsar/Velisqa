@@ -4,7 +4,7 @@ export default function GoogleSignInButton({ onClick, disabled, className = '' }
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className={`flex w-full items-center justify-center gap-3 rounded-xl border border-[#847377]/25 bg-white py-3 text-sm font-medium text-[#130006] shadow-sm transition hover:border-[#3d0a21]/20 hover:bg-[#fdf9f4] disabled:opacity-60 ${className}`}
+      className={`flex w-full items-center justify-center gap-3 rounded-xl border border-muted/25 bg-white py-3 text-sm font-medium text-ink shadow-sm transition hover:border-ink/20 hover:bg-paper disabled:opacity-60 ${className}`}
     >
       <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden>
         <path

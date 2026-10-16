@@ -5,7 +5,7 @@ export const CREATOR_TIERS = [
     range: "1K – 10K",
     minFollowers: 1000,
     maxFollowers: 9999,
-    accent: "#b97189",
+    accent: "#12786e",
     perks: [
       "Complimentary signature piece (up to ₹2,499)",
       "15% creator discount on all orders",
@@ -19,7 +19,7 @@ export const CREATOR_TIERS = [
     range: "10K – 50K",
     minFollowers: 10000,
     maxFollowers: 49999,
-    accent: "#d4af37",
+    accent: "#1fa79a",
     perks: [
       "Complimentary curated set (up to ₹4,999)",
       "20% creator discount on all orders",
@@ -34,7 +34,7 @@ export const CREATOR_TIERS = [
     range: "50K – 250K",
     minFollowers: 50000,
     maxFollowers: 249999,
-    accent: "#afa0d1",
+    accent: "#1fa79a",
     perks: [
       "Premium jewellery gift box (up to ₹9,999)",
       "25% creator discount + exclusive codes",
@@ -48,7 +48,7 @@ export const CREATOR_TIERS = [
     range: "250K – 1M",
     minFollowers: 250000,
     maxFollowers: 999999,
-    accent: "#e9c349",
+    accent: "#1fa79a",
     perks: [
       "Luxury campaign wardrobe (up to ₹19,999)",
       "30% creator discount + revenue share",
@@ -62,7 +62,7 @@ export const CREATOR_TIERS = [
     range: "1M+",
     minFollowers: 1000000,
     maxFollowers: null,
-    accent: "#f7ead0",
+    accent: "#ffffff",
     perks: [
       "Bespoke high-jewellery pieces",
       "Custom commission structure",

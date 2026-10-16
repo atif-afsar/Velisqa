@@ -20,12 +20,12 @@ export default function FreeGiftCard({ variant = 'default', giftItem = null }) {
     <div
       className={`free-gift-card relative rounded-xl border transition-all duration-300 ${
         isCompact ? 'p-2.5' : 'p-3 sm:p-3.5'
-      } border-[#D4AF37]/30 bg-gradient-to-r from-[#FFFCF0] to-[#FFF9E8]`}
+      } border-line bg-gradient-to-r from-[#FFFCF0] to-[#FFF9E8]`}
       role="listitem"
       aria-label="Complimentary gift item"
     >
       {/* FREE GIFT badge */}
-      <span className="absolute right-2 top-2 rounded-full bg-[#D4AF37] px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.1em] text-[#130006]">
+      <span className="absolute right-2 top-2 rounded-full bg-ink px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.1em] text-white">
         Free Gift
       </span>
 
@@ -47,22 +47,22 @@ export default function FreeGiftCard({ variant = 'default', giftItem = null }) {
 
         {/* Gift details */}
         <div className="min-w-0 flex-1 pr-14">
-          <p className={`font-serif leading-snug text-[#3d0a21] ${
+          <p className={`font-serif leading-snug text-ink ${
             isCompact ? 'text-[13px]' : 'text-[14px] sm:text-[15px]'
           }`}>
             {title}
           </p>
-          <p className="mt-0.5 text-[10px] sm:text-[11px] text-[#847377]">
+          <p className="mt-0.5 text-[10px] sm:text-[11px] text-muted">
             Worth {formatOfferAmount(value)}
           </p>
           <div className="mt-1.5 flex items-baseline gap-2 text-[11px] sm:text-xs">
-            <span className="font-bold tabular-nums text-[#8B6914]">₹0</span>
-            <span className="text-[10px] font-semibold uppercase tracking-[0.06em] text-[#D4AF37]">
+            <span className="font-bold tabular-nums text-accent-ink">₹0</span>
+            <span className="text-[10px] font-semibold uppercase tracking-[0.06em] text-muted">
               Complimentary
             </span>
           </div>
           {!isCompact && (
-            <p className="mt-1.5 text-[9px] sm:text-[10px] text-[#847377] leading-relaxed">
+            <p className="mt-1.5 text-[9px] sm:text-[10px] text-muted leading-relaxed">
               Your complimentary gift will be included with your order
             </p>
           )}

@@ -117,7 +117,7 @@ export default function SignatureCollection() {
     >
       <div
         ref={stickyBarRef}
-        className="sticky-category-bar z-40 isolate border-b border-black/8 bg-white shadow-[0_4px_16px_rgba(19,0,6,0.06)]"
+        className="sticky-category-bar z-40 isolate border-b border-black/8 bg-white shadow-[0_4px_16px_rgba(17, 17, 17,0.06)]"
       >
         <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-10">
           <div className="relative flex items-center justify-center py-3">
@@ -177,10 +177,10 @@ export default function SignatureCollection() {
 
           <div className="min-w-0 flex-1">
             <div className="mb-6 flex items-center justify-between border-b border-black/5 pb-2">
-              <h2 className="font-serif text-xl font-normal text-[#130006] sm:text-2xl capitalize">
+              <h2 className="font-serif text-xl font-normal text-ink sm:text-2xl capitalize">
                 {activeCategory}
               </h2>
-              <span className="text-[10px] uppercase tracking-[0.16em] text-[#847377]">
+              <span className="text-[10px] uppercase tracking-[0.16em] text-muted">
                 {loading ? 'Loading…' : `${filteredProducts.length} pieces`}
               </span>
             </div>
@@ -213,7 +213,7 @@ export default function SignatureCollection() {
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="mt-4 text-[13px] font-medium text-[#130006] underline-offset-2 hover:underline"
+                  className="mt-4 text-[13px] font-medium text-ink underline-offset-2 hover:underline"
                 >
                   Clear filters
                 </button>

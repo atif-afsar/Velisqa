@@ -5,7 +5,7 @@ import { useAdminInbox } from '../hooks/useAdminInbox'
 
 function ActionCard({ title, count, description, href, cta, tone = 'default' }) {
   const tones = {
-    default: 'border-[#d4af37]/20 bg-white',
+    default: 'border-line bg-white',
     urgent: 'border-amber-300 bg-amber-50',
     calm: 'border-[#2d6a4f]/20 bg-[#f0f7f4]',
   }
@@ -17,8 +17,8 @@ function ActionCard({ title, count, description, href, cta, tone = 'default' }) 
     >
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#847377]">{title}</p>
-          <p className="mt-2 font-serif text-3xl font-semibold text-[#130006]">{count}</p>
+          <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted">{title}</p>
+          <p className="mt-2 font-serif text-3xl font-semibold text-ink">{count}</p>
         </div>
         {count > 0 ? (
           <span className="rounded-full bg-[#c0392b] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.08em] text-white">
@@ -30,8 +30,8 @@ function ActionCard({ title, count, description, href, cta, tone = 'default' }) 
           </span>
         )}
       </div>
-      <p className="mt-3 text-sm leading-relaxed text-[#514347]">{description}</p>
-      <p className="mt-4 text-sm font-semibold text-[#6f334a]">{cta} →</p>
+      <p className="mt-3 text-sm leading-relaxed text-body">{description}</p>
+      <p className="mt-4 text-sm font-semibold text-ink">{cta} →</p>
     </Link>
   )
 }
@@ -59,12 +59,12 @@ export default function AdminHome() {
       ) : null}
 
       {loading && !inbox ? (
-        <p className="text-sm text-[#514347]">Loading your inbox…</p>
+        <p className="text-sm text-body">Loading your inbox…</p>
       ) : (
         <>
           {counts.totalOpen > 0 ? (
-            <div className="mb-6 rounded-2xl border border-[#3d0a21]/15 bg-[#3d0a21] p-5 text-[#fdf9f4] sm:p-6">
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#d4af37]">Needs attention now</p>
+            <div className="mb-6 rounded-2xl border border-ink/15 bg-ink p-5 text-white sm:p-6">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-muted">Needs attention now</p>
               <p className="mt-2 font-serif text-2xl font-semibold">
                 {counts.totalOpen} open task{counts.totalOpen === 1 ? '' : 's'} from the shop
               </p>
@@ -86,7 +86,7 @@ export default function AdminHome() {
           ) : (
             <div className="mb-6 rounded-2xl border border-[#2d6a4f]/20 bg-[#f0f7f4] p-5 sm:p-6">
               <p className="font-semibold text-[#1b4332]">You&apos;re all caught up</p>
-              <p className="mt-1 text-sm text-[#514347]">No UPI proofs, shipping tasks, or customer reviews need attention.</p>
+              <p className="mt-1 text-sm text-body">No UPI proofs, shipping tasks, or customer reviews need attention.</p>
             </div>
           )}
 
@@ -133,45 +133,45 @@ export default function AdminHome() {
           </div>
 
           <section className="mt-8 grid gap-6 lg:grid-cols-2">
-            <div className="rounded-2xl border border-[#d4af37]/15 bg-white p-5">
+            <div className="rounded-2xl border border-line bg-white p-5">
               <h2 className="font-serif text-xl font-semibold">How orders flow</h2>
-              <ol className="mt-4 space-y-3 text-sm leading-relaxed text-[#514347]">
+              <ol className="mt-4 space-y-3 text-sm leading-relaxed text-body">
                 <li className="flex gap-3">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#3d0a21] text-xs font-bold text-white">1</span>
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink text-xs font-bold text-white">1</span>
                   <span><strong>Customer places order</strong> on the website (COD or Online).</span>
                 </li>
                 <li className="flex gap-3">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#3d0a21] text-xs font-bold text-white">2</span>
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink text-xs font-bold text-white">2</span>
                   <span><strong>Payment:</strong> Online orders verify automatically via Razorpay. COD orders wait for your confirmation.</span>
                 </li>
                 <li className="flex gap-3">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#3d0a21] text-xs font-bold text-white">3</span>
-                  <span><strong>Fulfillment:</strong> Shipments are created automatically for paid orders (or manually triggered in <Link to="/admin/orders" className="font-semibold text-[#6f334a] hover:underline">Ship orders</Link>).</span>
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink text-xs font-bold text-white">3</span>
+                  <span><strong>Fulfillment:</strong> Shipments are created automatically for paid orders (or manually triggered in <Link to="/admin/orders" className="font-semibold text-ink hover:underline">Ship orders</Link>).</span>
                 </li>
                 <li className="flex gap-3">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#3d0a21] text-xs font-bold text-white">4</span>
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink text-xs font-bold text-white">4</span>
                   <span><strong>Tracking:</strong> Customers track shipment status automatically via their private order tracking page.</span>
                 </li>
               </ol>
             </div>
 
-            <div className="rounded-2xl border border-[#d4af37]/15 bg-white p-5">
+            <div className="rounded-2xl border border-line bg-white p-5">
               <div className="flex items-center justify-between gap-3">
                 <h2 className="font-serif text-xl font-semibold">Latest from shop</h2>
-                <Link to="/admin/orders" className="text-xs font-semibold text-[#6f334a] hover:underline">
+                <Link to="/admin/orders" className="text-xs font-semibold text-ink hover:underline">
                   All orders →
                 </Link>
               </div>
               {(inbox?.recentOrders || []).length === 0 ? (
-                <p className="mt-4 text-sm text-[#514347]">No orders yet.</p>
+                <p className="mt-4 text-sm text-body">No orders yet.</p>
               ) : (
-                <ul className="mt-4 divide-y divide-[#130006]/8">
+                <ul className="mt-4 divide-y divide-ink/8">
                   {inbox.recentOrders.map((order) => (
                     <li key={order.id} className="flex items-start justify-between gap-3 py-3">
                       <div>
-                        <p className="font-mono text-xs font-semibold text-[#3d0a21]">{order.order_ref}</p>
+                        <p className="font-mono text-xs font-semibold text-ink">{order.order_ref}</p>
                         <p className="text-sm">{order.customer_name}</p>
-                        <p className="text-xs text-[#847377]">
+                        <p className="text-xs text-muted">
                           {order.payment_method === 'cod' ? 'COD' : 'UPI'} · {order.payment_status.replace(/_/g, ' ')}
                         </p>
                       </div>

@@ -270,8 +270,8 @@ export default function AdminPayments() {
             onClick={() => setFilter(item.id)}
             className={`rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.08em] transition-colors ${
               filter === item.id
-                ? 'bg-[#3d0a21] text-white'
-                : 'border border-[#3d0a21]/20 bg-white text-[#514347] hover:bg-[#fcfaf7]'
+                ? 'bg-ink text-white'
+                : 'border border-ink/20 bg-white text-body hover:bg-[#fcfaf7]'
             }`}
           >
             {item.label}
@@ -296,11 +296,11 @@ export default function AdminPayments() {
       )}
 
       {loading ? (
-        <p className="text-sm text-[#514347]">Loading transactions…</p>
+        <p className="text-sm text-body">Loading transactions…</p>
       ) : filteredPayments.length === 0 ? (
-        <div className="rounded-2xl border border-[#d4af37]/15 bg-white p-8 text-center">
+        <div className="rounded-2xl border border-line bg-white p-8 text-center">
           <p className="font-serif text-xl">No payments found</p>
-          <p className="mx-auto mt-2 max-w-md text-sm text-[#514347]">
+          <p className="mx-auto mt-2 max-w-md text-sm text-body">
             Try changing the filter tab or refresh to check for new orders.
           </p>
         </div>
@@ -312,11 +312,11 @@ export default function AdminPayments() {
             const hasAwb = Boolean(item.nimbuspost_awb)
 
             return (
-              <article key={item.id} className="rounded-2xl border border-[#d4af37]/15 bg-white p-5 shadow-sm sm:p-6">
+              <article key={item.id} className="rounded-2xl border border-line bg-white p-5 shadow-sm sm:p-6">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
-                      <p className="font-mono text-sm font-semibold text-[#3d0a21]">{item.order_ref}</p>
+                      <p className="font-mono text-sm font-semibold text-ink">{item.order_ref}</p>
                       <span className={`rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.08em] ${
                         isPaid
                           ? 'bg-[#edf7f1] text-[#2d6a4f] border border-[#2d6a4f]/20'
@@ -333,28 +333,28 @@ export default function AdminPayments() {
                       )}
                     </div>
                     <p className="mt-1.5 text-sm font-semibold">{item.customer_name}</p>
-                    <p className="text-xs text-[#514347]">
+                    <p className="text-xs text-body">
                       {item.customer_phone} {item.customer_email ? `· ${item.customer_email}` : ''}
                     </p>
-                    <p className="mt-2 text-xs text-[#847377]">
+                    <p className="mt-2 text-xs text-muted">
                       Transaction Date: {new Date(item.created_at).toLocaleString('en-IN')}
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="font-serif text-xl font-semibold text-[#3d0a21]">{formatInr(item.grand_total)}</p>
-                    <p className="mt-1 text-xs text-[#514347]">Razorpay Online Payment</p>
+                    <p className="font-serif text-xl font-semibold text-ink">{formatInr(item.grand_total)}</p>
+                    <p className="mt-1 text-xs text-body">Razorpay Online Payment</p>
                   </div>
                 </div>
 
                 {/* Razorpay Transaction Identifiers */}
-                <div className="mt-4 grid gap-3 border-t border-[#d4af37]/15 pt-4 sm:grid-cols-2 text-xs">
+                <div className="mt-4 grid gap-3 border-t border-line pt-4 sm:grid-cols-2 text-xs">
                   <div>
-                    <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#847377]">Razorpay Order ID</span>
-                    <p className="font-mono mt-0.5 text-sm font-medium text-[#130006] break-all">{item.razorpay_order_id || 'N/A'}</p>
+                    <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted">Razorpay Order ID</span>
+                    <p className="font-mono mt-0.5 text-sm font-medium text-ink break-all">{item.razorpay_order_id || 'N/A'}</p>
                   </div>
                   <div>
-                    <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#847377]">Razorpay Payment ID</span>
-                    <p className="font-mono mt-0.5 text-sm font-medium text-[#130006] break-all">{item.razorpay_payment_id || 'N/A'}</p>
+                    <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted">Razorpay Payment ID</span>
+                    <p className="font-mono mt-0.5 text-sm font-medium text-ink break-all">{item.razorpay_payment_id || 'N/A'}</p>
                   </div>
                 </div>
 
@@ -369,7 +369,7 @@ export default function AdminPayments() {
                         href={item.tracking_url}
                         target="_blank"
                         rel="noreferrer"
-                        className="mt-1.5 inline-flex font-semibold text-[#3d0a21] hover:underline"
+                        className="mt-1.5 inline-flex font-semibold text-ink hover:underline"
                       >
                         Track shipment on NimbusPost →
                       </a>
@@ -378,15 +378,15 @@ export default function AdminPayments() {
                 )}
 
                 {/* Items Summary */}
-                <div className="mt-4 border-t border-[#d4af37]/15 pt-4">
-                  <h3 className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#847377]">Items</h3>
+                <div className="mt-4 border-t border-line pt-4">
+                  <h3 className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted">Items</h3>
                   <div className="mt-2">
                     <AdminOrderItems items={item.order_items} />
                   </div>
                 </div>
 
                 {/* Action Toolbar */}
-                <div className="mt-5 flex flex-wrap items-center justify-end gap-3 border-t border-[#d4af37]/15 pt-4">
+                <div className="mt-5 flex flex-wrap items-center justify-end gap-3 border-t border-line pt-4">
                   {!isPaid && (
                     <div className="flex flex-wrap items-center gap-2 w-full justify-between sm:w-auto sm:justify-end">
                       <span className="text-xs text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-lg">
@@ -408,7 +408,7 @@ export default function AdminPayments() {
                       type="button"
                       disabled={isBusy}
                       onClick={() => void shipDirectly(item)}
-                      className="min-h-10 inline-flex items-center justify-center rounded-full bg-[#3d0a21] px-5 text-xs font-bold uppercase tracking-[0.08em] text-white hover:bg-[#250514] disabled:opacity-50 transition-colors"
+                      className="min-h-10 inline-flex items-center justify-center rounded-full bg-ink px-5 text-xs font-bold uppercase tracking-[0.08em] text-white hover:bg-[#250514] disabled:opacity-50 transition-colors"
                     >
                       {isBusy ? 'Booking NimbusPost…' : 'Ship via NimbusPost'}
                     </button>
@@ -426,7 +426,7 @@ export default function AdminPayments() {
             type="button"
             disabled={loadingMore}
             onClick={() => void loadMore()}
-            className="min-h-11 rounded-full border border-[#3d0a21]/20 bg-white px-6 text-xs font-bold uppercase tracking-[0.08em] text-[#3d0a21] disabled:opacity-50"
+            className="min-h-11 rounded-full border border-ink/20 bg-white px-6 text-xs font-bold uppercase tracking-[0.08em] text-ink disabled:opacity-50"
           >
             {loadingMore ? 'Loading more…' : 'Load more transactions'}
           </button>

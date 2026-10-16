@@ -47,16 +47,16 @@ export default function MyOrders() {
         canonicalPath="/account/orders"
         noindex
       />
-      <main className="page-offset-nav min-h-screen bg-[#f9f5f0] px-4 py-12 text-[#130006] sm:px-6 sm:py-16">
+      <main className="page-offset-nav min-h-screen bg-mist px-4 py-12 text-ink sm:px-6 sm:py-16">
         <div className="container-stitch mx-auto max-w-3xl">
-          <p className="type-label text-[#847377]">Your account</p>
+          <p className="type-label text-muted">Your account</p>
           <h1 className="mt-2 font-serif text-3xl font-semibold">My orders</h1>
-          <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#514347]">
+          <p className="mt-2 max-w-xl text-sm leading-relaxed text-body">
             All orders placed while signed in appear here. Track delivery, complete UPI payment, or cancel before dispatch.
           </p>
 
           {loading && (
-            <p className="mt-10 text-center text-sm text-[#847377]">Loading your orders…</p>
+            <p className="mt-10 text-center text-sm text-muted">Loading your orders…</p>
           )}
 
           {error && (
@@ -66,14 +66,14 @@ export default function MyOrders() {
           )}
 
           {!loading && !error && orders.length === 0 && (
-            <div className="mt-10 rounded-2xl border border-[#d4af37]/20 bg-white/70 p-8 text-center shadow-[0_14px_44px_rgba(19,0,6,0.06)]">
-              <p className="font-serif text-xl text-[#130006]">No orders yet</p>
-              <p className="mt-2 text-sm text-[#514347]">
+            <div className="mt-10 rounded-2xl border border-line bg-white/70 p-8 text-center shadow-[0_14px_44px_rgba(17, 17, 17,0.06)]">
+              <p className="font-serif text-xl text-ink">No orders yet</p>
+              <p className="mt-2 text-sm text-body">
                 Add pieces to your bag, sign in, and checkout to see them here.
               </p>
               <Link
                 to="/collections#signature"
-                className="mt-6 inline-flex rounded-full bg-[#3d0a21] px-6 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-[#fdf9f4] transition hover:bg-[#2a0718]"
+                className="mt-6 inline-flex rounded-full bg-ink px-6 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-white transition hover:bg-ink"
               >
                 Shop collections
               </Link>
@@ -98,38 +98,38 @@ export default function MyOrders() {
                 return (
                   <li
                     key={order.id}
-                    className="rounded-2xl border border-[#d4af37]/20 bg-white/70 p-5 shadow-[0_14px_44px_rgba(19,0,6,0.06)] sm:p-6"
+                    className="rounded-2xl border border-line bg-white/70 p-5 shadow-[0_14px_44px_rgba(17, 17, 17,0.06)] sm:p-6"
                   >
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div>
-                        <p className="font-mono text-sm font-semibold text-[#3d0a21]">{order.order_ref}</p>
-                        <p className="mt-1 text-sm text-[#514347]">{summarizeItems(order.order_items)}</p>
-                        <p className="mt-1 text-xs text-[#847377]">
+                        <p className="font-mono text-sm font-semibold text-ink">{order.order_ref}</p>
+                        <p className="mt-1 text-sm text-body">{summarizeItems(order.order_items)}</p>
+                        <p className="mt-1 text-xs text-muted">
                           {new Date(order.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}
                         </p>
                       </div>
-                      <p className="font-serif text-xl font-semibold text-[#3d0a21]">
+                      <p className="font-serif text-xl font-semibold text-ink">
                         {formatInr(order.grand_total)}
                       </p>
                     </div>
 
                     <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                      <div className="rounded-xl bg-[#f1ede8] px-3 py-2.5">
-                        <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">Payment</p>
-                        <p className="mt-1 text-sm font-semibold text-[#130006]">
+                      <div className="rounded-xl bg-mist px-3 py-2.5">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted">Payment</p>
+                        <p className="mt-1 text-sm font-semibold text-ink">
                           {getPaymentStatusLabel(mapped) || PAYMENT_STATUS_LABELS[order.payment_status]}
                         </p>
                       </div>
-                      <div className="rounded-xl bg-[#f1ede8] px-3 py-2.5">
-                        <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">Shipment</p>
-                        <p className="mt-1 text-sm font-semibold text-[#130006]">
+                      <div className="rounded-xl bg-mist px-3 py-2.5">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted">Shipment</p>
+                        <p className="mt-1 text-sm font-semibold text-ink">
                           {getShipmentStatusLabel(mapped)}
                         </p>
                       </div>
                     </div>
 
                     {order.nimbuspost_awb && (
-                      <p className="mt-3 text-xs text-[#514347]">
+                      <p className="mt-3 text-xs text-body">
                         AWB: <span className="font-mono font-semibold">{order.nimbuspost_awb}</span>
                       </p>
                     )}
@@ -146,7 +146,7 @@ export default function MyOrders() {
                       {!cancelled && needsPayment && (
                         <Link
                           to={payUrl}
-                          className="inline-flex min-h-10 items-center rounded-full border border-[#3d0a21]/20 px-5 text-xs font-bold uppercase tracking-[0.08em] text-[#3d0a21] transition hover:bg-white"
+                          className="inline-flex min-h-10 items-center rounded-full border border-ink/20 px-5 text-xs font-bold uppercase tracking-[0.08em] text-ink transition hover:bg-white"
                         >
                           Complete payment
                         </Link>

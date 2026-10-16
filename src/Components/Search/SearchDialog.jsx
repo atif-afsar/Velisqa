@@ -5,7 +5,7 @@ import {
   useState,
 } from 'react'
 import { createPortal } from 'react-dom'
-import { motion } from 'framer-motion'
+import { motion } from '../../lib/motion'
 import {
   useLocation,
   useNavigate,
@@ -32,6 +32,7 @@ import {
   getPromoPriceDisplay,
 } from '../../lib/promoPricing'
 import { isProductSoldOut } from '../../lib/cartStock'
+import { productPath } from '../../lib/productUrl'
 
 const MAX_SUGGESTIONS = 6
 
@@ -164,8 +165,8 @@ function HighlightedName({
 
       <mark
         className="
-          bg-[#d4af37]/15
-          text-[#3d0a21]
+          bg-mist
+          text-ink
         "
       >
         {name.slice(
@@ -323,7 +324,7 @@ export default function SearchDialog({
     )
 
     navigate(
-      `/product/${product.id}`,
+      productPath(product),
     )
 
     onClose()
@@ -475,7 +476,7 @@ export default function SearchDialog({
         className="
           absolute
           inset-0
-          bg-[#130006]/35
+          bg-ink/35
           backdrop-blur-[3px]
         "
       />
@@ -519,7 +520,7 @@ export default function SearchDialog({
           w-full
           flex-col
           overflow-hidden
-          bg-[#fffdfb]
+          bg-paper
 
           lg:mt-[var(--nav-bar-height)]
           lg:h-[calc(100vh-var(--nav-bar-height))]
@@ -536,7 +537,7 @@ export default function SearchDialog({
           className="
             shrink-0
             border-b
-            border-[#1b0b12]/8
+            border-ink/8
           "
         >
           <div
@@ -581,7 +582,7 @@ export default function SearchDialog({
                     font-serif
                     text-2xl
                     leading-none
-                    text-[#1b0b12]
+                    text-ink
                     sm:text-3xl
                   "
                 >
@@ -599,7 +600,7 @@ export default function SearchDialog({
                   w-9
                   shrink-0
                   place-items-center
-                  text-[#514347]
+                  text-body
                   transition-opacity
                   hover:opacity-50
                 "
@@ -618,10 +619,10 @@ export default function SearchDialog({
                 items-center
                 gap-3
                 border-b
-                border-[#1b0b12]/20
-                text-[#1b0b12]
+                border-ink/20
+                text-ink
                 transition-colors
-                focus-within:border-[#3d0a21]
+                focus-within:border-ink
               "
             >
               <SearchIcon />
@@ -647,7 +648,7 @@ export default function SearchDialog({
                   bg-transparent
                   text-base
                   font-normal
-                  text-[#1b0b12]
+                  text-ink
                   outline-none
                   placeholder:text-[#a69b9e]
                   sm:text-lg
@@ -680,7 +681,7 @@ export default function SearchDialog({
                     place-items-center
                     text-[#817477]
                     transition-colors
-                    hover:text-[#1b0b12]
+                    hover:text-ink
                   "
                 >
                   <CloseIcon />
@@ -700,7 +701,7 @@ export default function SearchDialog({
                     font-semibold
                     uppercase
                     tracking-[0.16em]
-                    text-[#3d0a21]
+                    text-ink
                     transition-opacity
                     hover:opacity-60
                     sm:block
@@ -746,7 +747,7 @@ export default function SearchDialog({
                 <span
                   className="
                     border
-                    border-[#1b0b12]/10
+                    border-ink/10
                     px-1.5
                     py-1
                   "
@@ -823,7 +824,7 @@ export default function SearchDialog({
                             font-semibold
                             uppercase
                             tracking-[0.18em]
-                            text-[#514347]
+                            text-body
                           "
                         >
                           Recent searches
@@ -843,7 +844,7 @@ export default function SearchDialog({
                           tracking-[0.14em]
                           text-[#9a8d91]
                           transition-colors
-                          hover:text-[#3d0a21]
+                          hover:text-ink
                         "
                       >
                         Clear
@@ -870,15 +871,15 @@ export default function SearchDialog({
                             }
                             className="
                               border
-                              border-[#1b0b12]/10
+                              border-ink/10
                               bg-white
                               px-3
                               py-2
                               text-[10px]
-                              text-[#514347]
+                              text-body
                               transition-colors
-                              hover:border-[#3d0a21]/30
-                              hover:text-[#3d0a21]
+                              hover:border-ink/30
+                              hover:text-ink
                             "
                           >
                             {item}
@@ -898,7 +899,7 @@ export default function SearchDialog({
                       font-semibold
                       uppercase
                       tracking-[0.18em]
-                      text-[#514347]
+                      text-body
                     "
                   >
                     Trending searches
@@ -932,14 +933,14 @@ export default function SearchDialog({
                             items-center
                             justify-between
                             border-b
-                            border-[#1b0b12]/8
+                            border-ink/8
                             pb-2
                             text-left
                             text-[11px]
                             text-[#3d3035]
                             transition-colors
-                            hover:border-[#3d0a21]/30
-                            hover:text-[#3d0a21]
+                            hover:border-ink/30
+                            hover:text-ink
                           "
                         >
                           {item.label}
@@ -966,7 +967,7 @@ export default function SearchDialog({
                   className="
                     lg:col-span-2
                     border-t
-                    border-[#1b0b12]/8
+                    border-ink/8
                     pt-7
                   "
                 >
@@ -983,7 +984,7 @@ export default function SearchDialog({
                         font-semibold
                         uppercase
                         tracking-[0.18em]
-                        text-[#514347]
+                        text-body
                       "
                     >
                       Shop by category
@@ -1009,8 +1010,8 @@ export default function SearchDialog({
                       gap-px
                       overflow-hidden
                       border
-                      border-[#1b0b12]/8
-                      bg-[#1b0b12]/8
+                      border-ink/8
+                      bg-ink/8
                       sm:grid-cols-4
                     "
                   >
@@ -1030,7 +1031,7 @@ export default function SearchDialog({
                             min-h-[72px]
                             items-center
                             justify-between
-                            bg-[#fffdfb]
+                            bg-paper
                             px-4
                             text-left
                             transition-colors
@@ -1041,7 +1042,7 @@ export default function SearchDialog({
                             className="
                               font-serif
                               text-base
-                              text-[#1b0b12]
+                              text-ink
                             "
                           >
                             {category}
@@ -1052,7 +1053,7 @@ export default function SearchDialog({
                               text-[#a69b9e]
                               transition-all
                               group-hover:translate-x-1
-                              group-hover:text-[#3d0a21]
+                              group-hover:text-ink
                             "
                           >
                             →
@@ -1085,8 +1086,8 @@ export default function SearchDialog({
                       animate-spin
                       rounded-full
                       border
-                      border-[#d4af37]/25
-                      border-t-[#3d0a21]
+                      border-line
+                      border-t-ink
                     "
                   />
 
@@ -1116,7 +1117,7 @@ export default function SearchDialog({
                     items-end
                     justify-between
                     border-b
-                    border-[#1b0b12]/8
+                    border-ink/8
                     pb-3
                   "
                 >
@@ -1138,7 +1139,7 @@ export default function SearchDialog({
                         mt-1
                         font-serif
                         text-xl
-                        text-[#1b0b12]
+                        text-ink
                       "
                     >
                       Pieces for “
@@ -1196,7 +1197,7 @@ export default function SearchDialog({
                           }
                           className="
                             border-b
-                            border-[#1b0b12]/8
+                            border-ink/8
                           "
                         >
                           <button
@@ -1241,7 +1242,7 @@ export default function SearchDialog({
                                 w-[66px]
                                 shrink-0
                                 overflow-hidden
-                                bg-[#eee8e1]
+                                bg-mist
                               "
                             >
                               <img
@@ -1265,7 +1266,7 @@ export default function SearchDialog({
                                     absolute
                                     bottom-1
                                     left-1
-                                    bg-[#1b0b12]/85
+                                    bg-ink/85
                                     px-1.5
                                     py-1
                                     text-[7px]
@@ -1295,7 +1296,7 @@ export default function SearchDialog({
                                   font-serif
                                   text-[16px]
                                   leading-tight
-                                  text-[#1b0b12]
+                                  text-ink
                                 "
                               >
                                 <HighlightedName
@@ -1344,7 +1345,7 @@ export default function SearchDialog({
                                   block
                                   text-[12px]
                                   font-semibold
-                                  text-[#3d0a21]
+                                  text-ink
                                 "
                               >
                                 {formatInr(
@@ -1377,7 +1378,7 @@ export default function SearchDialog({
                                 text-[#aaa0a2]
                                 transition-all
                                 group-hover:translate-x-1
-                                group-hover:text-[#3d0a21]
+                                group-hover:text-ink
                                 sm:block
                               "
                             >
@@ -1398,7 +1399,7 @@ export default function SearchDialog({
                     className="
                       mt-7
                       border-t
-                      border-[#1b0b12]/8
+                      border-ink/8
                       pt-5
                     "
                   >
@@ -1434,13 +1435,13 @@ export default function SearchDialog({
                             }
                             className="
                               border-b
-                              border-[#1b0b12]/15
+                              border-ink/15
                               pb-0.5
                               text-[10px]
-                              text-[#514347]
+                              text-body
                               transition-colors
-                              hover:border-[#3d0a21]
-                              hover:text-[#3d0a21]
+                              hover:border-ink
+                              hover:text-ink
                             "
                           >
                             {category}
@@ -1478,16 +1479,16 @@ export default function SearchDialog({
                     justify-center
                     gap-3
                     border
-                    border-[#3d0a21]/20
+                    border-ink/20
                     py-3.5
                     text-[9px]
                     font-semibold
                     uppercase
                     tracking-[0.18em]
-                    text-[#3d0a21]
+                    text-ink
                     transition-all
-                    hover:border-[#3d0a21]
-                    hover:bg-[#3d0a21]
+                    hover:border-ink
+                    hover:bg-ink
                     hover:text-white
                   "
                 >
@@ -1533,7 +1534,7 @@ export default function SearchDialog({
                   className="
                     font-serif
                     text-2xl
-                    text-[#1b0b12]
+                    text-ink
                   "
                 >
                   No matching pieces
@@ -1562,13 +1563,13 @@ export default function SearchDialog({
                     items-center
                     gap-2
                     border-b
-                    border-[#3d0a21]/40
+                    border-ink/40
                     pb-1.5
                     text-[9px]
                     font-semibold
                     uppercase
                     tracking-[0.16em]
-                    text-[#3d0a21]
+                    text-ink
                   "
                 >
                   Browse popular searches
@@ -1589,7 +1590,7 @@ export default function SearchDialog({
             hidden
             shrink-0
             border-t
-            border-[#1b0b12]/8
+            border-ink/8
             bg-[#faf7f3]
             px-5
             py-3
@@ -1628,7 +1629,7 @@ export default function SearchDialog({
                 tracking-[0.15em]
                 text-[#75696d]
                 transition-colors
-                hover:text-[#3d0a21]
+                hover:text-ink
               "
             >
               Close

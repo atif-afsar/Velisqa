@@ -42,7 +42,7 @@ function BagBadge({ count }) {
         items-center
         justify-center
         rounded-full
-        bg-[#3d0a21]
+        bg-ink
         px-1
         text-[8px]
         font-bold
@@ -50,7 +50,7 @@ function BagBadge({ count }) {
         tabular-nums
         text-white
         ring-2
-        ring-[#fffdfb]
+        ring-paper
       "
     >
       {count > 99 ? '99+' : count}
@@ -103,7 +103,7 @@ export default function CartNavLink({
           shrink-0
           items-center
           justify-center
-          text-[#1b0b12]
+          text-ink
           transition-opacity
           duration-200
           hover:opacity-60
@@ -132,7 +132,7 @@ export default function CartNavLink({
               font-semibold
               uppercase
               tracking-[0.14em]
-              text-[#514347]
+              text-body
               md:block
             "
           >
@@ -162,10 +162,10 @@ export default function CartNavLink({
         inline-flex
         items-center
         gap-2
-        text-[#514347]
+        text-body
         transition-colors
         duration-200
-        hover:text-[#1b0b12]
+        hover:text-ink
 
         ${
           scrolled

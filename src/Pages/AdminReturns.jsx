@@ -79,8 +79,8 @@ export default function AdminReturns() {
             }}
             className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-[0.1em] ${
               filter === item.id
-                ? 'bg-[#3d0a21] text-[#f7ead0]'
-                : 'border border-[#847377]/20 bg-white text-[#514347]'
+                ? 'bg-ink text-white'
+                : 'border border-muted/20 bg-white text-body'
             }`}
           >
             {item.label}
@@ -96,9 +96,9 @@ export default function AdminReturns() {
       )}
 
       {loading ? (
-        <p className="text-sm text-[#514347]">Loading return requests…</p>
+        <p className="text-sm text-body">Loading return requests…</p>
       ) : returns.length === 0 ? (
-        <p className="rounded-xl border border-[#d4af37]/20 bg-white p-6 text-sm text-[#514347]">
+        <p className="rounded-xl border border-line bg-white p-6 text-sm text-body">
           No return requests in this view.
         </p>
       ) : (
@@ -112,31 +112,31 @@ export default function AdminReturns() {
             return (
               <li
                 key={row.id}
-                className="rounded-2xl border border-[#d4af37]/20 bg-white p-5 shadow-sm sm:p-6"
+                className="rounded-2xl border border-line bg-white p-5 shadow-sm sm:p-6"
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <p className="font-mono text-sm font-semibold text-[#3d0a21]">{order.order_ref}</p>
-                    <p className="mt-1 text-sm text-[#514347]">
+                    <p className="font-mono text-sm font-semibold text-ink">{order.order_ref}</p>
+                    <p className="mt-1 text-sm text-body">
                       {order.customer_name} · {order.customer_phone}
                     </p>
-                    <p className="mt-1 text-xs text-[#847377]">
+                    <p className="mt-1 text-xs text-muted">
                       Requested {new Date(row.requested_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="font-serif text-xl font-semibold text-[#130006]">{formatInr(order.grand_total)}</p>
-                    <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-[#6f334a]">
+                    <p className="font-serif text-xl font-semibold text-ink">{formatInr(order.grand_total)}</p>
+                    <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-ink">
                       {RETURN_STATUS_LABELS[row.status] || row.status}
                     </p>
                   </div>
                 </div>
 
-                <p className="mt-4 text-sm text-[#514347]">
-                  <span className="font-semibold text-[#130006]">Reason:</span> {row.reason}
+                <p className="mt-4 text-sm text-body">
+                  <span className="font-semibold text-ink">Reason:</span> {row.reason}
                 </p>
                 {row.customer_notes && (
-                  <p className="mt-2 text-sm text-[#514347]">{row.customer_notes}</p>
+                  <p className="mt-2 text-sm text-body">{row.customer_notes}</p>
                 )}
 
                 <div className="mt-5 flex flex-wrap gap-2">
@@ -156,7 +156,7 @@ export default function AdminReturns() {
                           value={rejectReason}
                           onChange={(event) => setRejectForms((prev) => ({ ...prev, [row.id]: event.target.value }))}
                           placeholder="Rejection reason for customer"
-                          className="min-w-[180px] flex-1 rounded-lg border border-[#130006]/15 px-3 py-2 text-sm"
+                          className="min-w-[180px] flex-1 rounded-lg border border-ink/15 px-3 py-2 text-sm"
                         />
                         <button
                           type="button"
@@ -171,8 +171,8 @@ export default function AdminReturns() {
                   )}
 
                   {['approved', 'pickup_scheduled', 'in_transit'].includes(row.status) && (
-                    <div className="w-full space-y-2 rounded-xl bg-[#f1ede8] p-3">
-                      <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#847377]">Reverse pickup (NimbusPost)</p>
+                    <div className="w-full space-y-2 rounded-xl bg-mist p-3">
+                      <p className="text-xs font-bold uppercase tracking-[0.12em] text-muted">Reverse pickup (NimbusPost)</p>
                       <input
                         type="text"
                         value={reverse.awb}
@@ -183,7 +183,7 @@ export default function AdminReturns() {
                           }))
                         }
                         placeholder="Reverse AWB"
-                        className="w-full rounded-lg border border-[#130006]/15 px-3 py-2 text-sm font-mono"
+                        className="w-full rounded-lg border border-ink/15 px-3 py-2 text-sm font-mono"
                       />
                       <input
                         type="url"
@@ -195,7 +195,7 @@ export default function AdminReturns() {
                           }))
                         }
                         placeholder="Tracking URL (optional)"
-                        className="w-full rounded-lg border border-[#130006]/15 px-3 py-2 text-sm"
+                        className="w-full rounded-lg border border-ink/15 px-3 py-2 text-sm"
                       />
                       <button
                         type="button"
@@ -207,7 +207,7 @@ export default function AdminReturns() {
                             reverseTrackingUrl: reverse.url,
                           })
                         }
-                        className="rounded-full bg-[#3d0a21] px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-[#f7ead0] disabled:opacity-50"
+                        className="rounded-full bg-ink px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-white disabled:opacity-50"
                       >
                         Save reverse AWB
                       </button>
@@ -219,7 +219,7 @@ export default function AdminReturns() {
                       type="button"
                       disabled={busy}
                       onClick={() => void runAction(row.id, { action: 'mark_received' })}
-                      className="rounded-full border border-[#3d0a21]/20 px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-[#3d0a21] disabled:opacity-50"
+                      className="rounded-full border border-ink/20 px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-ink disabled:opacity-50"
                     >
                       Mark received
                     </button>
@@ -251,7 +251,7 @@ export default function AdminReturns() {
                       type="button"
                       disabled={busy}
                       onClick={() => void runAction(row.id, { action: 'mark_refunded' })}
-                      className="rounded-full bg-[#6f334a] px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-white disabled:opacity-50"
+                      className="rounded-full bg-ink-soft px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-white disabled:opacity-50"
                     >
                       Mark refunded
                     </button>

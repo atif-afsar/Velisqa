@@ -8,7 +8,7 @@ function RatingShell({ linkToReviews, className, children, ariaLabel }) {
     return (
       <Link
         to="#product-reviews"
-        className={`${baseClass} transition hover:text-[#3d0a21]`}
+        className={`${baseClass} transition hover:text-ink`}
         aria-label={ariaLabel}
       >
         {children}
@@ -40,10 +40,10 @@ export default function ProductRating({ product, className = '', size = 'card', 
     return (
       <RatingShell
         linkToReviews={linkToReviews}
-        className={`${alignClass} ${textSize} text-[#847377] ${className}`}
+        className={`${alignClass} ${textSize} text-muted ${className}`}
         ariaLabel="No customer reviews yet"
       >
-        <span className={`${starSize} text-[#d4af37]/45`} aria-hidden>☆☆☆☆☆</span>
+        <span className={`${starSize} text-muted`} aria-hidden>☆☆☆☆☆</span>
         <span>No reviews yet</span>
       </RatingShell>
     )
@@ -52,19 +52,19 @@ export default function ProductRating({ product, className = '', size = 'card', 
   return (
     <RatingShell
       linkToReviews={linkToReviews}
-      className={`${alignClass} ${textSize} text-[#514347] ${className}`}
+      className={`${alignClass} ${textSize} text-body ${className}`}
       ariaLabel={`Rated ${rating} out of 5 from ${reviewCount} reviews`}
     >
-      <span className={`inline-flex items-center gap-0.5 ${starSize} text-[#d4af37]`} aria-hidden>
+      <span className={`inline-flex items-center gap-0.5 ${starSize} text-muted`} aria-hidden>
         {Array.from({ length: 5 }, (_, i) => {
           const filled = i < fullStars
           const half = i === fullStars && halfStar
           return (
             <span key={`star-${i + 1}`} className="relative inline-block leading-none">
-              <span className={filled || half ? 'text-[#d4af37]' : 'text-[#d4af37]/25'}>★</span>
+              <span className={filled || half ? 'text-muted' : 'text-muted'}>★</span>
               {half && (
                 <span
-                  className="absolute inset-0 w-1/2 overflow-hidden text-[#d4af37]"
+                  className="absolute inset-0 w-1/2 overflow-hidden text-muted"
                   style={{ clipPath: 'inset(0 50% 0 0)' }}
                 >
                   ★
@@ -74,11 +74,11 @@ export default function ProductRating({ product, className = '', size = 'card', 
           )
         })}
       </span>
-      <span className="font-semibold tabular-nums text-[#130006]">{rating.toFixed(1)}</span>
-      <span className="text-[#847377]" aria-hidden>
+      <span className="font-semibold tabular-nums text-ink">{rating.toFixed(1)}</span>
+      <span className="text-muted" aria-hidden>
         |
       </span>
-      <span className="text-[#514347]">({formatReviewCount(reviewCount)})</span>
+      <span className="text-body">({formatReviewCount(reviewCount)})</span>
     </RatingShell>
   )
 }

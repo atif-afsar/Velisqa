@@ -11,7 +11,7 @@ import {
 } from '../../lib/orderReturns'
 
 const fieldClass =
-  'box-border w-full rounded-lg border border-[#130006]/15 bg-white px-3 py-2.5 text-sm text-[#130006] outline-none focus:border-[#6f334a] focus:ring-1 focus:ring-[#6f334a]/20'
+  'box-border w-full rounded-lg border border-ink/15 bg-white px-3 py-2.5 text-sm text-ink outline-none focus:border-ink-soft focus:ring-1 focus:ring-ink-soft/20'
 
 export default function OrderReturnPanel({ orderId, orderRef, order }) {
   const [returnRow, setReturnRow] = useState(null)
@@ -82,8 +82,8 @@ export default function OrderReturnPanel({ orderId, orderRef, order }) {
   const statusLabel = returnRow ? RETURN_STATUS_LABELS[returnRow.status] || returnRow.status : null
 
   return (
-    <section className="mt-6 rounded-2xl border border-[#d4af37]/25 bg-white/80 p-4 sm:p-5">
-      <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">Return after delivery</p>
+    <section className="mt-6 rounded-2xl border border-line bg-white/80 p-4 sm:p-5">
+      <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted">Return after delivery</p>
 
       {notice && (
         <p className="mt-3 rounded-xl border border-[#2d6a4f]/25 bg-[#f0f7f4] px-3 py-2.5 text-sm text-[#1b4332]">
@@ -98,10 +98,10 @@ export default function OrderReturnPanel({ orderId, orderRef, order }) {
       )}
 
       {returnRow ? (
-        <div className="mt-3 space-y-2 text-sm text-[#514347]">
-          <p className="font-semibold text-[#130006]">{statusLabel}</p>
+        <div className="mt-3 space-y-2 text-sm text-body">
+          <p className="font-semibold text-ink">{statusLabel}</p>
           <p>
-            Reason: <span className="text-[#130006]">{returnRow.reason}</span>
+            Reason: <span className="text-ink">{returnRow.reason}</span>
           </p>
           {returnRow.rejection_reason && (
             <p className="rounded-lg bg-red-50 px-3 py-2 text-red-900">
@@ -111,7 +111,7 @@ export default function OrderReturnPanel({ orderId, orderRef, order }) {
           {returnRow.reverse_awb && (
             <p>
               Reverse AWB:{' '}
-              <span className="font-mono font-semibold text-[#130006]">{returnRow.reverse_awb}</span>
+              <span className="font-mono font-semibold text-ink">{returnRow.reverse_awb}</span>
             </p>
           )}
           {returnRow.reverse_tracking_url && (
@@ -119,7 +119,7 @@ export default function OrderReturnPanel({ orderId, orderRef, order }) {
               href={returnRow.reverse_tracking_url}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex font-semibold text-[#6f334a] underline-offset-2 hover:underline"
+              className="inline-flex font-semibold text-ink underline-offset-2 hover:underline"
             >
               Track return shipment
             </a>
@@ -130,12 +130,12 @@ export default function OrderReturnPanel({ orderId, orderRef, order }) {
         </div>
       ) : canRequest ? (
         <form onSubmit={handleSubmit} className="mt-4 space-y-3">
-          <p className="text-sm text-[#514347]">
+          <p className="text-sm text-body">
             Not satisfied with order <span className="font-mono font-semibold">{orderRef}</span>? Request a return within
             5 days of delivery.
           </p>
           <label className="block">
-            <span className="text-xs font-semibold uppercase tracking-[0.12em] text-[#847377]">Reason</span>
+            <span className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Reason</span>
             <select
               value={reason}
               onChange={(event) => setReason(event.target.value)}
@@ -150,7 +150,7 @@ export default function OrderReturnPanel({ orderId, orderRef, order }) {
             </select>
           </label>
           <label className="block">
-            <span className="text-xs font-semibold uppercase tracking-[0.12em] text-[#847377]">Notes (optional)</span>
+            <span className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Notes (optional)</span>
             <textarea
               value={notes}
               onChange={(event) => setNotes(event.target.value)}
@@ -163,24 +163,24 @@ export default function OrderReturnPanel({ orderId, orderRef, order }) {
           <button
             type="submit"
             disabled={busy}
-            className="min-h-10 rounded-full bg-[#3d0a21] px-5 text-xs font-bold uppercase tracking-[0.08em] text-[#f7ead0] disabled:opacity-50"
+            className="min-h-10 rounded-full bg-ink px-5 text-xs font-bold uppercase tracking-[0.08em] text-white disabled:opacity-50"
           >
             {busy ? 'Submitting…' : 'Request return'}
           </button>
         </form>
       ) : (
-        <p className="mt-3 text-sm text-[#514347]">
+        <p className="mt-3 text-sm text-body">
           This order is not eligible for an online return (window expired or already handled). See our{' '}
-          <Link to="/refund-cancellation" className="font-semibold text-[#6f334a] underline-offset-2 hover:underline">
+          <Link to="/refund-cancellation" className="font-semibold text-ink underline-offset-2 hover:underline">
             refund policy
           </Link>{' '}
           or contact us on WhatsApp for help.
         </p>
       )}
 
-      <p className="mt-4 text-xs text-[#847377]">
+      <p className="mt-4 text-xs text-muted">
         Read the full{' '}
-        <Link to="/refund-cancellation" className="text-[#6f334a] underline-offset-2 hover:underline">
+        <Link to="/refund-cancellation" className="text-ink underline-offset-2 hover:underline">
           Refund &amp; cancellation policy
         </Link>
         .

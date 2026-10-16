@@ -37,10 +37,10 @@ export default function OfferProgressCard({ onNavigate, compact = false }) {
     <div
       className={`offer-progress-card rounded-xl border p-3.5 sm:p-4 transition-all duration-300 ${
         freeGiftEligible
-          ? 'border-[#D4AF37]/40 bg-gradient-to-br from-[#FFFCF0] to-[#FFF8E1] shadow-[0_4px_20px_rgba(212,175,55,0.12)]'
+          ? 'border-line bg-gradient-to-br from-[#FFFCF0] to-[#FFF8E1] shadow-[0_4px_20px_rgba(17, 17, 17,0.12)]'
           : couponEligible
-            ? 'border-[#D4AF37]/25 bg-[#FFFDF5]'
-            : 'border-[#847377]/15 bg-[#fdf9f4]'
+            ? 'border-line bg-[#FFFDF5]'
+            : 'border-muted/15 bg-paper'
       }`}
       role="region"
       aria-label="Shopping benefits progress"
@@ -50,11 +50,11 @@ export default function OfferProgressCard({ onNavigate, compact = false }) {
         <div className="text-center">
           <div className="offer-sparkle-container inline-flex items-center gap-2">
             <span className="text-xl" role="img" aria-label="Gift">🎁</span>
-            <p className="font-serif text-base sm:text-lg font-semibold text-[#3d0a21]">
+            <p className="font-serif text-base sm:text-lg font-semibold text-ink">
               Free Gift Unlocked
             </p>
           </div>
-          <p className="mt-1 text-[11px] sm:text-xs text-[#514347] leading-relaxed">
+          <p className="mt-1 text-[11px] sm:text-xs text-body leading-relaxed">
             {freeGiftInCart
               ? 'Your chosen complimentary gift has been added to your bag.'
               : `Select your complimentary gift worth up to ${formatOfferAmount(giftValue)} in your bag.`}
@@ -63,7 +63,7 @@ export default function OfferProgressCard({ onNavigate, compact = false }) {
             <Link
               to="/cart"
               onClick={handleCta}
-              className="mt-2.5 inline-flex h-7 items-center justify-center rounded-full bg-[#8B6914] px-4 text-[9.5px] font-bold uppercase tracking-wider text-white hover:bg-[#6B5210] transition"
+              className="mt-2.5 inline-flex h-7 items-center justify-center rounded-full bg-ink px-4 text-[9.5px] font-bold uppercase tracking-wider text-white hover:bg-ink transition"
             >
               Choose Free Gift
             </Link>
@@ -78,14 +78,14 @@ export default function OfferProgressCard({ onNavigate, compact = false }) {
       {state === 'B' && (
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-[#8B6914] text-sm">✓</span>
-            <p className="text-[11px] sm:text-xs font-bold text-[#8B6914] uppercase tracking-[0.06em]">
+            <span className="text-accent-ink text-sm">✓</span>
+            <p className="text-[11px] sm:text-xs font-bold text-accent-ink uppercase tracking-[0.06em]">
               {formatOfferAmount(couponDiscount)} OFF Unlocked
             </p>
           </div>
           <div aria-live="polite">
-            <p className="text-xs sm:text-sm font-semibold text-[#3d0a21]">
-              Just {formatOfferAmount(amountToGift)} more to unlock your <span className="text-[#8B6914]">FREE {formatOfferAmount(giftValue)}+ gift</span>
+            <p className="text-xs sm:text-sm font-semibold text-ink">
+              Just {formatOfferAmount(amountToGift)} more to unlock your <span className="text-accent-ink">FREE {formatOfferAmount(giftValue)}+ gift</span>
             </p>
           </div>
           <div className="mt-3">
@@ -94,7 +94,7 @@ export default function OfferProgressCard({ onNavigate, compact = false }) {
           <Link
             to="/collections#signature"
             onClick={handleCta}
-            className="mt-3 flex h-8 w-full items-center justify-center rounded-full border border-[#3d0a21]/20 text-[10px] font-bold uppercase tracking-[0.08em] text-[#3d0a21] transition hover:bg-[#3d0a21] hover:text-[#f7ead0] sm:h-9 sm:text-[11px]"
+            className="mt-3 flex h-8 w-full items-center justify-center rounded-full border border-ink/20 text-[10px] font-bold uppercase tracking-[0.08em] text-ink transition hover:bg-ink hover:text-white sm:h-9 sm:text-[11px]"
           >
             Add {formatOfferAmount(amountToGift)} more
           </Link>
@@ -105,12 +105,12 @@ export default function OfferProgressCard({ onNavigate, compact = false }) {
       {state === 'A' && (
         <div>
           <div aria-live="polite">
-            <p className="text-xs sm:text-sm font-semibold text-[#3d0a21]">
+            <p className="text-xs sm:text-sm font-semibold text-ink">
               You're {formatOfferAmount(amountToCoupon)} away from{' '}
-              <span className="text-[#8B6914]">{formatOfferAmount(couponDiscount)} OFF</span>
+              <span className="text-accent-ink">{formatOfferAmount(couponDiscount)} OFF</span>
             </p>
             {amountToGift > 0 && amountToGift < 500 && (
-              <p className="mt-1 text-[10px] sm:text-[11px] text-[#847377]">
+              <p className="mt-1 text-[10px] sm:text-[11px] text-muted">
                 {formatOfferAmount(amountToGift)} away from a FREE {formatOfferAmount(giftValue)}+ gift
               </p>
             )}
@@ -121,7 +121,7 @@ export default function OfferProgressCard({ onNavigate, compact = false }) {
           <Link
             to="/collections#signature"
             onClick={handleCta}
-            className="mt-3 flex h-8 w-full items-center justify-center rounded-full border border-[#847377]/20 text-[10px] font-bold uppercase tracking-[0.08em] text-[#514347] transition hover:bg-[#3d0a21] hover:text-[#f7ead0] sm:h-9 sm:text-[11px]"
+            className="mt-3 flex h-8 w-full items-center justify-center rounded-full border border-muted/20 text-[10px] font-bold uppercase tracking-[0.08em] text-body transition hover:bg-ink hover:text-white sm:h-9 sm:text-[11px]"
           >
             Continue shopping
           </Link>

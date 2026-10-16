@@ -9,7 +9,7 @@ const CollectionsFooter = lazy(() => import("./CollectionsFooter"));
 
 export default function CollectionsContent() {
   return (
-    <main className="page-offset-nav bg-white text-[#130006]">
+    <main className="page-offset-nav bg-white text-ink">
       <h1 className="sr-only">Velisqa Collections</h1>
       <SignatureCollection />
       <LazySection minHeight="760px">

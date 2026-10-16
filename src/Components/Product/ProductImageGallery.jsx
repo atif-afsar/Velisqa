@@ -15,7 +15,7 @@ function GalleryThumb({ src, selected, index, onSelect }) {
       onClick={onSelect}
       className={`h-16 w-14 shrink-0 overflow-hidden rounded-lg border-2 transition sm:h-[4.5rem] sm:w-[3.25rem] ${
         selected
-          ? 'border-[#3d0a21] ring-1 ring-[#d4af37]/40'
+          ? 'border-ink ring-1 ring-accent/40'
           : 'border-transparent opacity-70 hover:opacity-100'
       }`}
     >
@@ -67,7 +67,7 @@ export default function ProductImageGallery({ images, alt }) {
 
   if (!count) {
     return (
-      <div className="flex aspect-[4/5] items-center justify-center text-sm text-[#847377]">
+      <div className="flex aspect-[4/5] items-center justify-center text-sm text-muted">
         No image
       </div>
     )
@@ -101,7 +101,7 @@ export default function ProductImageGallery({ images, alt }) {
             <button
               type="button"
               onClick={() => goTo(safeIndex - 1)}
-              className="absolute left-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-[#130006]/35 text-[#fdf9f4] backdrop-blur-sm transition hover:bg-[#130006]/55 sm:left-3"
+              className="absolute left-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-ink/35 text-white backdrop-blur-sm transition hover:bg-ink/55 sm:left-3"
               aria-label="Previous image"
             >
               <span className="text-lg leading-none" aria-hidden>
@@ -111,14 +111,14 @@ export default function ProductImageGallery({ images, alt }) {
             <button
               type="button"
               onClick={() => goTo(safeIndex + 1)}
-              className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-[#130006]/35 text-[#fdf9f4] backdrop-blur-sm transition hover:bg-[#130006]/55 sm:right-3"
+              className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-ink/35 text-white backdrop-blur-sm transition hover:bg-ink/55 sm:right-3"
               aria-label="Next image"
             >
               <span className="text-lg leading-none" aria-hidden>
                 ›
               </span>
             </button>
-            <p className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-[#130006]/45 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#fdf9f4] backdrop-blur-sm">
+            <p className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-ink/45 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-white backdrop-blur-sm">
               {safeIndex + 1} / {count}
             </p>
           </>

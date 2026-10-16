@@ -18,10 +18,10 @@ export default function RefreshCountdown({ intervalMs = 25000, active = true }) 
   const progress = ((totalSeconds - remaining) / totalSeconds) * 100
 
   return (
-    <span className="inline-flex items-center gap-2 text-[#847377]">
+    <span className="inline-flex items-center gap-2 text-muted">
       <span className="relative inline-flex h-4 w-4 items-center justify-center" aria-hidden>
         <svg viewBox="0 0 20 20" className="h-4 w-4 -rotate-90">
-          <circle cx="10" cy="10" r="8" fill="none" stroke="#d4af37" strokeOpacity="0.25" strokeWidth="2" />
+          <circle cx="10" cy="10" r="8" fill="none" stroke="#1fa79a" strokeOpacity="0.25" strokeWidth="2" />
           <circle
             cx="10"
             cy="10"

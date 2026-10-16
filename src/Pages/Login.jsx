@@ -19,29 +19,29 @@ export default function Login() {
 
   if (authLoading) {
     return (
-      <main className="min-h-screen bg-[#f9f5f0] px-4 py-20 text-center text-sm text-[#847377]">
+      <main className="min-h-screen bg-mist px-4 py-20 text-center text-sm text-muted">
         Loading…
       </main>
     )
   }
 
   return (
-    <main className="min-h-screen bg-[#f9f5f0] text-[#130006]">
+    <main className="min-h-screen bg-mist text-ink">
       <div className="page-offset-nav">
         <div className="container-stitch px-4 py-10 sm:py-14">
           <Link
             to="/"
-            className="mb-8 inline-flex text-[10px] font-bold uppercase tracking-[0.2em] text-[#847377] transition hover:text-[#3d0a21]"
+            className="mb-8 inline-flex text-[10px] font-bold uppercase tracking-[0.2em] text-muted transition hover:text-ink"
           >
             ← Back to home
           </Link>
 
-          <div className="mx-auto max-w-md rounded-2xl border border-[#d4af37]/20 bg-white/70 p-6 shadow-[0_20px_50px_rgba(19,0,6,0.06)] backdrop-blur-sm sm:p-8">
-            <p className="type-label text-[#d4af37]">Velisqa</p>
+          <div className="mx-auto max-w-md rounded-2xl border border-line bg-white/70 p-6 shadow-[0_20px_50px_rgba(17, 17, 17,0.06)] backdrop-blur-sm sm:p-8">
+            <p className="type-label text-muted">Velisqa</p>
             <h1 className="mt-2 font-serif text-2xl font-semibold tracking-wide sm:text-3xl">
               {auth.isSignup ? 'Create your account' : 'Sign in'}
             </h1>
-            <p className="mt-2 text-sm text-[#514347]">
+            <p className="mt-2 text-sm text-body">
               {auth.isSignup
                 ? 'Join with Google or email for orders and updates.'
                 : 'Sign in with Google or your email.'}

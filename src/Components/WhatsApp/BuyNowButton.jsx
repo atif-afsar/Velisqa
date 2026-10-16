@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion } from "../../lib/motion";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getPrimaryImageUrl } from "../../lib/productImages";
@@ -41,15 +41,15 @@ export default function BuyNowButton({
   const baseStyles =
     "tap-target inline-flex max-w-full min-w-0 items-center justify-center gap-2 rounded-sm px-4 py-2 text-center font-bold transition-all cursor-pointer";
   const visual = variant === "outline"
-    ? "bg-white text-[#3B0D23] border border-[#3B0D23] hover:bg-[#F8F6F3]/40"
-    : "bg-[#3B0D23] text-white hover:bg-[#2A0718]";
+    ? "bg-white text-ink border border-ink hover:bg-mist/40"
+    : "bg-ink text-white hover:bg-ink";
   const premiumStyles =
     "ring-transparent";
 
   return (
     <div className="flex w-full max-w-full flex-col items-center">
       {soldOut && (
-        <p className="mb-1.5 text-[9px] font-semibold uppercase tracking-[0.2em] text-[#D4AF37] sm:text-[10px]">
+        <p className="mb-1.5 text-[9px] font-semibold uppercase tracking-[0.2em] text-muted sm:text-[10px]">
           Out of stock
         </p>
       )}

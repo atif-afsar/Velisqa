@@ -37,7 +37,7 @@ export default function ProductTrustBadges() {
         {BADGES.map(({ label, icon }) => (
           <li key={label} className="flex flex-col items-center gap-3 text-center">
             <svg
-              className="h-8 w-8 text-[#130006] sm:h-9 sm:w-9"
+              className="h-8 w-8 text-ink sm:h-9 sm:w-9"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -48,7 +48,7 @@ export default function ProductTrustBadges() {
             >
               {icon}
             </svg>
-            <span className="text-xs font-medium leading-snug text-[#130006] sm:text-sm">
+            <span className="text-xs font-medium leading-snug text-ink sm:text-sm">
               {label}
             </span>
           </li>

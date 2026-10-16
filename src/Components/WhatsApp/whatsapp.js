@@ -1,4 +1,5 @@
 import { SITE_URL } from "../SEO/siteConfig";
+import { productPath } from '../../lib/productUrl'
 
 export const WHATSAPP_NUMBER = "919336072590";
 
@@ -94,7 +95,7 @@ export function buildCartOrderWhatsAppMessage({
 
     const url =
       item.productUrl ||
-      (item.productId ? `${SITE_URL}/product/${item.productId}` : null);
+      (item.productId ? `${SITE_URL}${productPath({ id: item.productId, name: item.name })}` : null);
 
     return [
       `${index + 1}. *${item.name}*`,

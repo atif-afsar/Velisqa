@@ -51,7 +51,7 @@ export default function Wishlist() {
   const missingCount = wishlistCount - products.length
 
   return (
-    <main className="page-offset-nav bg-[#fdf9f4] text-[#130006]">
+    <main className="page-offset-nav bg-paper text-ink">
       <SEOHead
         title="Wishlist | Velisqa"
         description="Your saved Velisqa jewellery pieces — add to bag or continue shopping."
@@ -59,9 +59,9 @@ export default function Wishlist() {
       />
       <div className="container-stitch px-4 py-10 sm:py-14">
         <header className="mx-auto max-w-2xl text-center">
-          <p className="type-label text-[#847377]">Saved pieces</p>
+          <p className="type-label text-muted">Saved pieces</p>
           <h1 className="mt-2 type-section">Wishlist</h1>
-          <p className="mt-3 text-sm text-[#514347]">
+          <p className="mt-3 text-sm text-body">
             {wishlistCount === 0
               ? 'Tap the heart on any product to save it here.'
               : `${wishlistCount} piece${wishlistCount === 1 ? '' : 's'} saved on this device.`}
@@ -82,10 +82,10 @@ export default function Wishlist() {
 
         {!loading && wishlistCount === 0 && (
           <div className="mt-12 flex flex-col items-center gap-4 text-center">
-            <p className="text-sm text-[#514347]">Your wishlist is empty.</p>
+            <p className="text-sm text-body">Your wishlist is empty.</p>
             <Link
               to="/collections"
-              className="tap-target rounded-full bg-[#3d0a21] px-8 py-3 text-xs font-bold uppercase tracking-[0.12em] text-[#e9c349] transition hover:bg-[#2a0718]"
+              className="tap-target rounded-full bg-ink px-8 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white transition hover:bg-ink"
             >
               Explore collections
             </Link>
@@ -101,11 +101,11 @@ export default function Wishlist() {
         )}
 
         {!loading && missingCount > 0 && (
-          <p className="mt-8 text-center text-xs text-[#847377]">
+          <p className="mt-8 text-center text-xs text-muted">
             {missingCount} saved item{missingCount === 1 ? '' : 's'} may no longer be available.
             <button
               type="button"
-              className="ml-1 font-semibold text-[#6f334a] underline-offset-2 hover:underline"
+              className="ml-1 font-semibold text-ink underline-offset-2 hover:underline"
               onClick={() => {
                 const available = new Set(products.map((p) => p.id))
                 wishlistIds.filter((id) => !available.has(id)).forEach(removeFromWishlist)

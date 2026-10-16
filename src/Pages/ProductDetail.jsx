@@ -30,13 +30,13 @@ function ProductDetailSkeleton() {
   return (
     <main className="page-offset-nav bg-white">
       <div className="container-stitch mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
-        <div className="mb-6 h-3 w-40 animate-pulse rounded bg-[#ebe6df]" />
+        <div className="mb-6 h-3 w-40 animate-pulse rounded bg-mist" />
         <div className="grid gap-8 lg:grid-cols-2 lg:gap-10">
-          <div className="aspect-[4/5] animate-pulse rounded-lg bg-[#ebe6df]" />
+          <div className="aspect-[4/5] animate-pulse rounded-lg bg-mist" />
           <div className="space-y-4">
-            <div className="h-8 w-3/4 animate-pulse rounded bg-[#ebe6df]" />
-            <div className="h-6 w-32 animate-pulse rounded bg-[#ebe6df]" />
-            <div className="h-12 w-full animate-pulse rounded-full bg-[#ebe6df]" />
+            <div className="h-8 w-3/4 animate-pulse rounded bg-mist" />
+            <div className="h-6 w-32 animate-pulse rounded bg-mist" />
+            <div className="h-12 w-full animate-pulse rounded-full bg-mist" />
           </div>
         </div>
       </div>
@@ -171,10 +171,10 @@ export default function ProductDetail() {
   if (notFound || !product) {
     return (
       <main className="page-offset-nav bg-white px-4 py-20 text-center">
-        <h1 className="font-serif text-2xl text-[#130006]">Product not found</h1>
+        <h1 className="font-serif text-2xl text-ink">Product not found</h1>
         <Link
           to="/collections"
-          className="mt-6 inline-flex rounded-full bg-[#3d0a21] px-6 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-[#f7ead0]"
+          className="mt-6 inline-flex rounded-full bg-ink px-6 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-white"
         >
           Back to shop
         </Link>
@@ -202,17 +202,17 @@ export default function ProductDetail() {
           }),
         ]}
       />
-      <main className="page-offset-nav bg-white text-[#130006] pb-24 lg:pb-12 no-overflow-x">
+      <main className="page-offset-nav bg-white text-ink pb-24 lg:pb-12 no-overflow-x">
         <div className="container-stitch mx-auto max-w-6xl px-4 py-4 sm:px-6 sm:py-6 max-w-safe">
           <nav
             className="mb-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-500 font-medium sm:text-sm"
             aria-label="Breadcrumb"
           >
-            <Link to="/" className="hover:text-[#8B6914] transition-colors">
+            <Link to="/" className="hover:text-accent-ink transition-colors">
               Home
             </Link>
             <span aria-hidden>/</span>
-            <Link to={collectionsLink} className="hover:text-[#8B6914] transition-colors">
+            <Link to={collectionsLink} className="hover:text-accent-ink transition-colors">
               Shop
             </Link>
             {category && (
@@ -241,7 +241,7 @@ export default function ProductDetail() {
                 {category && (
                   <Link
                     to={collectionsLink}
-                    className="text-xs font-bold uppercase tracking-wider text-[#8B6914] hover:text-[#6B5210] hover:underline"
+                    className="text-xs font-bold uppercase tracking-wider text-accent-ink hover:text-accent-ink hover:underline"
                   >
                     {category}
                   </Link>
@@ -276,7 +276,7 @@ export default function ProductDetail() {
 
               {/* Combo products display */}
               {product.is_combo && comboProducts.length > 0 && (
-                <div className="mt-6 rounded-xl border border-slate-200 bg-[#FAF9F6] p-4 shadow-xs animate-fade-in">
+                <div className="mt-6 rounded-xl border border-slate-200 bg-mist p-4 shadow-xs animate-fade-in">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-3">
                     Included in this Combo
                   </h3>
@@ -289,7 +289,7 @@ export default function ProductDetail() {
                       return (
                         <div
                           key={p.id}
-                          className="flex items-center gap-3.5 rounded-lg bg-white border border-slate-200/80 p-2.5 shadow-xs transition hover:border-[#C9A96E]"
+                          className="flex items-center gap-3.5 rounded-lg bg-white border border-slate-200/80 p-2.5 shadow-xs transition hover:border-line"
                         >
                           <Link to={pLink} className="shrink-0">
                             <img
@@ -300,22 +300,22 @@ export default function ProductDetail() {
                           </Link>
                           <div className="min-w-0 flex-1">
                             {p.category && (
-                              <span className="text-[9px] font-bold uppercase tracking-wider text-[#6f334a]">
+                              <span className="text-[9px] font-bold uppercase tracking-wider text-ink">
                                 {normalizeProductCategory(p.category)}
                               </span>
                             )}
                             <Link
                               to={pLink}
-                              className="block text-sm font-semibold text-[#130006] hover:text-[#6f334a] transition line-clamp-1 leading-snug mt-0.5"
+                              className="block text-sm font-semibold text-ink hover:text-ink transition line-clamp-1 leading-snug mt-0.5"
                             >
                               {p.name}
                             </Link>
                             <div className="flex items-center gap-1.5 mt-1">
-                              <span className="text-sm font-bold text-[#130006]">
+                              <span className="text-sm font-bold text-ink">
                                 ₹{Number(p.price).toLocaleString('en-IN')}
                               </span>
                               {p.mrp && Number(p.mrp) > Number(p.price) && (
-                                <span className="text-xs text-[#847377] line-through">
+                                <span className="text-xs text-muted line-through">
                                   ₹{Number(p.mrp).toLocaleString('en-IN')}
                                 </span>
                               )}
@@ -336,14 +336,14 @@ export default function ProductDetail() {
                   <>
                     <Link
                       to="/shipping-delivery"
-                      className="text-xs font-medium text-[#6f334a] underline-offset-2 hover:underline"
+                      className="text-xs font-medium text-ink underline-offset-2 hover:underline"
                     >
                       Shipping &amp; delivery policy
                     </Link>
-                    <span className="text-xs text-[#847377]"> · </span>
+                    <span className="text-xs text-muted"> · </span>
                     <Link
                       to="/refund-cancellation"
-                      className="text-xs font-medium text-[#6f334a] underline-offset-2 hover:underline"
+                      className="text-xs font-medium text-ink underline-offset-2 hover:underline"
                     >
                       Refund &amp; cancellation policy
                     </Link>
@@ -355,7 +355,7 @@ export default function ProductDetail() {
 
               <Link
                 to={collectionsLink}
-                className="tap-target mt-8 inline-flex text-sm font-medium text-[#6f334a] underline-offset-2 hover:underline"
+                className="tap-target mt-8 inline-flex text-sm font-medium text-ink underline-offset-2 hover:underline"
               >
                 ← Continue shopping
               </Link>

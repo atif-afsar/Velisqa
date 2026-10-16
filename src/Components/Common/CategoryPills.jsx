@@ -26,8 +26,8 @@ export function CategoryPill({ active, onClick, label, count, className = '' }) 
         outline-none
         ${
           active
-            ? 'bg-[#3d0a21] border-[#3d0a21] text-white'
-            : 'bg-[#130006]/[0.03] border-transparent text-[#6e5d62] hover:bg-[#130006]/[0.06] hover:text-[#3d0a21]'
+            ? 'bg-ink border-ink text-white'
+            : 'bg-ink/[0.03] border-transparent text-[#6e5d62] hover:bg-ink/[0.06] hover:text-ink'
         }
         ${className}
       `}

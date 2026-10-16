@@ -583,7 +583,7 @@ export default function AdminDashboard() {
   }
 
   const inputClass =
-    'w-full max-w-full min-w-0 box-border rounded-xl border border-[#847377]/25 bg-white px-3.5 sm:px-4 py-2.5 text-sm text-[#130006] outline-none transition focus:border-[#3d0a21]/35 focus:ring-2 focus:ring-[#d4af37]/20'
+    'w-full max-w-full min-w-0 box-border rounded-xl border border-muted/25 bg-white px-3.5 sm:px-4 py-2.5 text-sm text-ink outline-none transition focus:border-ink/35 focus:ring-2 focus:ring-accent/20'
 
   const filteredProducts = products.filter((p) => {
     const matchesCategory = selectedCategoryTab === 'all'
@@ -615,11 +615,11 @@ export default function AdminDashboard() {
             </div>
           )}
 
-          <section className="mb-10 w-full max-w-full min-w-0 box-border overflow-hidden rounded-2xl border border-[#d4af37]/15 bg-white/80 p-3.5 sm:p-6 shadow-[0_16px_48px_rgba(19,0,6,0.05)]">
+          <section className="mb-10 w-full max-w-full min-w-0 box-border overflow-hidden rounded-2xl border border-line bg-white/80 p-3.5 sm:p-6 shadow-[0_16px_48px_rgba(17, 17, 17,0.05)]">
             <h2 className="font-serif text-lg font-semibold">
               {editingId ? 'Edit product' : 'Add a new product'}
             </h2>
-            <p className="mt-1 text-sm text-[#847377]">
+            <p className="mt-1 text-sm text-muted">
               {editingId
                 ? 'Update fields and images, then save. First image is the shop thumbnail.'
                 : 'Add up to 10 images. They are resized to WebP before upload.'}
@@ -639,7 +639,7 @@ export default function AdminDashboard() {
 
             <form onSubmit={handleSubmit} className="mt-4 grid gap-4 w-full max-w-full min-w-0 box-border sm:grid-cols-2">
               <label className="sm:col-span-2 block w-full max-w-full min-w-0">
-                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
                   Name
                 </span>
                 <input
@@ -651,37 +651,37 @@ export default function AdminDashboard() {
               </label>
 
               {/* Combo Toggle & Configuration */}
-              <div className="sm:col-span-2 rounded-xl border border-[#d4af37]/20 bg-[#fdf9f4] p-4 shadow-[0_4px_12px_rgba(19,0,6,0.02)]">
+              <div className="sm:col-span-2 rounded-xl border border-line bg-paper p-4 shadow-[0_4px_12px_rgba(17, 17, 17,0.02)]">
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="checkbox"
-                    className="h-5 w-5 rounded accent-[#3d0a21] cursor-pointer"
+                    className="h-5 w-5 rounded accent-ink cursor-pointer"
                     checked={form.is_combo}
                     onChange={(e) => setForm((f) => ({ ...f, is_combo: e.target.checked }))}
                   />
-                  <span className="text-sm font-semibold text-[#130006] leading-none">
+                  <span className="text-sm font-semibold text-ink leading-none">
                     Is this a Combo / Bundle Product?
                   </span>
                 </label>
-                <p className="mt-1 text-xs text-[#847377] ml-8">
+                <p className="mt-1 text-xs text-muted ml-8">
                   Check this box if this product is a package bundle containing multiple individual items.
                 </p>
 
                 {form.is_combo && (
-                  <div className="mt-4 border-t border-[#847377]/10 pt-4 space-y-4">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-[#3d0a21]">
+                  <div className="mt-4 border-t border-muted/10 pt-4 space-y-4">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-ink">
                       Configure Combo Products
                     </h3>
 
                     {/* Selected products list & Merged Price */}
-                    <div className="rounded-xl bg-[#3d0a21]/5 p-4 border border-[#3d0a21]/10">
+                    <div className="rounded-xl bg-ink/5 p-4 border border-ink/10">
                       <div className="flex flex-wrap items-center justify-between gap-2">
-                        <span className="text-xs font-semibold text-[#514347]">
+                        <span className="text-xs font-semibold text-body">
                           Selected Products ({form.combo_product_ids.length})
                         </span>
                         {form.combo_product_ids.length > 0 && (
                           <div className="flex items-center gap-3">
-                            <span className="text-xs font-bold text-[#130006]">
+                            <span className="text-xs font-bold text-ink">
                               Merged Price: ₹{
                                 products
                                   .filter((p) => form.combo_product_ids.includes(p.id))
@@ -689,7 +689,7 @@ export default function AdminDashboard() {
                                   .toLocaleString('en-IN')
                               }
                               {products.filter((p) => form.combo_product_ids.includes(p.id)).some(p => p.mrp) && (
-                                <span className="text-xs font-normal text-[#847377] line-through ml-1.5">
+                                <span className="text-xs font-normal text-muted line-through ml-1.5">
                                   ₹{
                                     products
                                       .filter((p) => form.combo_product_ids.includes(p.id))
@@ -711,7 +711,7 @@ export default function AdminDashboard() {
                                   mrp: sumMrp > sumPrice ? String(sumMrp) : '',
                                 }));
                               }}
-                              className="rounded bg-[#3d0a21] hover:bg-[#3d0a21]/90 text-[10px] font-bold text-[#fdf9f4] px-2.5 py-1 uppercase tracking-wider transition"
+                              className="rounded bg-ink hover:bg-ink/90 text-[10px] font-bold text-white px-2.5 py-1 uppercase tracking-wider transition"
                             >
                               Apply Price
                             </button>
@@ -720,7 +720,7 @@ export default function AdminDashboard() {
                       </div>
 
                       {form.combo_product_ids.length === 0 ? (
-                        <p className="mt-2 text-xs italic text-[#847377]">
+                        <p className="mt-2 text-xs italic text-muted">
                           No products selected. Search and select products below.
                         </p>
                       ) : (
@@ -730,7 +730,7 @@ export default function AdminDashboard() {
                             .map((p) => (
                               <div
                                 key={p.id}
-                                className="flex items-center gap-2 rounded-lg bg-white border border-[#847377]/15 p-1.5 pr-2.5 shadow-sm"
+                                className="flex items-center gap-2 rounded-lg bg-white border border-muted/15 p-1.5 pr-2.5 shadow-sm"
                               >
                                 <img
                                   src={getProductImageUrls(p)[0] || ''}
@@ -738,10 +738,10 @@ export default function AdminDashboard() {
                                   className="h-7 w-7 rounded object-cover"
                                 />
                                 <div className="text-[11px] leading-tight">
-                                  <div className="font-semibold text-[#130006] line-clamp-1 max-w-[120px]">
+                                  <div className="font-semibold text-ink line-clamp-1 max-w-[120px]">
                                     {p.name}
                                   </div>
-                                  <div className="text-[#847377]">
+                                  <div className="text-muted">
                                     ₹{Number(p.price).toLocaleString('en-IN')}
                                   </div>
                                 </div>
@@ -771,7 +771,7 @@ export default function AdminDashboard() {
                           placeholder="Search products to add..."
                           value={comboSearch}
                           onChange={(e) => setComboSearch(e.target.value)}
-                          className="w-full sm:w-64 rounded-lg border border-[#847377]/25 bg-white px-3 py-1.5 text-xs text-[#130006] outline-none focus:border-[#3d0a21]/35"
+                          className="w-full sm:w-64 rounded-lg border border-muted/25 bg-white px-3 py-1.5 text-xs text-ink outline-none focus:border-ink/35"
                         />
                         {/* Tabs / Category filter pills */}
                         <div className="flex flex-wrap gap-1 items-center max-h-24 overflow-y-auto">
@@ -780,8 +780,8 @@ export default function AdminDashboard() {
                             onClick={() => setComboTab('all')}
                             className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider transition ${
                               comboTab === 'all'
-                                ? 'bg-[#3d0a21] text-[#fdf9f4]'
-                                : 'bg-[#847377]/10 text-[#514347] hover:bg-[#847377]/15'
+                                ? 'bg-ink text-white'
+                                : 'bg-muted/10 text-body hover:bg-muted/15'
                             }`}
                           >
                             All
@@ -791,8 +791,8 @@ export default function AdminDashboard() {
                             onClick={() => setComboTab('new')}
                             className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider transition ${
                               comboTab === 'new'
-                                ? 'bg-[#3d0a21] text-[#fdf9f4]'
-                                : 'bg-[#847377]/10 text-[#514347] hover:bg-[#847377]/15'
+                                ? 'bg-ink text-white'
+                                : 'bg-muted/10 text-body hover:bg-muted/15'
                             }`}
                           >
                             New Arrivals
@@ -807,8 +807,8 @@ export default function AdminDashboard() {
                                 onClick={() => setComboTab(cat)}
                                 className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider transition ${
                                   comboTab === cat
-                                    ? 'bg-[#3d0a21] text-[#fdf9f4]'
-                                    : 'bg-[#847377]/10 text-[#514347] hover:bg-[#847377]/15'
+                                    ? 'bg-ink text-white'
+                                    : 'bg-muted/10 text-body hover:bg-muted/15'
                                 }`}
                               >
                                 {cat}
@@ -819,7 +819,7 @@ export default function AdminDashboard() {
                       </div>
 
                       {/* Scrollable grid of products to select */}
-                      <div className="grid gap-2 grid-cols-2 sm:grid-cols-3 max-h-60 overflow-y-auto border border-[#847377]/15 rounded-xl bg-white p-2.5">
+                      <div className="grid gap-2 grid-cols-2 sm:grid-cols-3 max-h-60 overflow-y-auto border border-muted/15 rounded-xl bg-white p-2.5">
                         {products
                           .filter((p) => p.id !== editingId)
                           .filter((p) => {
@@ -881,15 +881,15 @@ export default function AdminDashboard() {
                                 }}
                                 className={`flex items-start gap-2.5 rounded-lg border p-2 cursor-pointer transition select-none ${
                                   isSelected
-                                    ? 'border-[#3d0a21] bg-[#3d0a21]/5 ring-1 ring-[#3d0a21]'
-                                    : 'border-[#847377]/15 bg-[#fdf9f4]/20 hover:border-[#847377]/35'
+                                    ? 'border-ink bg-ink/5 ring-1 ring-ink'
+                                    : 'border-muted/15 bg-paper/20 hover:border-muted/35'
                                 }`}
                               >
                                 <input
                                   type="checkbox"
                                   checked={isSelected}
                                   onChange={() => {}}
-                                  className="mt-1 h-3.5 w-3.5 accent-[#3d0a21] pointer-events-none"
+                                  className="mt-1 h-3.5 w-3.5 accent-ink pointer-events-none"
                                 />
                                 <div className="min-w-0 flex-1">
                                   <img
@@ -897,13 +897,13 @@ export default function AdminDashboard() {
                                     alt=""
                                     className="aspect-square w-full rounded object-cover bg-gray-100 max-h-16"
                                   />
-                                  <div className="mt-1.5 font-semibold text-[11px] text-[#130006] truncate">
+                                  <div className="mt-1.5 font-semibold text-[11px] text-ink truncate">
                                     {p.name}
                                   </div>
-                                  <div className="text-[10px] text-[#847377]">
+                                  <div className="text-[10px] text-muted">
                                     {normalizeProductCategory(p.category)}
                                   </div>
-                                  <div className="mt-0.5 text-xs font-bold text-[#130006]">
+                                  <div className="mt-0.5 text-xs font-bold text-ink">
                                     ₹{Number(p.price).toLocaleString('en-IN')}
                                   </div>
                                 </div>
@@ -917,7 +917,7 @@ export default function AdminDashboard() {
               </div>
 
               <label className="block w-full max-w-full min-w-0 box-border">
-                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
                   Selling price (₹)
                 </span>
                 <input
@@ -932,7 +932,7 @@ export default function AdminDashboard() {
               </label>
 
               <label className="block w-full max-w-full min-w-0 box-border">
-                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
                   MRP (₹)
                 </span>
                 <input
@@ -944,11 +944,11 @@ export default function AdminDashboard() {
                   onChange={(e) => setForm((f) => ({ ...f, mrp: e.target.value }))}
                   placeholder="Leave empty when not discounted"
                 />
-                <p className="mt-1 text-xs text-[#847377]">Must not be lower than the selling price.</p>
+                <p className="mt-1 text-xs text-muted">Must not be lower than the selling price.</p>
               </label>
 
               <label className="block w-full max-w-full min-w-0 box-border">
-                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
                   Stock
                 </span>
                 <input
@@ -962,15 +962,15 @@ export default function AdminDashboard() {
                 />
               </label>
 
-              <label className="flex items-start gap-3 rounded-xl border border-[#847377]/20 bg-[#fdf9f4] p-3 sm:px-4 sm:py-3 sm:col-span-2 w-full max-w-full min-w-0 box-border overflow-hidden">
+              <label className="flex items-start gap-3 rounded-xl border border-muted/20 bg-paper p-3 sm:px-4 sm:py-3 sm:col-span-2 w-full max-w-full min-w-0 box-border overflow-hidden">
                 <input
                   type="checkbox"
-                  className="mt-1 h-4 w-4 shrink-0 accent-[#3d0a21]"
+                  className="mt-1 h-4 w-4 shrink-0 accent-ink"
                   checked={form.out_of_stock}
                   onChange={(e) => setForm((f) => ({ ...f, out_of_stock: e.target.checked }))}
                 />
-                <span className="text-xs sm:text-sm leading-relaxed text-[#514347] min-w-0 flex-1">
-                  <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+                <span className="text-xs sm:text-sm leading-relaxed text-body min-w-0 flex-1">
+                  <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
                     Out of stock
                   </span>
                   Shoppers see “Out of stock” and “Enquire this product” on the website. Stock count
@@ -979,7 +979,7 @@ export default function AdminDashboard() {
               </label>
 
               <label className="sm:col-span-2 block w-full max-w-full min-w-0 box-border">
-                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
                   Badge
                 </span>
                 <select
@@ -993,14 +993,14 @@ export default function AdminDashboard() {
                     </option>
                   ))}
                 </select>
-                <p className="mt-1 text-xs text-[#847377]">
+                <p className="mt-1 text-xs text-muted">
                   Ratings and review counts come only from approved customer reviews. Auto badge:
                   New (30 days) or Bestseller (80+ approved reviews).
                 </p>
               </label>
 
               <label className="block w-full max-w-full min-w-0 box-border">
-                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
                   Mock Review Count (Admin)
                 </span>
                 <input
@@ -1014,7 +1014,7 @@ export default function AdminDashboard() {
               </label>
 
               <label className="block w-full max-w-full min-w-0 box-border">
-                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
                   Mock Average Rating (1.0 - 5.0)
                 </span>
                 <input
@@ -1030,7 +1030,7 @@ export default function AdminDashboard() {
               </label>
 
               <label className="sm:col-span-2 block w-full max-w-full min-w-0 box-border">
-                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
                   Category
                 </span>
                 <select
@@ -1045,13 +1045,13 @@ export default function AdminDashboard() {
                     </option>
                   ))}
                 </select>
-                <p className="mt-1 text-xs text-[#847377]">
+                <p className="mt-1 text-xs text-muted">
                   Shown on Collections under this category (e.g. Necklace, Rings).
                 </p>
               </label>
 
               <label className="block w-full max-w-full min-w-0 box-border">
-                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
                   Metal / material
                 </span>
                 <select
@@ -1068,7 +1068,7 @@ export default function AdminDashboard() {
               </label>
 
               <label className="block w-full max-w-full min-w-0 box-border">
-                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
                   Colour
                 </span>
                 <select
@@ -1084,16 +1084,16 @@ export default function AdminDashboard() {
                 </select>
               </label>
 
-              <fieldset className="rounded-xl border border-[#847377]/20 bg-[#fdf9f4] p-3.5 sm:p-4 sm:col-span-2 w-full max-w-full min-w-0 box-border overflow-hidden">
-                <legend className="px-1 text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+              <fieldset className="rounded-xl border border-muted/20 bg-paper p-3.5 sm:p-4 sm:col-span-2 w-full max-w-full min-w-0 box-border overflow-hidden">
+                <legend className="px-1 text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
                   Styles / occasions
                 </legend>
                 <div className="mt-1 grid gap-2 sm:grid-cols-2 lg:grid-cols-4 min-w-0">
                   {STYLE_OPTIONS.map((style) => (
-                    <label key={style} className="flex items-center gap-2 text-sm text-[#514347] min-w-0">
+                    <label key={style} className="flex items-center gap-2 text-sm text-body min-w-0">
                       <input
                         type="checkbox"
-                        className="h-4 w-4 accent-[#3d0a21] shrink-0"
+                        className="h-4 w-4 accent-ink shrink-0"
                         checked={form.styles.includes(style)}
                         onChange={(event) => setForm((current) => ({
                           ...current,
@@ -1109,7 +1109,7 @@ export default function AdminDashboard() {
               </fieldset>
 
               <label className="sm:col-span-2 block w-full max-w-full min-w-0 box-border">
-                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
                   Search keywords
                 </span>
                 <input
@@ -1118,25 +1118,25 @@ export default function AdminDashboard() {
                   onChange={(e) => setForm((f) => ({ ...f, search_keywords: e.target.value }))}
                   placeholder="gift for her, dainty jewellery, floral pendant"
                 />
-                <p className="mt-1 text-xs text-[#847377]">
+                <p className="mt-1 text-xs text-muted">
                   Optional comma-separated phrases customers may type.
                 </p>
               </label>
 
-              <div className="sm:col-span-2 space-y-4 rounded-xl border border-[#d4af37]/20 bg-[#fdf9f4] p-3.5 sm:p-4 shadow-sm min-w-0 max-w-full overflow-hidden box-border">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-[#847377]/15 pb-3 min-w-0">
+              <div className="sm:col-span-2 space-y-4 rounded-xl border border-line bg-paper p-3.5 sm:p-4 shadow-sm min-w-0 max-w-full overflow-hidden box-border">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-muted/15 pb-3 min-w-0">
                   <div className="min-w-0">
-                    <span className="block text-xs font-bold uppercase tracking-wide text-[#3d0a21] break-words whitespace-normal leading-snug">
+                    <span className="block text-xs font-bold uppercase tracking-wide text-ink break-words whitespace-normal leading-snug">
                       Product Images & Cover/Hover Roles ({galleryItems.length}/{MAX_IMAGES_PER_PRODUCT})
                     </span>
-                    <p className="text-xs text-[#847377] mt-1 leading-relaxed break-words whitespace-normal">
+                    <p className="text-xs text-muted mt-1 leading-relaxed break-words whitespace-normal">
                       First image is Cover (Primary). Select any image below to set it as the Hover/Touch Image.
                     </p>
                   </div>
                   <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto shrink-0">
                     <label
                       htmlFor={fileInputId}
-                      className={`cursor-pointer rounded-lg bg-[#3d0a21] px-3 py-2 text-xs font-semibold text-white text-center hover:bg-[#3d0a21]/90 transition ${
+                      className={`cursor-pointer rounded-lg bg-ink px-3 py-2 text-xs font-semibold text-white text-center hover:bg-ink/90 transition ${
                         galleryItems.length >= MAX_IMAGES_PER_PRODUCT ? 'pointer-events-none opacity-50' : ''
                       }`}
                     >
@@ -1153,7 +1153,7 @@ export default function AdminDashboard() {
                     </label>
                     <label
                       htmlFor={hoverFileInputId}
-                      className={`cursor-pointer rounded-lg border border-[#3d0a21] bg-white px-3 py-2 text-xs font-semibold text-[#3d0a21] text-center hover:bg-[#f9f5f0] transition ${
+                      className={`cursor-pointer rounded-lg border border-ink bg-white px-3 py-2 text-xs font-semibold text-ink text-center hover:bg-mist transition ${
                         galleryItems.length >= MAX_IMAGES_PER_PRODUCT ? 'pointer-events-none opacity-50' : ''
                       }`}
                     >
@@ -1249,7 +1249,7 @@ export default function AdminDashboard() {
                               ? 'border-amber-400 ring-2 ring-amber-400/40'
                               : isHover
                               ? 'border-indigo-400 ring-2 ring-indigo-400/40'
-                              : 'border-[#847377]/15'
+                              : 'border-muted/15'
                           }`}
                         >
                           <div className="relative">
@@ -1273,7 +1273,7 @@ export default function AdminDashboard() {
                           </div>
 
                           {/* Role Actions */}
-                          <div className="p-2 border-t border-[#847377]/15 flex flex-wrap gap-1.5 bg-[#fdf9f4]">
+                          <div className="p-2 border-t border-muted/15 flex flex-wrap gap-1.5 bg-paper">
                             {!isCover && (
                               <button
                                 type="button"
@@ -1304,12 +1304,12 @@ export default function AdminDashboard() {
                           </div>
 
                           {/* Position Shift & Delete Controls */}
-                          <div className="flex border-t border-[#847377]/15 bg-[#f1ede8]">
+                          <div className="flex border-t border-muted/15 bg-mist">
                             <button
                               type="button"
                               disabled={idx === 0}
                               onClick={() => moveGalleryItem(item.id, -1)}
-                              className="flex-1 py-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-[#514347] hover:bg-white disabled:opacity-30"
+                              className="flex-1 py-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-body hover:bg-white disabled:opacity-30"
                               aria-label="Move image earlier"
                             >
                               ← Move
@@ -1318,7 +1318,7 @@ export default function AdminDashboard() {
                               type="button"
                               disabled={idx === galleryItems.length - 1}
                               onClick={() => moveGalleryItem(item.id, 1)}
-                              className="flex-1 border-x border-[#847377]/15 py-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-[#514347] hover:bg-white disabled:opacity-30"
+                              className="flex-1 border-x border-muted/15 py-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-body hover:bg-white disabled:opacity-30"
                               aria-label="Move image later"
                             >
                               Move →
@@ -1342,7 +1342,7 @@ export default function AdminDashboard() {
               </div>
 
               <label className="sm:col-span-2">
-                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+                <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
                   Description
                 </span>
                 <textarea
@@ -1358,7 +1358,7 @@ export default function AdminDashboard() {
                 <button
                   type="submit"
                   disabled={busy}
-                  className="rounded-full bg-[#3d0a21] px-6 py-2.5 text-xs font-semibold uppercase tracking-[0.14em] text-[#fdf9f4] disabled:opacity-60"
+                  className="rounded-full bg-ink px-6 py-2.5 text-xs font-semibold uppercase tracking-[0.14em] text-white disabled:opacity-60"
                 >
                   {busy ? 'Saving…' : editingId ? 'Save changes' : 'Add product'}
                 </button>
@@ -1366,7 +1366,7 @@ export default function AdminDashboard() {
                   <button
                     type="button"
                     onClick={resetForm}
-                    className="rounded-full border border-[#847377]/35 px-6 py-2.5 text-xs font-semibold uppercase tracking-[0.14em] text-[#514347]"
+                    className="rounded-full border border-muted/35 px-6 py-2.5 text-xs font-semibold uppercase tracking-[0.14em] text-body"
                   >
                     Cancel edit
                   </button>
@@ -1377,7 +1377,7 @@ export default function AdminDashboard() {
 
           <section>
             <h2 className="font-serif text-lg font-semibold">Your products</h2>
-            <p className="mt-1 text-sm text-[#514347]">
+            <p className="mt-1 text-sm text-body">
               {products.length === 0
                 ? 'No products yet — use the form above to add your first piece.'
                 : selectedCategoryTab !== 'all' || adminSearchQuery.trim() !== ''
@@ -1386,15 +1386,15 @@ export default function AdminDashboard() {
             </p>
 
             {/* Category tabs & Search box */}
-            <div className="mt-4 flex flex-col gap-4 border-b border-[#847377]/15 pb-5 md:flex-row md:items-center md:justify-between">
+            <div className="mt-4 flex flex-col gap-4 border-b border-muted/15 pb-5 md:flex-row md:items-center md:justify-between">
               <div className="flex flex-wrap gap-2">
                 <button
                   type="button"
                   onClick={() => setSelectedCategoryTab('all')}
                   className={`rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wider transition ${
                     selectedCategoryTab === 'all'
-                      ? 'bg-[#3d0a21] text-white shadow-sm'
-                      : 'bg-[#847377]/10 text-[#514347] hover:bg-[#847377]/15'
+                      ? 'bg-ink text-white shadow-sm'
+                      : 'bg-muted/10 text-body hover:bg-muted/15'
                   }`}
                 >
                   All ({products.length})
@@ -1410,8 +1410,8 @@ export default function AdminDashboard() {
                       onClick={() => setSelectedCategoryTab(cat)}
                       className={`rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wider transition ${
                         selectedCategoryTab === cat
-                          ? 'bg-[#3d0a21] text-white shadow-sm'
-                          : 'bg-[#847377]/10 text-[#514347] hover:bg-[#847377]/15'
+                          ? 'bg-ink text-white shadow-sm'
+                          : 'bg-muted/10 text-body hover:bg-muted/15'
                       }`}
                     >
                       {cat} ({count})
@@ -1426,10 +1426,10 @@ export default function AdminDashboard() {
                   value={adminSearchQuery}
                   onChange={(e) => setAdminSearchQuery(e.target.value)}
                   placeholder="Search products by name..."
-                  className="w-full rounded-full border border-[#847377]/25 bg-white px-4 py-1.5 pl-9 text-xs text-[#130006] outline-none transition placeholder:text-[#847377]/55 focus:border-[#6f334a] focus:ring-1 focus:ring-[#6f334a]/20"
+                  className="w-full rounded-full border border-muted/25 bg-white px-4 py-1.5 pl-9 text-xs text-ink outline-none transition placeholder:text-muted/55 focus:border-ink-soft focus:ring-1 focus:ring-ink-soft/20"
                 />
                 <svg
-                  className="absolute left-3.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#847377]/60"
+                  className="absolute left-3.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted/60"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -1448,24 +1448,24 @@ export default function AdminDashboard() {
                 return (
                   <article
                     key={product.id}
-                    className="flex flex-col overflow-hidden rounded-2xl border border-[#847377]/15 bg-white shadow-[0_12px_36px_rgba(19,0,6,0.04)]"
+                    className="flex flex-col overflow-hidden rounded-2xl border border-muted/15 bg-white shadow-[0_12px_36px_rgba(17, 17, 17,0.04)]"
                   >
                     {thumb ? (
-                      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#f1ede8]">
+                      <div className="relative aspect-[4/3] w-full overflow-hidden bg-mist">
                         <img src={thumb} alt="" className="h-full w-full object-cover" />
                         {imageCount > 1 && (
-                          <span className="absolute bottom-2 right-2 rounded-full bg-[#130006]/55 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.1em] text-[#fdf9f4]">
+                          <span className="absolute bottom-2 right-2 rounded-full bg-ink/55 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.1em] text-white">
                             {imageCount} photos
                           </span>
                         )}
                         {soldOut && (
-                          <span className="absolute left-2 top-2 rounded-full bg-[#c9a75a] px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.1em] text-[#130006]">
+                          <span className="absolute left-2 top-2 rounded-full bg-ink px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.1em] text-white">
                             Out of stock
                           </span>
                         )}
                       </div>
                     ) : (
-                      <div className="flex aspect-[4/3] items-center justify-center bg-[#f1ede8] text-xs text-[#847377]">
+                      <div className="flex aspect-[4/3] items-center justify-center bg-mist text-xs text-muted">
                         No image
                       </div>
                     )}
@@ -1473,19 +1473,19 @@ export default function AdminDashboard() {
                       <div className="flex items-center gap-2 flex-wrap">
                         <h3 className="font-serif text-base font-semibold">{product.name}</h3>
                         {product.is_combo && (
-                          <span className="rounded bg-[#d4af37]/20 border border-[#d4af37]/45 text-[9px] font-bold uppercase tracking-wider text-[#8a6b1f] px-1.5 py-0.5">
+                          <span className="rounded bg-mist border border-line text-[9px] font-bold uppercase tracking-wider text-[#8a6b1f] px-1.5 py-0.5">
                             Combo
                           </span>
                         )}
                       </div>
                       {product.category && (
-                        <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-[#847377]">
+                        <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-muted">
                           {product.category}
                         </p>
                       )}
-                      <p className="mt-2 text-sm text-[#514347]">
+                      <p className="mt-2 text-sm text-body">
                         ₹{Number(product.price).toLocaleString('en-IN')}
-                        <span className="text-[#847377]">
+                        <span className="text-muted">
                           {' '}
                           · Stock {product.stock}
                           {readOutOfStockFromProduct(product, useOosColumn) && useOosColumn
@@ -1494,7 +1494,7 @@ export default function AdminDashboard() {
                         </span>
                       </p>
                       {product.description && (
-                        <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-[#514347]/90">
+                        <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-body/90">
                           {product.description}
                         </p>
                       )}
@@ -1503,7 +1503,7 @@ export default function AdminDashboard() {
                           to={`/product/${product.id}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-full rounded-full border border-[#847377]/25 py-2 text-center text-[11px] font-semibold uppercase tracking-[0.12em] text-[#514347] transition hover:bg-[#f9f5f0]"
+                          className="w-full rounded-full border border-muted/25 py-2 text-center text-[11px] font-semibold uppercase tracking-[0.12em] text-body transition hover:bg-mist"
                         >
                           View on site
                         </Link>
@@ -1513,7 +1513,7 @@ export default function AdminDashboard() {
                           className={`w-full rounded-full border py-2 text-[11px] font-semibold uppercase tracking-[0.12em] transition ${
                             readOutOfStockFromProduct(product, useOosColumn)
                               ? 'border-emerald-200 bg-emerald-50 text-emerald-900 hover:bg-emerald-100'
-                              : 'border-[#c9a75a]/40 bg-[#c9a75a]/10 text-[#8a6b1f] hover:bg-[#c9a75a]/20'
+                              : 'border-line bg-mist text-[#8a6b1f] hover:bg-mist'
                           }`}
                         >
                           {readOutOfStockFromProduct(product, useOosColumn)
@@ -1523,7 +1523,7 @@ export default function AdminDashboard() {
                         <button
                           type="button"
                           onClick={() => startEdit(product)}
-                          className="flex-1 rounded-full border border-[#3d0a21]/25 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#3d0a21] transition hover:bg-[#3d0a21]/5"
+                          className="flex-1 rounded-full border border-ink/25 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink transition hover:bg-ink/5"
                         >
                           Edit
                         </button>
@@ -1542,7 +1542,7 @@ export default function AdminDashboard() {
             </div>
 
             {products.length === 0 && !fetchError && (
-              <p className="mt-8 text-center text-sm text-[#847377]">No products yet. Add one above.</p>
+              <p className="mt-8 text-center text-sm text-muted">No products yet. Add one above.</p>
             )}
           </section>
     </AdminShell>

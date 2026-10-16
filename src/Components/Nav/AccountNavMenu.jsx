@@ -17,7 +17,7 @@ function AccountIcon({ onDarkHero, open = false }) {
         transition-transform
         duration-300
         ${open ? 'scale-[0.94]' : ''}
-        ${onDarkHero ? 'text-white' : 'text-[#1b0b12]'}
+        ${onDarkHero ? 'text-white' : 'text-ink'}
       `}
       aria-hidden="true"
     >
@@ -46,7 +46,7 @@ function ChevronIcon({ open, onDarkHero }) {
         ${
           onDarkHero
             ? 'text-white/60'
-            : 'text-[#1b0b12]/45'
+            : 'text-ink/45'
         }
       `}
       aria-hidden="true"
@@ -70,7 +70,7 @@ function AccountLabel({ onDarkHero }) {
         ${
           onDarkHero
             ? 'text-white/75'
-            : 'text-[#514347]'
+            : 'text-body'
         }
       `}
     >
@@ -229,7 +229,7 @@ export default function AccountNavMenu({
     text-[#2a151d]
     transition-colors
     duration-200
-    hover:bg-[#f7f3ee]
+    hover:bg-mist
   `
 
   // ------------------------------------------------------------
@@ -324,8 +324,8 @@ export default function AccountNavMenu({
             w-[190px]
             overflow-hidden
             border
-            border-[#1b0b12]/10
-            bg-[#fffdfb]
+            border-ink/10
+            bg-paper
             shadow-[0_16px_45px_rgba(27,11,18,0.10)]
           "
         >
@@ -336,7 +336,7 @@ export default function AccountNavMenu({
           <div
             className="
               border-b
-              border-[#1b0b12]/8
+              border-ink/8
               px-4
               py-4
             "
@@ -360,7 +360,7 @@ export default function AccountNavMenu({
                   truncate
                   font-serif
                   text-[15px]
-                  text-[#1b0b12]
+                  text-ink
                 "
               >
                 {profile.name}
@@ -398,7 +398,7 @@ export default function AccountNavMenu({
                 ${itemClass}
                 ${
                   isActive
-                    ? 'bg-[#f7f3ee] text-[#3d0a21]'
+                    ? 'bg-mist text-ink'
                     : ''
                 }
               `
@@ -451,7 +451,7 @@ export default function AccountNavMenu({
           <div
             className="
               border-t
-              border-[#1b0b12]/8
+              border-ink/8
             "
           >
             <button

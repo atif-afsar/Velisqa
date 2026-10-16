@@ -34,7 +34,7 @@ export default function ConsentBanner() {
       aria-label="Cookie consent"
     >
       <div
-        className="flex items-center justify-between gap-3 rounded border border-[#D4AF37]/30 bg-[#130006]/85 px-4 py-2.5 shadow-2xl backdrop-blur-md text-white sm:px-5 sm:py-3 transition-all duration-300"
+        className="flex items-center justify-between gap-3 rounded border border-line bg-ink/85 px-4 py-2.5 shadow-2xl backdrop-blur-md text-white sm:px-5 sm:py-3 transition-all duration-300"
         style={{ animation: 'fadeInUp 0.3s ease-out' }}
       >
         <p className="text-[11px] leading-tight text-white/85 sm:text-xs">
@@ -50,7 +50,7 @@ export default function ConsentBanner() {
           </button>
           <button
             onClick={handleAccept}
-            className="rounded-sm bg-[#D4AF37] px-3.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[#130006] hover:bg-[#e5c34a] shadow-sm transition-all sm:text-xs"
+            className="rounded-sm bg-ink px-3.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white hover:bg-ink-soft shadow-sm transition-all sm:text-xs"
           >
             Accept
           </button>

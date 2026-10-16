@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "../../lib/motion";
 import { useEffect, useId, useState } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +14,7 @@ import OrderConfirmation from "../Checkout/OrderConfirmation";
 import OrderProductPreview from "../Checkout/OrderProductPreview";
 
 const fieldClass =
-  "box-border w-full min-w-0 max-w-full rounded-lg border border-[#130006]/15 bg-white px-3 py-2.5 text-base text-[#130006] outline-none transition placeholder:text-[#847377]/55 focus:border-[#6f334a] focus:ring-1 focus:ring-[#6f334a]/20 sm:py-2 sm:text-sm";
+  "box-border w-full min-w-0 max-w-full rounded-lg border border-ink/15 bg-white px-3 py-2.5 text-base text-ink outline-none transition placeholder:text-muted/55 focus:border-ink-soft focus:ring-1 focus:ring-ink-soft/20 sm:py-2 sm:text-sm";
 
 const INDIAN_STATES = [
   "Andaman and Nicobar Islands",
@@ -403,15 +403,15 @@ export default function OrderFormModal({
       aria-modal={isPage ? undefined : true}
       aria-labelledby={titleId}
       data-lenis-prevent={isPage ? undefined : true}
-      className={`w-full bg-[#fbf7f1] ${
+      className={`w-full bg-mist ${
         isPage
-          ? "overflow-visible rounded-2xl border border-[#d4af37]/20 shadow-[0_16px_48px_rgba(19,0,6,0.08)]"
-          : "relative z-10 flex h-[100dvh] max-h-[100dvh] flex-col overflow-hidden max-sm:fixed max-sm:inset-0 sm:h-auto sm:max-h-[min(90dvh,680px)] sm:max-w-md sm:rounded-2xl sm:border sm:border-[#d4af37]/20 sm:shadow-[0_24px_80px_rgba(19,0,6,0.35)]"
+          ? "overflow-visible rounded-2xl border border-line shadow-[0_16px_48px_rgba(17, 17, 17,0.08)]"
+          : "relative z-10 flex h-[100dvh] max-h-[100dvh] flex-col overflow-hidden max-sm:fixed max-sm:inset-0 sm:h-auto sm:max-h-[min(90dvh,680px)] sm:max-w-md sm:rounded-2xl sm:border sm:border-line sm:shadow-[0_24px_80px_rgba(17, 17, 17,0.35)]"
       }`}
     >
-            <div className="flex shrink-0 items-center justify-between gap-3 border-b border-[#d4af37]/15 px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-5 sm:py-3">
+            <div className="flex shrink-0 items-center justify-between gap-3 border-b border-line px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-5 sm:py-3">
               <div className="min-w-0 flex-1">
-                <h2 id={titleId} className="font-serif text-lg leading-tight text-[#130006] sm:text-xl">
+                <h2 id={titleId} className="font-serif text-lg leading-tight text-ink sm:text-xl">
                   {modalTitle}
                 </h2>
               </div>
@@ -419,7 +419,7 @@ export default function OrderFormModal({
                 <button
                   type="button"
                   onClick={() => void (confirmation ? handleCloseAll() : requestClose())}
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#130006]/10 text-lg leading-none text-[#130006] transition hover:bg-[#130006]/5"
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-ink/10 text-lg leading-none text-ink transition hover:bg-ink/5"
                   aria-label="Close"
                 >
                   &times;
@@ -467,7 +467,7 @@ export default function OrderFormModal({
                     />
 
                     {isEnquiry && (
-                      <p className="rounded-lg border border-[#d4af37]/25 bg-[#3d0a21]/[0.05] px-3 py-2 text-[11px] leading-snug text-[#514347]">
+                      <p className="rounded-lg border border-line bg-ink/[0.05] px-3 py-2 text-[11px] leading-snug text-body">
                         Made to order — our team will confirm availability and delivery timeline.
                       </p>
                     )}
@@ -482,16 +482,16 @@ export default function OrderFormModal({
 
                     {!isEnquiry && (
                       <fieldset className="min-w-0 space-y-2">
-                        <legend className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#514347]">
-                          Payment method <span className="text-[#6f334a]">*</span>
+                        <legend className="text-[10px] font-semibold uppercase tracking-[0.12em] text-body">
+                          Payment method <span className="text-ink">*</span>
                         </legend>
                         <div className="flex flex-col gap-2.5">
                           {/* Razorpay Online Option */}
                           <label
                             className={`relative flex min-w-0 cursor-pointer items-start gap-2.5 rounded-xl border p-4.5 transition w-full ${
                               paymentMethod === 'online'
-                                ? "border-[#3d0a21] bg-[#3d0a21]/[0.05] ring-2 ring-[#3d0a21]/20 shadow-sm"
-                                : "border-[#130006]/12 bg-white hover:border-[#3d0a21]/25"
+                                ? "border-ink bg-ink/[0.05] ring-2 ring-ink/20 shadow-sm"
+                                : "border-ink/12 bg-white hover:border-ink/25"
                             }`}
                           >
                             <input
@@ -507,21 +507,21 @@ export default function OrderFormModal({
                             </span>
                             <span className="min-w-0 flex-1">
                               <span className="flex items-center gap-1.5 flex-wrap">
-                                <span className="block text-[11px] font-bold leading-snug text-[#130006]">
+                                <span className="block text-[11px] font-bold leading-snug text-ink">
                                   Online Payment (Card, UPI, Wallets)
                                 </span>
                                 <span className="bg-emerald-100 text-emerald-800 text-[8px] font-extrabold px-1.5 py-0.5 rounded-sm uppercase tracking-wide leading-none">
                                   Free Delivery
                                 </span>
                               </span>
-                              <span className="mt-1 block text-[9px] leading-snug text-[#847377]">
+                              <span className="mt-1 block text-[9px] leading-snug text-muted">
                                 Pay securely via Razorpay
                               </span>
                               <span className="mt-1 block text-[9px] font-semibold text-emerald-700">
                                 ✓ Pay online now for completely free delivery.
                               </span>
                             </span>
-                            <div className="absolute top-2 right-3 text-[8px] font-extrabold text-[#D4AF37] uppercase tracking-wider">
+                            <div className="absolute top-2 right-3 text-[8px] font-extrabold text-muted uppercase tracking-wider">
                               ★ Recommended
                             </div>
                           </label>
@@ -531,7 +531,7 @@ export default function OrderFormModal({
                             className={`flex min-w-0 cursor-pointer items-start gap-2.5 rounded-lg border p-3 transition w-full ${
                               paymentMethod === 'cod'
                                 ? "border-amber-700 bg-amber-50/20 opacity-100 shadow-sm"
-                                : "border-[#130006]/12 bg-gray-50/50 opacity-60 hover:opacity-80"
+                                : "border-ink/12 bg-gray-50/50 opacity-60 hover:opacity-80"
                             }`}
                           >
                             <input
@@ -546,10 +546,10 @@ export default function OrderFormModal({
                               💵
                             </span>
                             <span className="min-w-0 flex-1">
-                              <span className="block text-[10px] font-bold leading-snug text-[#130006]">
+                              <span className="block text-[10px] font-bold leading-snug text-ink">
                                 Cash on Delivery (COD)
                               </span>
-                              <span className="mt-0.5 block text-[9px] leading-snug text-[#847377]">
+                              <span className="mt-0.5 block text-[9px] leading-snug text-muted">
                                 Pay when your order arrives
                               </span>
                               <span className="mt-1 block text-[9px] font-semibold text-amber-800">
@@ -563,8 +563,8 @@ export default function OrderFormModal({
 
                     <div className="grid min-w-0 grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3">
                       <label className="flex min-w-0 flex-col gap-1 sm:col-span-2">
-                        <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#514347]">
-                          Full name <span className="text-[#6f334a]">*</span>
+                        <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-body">
+                          Full name <span className="text-ink">*</span>
                         </span>
                         <input
                           className={fieldClass}
@@ -576,8 +576,8 @@ export default function OrderFormModal({
                         />
                       </label>
                       <label className="flex min-w-0 flex-col gap-1">
-                        <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#514347]">
-                          Phone <span className="text-[#6f334a]">*</span>
+                        <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-body">
+                          Phone <span className="text-ink">*</span>
                         </span>
                         <input
                           className={fieldClass}
@@ -593,8 +593,8 @@ export default function OrderFormModal({
                         />
                       </label>
                       <label className="flex min-w-0 flex-col gap-1">
-                        <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#514347]">
-                          Email <span className="text-[#6f334a]">*</span>
+                        <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-body">
+                          Email <span className="text-ink">*</span>
                         </span>
                         <input
                           className={fieldClass}
@@ -609,8 +609,8 @@ export default function OrderFormModal({
                     </div>
 
                     <label className="flex min-w-0 flex-col gap-1">
-                      <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#514347]">
-                        House / flat / building <span className="text-[#6f334a]">*</span>
+                      <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-body">
+                        House / flat / building <span className="text-ink">*</span>
                       </span>
                       <input
                         className={fieldClass}
@@ -623,8 +623,8 @@ export default function OrderFormModal({
                     </label>
 
                     <label className="flex min-w-0 flex-col gap-1">
-                      <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#514347]">
-                        Street / road / locality <span className="text-[#6f334a]">*</span>
+                      <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-body">
+                        Street / road / locality <span className="text-ink">*</span>
                       </span>
                       <input
                         className={fieldClass}
@@ -637,8 +637,8 @@ export default function OrderFormModal({
                     </label>
 
                     <label className="flex min-w-0 flex-col gap-1">
-                      <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#514347]">
-                        Landmark <span className="font-normal normal-case tracking-normal text-[#847377]">(optional)</span>
+                      <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-body">
+                        Landmark <span className="font-normal normal-case tracking-normal text-muted">(optional)</span>
                       </span>
                       <input
                         className={fieldClass}
@@ -649,8 +649,8 @@ export default function OrderFormModal({
 
                     <div className="grid min-w-0 grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3">
                       <label className="flex min-w-0 flex-col gap-1">
-                        <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#514347]">
-                          City / district <span className="text-[#6f334a]">*</span>
+                        <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-body">
+                          City / district <span className="text-ink">*</span>
                         </span>
                         <input
                           className={fieldClass}
@@ -661,7 +661,7 @@ export default function OrderFormModal({
                         />
                       </label>
                       <label className="flex min-w-0 flex-col gap-1">
-                        <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#514347]">
+                        <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-body">
                           PIN code
                         </span>
                         <input
@@ -677,8 +677,8 @@ export default function OrderFormModal({
                     </div>
 
                     <label className="flex min-w-0 flex-col gap-1">
-                      <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#514347]">
-                        State / union territory <span className="text-[#6f334a]">*</span>
+                      <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-body">
+                        State / union territory <span className="text-ink">*</span>
                       </span>
                       <select
                         className={fieldClass}
@@ -695,7 +695,7 @@ export default function OrderFormModal({
                     </label>
 
                     <label className="flex min-w-0 flex-col gap-1">
-                      <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#514347]">
+                      <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-body">
                         Order notes
                       </span>
                       <input
@@ -706,15 +706,15 @@ export default function OrderFormModal({
                     </label>
 
                     <div className="flex min-w-0 flex-col gap-1">
-                      <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#514347]">
-                        Location <span className="font-normal normal-case tracking-normal text-[#847377]">(optional)</span>
+                      <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-body">
+                        Location <span className="font-normal normal-case tracking-normal text-muted">(optional)</span>
                       </span>
                       <div className="flex min-w-0 gap-2">
                         <button
                           type="button"
                           onClick={handleUseLocation}
                           disabled={locationStatus === "loading"}
-                          className="tap-target shrink-0 rounded-lg border border-[#3d0a21]/15 bg-[#3d0a21]/5 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.08em] text-[#3d0a21] transition hover:bg-[#3d0a21]/10 disabled:opacity-60 sm:px-3.5 sm:text-[11px]"
+                          className="tap-target shrink-0 rounded-lg border border-ink/15 bg-ink/5 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.08em] text-ink transition hover:bg-ink/10 disabled:opacity-60 sm:px-3.5 sm:text-[11px]"
                           title="Share GPS location"
                         >
                           {locationStatus === "loading"
@@ -746,21 +746,21 @@ export default function OrderFormModal({
                     )}
                   </div>
 
-                  <div className="shrink-0 border-t border-[#d4af37]/15 bg-[#fbf7f1] px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-5">
+                  <div className="shrink-0 border-t border-line bg-mist px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-5">
                     {paymentMethod === "online" && !isEnquiry ? (
-                      <p className="mb-3 rounded-lg border border-[#d4af37]/20 bg-[#fbf7f1] px-3 py-2 text-center text-[11px] leading-snug text-[#514347]">
-                        <span className="font-semibold text-[#130006]">Next step:</span> scan the UPI QR and upload your payment screenshot.
+                      <p className="mb-3 rounded-lg border border-line bg-mist px-3 py-2 text-center text-[11px] leading-snug text-body">
+                        <span className="font-semibold text-ink">Next step:</span> scan the UPI QR and upload your payment screenshot.
                       </p>
                     ) : null}
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="tap-target inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border border-[#d4af37]/20 bg-[#2A0718] px-4 text-[11px] font-bold uppercase tracking-[0.1em] text-[#f7ead0] shadow-[0_8px_24px_rgba(42,7,24,0.35)] transition hover:bg-[#3d0a21] disabled:cursor-not-allowed disabled:opacity-60 sm:h-12 sm:text-xs"
+                      className="tap-target inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border border-line bg-ink px-4 text-[11px] font-bold uppercase tracking-[0.1em] text-white shadow-[0_8px_24px_rgba(42,7,24,0.35)] transition hover:bg-ink disabled:cursor-not-allowed disabled:opacity-60 sm:h-12 sm:text-xs"
                     >
                       <OrderIcon />
                       <span className="truncate">{submitLabel}</span>
                     </button>
-                    <p className="mt-1.5 text-center text-[10px] leading-snug text-[#847377]">
+                    <p className="mt-1.5 text-center text-[10px] leading-snug text-muted">
                       {paymentMethod === "online" && !isEnquiry
                         ? "You are not charged until you upload payment proof."
                         : isEnquiry
@@ -798,7 +798,7 @@ export default function OrderFormModal({
         >
           <button
             type="button"
-            className="absolute inset-0 hidden cursor-default bg-[#130006]/75 backdrop-blur-[2px] sm:block"
+            className="absolute inset-0 hidden cursor-default bg-ink/75 backdrop-blur-[2px] sm:block"
             onClick={() => void requestClose()}
             aria-label="Close order form"
           />

@@ -131,7 +131,7 @@ export default function AdminCoupons() {
   }
 
   const inputClass =
-    'mt-1 block w-full rounded-xl border border-[#847377]/35 bg-white px-3 py-2 text-sm text-[#130006] outline-none focus:border-[#3d0a21] focus:ring-1 focus:ring-[#3d0a21]'
+    'mt-1 block w-full rounded-xl border border-muted/35 bg-white px-3 py-2 text-sm text-ink outline-none focus:border-ink focus:ring-1 focus:ring-ink'
 
   return (
     <AdminShell
@@ -143,18 +143,18 @@ export default function AdminCoupons() {
 
       <div className="grid gap-8 lg:grid-cols-[1fr_350px]">
         {/* Left Column: List of coupons */}
-        <div className="rounded-2xl border border-[#3d0a21]/10 bg-white p-5 shadow-sm">
-          <h3 className="font-serif text-lg font-semibold text-[#3d0a21] mb-4">Existing Coupons</h3>
+        <div className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm">
+          <h3 className="font-serif text-lg font-semibold text-ink mb-4">Existing Coupons</h3>
           
           {loading ? (
-            <p className="text-sm text-[#847377] py-6 text-center animate-pulse">Loading coupons…</p>
+            <p className="text-sm text-muted py-6 text-center animate-pulse">Loading coupons…</p>
           ) : coupons.length === 0 ? (
-            <p className="text-sm text-[#847377] py-6 text-center">No coupons configured yet.</p>
+            <p className="text-sm text-muted py-6 text-center">No coupons configured yet.</p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs text-[#514347]">
+              <table className="w-full text-left text-xs text-body">
                 <thead>
-                  <tr className="border-b border-[#3d0a21]/10 text-[10px] font-bold uppercase tracking-wider text-[#847377]">
+                  <tr className="border-b border-ink/10 text-[10px] font-bold uppercase tracking-wider text-muted">
                     <th className="pb-3 pr-2">Code</th>
                     <th className="pb-3 pr-2">Type</th>
                     <th className="pb-3 pr-2">Discount</th>
@@ -166,7 +166,7 @@ export default function AdminCoupons() {
                 <tbody className="divide-y divide-gray-100">
                   {coupons.map((coupon) => (
                     <tr key={coupon.code} className="hover:bg-gray-50/50">
-                      <td className="py-3.5 pr-2 font-mono font-bold text-[#130006]">{coupon.code}</td>
+                      <td className="py-3.5 pr-2 font-mono font-bold text-ink">{coupon.code}</td>
                       <td className="py-3.5 pr-2 capitalize">{coupon.discount_type}</td>
                       <td className="py-3.5 pr-2 font-semibold">
                         {coupon.discount_type === 'percentage'
@@ -205,15 +205,15 @@ export default function AdminCoupons() {
         </div>
 
         {/* Right Column: Add coupon form */}
-        <div className="rounded-2xl border border-[#3d0a21]/10 bg-white p-5 shadow-sm self-start space-y-4">
-          <h3 className="font-serif text-lg font-semibold text-[#3d0a21]">Create Coupon</h3>
+        <div className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm self-start space-y-4">
+          <h3 className="font-serif text-lg font-semibold text-ink">Create Coupon</h3>
 
           {error && <p className="text-xs font-semibold text-red-700 bg-red-50 p-2.5 rounded-lg border border-red-100">{error}</p>}
           {notice && <p className="text-xs font-semibold text-emerald-800 bg-emerald-50 p-2.5 rounded-lg border border-emerald-100">{notice}</p>}
 
           <form onSubmit={handleSubmit} className="space-y-3">
             <label className="block">
-              <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+              <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
                 Coupon Code
               </span>
               <input
@@ -227,7 +227,7 @@ export default function AdminCoupons() {
             </label>
 
             <label className="block">
-              <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+              <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
                 Discount Type
               </span>
               <select
@@ -242,7 +242,7 @@ export default function AdminCoupons() {
             </label>
 
             <label className="block">
-              <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+              <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
                 Discount Value
               </span>
               <input
@@ -258,7 +258,7 @@ export default function AdminCoupons() {
             </label>
 
             <label className="block">
-              <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-[#847377]">
+              <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
                 Min Order Subtotal (₹)
               </span>
               <input
@@ -273,12 +273,12 @@ export default function AdminCoupons() {
               />
             </label>
 
-            <label className="flex items-center gap-2.5 pt-2 cursor-pointer text-xs font-semibold text-[#514347]">
+            <label className="flex items-center gap-2.5 pt-2 cursor-pointer text-xs font-semibold text-body">
               <input
                 type="checkbox"
                 checked={form.active}
                 onChange={(e) => setForm((f) => ({ ...f, active: e.target.checked }))}
-                className="h-4 w-4 rounded border-gray-300 text-[#3d0a21] focus:ring-[#3d0a21]"
+                className="h-4 w-4 rounded border-gray-300 text-ink focus:ring-ink"
               />
               <span>Enable this coupon immediately</span>
             </label>
@@ -286,7 +286,7 @@ export default function AdminCoupons() {
             <button
               type="submit"
               disabled={submitting}
-              className="mt-4 w-full rounded-full bg-[#3d0a21] py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow hover:bg-[#2a0718] transition disabled:opacity-50"
+              className="mt-4 w-full rounded-full bg-ink py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow hover:bg-ink transition disabled:opacity-50"
             >
               {submitting ? 'Creating…' : 'Create Coupon'}
             </button>

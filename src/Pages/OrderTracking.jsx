@@ -35,14 +35,14 @@ export default function OrderTracking() {
   })
 
   if (loading) {
-    return <main className="page-offset-nav min-h-[60vh] bg-[#f9f5f0] p-8 text-center">Loading status…</main>
+    return <main className="page-offset-nav min-h-[60vh] bg-mist p-8 text-center">Loading status…</main>
   }
 
   if (error || !order) {
     return (
-      <main className="page-offset-nav min-h-[60vh] bg-[#f9f5f0] px-4 py-16 text-center">
-        <h1 className="font-serif text-2xl text-[#130006]">Order not found</h1>
-        <p className="mx-auto mt-3 max-w-md text-sm text-[#514347]">{error}</p>
+      <main className="page-offset-nav min-h-[60vh] bg-mist px-4 py-16 text-center">
+        <h1 className="font-serif text-2xl text-ink">Order not found</h1>
+        <p className="mx-auto mt-3 max-w-md text-sm text-body">{error}</p>
       </main>
     )
   }
@@ -92,14 +92,14 @@ export default function OrderTracking() {
         canonicalPath={`/orders/${order.orderRef}`}
         noindex
       />
-      <main className="page-offset-nav min-h-screen bg-[#f9f5f0] px-4 py-12 text-[#130006] sm:px-6 sm:py-16">
+      <main className="page-offset-nav min-h-screen bg-mist px-4 py-12 text-ink sm:px-6 sm:py-16">
         <div className="container-stitch mx-auto max-w-2xl">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="type-label text-[#847377]">Private order tracking</p>
+              <p className="type-label text-muted">Private order tracking</p>
               <h1 className="mt-2 font-serif text-3xl font-semibold">Track your order</h1>
               {lastUpdatedAt && (
-                <p className="mt-2 text-xs text-[#847377]">
+                <p className="mt-2 text-xs text-muted">
                   {refreshing ? 'Updating…' : (
                     <>
                       Last updated {new Date(lastUpdatedAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
@@ -119,14 +119,14 @@ export default function OrderTracking() {
             <button
               type="button"
               onClick={() => void handleRefreshAll()}
-              className="rounded-full border border-[#3d0a21]/20 px-4 py-2 text-xs font-semibold text-[#3d0a21]"
+              className="rounded-full border border-ink/20 px-4 py-2 text-xs font-semibold text-ink"
             >
               Refresh status
             </button>
             {user && (
               <Link
                 to="/account/orders"
-                className="rounded-full border border-[#3d0a21]/20 px-4 py-2 text-xs font-semibold text-[#3d0a21]"
+                className="rounded-full border border-ink/20 px-4 py-2 text-xs font-semibold text-ink"
               >
                 My orders
               </Link>
@@ -134,8 +134,8 @@ export default function OrderTracking() {
           </div>
 
           {isCancelled && (
-            <div className="mt-6 rounded-xl border border-[#130006]/15 bg-[#f1ede8] p-4 text-sm text-[#514347]">
-              <p className="font-semibold text-[#130006]">This order was cancelled</p>
+            <div className="mt-6 rounded-xl border border-ink/15 bg-mist p-4 text-sm text-body">
+              <p className="font-semibold text-ink">This order was cancelled</p>
               <p className="mt-1 leading-relaxed">
                 Your order is no longer being processed. If you already paid online and need help, contact Velisqa support.
               </p>
@@ -160,24 +160,24 @@ export default function OrderTracking() {
               <p className="mt-1">{order.rejectionReason || 'Please submit a clearer payment proof.'}</p>
               <Link
                 to={orderPrivateUrl('/pay', order.orderRef, accessToken)}
-                className="mt-3 inline-flex font-semibold text-[#6f334a] hover:underline"
+                className="mt-3 inline-flex font-semibold text-ink hover:underline"
               >
                 Upload new proof →
               </Link>
             </div>
           )}
 
-          <section className="mt-6 rounded-2xl border border-[#d4af37]/20 bg-white/70 p-5 shadow-[0_14px_44px_rgba(19,0,6,0.06)] sm:p-7">
+          <section className="mt-6 rounded-2xl border border-line bg-white/70 p-5 shadow-[0_14px_44px_rgba(17, 17, 17,0.06)] sm:p-7">
             <div className="grid gap-5 sm:grid-cols-2">
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#847377]">Payment</p>
-                <p className="mt-1 text-sm font-semibold text-[#130006]">
+                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">Payment</p>
+                <p className="mt-1 text-sm font-semibold text-ink">
                   {getPaymentStatusLabel(order)}
                 </p>
               </div>
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#847377]">Shipment</p>
-                <p className="mt-1 text-sm font-semibold text-[#130006]">
+                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">Shipment</p>
+                <p className="mt-1 text-sm font-semibold text-ink">
                   {getShipmentStatusLabel(order)}
                 </p>
               </div>
@@ -190,8 +190,8 @@ export default function OrderTracking() {
             </ol>
 
             {awaitingDispatch && (
-              <div className="mt-6 rounded-xl border border-[#d4af37]/25 bg-[#fbf7f1] p-4 text-sm text-[#514347]">
-                <p className="font-semibold text-[#130006]">Preparing your dispatch</p>
+              <div className="mt-6 rounded-xl border border-line bg-mist p-4 text-sm text-body">
+                <p className="font-semibold text-ink">Preparing your dispatch</p>
                 <p className="mt-1 leading-relaxed">
                   {isCodOrder(order)
                     ? 'Your COD order is confirmed. AWB and live tracking appear here once our team ships via NimbusPost.'
@@ -201,8 +201,8 @@ export default function OrderTracking() {
             )}
 
             {(order.awbNumber || trackingUrl) && !isCancelled && (
-              <div className="mt-6 rounded-xl bg-[#f1ede8] p-4 text-sm text-[#514347]">
-                <p className="font-semibold text-[#130006]">Shipment details</p>
+              <div className="mt-6 rounded-xl bg-mist p-4 text-sm text-body">
+                <p className="font-semibold text-ink">Shipment details</p>
                 {order.courierName && <p className="mt-2">Courier: <strong>{order.courierName}</strong></p>}
                 {order.awbNumber && <p className="mt-1">AWB: <strong className="font-mono">{order.awbNumber}</strong></p>}
                 {trackingUrl && (
@@ -210,7 +210,7 @@ export default function OrderTracking() {
                     href={trackingUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-3 inline-flex font-semibold text-[#6f334a] hover:underline"
+                    className="mt-3 inline-flex font-semibold text-ink hover:underline"
                   >
                     Open live map on NimbusPost →
                   </a>
@@ -219,21 +219,21 @@ export default function OrderTracking() {
             )}
 
             {trackingEnabled && (
-              <div className="mt-6 rounded-xl border border-[#2d6a4f]/15 bg-[#f7fbf8] p-4 text-sm text-[#514347]">
+              <div className="mt-6 rounded-xl border border-[#2d6a4f]/15 bg-[#f7fbf8] p-4 text-sm text-body">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="font-semibold text-[#130006]">Live parcel updates</p>
-                  {trackingLoading && <span className="text-xs text-[#847377]">Fetching scans…</span>}
+                  <p className="font-semibold text-ink">Live parcel updates</p>
+                  {trackingLoading && <span className="text-xs text-muted">Fetching scans…</span>}
                 </div>
 
                 {latestScan ? (
                   <>
-                    <p className="mt-3 text-base font-semibold text-[#130006]">{latestScan.status}</p>
+                    <p className="mt-3 text-base font-semibold text-ink">{latestScan.status}</p>
                     {latestScan.location && (
                       <p className="mt-1">Last seen at <strong>{latestScan.location}</strong></p>
                     )}
-                    {latestScan.remark && <p className="mt-1 text-[#847377]">{latestScan.remark}</p>}
+                    {latestScan.remark && <p className="mt-1 text-muted">{latestScan.remark}</p>}
                     {latestScan.timestamp && (
-                      <p className="mt-1 text-xs text-[#847377]">
+                      <p className="mt-1 text-xs text-muted">
                         {new Date(latestScan.timestamp).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}
                       </p>
                     )}
@@ -250,10 +250,10 @@ export default function OrderTracking() {
                       <li key={`${scan.status}-${scan.timestamp}-${index}`} className="flex gap-3">
                         <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-[#2d6a4f]" />
                         <div>
-                          <p className="font-medium text-[#130006]">{scan.status}</p>
-                          {scan.location && <p className="text-xs text-[#847377]">{scan.location}</p>}
+                          <p className="font-medium text-ink">{scan.status}</p>
+                          {scan.location && <p className="text-xs text-muted">{scan.location}</p>}
                           {scan.timestamp && (
-                            <p className="text-xs text-[#847377]">
+                            <p className="text-xs text-muted">
                               {new Date(scan.timestamp).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}
                             </p>
                           )}
@@ -267,9 +267,9 @@ export default function OrderTracking() {
           </section>
 
           {showCancel && (
-            <section className="mt-6 rounded-2xl border border-[#130006]/10 bg-white/70 p-5 sm:p-6">
-              <p className="font-semibold text-[#130006]">Need to cancel?</p>
-              <p className="mt-2 text-sm leading-relaxed text-[#514347]">
+            <section className="mt-6 rounded-2xl border border-ink/10 bg-white/70 p-5 sm:p-6">
+              <p className="font-semibold text-ink">Need to cancel?</p>
+              <p className="mt-2 text-sm leading-relaxed text-body">
                 You can cancel before delivery if the parcel has not left for your address yet.
                 {order.awbNumber ? ' If pickup already happened, contact us on WhatsApp.' : ''}
               </p>
@@ -290,7 +290,7 @@ export default function OrderTracking() {
                       type="button"
                       disabled={cancelBusy}
                       onClick={() => setCancelConfirmOpen(false)}
-                      className="min-h-10 rounded-full border border-[#3d0a21]/20 px-5 text-xs font-bold uppercase tracking-[0.08em] text-[#3d0a21] disabled:opacity-50"
+                      className="min-h-10 rounded-full border border-ink/20 px-5 text-xs font-bold uppercase tracking-[0.08em] text-ink disabled:opacity-50"
                     >
                       Keep order
                     </button>
@@ -345,26 +345,26 @@ function StatusStep({ step }) {
         <span
           className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold transition-all duration-300 ${
             complete
-              ? 'bg-[#3B0D23] text-[#D4AF37]'
+              ? 'bg-ink text-white'
               : active
-                ? 'border-2 border-[#3B0D23] bg-white text-[#3B0D23] ring-4 ring-[#B76E79]/15 animate-pulse'
-                : 'border border-[#847377]/30 bg-white text-[#847377]'
+                ? 'border-2 border-ink bg-white text-ink ring-4 ring-accent-ink/15 animate-pulse'
+                : 'border border-muted/30 bg-white text-muted'
           }`}
           aria-label={`${step.label}: ${statusLabel}`}
         >
           {complete ? '✓' : active ? '•' : ''}
         </span>
         {!step.last && (
-          <span className={`h-10 w-px ${complete ? 'bg-[#3B0D23]' : 'bg-[#847377]/20'}`} />
+          <span className={`h-10 w-px ${complete ? 'bg-ink' : 'bg-muted/20'}`} />
         )}
       </div>
       <div className="pb-4">
-        <p className={`text-sm ${complete || active ? 'font-semibold text-[#3B0D23]' : 'text-[#847377]'}`}>
+        <p className={`text-sm ${complete || active ? 'font-semibold text-ink' : 'text-muted'}`}>
           {step.label}
-          {active ? <span className="ml-2 text-[9px] font-bold uppercase tracking-[0.08em] text-[#B76E79]">Now</span> : null}
+          {active ? <span className="ml-2 text-[9px] font-bold uppercase tracking-[0.08em] text-accent-ink">Now</span> : null}
         </p>
         {step.detail && (
-          <p className="mt-0.5 text-xs leading-relaxed text-[#847377]">{step.detail}</p>
+          <p className="mt-0.5 text-xs leading-relaxed text-muted">{step.detail}</p>
         )}
       </div>
     </li>

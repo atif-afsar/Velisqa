@@ -14,7 +14,7 @@ export default function ProductBadgeLabel({ product, className = '', placement =
       <span
         className={`pointer-events-none absolute left-2 top-8 z-[18] inline-flex rounded-md px-2 py-0.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-xs sm:left-3 sm:top-9 ${
           isBestseller
-            ? 'bg-[#8B6914] text-white shadow-[#8B6914]/20'
+            ? 'bg-ink text-white shadow-accent-ink/20'
             : 'bg-white text-slate-900 border border-slate-200'
         } ${className}`}
       >
@@ -27,7 +27,7 @@ export default function ProductBadgeLabel({ product, className = '', placement =
     <span
       className={`inline-flex w-fit rounded-full border px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider ${
         isBestseller
-          ? 'border-[#C9A96E] bg-[#F5EFE6] text-[#6B5210]'
+          ? 'border-line bg-mist text-accent-ink'
           : 'border-slate-200 bg-slate-50 text-slate-700'
       } ${className}`}
     >
