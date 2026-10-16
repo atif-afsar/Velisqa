@@ -70,20 +70,6 @@ function productIdFromUrl(value) {
   }
 }
 
-const PAYMENT_OPTIONS = [
-  {
-    value: "online",
-    label: "Card / UPI / NetBanking",
-    hint: "Pay securely via Razorpay",
-    icon: "💳",
-  },
-  {
-    value: "cod",
-    label: "Cash on delivery",
-    hint: "Pay when your order arrives",
-    icon: "💵",
-  },
-];
 
 export default function OrderFormModal({
   open,

@@ -10,7 +10,6 @@ import {
   submitProductReview,
   uploadReviewImages,
 } from '../../lib/productReviews'
-import { getProductRating, getProductReviewCount } from '../../lib/productDisplay'
 import { productPath } from '../../lib/productUrl'
 
 const EMPTY_FORM = { rating: 5, title: '', body: '' }

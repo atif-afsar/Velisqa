@@ -80,7 +80,6 @@ function AccountLabel({ onDarkHero }) {
 }
 
 export default function AccountNavMenu({
-  scrolled,
   onDarkHero,
   onNavigate,
   variant = 'icon',

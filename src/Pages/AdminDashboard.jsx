@@ -401,7 +401,6 @@ export default function AdminDashboard() {
     setFormNotice('')
 
     try {
-      const keptItems = galleryItems.filter((item) => item.kind === 'existing')
       const newFiles = galleryItems.filter((item) => item.kind === 'new').map((item) => item.file)
 
       const uploadedAssets = newFiles.length ? await uploadProductImages(newFiles, user?.id) : []

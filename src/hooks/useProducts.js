@@ -16,9 +16,9 @@ function getInitialProducts() {
 
 export function useProducts() {
   const { catalogVersion } = useCatalog()
-  const initialCache = useRef(getInitialProducts())
-  const [products, setProducts] = useState(initialCache.current)
-  const [loading, setLoading] = useState(initialCache.current.length === 0)
+  const [initialProducts] = useState(getInitialProducts)
+  const [products, setProducts] = useState(initialProducts)
+  const [loading, setLoading] = useState(initialProducts.length === 0)
   const [error, setError] = useState(null)
   const [isStale, setIsStale] = useState(false)
   const lastFetchRef = useRef(0)
@@ -64,14 +64,14 @@ export function useProducts() {
   useEffect(() => {
     let cancelled = false
 
-    refresh({ silent: initialCache.current.length > 0 }).then(() => {
+    refresh({ silent: initialProducts.length > 0 }).then(() => {
       if (cancelled) return
     })
 
     return () => {
       cancelled = true
     }
-  }, [catalogVersion, refresh])
+  }, [catalogVersion, refresh, initialProducts])
 
   useEffect(() => {
     function maybeRefresh() {

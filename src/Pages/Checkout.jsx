@@ -21,6 +21,16 @@ import { analytics } from '../lib/analytics'
 
 const PINCODE_KEY = 'velisqa:delivery_pincode'
 
+/** Input filters applied while typing. */
+const SANITIZE = {
+  phone: (v) => v.replace(/\D/g, '').slice(0, 10),
+  name: (v) => v.replace(/[^\p{L}\s.'-]/gu, '').replace(/\s{2,}/g, ' ').slice(0, 80),
+  email: (v) => v.replace(/\s/g, '').slice(0, 120),
+  city: (v) => v.replace(/[^\p{L}\s.'-]/gu, '').slice(0, 60),
+  state: (v) => v.replace(/[^\p{L}\s.'&-]/gu, '').slice(0, 60),
+  notes: (v) => v.slice(0, 200),
+}
+
 function deliveryWindow() {
   const fmt = { day: 'numeric', month: 'short' }
   const start = new Date()
@@ -45,12 +55,12 @@ function isAuthRequiredError(err) {
 
 function Section({ step, title, children }) {
   return (
-    <section className="border-t border-line pt-8 first:border-t-0 first:pt-0">
-      <h2 className="flex items-center gap-3 font-serif text-2xl text-ink">
+    <section className="border-t border-line pt-7 first:border-t-0 first:pt-0">
+      <h2 className="flex items-center gap-3 font-serif text-[1.375rem] text-ink">
         <span className="grid h-7 w-7 place-items-center rounded-full border border-ink font-sans text-xs">{step}</span>
         {title}
       </h2>
-      <div className="mt-6">{children}</div>
+      <div className="mt-5">{children}</div>
     </section>
   )
 }
@@ -91,7 +101,11 @@ export default function Checkout() {
   const totals = computeCheckoutTotals({ subtotal: eligibleSubtotal, couponDiscount: coupon.discount, giftWrap, paymentMethod })
   const estimate = useMemo(() => deliveryWindow(), [])
 
-  const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }))
+  // Each field only accepts the characters it can contain.
+  const set = (key) => (e) => {
+    const clean = SANITIZE[key] ? SANITIZE[key](e.target.value) : e.target.value
+    setForm((f) => ({ ...f, [key]: clean }))
+  }
 
   // Redirect away from an empty checkout (but not mid-payment).
   useEffect(() => {
@@ -406,7 +420,7 @@ export default function Checkout() {
     <>
       <SEOHead title="Secure Checkout | Velisqa" description="Complete your Velisqa order securely." canonicalPath="/checkout" noindex />
       <main className="page-offset-nav min-h-svh bg-paper text-ink">
-        <div className="container-lux pb-28 pt-8 lg:pb-20 lg:pt-12">
+        <div className="container-lux max-w-[1120px] pb-28 pt-8 lg:pb-20 lg:pt-12">
           <h1 className="type-display text-[clamp(2rem,3vw,2.75rem)]">Checkout</h1>
           <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-xs text-muted" aria-label="Why shop with Velisqa">
             <li>Free shipping on prepaid orders</li>
@@ -431,8 +445,8 @@ export default function Checkout() {
             {summaryOpen && <div className="pb-6">{summary}</div>}
           </div>
 
-          <div className="mt-8 grid items-start gap-12 lg:grid-cols-[minmax(0,1fr)_420px] lg:gap-16">
-            <form id="checkout-form" onSubmit={handleSubmit} noValidate className="space-y-10">
+          <div className="mt-8 grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-14">
+            <form id="checkout-form" onSubmit={handleSubmit} noValidate className="space-y-8">
               {!user && (
                 <p className="bg-mist px-4 py-3 text-sm text-body">
                   Checking out as a guest.{' '}
@@ -448,18 +462,17 @@ export default function Checkout() {
               )}
 
               <Section step="1" title="Contact">
-                <div className="grid gap-5 sm:grid-cols-2">
-                  <Field label="Mobile number" type="tel" inputMode="tel" autoComplete="tel-national" required value={form.phone} onChange={set('phone')} error={errors.phone} hint="For delivery updates" />
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field label="Mobile number" type="tel" inputMode="numeric" pattern="[0-9]{10}" maxLength={10} autoComplete="tel-national" required value={form.phone} onChange={set('phone')} error={errors.phone} hint="10-digit mobile number, for delivery updates" />
                   <Field label="Email (optional)" type="email" autoComplete="email" value={form.email} onChange={set('email')} error={errors.email} hint="For your order confirmation" />
                 </div>
               </Section>
 
               <Section step="2" title="Delivery">
-                <div className="grid gap-5 sm:grid-cols-2">
+                <div className="grid gap-4 sm:grid-cols-2">
                   <Field label="Full name" autoComplete="name" required value={form.name} onChange={set('name')} error={errors.name} className="sm:col-span-2" />
                   <Field
                     label="Pincode"
-                    className="sm:col-span-2"
                     inputMode="numeric"
                     autoComplete="postal-code"
                     maxLength={6}
@@ -469,9 +482,10 @@ export default function Checkout() {
                     error={errors.pincode}
                     hint={pincodeStatus === 'checking' ? 'Checking…' : pincodeStatus === 'ok' && form.city ? `Delivering to ${form.city}, ${form.state}` : undefined}
                   />
+                  <Field label="City" autoComplete="address-level2" value={form.city} onChange={set('city')} />
                   <Field
                     as="textarea"
-                    rows={3}
+                    rows={2}
                     label="Address"
                     autoComplete="street-address"
                     required
@@ -481,7 +495,6 @@ export default function Checkout() {
                     hint="House / flat number, street, area, landmark"
                     className="sm:col-span-2"
                   />
-                  <Field label="City" autoComplete="address-level2" value={form.city} onChange={set('city')} />
                   <Field label="State" autoComplete="address-level1" value={form.state} onChange={set('state')} />
                 </div>
                 <details className="mt-5 group">
@@ -551,7 +564,7 @@ export default function Checkout() {
               </div>
             </form>
 
-            <aside aria-label="Order summary" className="hidden bg-mist p-8 lg:sticky lg:top-[calc(var(--nav-height)+1.5rem)] lg:block">
+            <aside aria-label="Order summary" className="hidden bg-mist p-7 lg:sticky lg:top-[calc(var(--nav-height)+1.5rem)] lg:block">
               <h2 className="eyebrow text-ink">Order summary</h2>
               <div className="mt-2">{summary}</div>
             </aside>

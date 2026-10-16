@@ -49,6 +49,20 @@
     "placeholder": "data:image/webp;base64,UklGRs4AAABXRUJQVlA4IMIAAAAQBgCdASoYACQAPu1wrVMppiOipWmZMB2JYwDG+AgC3YDQe9ioMT79nFWZ3O5E8Gcd7ox2yANT9AAA044d/GZiHfVVd4U5wCaLLj3ondpWj6bpO2/dQUsYHDmAocdE4OtzMxwLyO1EIIuSfeHR2VmoEChAzsJoHO32v7GAr7vlzITMuNVfd0KafSebJwVx/CRi7lAV25qWROUKisHpgELGZ9rd7bUIvGEd8wYuJTxkvgkWvcySczhDSQgz8SggIhoAAA==",
     "hash": "12492ddff6dd"
   },
+  "campaign-hero-c": {
+    "width": 2400,
+    "height": 3600,
+    "widths": [
+      480,
+      768,
+      1080,
+      1440,
+      1920,
+      2400
+    ],
+    "placeholder": "data:image/webp;base64,UklGRuQAAABXRUJQVlA4INgAAACQBgCdASoYACQAPuVYqE2pJKQiNVgMASAciWMAwqFtAc+jzdWiZU5IfJDKYkrvzmvxdJQWY4eSypa6XDxgAP7ZUqKHLKRVq9+eeYxPpJFPJHOs8PSj/x7ORwrWk5AAxCZFhAlOzYWlv8XudopZfh6io+Ev/7BsUWFYp4Strq0c+v+kBVNYciL9VlO96Q4Yz1eHxnik2jy11cVE8TY/gBaBokX+No5qlJ7U3Acii8sB9ec6Jdh3BXTzhAJMpYJ/rHY3UAhyruWtPzGc2Fy0SSGchEPFgAUwAAA=",
+    "hash": "2816ef3e70c8"
+  },
   "editorial-necklace": {
     "width": 2400,
     "height": 2505,

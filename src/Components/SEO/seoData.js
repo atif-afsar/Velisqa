@@ -1,4 +1,3 @@
-import { SITE_URL } from "./siteConfig";
 
 const BRAND_KEYWORDS = [
   "Velisqa",

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import SEOHead from '../Components/SEO/SEOHead'
 import PrivateOrderSummary from '../Components/Checkout/PrivateOrderSummary'
@@ -13,7 +13,7 @@ import { loadRazorpay } from '../lib/loadRazorpay'
 export default function ManualPayment() {
   const navigate = useNavigate()
   const { clearCart } = useCart()
-  const { accessToken, order, loading, error, refresh } = usePrivateOrder()
+  const { accessToken, order, loading, error } = usePrivateOrder()
   
   const [initializing, setInitializing] = useState(false)
   const [verifying, setVerifying] = useState(false)

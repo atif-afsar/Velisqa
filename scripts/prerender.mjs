@@ -157,11 +157,11 @@ try {
   // ── Home (with hero preload) ─────────────────────────────────────────────
   // Homepage LCP image — must match Components/Home/Hero.jsx.
   const heroPreload = (() => {
-    const slot = 'campaign-hero-b'
+    const slot = 'campaign-hero-c'
     const entry = media[slot]
     if (!entry) return ''
     const set = entry.widths.map((w) => `/media/${slot}-${w}.avif ${w}w`).join(', ')
-    return `<link rel="preload" as="image" type="image/avif" imagesrcset="${set}" imagesizes="(min-width: 1024px) 50vw, 100vw" fetchpriority="high" />`
+    return `<link rel="preload" as="image" type="image/avif" imagesrcset="${set}" imagesizes="100vw" fetchpriority="high" />`
   })()
   const homeLinks = SHOP_CATEGORIES.map((c) => `<li><a href="/collections/${c.slug}">${esc(c.label)}</a></li>`).join('')
   write(
