@@ -9,7 +9,10 @@ import { productPath } from './productUrl'
 
 // ─── Offer Configuration ────────────────────────────────────────────────────
 export const CART_OFFERS = {
+  // Disabled: the ₹90-off milestone was advertised but never applied at checkout or on the server.
+  // Re-enable only together with a matching server-side discount in create_manual_payment_order.
   coupon: {
+    enabled: false,
     threshold: 999,
     discount: 90,
     type: 'coupon',
@@ -64,10 +67,10 @@ export function getEligibleSubtotal(items) {
 export function calculateCartOffers(subtotal) {
   const { coupon, freeGift } = CART_OFFERS
 
-  const couponEligible = subtotal >= coupon.threshold
+  const couponEligible = coupon.enabled && subtotal >= coupon.threshold
   const freeGiftEligible = freeGift.enabled && subtotal >= freeGift.threshold
 
-  const amountToCoupon = Math.max(0, coupon.threshold - subtotal)
+  const amountToCoupon = coupon.enabled ? Math.max(0, coupon.threshold - subtotal) : Infinity
   const amountToGift = freeGift.enabled
     ? Math.max(0, freeGift.threshold - subtotal)
     : Infinity

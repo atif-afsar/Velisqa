@@ -1,651 +1,171 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import QuantityStepper from '../Components/Cart/QuantityStepper'
-import ProductCard from '../Components/Product/ProductCard'
 import SEOHead from '../Components/SEO/SEOHead'
-import { useAuth } from '../context/AuthContext'
+import CartLine from '../Components/Cart/CartLine'
+import CouponField from '../Components/Cart/CouponField'
+import { GiftPicker, OfferProgress } from '../Components/Cart/CartOffers'
+import ProductCard from '../Components/Product/ProductCard'
 import { useCart } from '../context/CartContext'
 import { useProducts } from '../hooks/useProducts'
-import { formatInr, getCartLineSubtotal, getProductStock, isProductSoldOut } from '../lib/cartStock'
+import { useCoupon } from '../hooks/useCoupon'
+import { formatInr, isProductSoldOut } from '../lib/cartStock'
 import { isFreeGiftItem } from '../lib/cartOffers'
-import { supabase } from '../lib/supabaseClient'
+import { computeCheckoutTotals, GIFT_WRAP_FEE } from '../lib/checkoutPricing'
+import { readGiftWrap, saveGiftWrap } from '../lib/coupons'
+import { displayProductName } from '../lib/productDisplay'
 import { analytics } from '../lib/analytics'
-import OfferProgressCard from '../Components/Offers/OfferProgressCard'
-import FreeGiftCard from '../Components/Offers/FreeGiftCard'
-
-const VALID_COUPONS = ['SAVE10', 'VELISQA5', 'FREE50']
-
-function getCouponDiscount(code, subtotal) {
-  const cleanCode = String(code || '').toUpperCase().trim()
-  if (cleanCode === 'SAVE10') return Math.round(subtotal * 0.10)
-  if (cleanCode === 'VELISQA5') return Math.round(subtotal * 0.05)
-  if (cleanCode === 'FREE50') return Math.min(50, subtotal)
-  return 0
-}
+import { LockIcon } from '../Components/UI/Icons'
 
 export default function Cart() {
   const navigate = useNavigate()
-  const {
-    items,
-    cartTotal,
-    stockIssues,
-    syncing,
-    setQuantity,
-    removeFromCart,
-    clearCart,
-    syncStockFromServer,
-    eligibleSubtotal,
-    freeGiftInCart,
-    addGiftToCart,
-    cartOffers,
-  } = useCart()
-
-  // Filter out the free gift from regular item rendering
-  const realItems = items.filter((line) => !isFreeGiftItem(line))
-  const selectedGift = items.find(isFreeGiftItem)
-
-  const { user } = useAuth()
+  const { items, cartTotal, stockIssues, syncing, setQuantity, removeFromCart, syncStockFromServer, eligibleSubtotal } = useCart()
   const { products } = useProducts()
-
-  // Filter products worth <= 400 that are in stock
-  const giftChoices = products
-    .filter((p) => Number(p.price) <= 400 && !isProductSoldOut(p))
-    .slice(0, 4)
-
+  const coupon = useCoupon(eligibleSubtotal)
+  const [giftWrap, setGiftWrap] = useState(readGiftWrap)
   const [localIssues, setLocalIssues] = useState([])
-  const [couponOpen, setCouponOpen] = useState(false)
 
-  const [couponInput, setCouponInput] = useState('')
-  const [appliedCoupon, setAppliedCoupon] = useState(() => {
-    return localStorage.getItem('velisqa:applied_coupon') || ''
-  })
-  const [couponError, setCouponError] = useState('')
-  const [giftWrap, setGiftWrap] = useState(() => {
-    return localStorage.getItem('velisqa:gift_wrap') === 'true'
-  })
-
-  const suggestedProducts = products
-    .filter((product) => !isProductSoldOut(product))
-    .slice(0, 4)
+  const lines = items.filter((line) => !isFreeGiftItem(line))
+  const gift = items.find(isFreeGiftItem)
+  const issues = localIssues.length ? localIssues : stockIssues
+  const canCheckout = lines.length > 0 && issues.length === 0 && !syncing
+  const totals = computeCheckoutTotals({ subtotal: eligibleSubtotal, couponDiscount: coupon.discount, giftWrap })
+  const inBag = new Set(items.map((l) => l.productId))
+  const suggestions = products.filter((p) => !isProductSoldOut(p) && !inBag.has(p.id)).slice(0, 4)
 
   useEffect(() => {
     let cancelled = false
     syncStockFromServer().then((result) => {
       if (!cancelled) setLocalIssues(result?.issues ?? [])
     })
+    if (items.length > 0) analytics.viewCart({ items, total: cartTotal })
     return () => {
       cancelled = true
     }
+    // Run once on page view.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  // Track view_cart event
-  useEffect(() => {
-    if (items.length > 0) {
-      analytics.viewCart({ items, total: cartTotal })
-    }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-  const issues = localIssues.length ? localIssues : stockIssues
-  const canCheckout = items.length > 0 && issues.length === 0 && !syncing
-
-  // Calculated pricing — use eligibleSubtotal (excludes free gift)
-  const subtotal = eligibleSubtotal
-  
-  // Total MRP (1.4x of sale price)
-  const totalMrp = useMemo(() => {
-    return realItems.reduce((sum, item) => {
-      const itemMrp = item.mrp || Math.round(item.price * 1.4)
-      return sum + (itemMrp * item.quantity)
-    }, 0)
-  }, [realItems])
-
-  const discountOnMrp = totalMrp - subtotal
-
-  const [couponDiscountVal, setCouponDiscountVal] = useState(0)
-
-  const giftWrapFee = giftWrap ? 50 : 0
-  const finalTotal = Math.max(0, subtotal - couponDiscountVal + giftWrapFee)
-  const totalSavings = discountOnMrp + couponDiscountVal
-
-  const handleGiftWrapChange = (e) => {
-    const checked = e.target.checked
-    setGiftWrap(checked)
-    if (checked) {
-      localStorage.setItem('velisqa:gift_wrap', 'true')
-    } else {
-      localStorage.removeItem('velisqa:gift_wrap')
-    }
-  }
-
-  // Revalidate and update discount dynamically when subtotal changes
-  useEffect(() => {
-    if (!appliedCoupon) {
-      setCouponDiscountVal(0)
-      return
-    }
-
-    async function revalidate() {
-      try {
-        const { data: coupon } = await supabase
-          .from('coupons')
-          .select('*')
-          .eq('code', appliedCoupon)
-          .eq('active', true)
-          .maybeSingle()
-
-        if (coupon && subtotal >= Number(coupon.min_subtotal)) {
-          let computedDiscount = 0
-          if (coupon.discount_type === 'percentage') {
-            computedDiscount = Math.round(subtotal * (Number(coupon.discount_value) / 100.0))
-          } else if (coupon.discount_type === 'fixed') {
-            computedDiscount = Math.min(Number(coupon.discount_value), subtotal)
-          }
-          setCouponDiscountVal(computedDiscount)
-          localStorage.setItem('velisqa:applied_coupon_discount', String(computedDiscount))
-        } else {
-          setAppliedCoupon('')
-          setCouponDiscountVal(0)
-          localStorage.removeItem('velisqa:applied_coupon')
-          localStorage.removeItem('velisqa:applied_coupon_discount')
-        }
-      } catch {
-        const savedDisc = Number(localStorage.getItem('velisqa:applied_coupon_discount') || 0)
-        setCouponDiscountVal(savedDisc)
-      }
-    }
-
-    revalidate()
-  }, [appliedCoupon, subtotal])
-
-  async function handleApplyCouponCode(code) {
-    setCouponError('')
-    const cleanCode = String(code || '').toUpperCase().trim()
-    if (!cleanCode) return
-
-    try {
-      const { data: coupon, error } = await supabase
-        .from('coupons')
-        .select('*')
-        .eq('code', cleanCode)
-        .eq('active', true)
-        .maybeSingle()
-
-      if (error || !coupon) {
-        setCouponError("This coupon isn't valid or has expired.")
-        return
-      }
-
-      if (subtotal < Number(coupon.min_subtotal)) {
-        setCouponError(`This coupon requires a minimum subtotal of ${formatInr(coupon.min_subtotal)}`)
-        return
-      }
-
-      let computedDiscount = 0
-      if (coupon.discount_type === 'percentage') {
-        computedDiscount = Math.round(subtotal * (Number(coupon.discount_value) / 100.0))
-      } else if (coupon.discount_type === 'fixed') {
-        computedDiscount = Math.min(Number(coupon.discount_value), subtotal)
-      }
-
-      setAppliedCoupon(cleanCode)
-      setCouponDiscountVal(computedDiscount)
-      localStorage.setItem('velisqa:applied_coupon', cleanCode)
-      localStorage.setItem('velisqa:applied_coupon_discount', String(computedDiscount))
-      setCouponInput('')
-      setCouponOpen(false)
-    } catch {
-      setCouponError("Unable to validate coupon. Please try again.")
-    }
-  }
-
-  function handleRemoveCoupon() {
-    setAppliedCoupon('')
-    localStorage.removeItem('velisqa:applied_coupon')
-    setCouponError('')
-  }
-
-  function handleCheckoutClick() {
-    if (!canCheckout) return
-    navigate('/checkout')
-  }
 
   return (
     <>
-      <SEOHead
-        title="Shopping Bag | Velisqa"
-        description="Review your premium shopping bag and check out securely."
-        canonicalPath="/cart"
-      />
-      <main className="page-offset-nav min-h-[75vh] bg-mist text-slate-900 pb-16 font-sans">
-        <div className="mx-auto max-w-[1200px] px-4 py-8 sm:px-6 lg:px-8">
-          
-          <h1 className="sr-only">Shopping Bag</h1>
+      <SEOHead title="Your Bag | Velisqa" description="Review your bag and check out securely." canonicalPath="/cart" noindex />
+      <main className="page-offset-nav bg-paper text-ink">
+        <div className="container-lux pb-20 pt-10 lg:pt-14">
+          <h1 className="type-display text-center">Your bag</h1>
 
-          {items.length === 0 ? (
-            <div className="mt-12 text-center py-16 bg-white rounded-2xl border border-slate-200 shadow-xs max-w-lg mx-auto">
-              <span className="text-4xl">🛍️</span>
-              <p className="text-sm sm:text-base font-semibold mt-4 text-slate-700">Your bag is currently empty.</p>
-              <Link
-                to="/collections"
-                className="mt-6 inline-flex h-11 items-center justify-center rounded-lg bg-slate-900 px-6 text-xs sm:text-sm font-bold uppercase tracking-wider text-white transition hover:bg-ink shadow-xs"
-              >
-                Browse Collections
+          {lines.length === 0 ? (
+            <div className="py-16 text-center">
+              <p className="text-body">Your bag is empty.</p>
+              <Link to="/collections" className="btn btn-primary mt-8">
+                Shop the collection
               </Link>
             </div>
           ) : (
-            <div className="mt-4 grid gap-8 lg:grid-cols-[1fr_420px] items-start">
-              
-              {/* LEFT COLUMN: Product Items */}
-              <div className="space-y-4">
-                {/* Offer Progress Card */}
-                <OfferProgressCard />
-                
-                {realItems.map((line) => {
-                  const stock = getProductStock({ stock: line.stock })
-                  const lineIssue = issues.find((i) => i.line.productId === line.productId)
-                  const comparePrice = line.mrp || Math.round(line.price * 1.4)
-                  return (
-                    <div key={line.productId} className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs space-y-4 relative">
-                      
-                      {/* Close / Remove button top right */}
-                      <button
-                        type="button"
-                        onClick={() => removeFromCart(line.productId)}
-                        className="absolute right-4 top-4 text-slate-400 hover:text-red-600 transition text-lg"
-                        aria-label="Remove item"
-                      >
-                        ✕
-                      </button>
-
-                      <div className="flex gap-4">
-                        {/* Product Image */}
-                        <Link
-                          to={`/product/${line.productId}`}
-                          className="h-24 w-24 shrink-0 overflow-hidden rounded-lg bg-mist border border-slate-200"
-                        >
-                          {line.imageUrl ? (
-                            <img
-                              src={line.imageUrl}
-                              alt={line.name}
-                              className="h-full w-full object-cover"
-                              loading="lazy"
-                            />
-                          ) : (
-                            <div className="flex h-full items-center justify-center text-xs text-slate-400">
-                              No Image
-                            </div>
-                          )}
-                        </Link>
-
-                        {/* Product details */}
-                        <div className="min-w-0 flex-1 space-y-1">
-                          <Link
-                            to={`/product/${line.productId}`}
-                            className="font-sans text-sm sm:text-base font-bold text-slate-900 hover:text-accent-ink transition-colors line-clamp-1 pr-6"
-                          >
-                            {line.name}
-                          </Link>
-                          
-                          <div className="flex items-baseline gap-2">
-                            <span className="text-sm sm:text-base font-bold text-slate-900">{formatInr(line.price)}</span>
-                            <span className="text-xs text-slate-400 line-through">{formatInr(comparePrice)}</span>
-                          </div>
-
-                          <div className="flex items-center gap-1.5 text-xs text-emerald-800 font-semibold">
-                            <span>🚚</span>
-                            <span>Free Delivery</span>
-                          </div>
-
-                          <div className="flex items-center gap-2 pt-1 text-xs text-slate-500">
-                            <span>Style:</span>
-                            <span className="font-semibold text-slate-800 bg-mist px-2 py-0.5 rounded border border-line">Single</span>
-                          </div>
-
-                          {lineIssue && (
-                            <div className="mt-2 rounded-md border border-amber-200 bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-950">
-                              {lineIssue.message}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Badges footer */}
-                      <div className="grid grid-cols-3 divide-x divide-slate-100 border-t border-slate-100 pt-3 text-xs text-center font-semibold text-slate-500">
-                        <div>5-Day Returns</div>
-                        <div>Secure Payments</div>
-                        <div>Premium Quality</div>
-                      </div>
-
-                    </div>
-                  )
-                })}
-
-                {/* Free Gift Card */}
-                {selectedGift && (
-                  <FreeGiftCard giftItem={selectedGift} />
-                )}
-
-                {/* Choose Free Gift Options (under 400) */}
-                {cartOffers.freeGiftEligible && giftChoices.length > 0 && (
-                  <div className="rounded-xl border border-dashed border-line bg-[#FFFDF7] p-4 sm:p-5 space-y-4 shadow-xs">
-                    <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.14em] text-accent-ink flex items-center gap-2">
-                      <span>🎁</span> {freeGiftInCart ? 'Change Your Free Gift' : 'Select Your Free Gift'}
-                    </p>
-                    <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-                      {giftChoices.map((product) => {
-                        const isCurrentGift = items.some(
-                          (item) => item.productId === product.id && item.isFreeGift,
-                        )
-                        return (
-                          <div
-                            key={product.id}
-                            className={`flex flex-col justify-between rounded-lg border p-3 text-center shadow-xs transition ${
-                              isCurrentGift ? 'border-line bg-[#FFFDF0]' : 'border-muted/10 bg-white'
-                            }`}
-                          >
-                            <div className="mx-auto h-16 w-16 overflow-hidden rounded-md bg-mist border border-black/5">
-                              {product.image_url ? (
-                                <img src={product.image_url} alt="" className="h-full w-full object-cover" />
-                              ) : (
-                                <div className="grid h-full place-items-center text-[10px] text-muted">
-                                  No Image
-                                </div>
-                              )}
-                            </div>
-                            <p className="mt-2.5 text-xs font-semibold text-ink line-clamp-1">
-                              {product.name}
-                            </p>
-                            <p className="text-[10px] text-muted line-through mt-0.5">
-                              {formatInr(product.price)}
-                            </p>
-                            <button
-                              type="button"
-                              disabled={isCurrentGift}
-                              onClick={() => addGiftToCart(product)}
-                              className={`mt-3 rounded-full py-1.5 text-[10px] font-bold uppercase tracking-wider transition-colors ${
-                                isCurrentGift
-                                  ? 'bg-emerald-100 text-emerald-800 cursor-not-allowed'
-                                  : 'bg-ink text-white hover:bg-ink'
-                              }`}
-                            >
-                              {isCurrentGift ? 'Claimed' : 'Claim Free'}
-                            </button>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
-                )}
-
-                {/* Add a Gift wrap option */}
-                <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs flex items-center">
-                  <label className="flex items-center gap-2.5 cursor-pointer text-xs sm:text-sm font-semibold text-slate-800">
-                    <input
-                      type="checkbox"
-                      checked={giftWrap}
-                      onChange={handleGiftWrapChange}
-                      className="h-4 w-4 rounded border-slate-300 text-accent-ink focus:ring-accent"
+            <div className="mt-10 grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-16">
+              <section aria-label="Items in your bag">
+                <div className="border-y border-line py-5">
+                  <OfferProgress />
+                </div>
+                <ul className="divide-y divide-line border-b border-line">
+                  {lines.map((line) => (
+                    <CartLine
+                      key={line.productId}
+                      line={line}
+                      size="lg"
+                      issue={issues.find((s) => s.line.productId === line.productId)}
+                      onQuantityChange={setQuantity}
+                      onRemove={removeFromCart}
                     />
-                    <span>Add a <span className="text-accent-ink font-bold">gift wrap</span> &amp; a message with this item (+ ₹50)</span>
-                  </label>
-                </div>
-
-
-                {/* Suggestions Block */}
-                {suggestedProducts.length > 0 && (
-                  <div className="pt-6">
-                    <h3 className="font-sans text-base sm:text-lg font-bold text-slate-900 mb-4">
-                      You Might Also Like
-                    </h3>
-                    <div className="grid grid-cols-2 gap-4">
-                      {suggestedProducts.map((product) => (
-                        <ProductCard key={product.id} product={product} />
-                      ))}
-                      </div>
-                  </div>
+                  ))}
+                </ul>
+                {gift && (
+                  <p className="border-b border-line py-4 text-sm text-body">
+                    <span className="eyebrow mr-2 text-accent-ink">Gift</span>
+                    {displayProductName(gift.name)} — complimentary
+                  </p>
                 )}
-
-              </div>
-
-              {/* RIGHT COLUMN: Price Summary & Coupons */}
-              <div className="space-y-4">
-                
-                {/* Apply Coupon Card */}
-                <button
-                  type="button"
-                  onClick={() => setCouponOpen(true)}
-                  className="w-full rounded-xl border border-slate-200 bg-white p-4 shadow-xs flex items-center justify-between hover:bg-slate-50 transition text-left"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-lg">🏷️</span>
-                    <div>
-                      <p className="text-xs sm:text-sm font-bold text-slate-900">Apply Coupon</p>
-                      {appliedCoupon && <p className="text-xs text-emerald-800 font-bold mt-0.5">✓ Coupon "{appliedCoupon}" applied</p>}
-                    </div>
-                  </div>
-                  <span className="text-slate-400 text-lg">›</span>
-                </button>
-
-                {/* Redeem Gift Card Card */}
-                <button
-                  type="button"
-                  className="w-full rounded-xl border border-slate-200 bg-white p-4 shadow-xs flex items-center justify-between hover:bg-slate-50 transition text-left"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-lg">🎁</span>
-                    <div>
-                      <p className="text-xs sm:text-sm font-bold text-slate-900">Redeem Gift Card</p>
-                    </div>
-                  </div>
-                  <span className="text-slate-400 text-lg">›</span>
-                </button>
-
-                {/* Rewards Info Line */}
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3.5 shadow-none flex items-center justify-between text-xs sm:text-sm font-semibold text-slate-800">
-                  <span>You will earn 5% Velisqa Crown Rewards</span>
-                  <span className="text-slate-950 font-bold">{formatInr(Math.round(finalTotal * 0.05))}</span>
+                <div className="mt-6">
+                  <GiftPicker />
                 </div>
+              </section>
 
-                {/* PRICE DETAILS CARD */}
-                <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs space-y-4">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100 pb-2">
-                    PRICE DETAILS ({realItems.reduce((sum, item) => sum + item.quantity, 0)} ITEMS)
-                  </h3>
-
-                  <div className="space-y-3 text-xs sm:text-sm text-slate-700 font-medium">
-                    <div className="flex justify-between">
-                      <span>Total MRP</span>
-                      <span className="font-semibold tabular-nums text-slate-900">{formatInr(totalMrp)}</span>
-                    </div>
-                    <div className="flex justify-between text-emerald-800 font-semibold">
-                      <span>Discount on MRP</span>
-                      <span className="tabular-nums">- {formatInr(discountOnMrp)}</span>
-                    </div>
-                    {couponDiscountVal > 0 && (
-                      <div className="flex justify-between text-emerald-800 font-semibold">
-                        <span>Coupon Discount ({appliedCoupon})</span>
-                        <span className="tabular-nums">- {formatInr(couponDiscountVal)}</span>
-                      </div>
-                    )}
-                    {selectedGift && (
-                      <div className="flex justify-between text-emerald-800 font-semibold">
-                        <span>Free Gift ({selectedGift.name})</span>
-                        <span className="tabular-nums">FREE</span>
-                      </div>
-                    )}
-                    {giftWrap && (
-                      <div className="flex justify-between">
-                        <span>Gift Wrap Fee</span>
-                        <span className="tabular-nums">{formatInr(50)}</span>
-                      </div>
-                    )}
-                    <div className="flex justify-between">
-                      <span>Shipping Charges</span>
-                      <span className="flex items-center gap-1.5">
-                        <span className="line-through text-slate-400">₹99.00</span>
-                        <span className="font-bold text-emerald-800">₹0</span>
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="border-t border-slate-100 pt-4 flex justify-between font-sans text-base font-bold text-slate-900">
-                    <div>
-                      <p className="text-sm font-bold text-slate-900">Estimated Amount:</p>
-                      <p className="text-xs text-slate-500 tracking-wider mt-0.5 font-normal">(incl. of all taxes)</p>
-                    </div>
-                    <span className="tabular-nums text-xl text-slate-900 font-bold">{formatInr(finalTotal)}</span>
-                  </div>
-
-                  {/* Green savings panel */}
-                  <div className="rounded-lg bg-emerald-50 text-emerald-800 font-semibold text-xs sm:text-sm py-2.5 px-3 text-center border border-emerald-200">
-                    {formatInr(totalSavings)} savings on your current order
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={handleCheckoutClick}
-                    disabled={!canCheckout}
-                    className="w-full flex h-12 items-center justify-center gap-2 rounded-lg bg-slate-900 text-sm font-bold uppercase tracking-wider text-white shadow-xs transition hover:bg-ink active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50 font-sans"
-                  >
-                    <span>🔒</span>
-                    <span>Checkout securely</span>
-                  </button>
-
-                  <div className="flex justify-between border-t border-slate-100 pt-4 mt-2">
-                    <button
-                      type="button"
-                      onClick={clearCart}
-                      className="text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-slate-900 transition"
-                    >
-                      Clear Bag
-                    </button>
-                    {appliedCoupon && (
-                      <button
-                        type="button"
-                        onClick={handleRemoveCoupon}
-                        className="text-xs font-bold uppercase tracking-wider text-red-700 hover:underline"
-                      >
-                        Remove Coupon ({appliedCoupon})
-                      </button>
-                    )}
-                  </div>
+              <aside aria-label="Order summary" className="bg-mist p-6 lg:sticky lg:top-[calc(var(--nav-height)+1.5rem)] sm:p-8">
+                <h2 className="eyebrow text-ink">Summary</h2>
+                <div className="mt-6">
+                  <CouponField coupon={coupon} />
                 </div>
+                <label className="mt-5 flex min-h-11 cursor-pointer items-center gap-3 text-sm text-body">
+                  <input
+                    type="checkbox"
+                    checked={giftWrap}
+                    onChange={(e) => {
+                      setGiftWrap(e.target.checked)
+                      saveGiftWrap(e.target.checked)
+                    }}
+                    className="h-[18px] w-[18px] accent-ink"
+                  />
+                  Add gift wrap ({formatInr(GIFT_WRAP_FEE)})
+                </label>
 
-              </div>
+                <dl className="mt-6 space-y-3 border-t border-line pt-6 text-sm">
+                  <div className="flex justify-between">
+                    <dt className="text-body">Subtotal</dt>
+                    <dd className="type-price">{formatInr(totals.subtotal)}</dd>
+                  </div>
+                  {totals.discount > 0 && (
+                    <div className="flex justify-between text-accent-ink">
+                      <dt>Coupon ({coupon.code})</dt>
+                      <dd className="type-price">−{formatInr(totals.discount)}</dd>
+                    </div>
+                  )}
+                  {totals.giftWrapFee > 0 && (
+                    <div className="flex justify-between">
+                      <dt className="text-body">Gift wrap</dt>
+                      <dd className="type-price">{formatInr(totals.giftWrapFee)}</dd>
+                    </div>
+                  )}
+                  <div className="flex justify-between">
+                    <dt className="text-body">Shipping</dt>
+                    <dd>Free (prepaid)</dd>
+                  </div>
+                  <div className="flex justify-between border-t border-line pt-4 text-base">
+                    <dt className="text-ink">Total</dt>
+                    <dd className="type-price text-ink">{formatInr(totals.total)}</dd>
+                  </div>
+                </dl>
+                <p className="mt-2 text-xs text-muted">Cash on delivery adds a ₹50 fee and 2% GST, shown at checkout.</p>
 
+                {issues.length > 0 && (
+                  <p className="mt-4 text-xs text-danger" role="alert">
+                    Some items are unavailable in the selected quantity. Update them to continue.
+                  </p>
+                )}
+                <button type="button" disabled={!canCheckout} onClick={() => navigate('/checkout')} className="btn btn-primary mt-6 w-full">
+                  <LockIcon size={16} />
+                  {syncing ? 'Checking stock…' : 'Secure checkout'}
+                </button>
+                <Link to="/collections" className="btn btn-link mx-auto mt-3 flex w-fit">
+                  Continue shopping
+                </Link>
+              </aside>
             </div>
           )}
 
+          {suggestions.length > 0 && (
+            <section aria-labelledby="suggest-heading" className="mt-20 border-t border-line pt-14">
+              <h2 id="suggest-heading" className="type-section">
+                You may also like
+              </h2>
+              <ul className="mt-10 grid grid-cols-2 gap-x-3 gap-y-10 sm:gap-x-5 lg:grid-cols-4 lg:gap-x-6">
+                {suggestions.map((p) => (
+                  <li key={p.id}>
+                    <ProductCard product={p} />
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
         </div>
       </main>
-
-      {/* GIVA-STYLE APPLY COUPON MODAL */}
-      {couponOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 font-sans">
-          <div className="relative w-full max-w-md rounded-xl bg-white p-5 shadow-xl border border-black/5">
-            
-            {/* Header */}
-            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-              <h3 className="text-base font-bold text-ink">Apply Coupon</h3>
-              <button
-                type="button"
-                onClick={() => {
-                  setCouponOpen(false)
-                  setCouponError('')
-                }}
-                className="text-gray-400 hover:text-black text-lg"
-              >
-                ✕
-              </button>
-            </div>
-
-            {/* Input fields */}
-            <div className="mt-4">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  placeholder="Enter coupon code here"
-                  value={couponInput}
-                  onChange={(e) => setCouponInput(e.target.value)}
-                  className="flex-1 rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-ink/30 text-ink"
-                />
-                <button
-                  type="button"
-                  onClick={() => handleApplyCouponCode(couponInput)}
-                  className="rounded border border-gray-300 px-4 py-2 text-xs font-bold text-body hover:bg-gray-50 transition shrink-0"
-                >
-                  Apply
-                </button>
-              </div>
-              {couponError && <p className="mt-2 text-xs text-red-600 font-medium">{couponError}</p>}
-            </div>
-
-            {/* Best Available Offers */}
-            <div className="mt-6 space-y-3">
-              <h4 className="text-xs font-bold text-muted uppercase tracking-wider">Best Available Offers</h4>
-              
-              <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1">
-                
-                {/* SAVE10 Offer */}
-                <div className="rounded-lg border border-line bg-mist/50 p-4 flex flex-col justify-between gap-3 text-left">
-                  <div>
-                    <p className="text-xs font-bold text-ink">Only for Today - Flat 10% Off</p>
-                    <p className="text-[10px] text-gray-500 mt-0.5">Applicable on select Silver &amp; Demi-fine Jewellery orders above ₹1999.</p>
-                  </div>
-                  <div className="flex items-center justify-between border-t border-dashed border-line pt-2.5">
-                    <span className="font-mono text-xs font-extrabold text-emerald-800 bg-emerald-50 px-2 py-1 rounded">SAVE10</span>
-                    <button
-                      type="button"
-                      onClick={() => handleApplyCouponCode('SAVE10')}
-                      className="rounded bg-accent-tint text-ink font-bold text-[10px] px-3.5 py-1.5 hover:bg-accent-tint transition uppercase tracking-wider"
-                    >
-                      Apply
-                    </button>
-                  </div>
-                </div>
-
-                {/* FREE50 Offer */}
-                <div className="rounded-lg border border-line bg-mist/50 p-4 flex flex-col justify-between gap-3 text-left">
-                  <div>
-                    <p className="text-xs font-bold text-ink">FLAT ₹50 Off on your order</p>
-                    <p className="text-[10px] text-gray-500 mt-0.5">Applicable on first jewellery order above ₹999.</p>
-                  </div>
-                  <div className="flex items-center justify-between border-t border-dashed border-line pt-2.5">
-                    <span className="font-mono text-xs font-extrabold text-emerald-800 bg-emerald-50 px-2 py-1 rounded">FREE50</span>
-                    <button
-                      type="button"
-                      onClick={() => handleApplyCouponCode('FREE50')}
-                      className="rounded bg-accent-tint text-ink font-bold text-[10px] px-3.5 py-1.5 hover:bg-accent-tint transition uppercase tracking-wider"
-                    >
-                      Apply
-                    </button>
-                  </div>
-                </div>
-
-                {/* VELISQA5 Offer */}
-                <div className="rounded-lg border border-line bg-mist/50 p-4 flex flex-col justify-between gap-3 text-left">
-                  <div>
-                    <p className="text-xs font-bold text-ink">FLAT 5% Off on jewellery</p>
-                    <p className="text-[10px] text-gray-500 mt-0.5">Applicable on orders above ₹1499.</p>
-                  </div>
-                  <div className="flex items-center justify-between border-t border-dashed border-line pt-2.5">
-                    <span className="font-mono text-xs font-extrabold text-emerald-800 bg-emerald-50 px-2 py-1 rounded">VELISQA5</span>
-                    <button
-                      type="button"
-                      onClick={() => handleApplyCouponCode('VELISQA5')}
-                      className="rounded bg-accent-tint text-ink font-bold text-[10px] px-3.5 py-1.5 hover:bg-accent-tint transition uppercase tracking-wider"
-                    >
-                      Apply
-                    </button>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
-          </div>
-        </div>
-      )}
     </>
   )
 }

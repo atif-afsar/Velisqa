@@ -136,27 +136,42 @@ export function buildFaqSchema(faqs) {
   };
 }
 
-export function buildProductDetailSchema({ product, image, description, url }) {
+export function buildProductDetailSchema({ product, name, images, image, description, url }) {
   const rating = Number(product?.rating)
   const reviewCount = Number(product?.review_count)
+  const soldOut = product?.out_of_stock === true || Number(product?.stock) <= 0
+  const imageList = (images?.length ? images : [image]).filter(Boolean)
   const schema = {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: product?.name,
-    image,
+    name: name || product?.name,
+    image: imageList,
     description,
+    sku: product?.id,
     brand: { "@type": "Brand", name: "Velisqa" },
     category: product?.category,
+    ...(product?.colour ? { color: product.colour } : {}),
+    ...(product?.metal ? { material: product.metal } : {}),
     offers: {
       "@type": "Offer",
-      priceCurrency: "INR",
-      price: Number(product?.price) || 0,
-      availability:
-        Number(product?.stock) > 0
-          ? "https://schema.org/InStock"
-          : "https://schema.org/OutOfStock",
       url,
+      priceCurrency: "INR",
+      price: String(Number(product?.price) || 0),
+      availability: soldOut ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
+      itemCondition: "https://schema.org/NewCondition",
       seller: { "@id": `${SITE_URL}/#organization` },
+      shippingDetails: {
+        "@type": "OfferShippingDetails",
+        shippingRate: { "@type": "MonetaryAmount", value: "0", currency: "INR" },
+        shippingDestination: { "@type": "DefinedRegion", addressCountry: "IN" },
+      },
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        applicableCountry: "IN",
+        returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+        merchantReturnDays: 5,
+        returnMethod: "https://schema.org/ReturnByMail",
+      },
     },
   };
 

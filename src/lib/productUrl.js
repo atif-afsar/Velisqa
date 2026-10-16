@@ -6,6 +6,8 @@
  * Legacy /product/<uuid> URLs still resolve and are redirected to the slug.
  */
 
+import { displayProductName } from './productDisplay'
+
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const SHORT_ID_LENGTH = 6
 
@@ -28,7 +30,7 @@ export function isProductUuid(value) {
 export function productSlug(product) {
   if (!product?.id) return ''
   const shortId = String(product.id).replace(/-/g, '').slice(0, SHORT_ID_LENGTH).toLowerCase()
-  const name = slugify(product.name) || 'jewellery'
+  const name = slugify(displayProductName(product.name)) || 'jewellery'
   return `${name}-${shortId}`
 }
 
