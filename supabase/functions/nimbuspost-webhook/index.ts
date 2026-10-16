@@ -1,5 +1,6 @@
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { jsonResponse } from '../_shared/http.ts'
+import { safeEqual } from '../_shared/security.ts'
 
 const STATUS_MAP: Record<string, string> = {
   booked: 'shipped',
@@ -59,7 +60,7 @@ Deno.serve(async (request) => {
 
   const expectedSecret = Deno.env.get('NIMBUSPOST_WEBHOOK_SECRET')
   const receivedSecret = readWebhookSecret(request)
-  if (!expectedSecret || receivedSecret !== expectedSecret) {
+  if (!expectedSecret || !safeEqual(receivedSecret, expectedSecret)) {
     return jsonResponse({ success: false, message: 'Invalid webhook signature.' }, 401)
   }
 

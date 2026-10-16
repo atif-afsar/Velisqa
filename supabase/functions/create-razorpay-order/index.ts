@@ -1,5 +1,6 @@
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { corsHeaders, jsonResponse } from '../_shared/http.ts'
+import { PublicError, publicErrorMessage } from '../_shared/security.ts'
 
 Deno.serve(async (request) => {
   if (request.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
@@ -69,7 +70,7 @@ Deno.serve(async (request) => {
     if (!rzpResponse.ok) {
       const errorText = await rzpResponse.text()
       console.error('Razorpay Order API failed:', errorText)
-      throw new Error(`Razorpay Order creation failed: ${errorText}`)
+      throw new PublicError('The payment gateway is unavailable right now. Please try again in a moment.')
     }
 
     const rzpOrder = await rzpResponse.json()
@@ -109,6 +110,6 @@ Deno.serve(async (request) => {
     })
   } catch (error) {
     console.error('create-razorpay-order error:', error)
-    return jsonResponse({ success: false, message: error instanceof Error ? error.message : 'Internal Server Error' }, 500)
+    return jsonResponse({ success: false, message: publicErrorMessage(error) }, 500)
   }
 })

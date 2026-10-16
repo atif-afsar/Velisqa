@@ -3,13 +3,14 @@ import crypto from "node:crypto"
 import { corsHeaders, jsonResponse } from '../_shared/http.ts'
 import { createNimbusPostShipment, isValidAwb } from '../_shared/nimbuspost.ts'
 import { recordAndSendMetaPurchase } from '../_shared/meta.ts'
+import { safeEqual, publicErrorMessage } from '../_shared/security.ts'
 
 function verifyWebhookSignature(rawBody: string, signature: string, secret: string): boolean {
   const generatedSignature = crypto
     .createHmac('sha256', secret)
     .update(rawBody)
     .digest('hex')
-  return generatedSignature === signature
+  return safeEqual(generatedSignature, signature)
 }
 
 function buildShipmentPatch(shipment: any) {
@@ -309,6 +310,6 @@ Deno.serve(async (request) => {
     return jsonResponse({ success: true, message: 'Webhook processed successfully.' })
   } catch (error) {
     console.error('razorpay-webhook error:', error)
-    return jsonResponse({ success: false, message: error instanceof Error ? error.message : 'Internal Server Error' }, 500)
+    return jsonResponse({ success: false, message: publicErrorMessage(error) }, 500)
   }
 })

@@ -3,6 +3,7 @@ import crypto from "node:crypto"
 import { corsHeaders, jsonResponse } from '../_shared/http.ts'
 import { createNimbusPostShipment, isValidAwb } from '../_shared/nimbuspost.ts'
 import { recordAndSendMetaPurchase } from '../_shared/meta.ts'
+import { safeEqual, publicErrorMessage } from '../_shared/security.ts'
 
 function verifySignature(orderId: string, paymentId: string, signature: string, secret: string): boolean {
   const text = `${orderId}|${paymentId}`
@@ -10,7 +11,7 @@ function verifySignature(orderId: string, paymentId: string, signature: string, 
     .createHmac('sha256', secret)
     .update(text)
     .digest('hex')
-  return generatedSignature === signature
+  return safeEqual(generatedSignature, signature)
 }
 
 function buildShipmentPatch(shipment: any) {
@@ -185,6 +186,6 @@ Deno.serve(async (request) => {
     })
   } catch (error) {
     console.error('verify-razorpay-payment error:', error)
-    return jsonResponse({ success: false, message: error instanceof Error ? error.message : 'Internal Server Error' }, 500)
+    return jsonResponse({ success: false, message: publicErrorMessage(error, 'We could not confirm your payment yet. If you were charged, your order will update automatically.') }, 500)
   }
 })
