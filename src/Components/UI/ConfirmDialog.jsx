@@ -44,11 +44,11 @@ export default function ConfirmDialog({
       ? 'bg-red-800 text-white hover:bg-red-900'
       : variant === 'primary'
         ? 'bg-[#2d6a4f] text-white hover:bg-[#1b4332]'
-        : 'bg-[#3d0a21] text-white hover:bg-[#2a0718]'
+        : 'bg-ink text-white hover:bg-ink'
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[220] flex items-end justify-center bg-[#130006]/70 p-4 sm:items-center"
+      className="fixed inset-0 z-[220] flex items-end justify-center bg-ink/70 p-4 sm:items-center"
       role="presentation"
       onClick={() => {
         if (!busy) onCancel?.()
@@ -58,14 +58,14 @@ export default function ConfirmDialog({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="w-full max-w-md rounded-2xl border border-[#d4af37]/20 bg-[#fbf7f1] p-5 shadow-[0_24px_80px_rgba(19,0,6,0.35)] sm:p-6"
+        className="w-full max-w-md rounded-2xl border border-line bg-mist p-5 shadow-[0_24px_80px_rgba(17, 17, 17,0.35)] sm:p-6"
         onClick={(event) => event.stopPropagation()}
       >
-        <h2 id={titleId} className="font-serif text-xl font-semibold text-[#130006]">
+        <h2 id={titleId} className="font-serif text-xl font-semibold text-ink">
           {title}
         </h2>
         {message ? (
-          <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-[#514347]">{message}</p>
+          <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-body">{message}</p>
         ) : null}
         {children ? <div className="mt-4">{children}</div> : null}
         <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
@@ -73,7 +73,7 @@ export default function ConfirmDialog({
             type="button"
             disabled={busy}
             onClick={onCancel}
-            className="min-h-11 rounded-full border border-[#3d0a21]/20 px-5 text-xs font-bold uppercase tracking-[0.08em] text-[#3d0a21] disabled:opacity-50"
+            className="min-h-11 rounded-full border border-ink/20 px-5 text-xs font-bold uppercase tracking-[0.08em] text-ink disabled:opacity-50"
           >
             {cancelLabel}
           </button>
