@@ -47,7 +47,7 @@ export default function FaqPageContent() {
       </section>
 
       <div className="container-stitch page-offset-nav px-4 py-10 sm:px-6 sm:py-12 md:py-14">
-        <div className="mx-auto max-w-3xl rounded-2xl border border-line bg-white/60 p-5 shadow-[0_12px_40px_rgba(17, 17, 17,0.06)] sm:p-8">
+        <div className="mx-auto max-w-3xl border border-line bg-white/60 p-5 sm:p-8">
           {page.faqItems.map(([question, answer], index) => (
             <FaqItem
               key={question}
@@ -62,13 +62,13 @@ export default function FaqPageContent() {
         <div className="mx-auto mt-10 flex max-w-3xl flex-col gap-3 sm:flex-row sm:justify-center">
           <Link
             to="/collections"
-            className="tap-target inline-flex justify-center rounded-full bg-ink px-8 py-3 text-[11px] font-bold uppercase tracking-[0.14em] text-white"
+            className="tap-target inline-flex justify-center bg-ink px-8 py-3 text-[11px] font-bold uppercase tracking-[0.14em] text-white"
           >
             Shop Collections
           </Link>
           <Link
             to="/order"
-            className="tap-target inline-flex justify-center rounded-full border border-ink px-8 py-3 text-[11px] font-bold uppercase tracking-[0.14em] text-ink"
+            className="tap-target inline-flex justify-center border border-ink px-8 py-3 text-[11px] font-bold uppercase tracking-[0.14em] text-ink"
           >
             Order on WhatsApp
           </Link>

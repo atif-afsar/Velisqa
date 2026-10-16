@@ -11,7 +11,7 @@ import {
 } from '../../lib/orderReturns'
 
 const fieldClass =
-  'box-border w-full rounded-lg border border-ink/15 bg-white px-3 py-2.5 text-sm text-ink outline-none focus:border-ink-soft focus:ring-1 focus:ring-ink-soft/20'
+  'box-border w-full  border border-ink/15 bg-white px-3 py-2.5 text-sm text-ink outline-none focus:border-ink-soft focus:ring-1 focus:ring-ink-soft/20'
 
 export default function OrderReturnPanel({ orderId, orderRef, order }) {
   const [returnRow, setReturnRow] = useState(null)
@@ -82,17 +82,17 @@ export default function OrderReturnPanel({ orderId, orderRef, order }) {
   const statusLabel = returnRow ? RETURN_STATUS_LABELS[returnRow.status] || returnRow.status : null
 
   return (
-    <section className="mt-6 rounded-2xl border border-line bg-white/80 p-4 sm:p-5">
+    <section className="mt-6 border border-line bg-white/80 p-4 sm:p-5">
       <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted">Return after delivery</p>
 
       {notice && (
-        <p className="mt-3 rounded-xl border border-[#2d6a4f]/25 bg-[#f0f7f4] px-3 py-2.5 text-sm text-[#1b4332]">
+        <p className="mt-3 border border-[#2d6a4f]/25 bg-[#f0f7f4] px-3 py-2.5 text-sm text-[#1b4332]">
           {notice}
         </p>
       )}
 
       {error && (
-        <p className="mt-3 rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-900">
+        <p className="mt-3 border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-900">
           {error}
         </p>
       )}
@@ -104,7 +104,7 @@ export default function OrderReturnPanel({ orderId, orderRef, order }) {
             Reason: <span className="text-ink">{returnRow.reason}</span>
           </p>
           {returnRow.rejection_reason && (
-            <p className="rounded-lg bg-red-50 px-3 py-2 text-red-900">
+            <p className="bg-red-50 px-3 py-2 text-red-900">
               {returnRow.rejection_reason}
             </p>
           )}
@@ -163,7 +163,7 @@ export default function OrderReturnPanel({ orderId, orderRef, order }) {
           <button
             type="submit"
             disabled={busy}
-            className="min-h-10 rounded-full bg-ink px-5 text-xs font-bold uppercase tracking-[0.08em] text-white disabled:opacity-50"
+            className="min-h-10 bg-ink px-5 text-xs font-bold uppercase tracking-[0.08em] text-white disabled:opacity-50"
           >
             {busy ? 'Submitting…' : 'Request return'}
           </button>

@@ -36,7 +36,7 @@ export default function Login() {
             ← Back to home
           </Link>
 
-          <div className="mx-auto max-w-md rounded-2xl border border-line bg-white/70 p-6 shadow-[0_20px_50px_rgba(17, 17, 17,0.06)] backdrop-blur-sm sm:p-8">
+          <div className="mx-auto max-w-md border border-line bg-white/70 p-6 sm:p-8">
             <p className="type-label text-muted">Velisqa</p>
             <h1 className="mt-2 font-serif text-2xl font-semibold tracking-wide sm:text-3xl">
               {auth.isSignup ? 'Create your account' : 'Sign in'}

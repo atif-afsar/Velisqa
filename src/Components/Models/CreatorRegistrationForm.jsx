@@ -13,7 +13,7 @@ import {
 const EASE = [0.16, 1, 0.3, 1];
 
 const fieldClass =
-  "w-full border border-ink/20 bg-white/80 px-4 py-3 text-sm text-ink outline-none transition focus:border-line focus:ring-2 focus:ring-accent/15 placeholder:text-muted/45 rounded-lg";
+  "w-full border border-ink/20 bg-white/80 px-4 py-3 text-sm text-ink outline-none transition focus:border-line focus:ring-2 focus:ring-accent/15 placeholder:text-muted/45 ";
 
 const labelClass = "label-stitch text-[0.68rem] uppercase tracking-[0.14em] text-body";
 
@@ -147,7 +147,7 @@ export default function CreatorRegistrationForm() {
             transition={{ duration: 0.6, ease: EASE }}
           >
             <motion.div
-              className="sticky top-28 rounded-2xl border border-ink/8 bg-paper p-6 shadow-[0_20px_48px_-16px_rgba(17, 17, 17,0.08)] sm:p-8"
+              className="sticky top-28 border border-ink/8 bg-paper p-6 sm:p-8"
               layout
             >
               <p className="label-stitch text-[0.68rem] uppercase tracking-[0.14em] text-muted">
@@ -205,7 +205,7 @@ export default function CreatorRegistrationForm() {
                   {CREATOR_TIERS.map((tier) => (
                     <span
                       key={tier.id}
-                      className={`rounded-full px-2.5 py-1 text-[0.62rem] font-medium uppercase tracking-wider ${
+                      className={` px-2.5 py-1 text-[0.62rem] font-medium uppercase tracking-wider ${
                         detectedTier?.id === tier.id
                           ? "bg-mist text-ink"
                           : "bg-ink/5 text-muted"
@@ -232,7 +232,7 @@ export default function CreatorRegistrationForm() {
                   key="success"
                   initial={reduceMotion ? false : { opacity: 0, scale: 0.98 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="rounded-2xl border border-line bg-paper p-8 text-center shadow-[0_20px_48px_-16px_rgba(17, 17, 17,0.08)] sm:p-12"
+                  className="border border-line bg-paper p-8 text-center sm:p-12"
                 >
                   <span className="text-4xl" aria-hidden="true">
                     ✨
@@ -245,7 +245,7 @@ export default function CreatorRegistrationForm() {
                   <button
                     type="button"
                     onClick={() => setResult(null)}
-                    className="tap-target mt-8 rounded-full border border-ink/20 px-8 py-3 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-ink transition hover:border-ink/40"
+                    className="tap-target mt-8 border border-ink/20 px-8 py-3 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-ink transition hover:border-ink/40"
                   >
                     Submit Another
                   </button>
@@ -254,11 +254,11 @@ export default function CreatorRegistrationForm() {
                 <motion.form
                   key="form"
                   onSubmit={handleSubmit}
-                  className="rounded-2xl border border-ink/8 bg-paper p-6 shadow-[0_20px_48px_-16px_rgba(17, 17, 17,0.08)] sm:p-8 md:p-10"
+                  className="border border-ink/8 bg-paper p-6 sm:p-8 md:p-10"
                   noValidate
                 >
                   {result?.ok === false && (
-                    <p className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                    <p className="mb-6 border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                       Something went wrong. Please try again or contact us on WhatsApp.
                     </p>
                   )}
@@ -411,7 +411,7 @@ export default function CreatorRegistrationForm() {
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="tap-target w-full rounded-full bg-ink px-10 py-4 label-stitch text-[0.72rem] uppercase tracking-[0.16em] text-white transition hover:bg-ink disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                      className="tap-target w-full bg-ink px-10 py-4 label-stitch text-[0.72rem] uppercase tracking-[0.16em] text-white transition hover:bg-ink disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                     >
                       {submitting ? "Submitting…" : "Submit Application"}
                     </button>

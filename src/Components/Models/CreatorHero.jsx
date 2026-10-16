@@ -47,7 +47,7 @@ export default function CreatorHero() {
         transition={{ duration: 0.8, ease: EASE }}
       >
         <motion.div
-          className="mx-auto max-w-3xl rounded-3xl border border-white/10 bg-ink/25 px-6 py-10 shadow-[0_24px_64px_rgba(17, 17, 17,0.28)] backdrop-blur-md sm:px-10 sm:py-12"
+          className="mx-auto max-w-3xl border border-white/10 bg-ink/25 px-6 py-10 sm:px-10 sm:py-12"
           initial={reduceMotion ? false : { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15, duration: 0.7, ease: EASE }}
@@ -66,13 +66,13 @@ export default function CreatorHero() {
           <motion.div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
             <a
               href="#register"
-              className="tap-target inline-flex min-h-[48px] w-full max-w-xs items-center justify-center rounded-full bg-ink px-8 py-3.5 label-stitch text-[0.72rem] uppercase tracking-[0.16em] text-white shadow-[0_8px_24px_rgba(17, 17, 17,0.35)] transition hover:bg-ink sm:w-auto"
+              className="tap-target inline-flex min-h-[48px] w-full max-w-xs items-center justify-center bg-ink px-8 py-3.5 label-stitch text-[0.72rem] uppercase tracking-[0.16em] text-white transition hover:bg-ink sm:w-auto"
             >
               Apply Now
             </a>
             <a
               href="#tiers"
-              className="tap-target inline-flex min-h-[48px] w-full max-w-xs items-center justify-center rounded-full border border-white/40 bg-white/10 px-8 py-3.5 label-stitch text-[0.72rem] uppercase tracking-[0.16em] text-white backdrop-blur-sm transition hover:border-white/70 hover:bg-white/15 sm:w-auto"
+              className="tap-target inline-flex min-h-[48px] w-full max-w-xs items-center justify-center border border-white/40 bg-white/10 px-8 py-3.5 label-stitch text-[0.72rem] uppercase tracking-[0.16em] text-white transition hover:border-white/70 hover:bg-white/15 sm:w-auto"
             >
               View Tiers
             </a>

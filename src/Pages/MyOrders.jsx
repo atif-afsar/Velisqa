@@ -60,20 +60,20 @@ export default function MyOrders() {
           )}
 
           {error && (
-            <p className="mt-10 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900">
+            <p className="mt-10 border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900">
               {error}
             </p>
           )}
 
           {!loading && !error && orders.length === 0 && (
-            <div className="mt-10 rounded-2xl border border-line bg-white/70 p-8 text-center shadow-[0_14px_44px_rgba(17, 17, 17,0.06)]">
+            <div className="mt-10 border border-line bg-white/70 p-8 text-center">
               <p className="font-serif text-xl text-ink">No orders yet</p>
               <p className="mt-2 text-sm text-body">
                 Add pieces to your bag, sign in, and checkout to see them here.
               </p>
               <Link
                 to="/collections#signature"
-                className="mt-6 inline-flex rounded-full bg-ink px-6 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-white transition hover:bg-ink"
+                className="mt-6 inline-flex bg-ink px-6 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-white transition hover:bg-ink"
               >
                 Shop collections
               </Link>
@@ -98,7 +98,7 @@ export default function MyOrders() {
                 return (
                   <li
                     key={order.id}
-                    className="rounded-2xl border border-line bg-white/70 p-5 shadow-[0_14px_44px_rgba(17, 17, 17,0.06)] sm:p-6"
+                    className="border border-line bg-white/70 p-5 sm:p-6"
                   >
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div>
@@ -114,13 +114,13 @@ export default function MyOrders() {
                     </div>
 
                     <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                      <div className="rounded-xl bg-mist px-3 py-2.5">
+                      <div className="bg-mist px-3 py-2.5">
                         <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted">Payment</p>
                         <p className="mt-1 text-sm font-semibold text-ink">
                           {getPaymentStatusLabel(mapped) || PAYMENT_STATUS_LABELS[order.payment_status]}
                         </p>
                       </div>
-                      <div className="rounded-xl bg-mist px-3 py-2.5">
+                      <div className="bg-mist px-3 py-2.5">
                         <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted">Shipment</p>
                         <p className="mt-1 text-sm font-semibold text-ink">
                           {getShipmentStatusLabel(mapped)}
@@ -138,7 +138,7 @@ export default function MyOrders() {
                       {!cancelled && (
                         <Link
                           to={trackUrl}
-                          className="inline-flex min-h-10 items-center rounded-full bg-[#2d6a4f] px-5 text-xs font-bold uppercase tracking-[0.08em] text-white transition hover:bg-[#245a42]"
+                          className="inline-flex min-h-10 items-center bg-[#2d6a4f] px-5 text-xs font-bold uppercase tracking-[0.08em] text-white transition hover:bg-[#245a42]"
                         >
                           Track order
                         </Link>
@@ -146,7 +146,7 @@ export default function MyOrders() {
                       {!cancelled && needsPayment && (
                         <Link
                           to={payUrl}
-                          className="inline-flex min-h-10 items-center rounded-full border border-ink/20 px-5 text-xs font-bold uppercase tracking-[0.08em] text-ink transition hover:bg-white"
+                          className="inline-flex min-h-10 items-center border border-ink/20 px-5 text-xs font-bold uppercase tracking-[0.08em] text-ink transition hover:bg-white"
                         >
                           Complete payment
                         </Link>

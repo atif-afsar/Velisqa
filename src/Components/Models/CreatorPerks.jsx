@@ -71,7 +71,7 @@ export default function CreatorPerks() {
           {PERKS.map((perk, i) => (
             <motion.div
               key={perk.label}
-              className="rounded-xl border border-white/10 bg-white/5 p-4 text-center backdrop-blur-sm sm:p-6"
+              className="border border-white/10 bg-white/5 p-4 text-center sm:p-6"
               initial={reduceMotion ? false : { opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -92,7 +92,7 @@ export default function CreatorPerks() {
           {STEPS.map((item, i) => (
             <motion.div
               key={item.step}
-              className="relative rounded-2xl border border-white/10 bg-ink/60 p-6 backdrop-blur-sm"
+              className="relative border border-white/10 bg-ink/60 p-6"
               initial={reduceMotion ? false : { opacity: 0, x: -12 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}

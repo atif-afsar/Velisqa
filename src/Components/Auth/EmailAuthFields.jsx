@@ -1,7 +1,7 @@
 import GoogleSignInButton from './GoogleSignInButton'
 
 export const EMAIL_AUTH_INPUT_CLASS =
-  'w-full rounded-xl border border-muted/25 bg-white/80 px-4 py-3 text-ink shadow-sm outline-none transition placeholder:text-muted/60 focus:border-ink/40 focus:ring-2 focus:ring-accent/25'
+  'w-full  border border-muted/25 bg-white/80 px-4 py-3 text-ink  outline-none transition placeholder:text-muted/60 focus:border-ink/40 focus:ring-2 focus:ring-accent/25'
 
 export default function EmailAuthFields({
   idPrefix = 'auth',
@@ -25,23 +25,23 @@ export default function EmailAuthFields({
   toggleSignupLabel = 'Create an account',
 }) {
   const inputClass = compact
-    ? 'w-full rounded-xl border border-muted/25 bg-white/80 px-4 py-2.5 text-sm text-ink outline-none transition placeholder:text-muted/60 focus:border-ink/40 focus:ring-2 focus:ring-accent/25'
+    ? 'w-full  border border-muted/25 bg-white/80 px-4 py-2.5 text-sm text-ink outline-none transition placeholder:text-muted/60 focus:border-ink/40 focus:ring-2 focus:ring-accent/25'
     : EMAIL_AUTH_INPUT_CLASS
 
   const buttonClass = compact
-    ? 'rounded-xl bg-ink px-4 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-ink disabled:opacity-60'
-    : 'rounded-xl bg-ink px-4 py-3 text-sm font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-ink disabled:opacity-60'
+    ? ' bg-ink px-4 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-ink disabled:opacity-60'
+    : ' bg-ink px-4 py-3 text-sm font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-ink disabled:opacity-60'
 
   return (
     <>
       {formError ? (
-        <p className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+        <p className="mb-4 border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
           {formError}
         </p>
       ) : null}
 
       {formNotice ? (
-        <p className="mb-4 rounded-xl border border-[#2d6a4f]/25 bg-[#edf7f1] px-4 py-3 text-sm text-[#1f4334]">
+        <p className="mb-4 border border-[#2d6a4f]/25 bg-[#edf7f1] px-4 py-3 text-sm text-[#1f4334]">
           {formNotice}
         </p>
       ) : null}

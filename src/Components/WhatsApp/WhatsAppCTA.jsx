@@ -5,13 +5,13 @@ import { analytics } from "../../lib/analytics";
 export default function WhatsAppCTA({ productName, productUrl, children, intent = "inquiry", className = "" }) {
   const href = createWhatsAppLink(buildWhatsAppMessage({ productName, productUrl, intent }));
   const baseStyles =
-    "tap-target inline-flex max-w-full min-w-0 items-center justify-center gap-3 rounded-full px-4 py-2 text-center font-medium transition-all";
+    "tap-target inline-flex max-w-full min-w-0 items-center justify-center gap-3  px-4 py-2 text-center font-medium transition-all";
 
   const visual =
     "bg-ink text-white border border-line shadow-none";
 
   const premiumStyles =
-    "bg-clip-padding backdrop-blur-sm bg-gradient-to-b from-ink via-[#4c172f] to-[#2a0712] text-muted ring-transparent";
+    "bg-clip-padding  bg-gradient-to-b from-ink via-[#4c172f] to-[#2a0712] text-muted ring-transparent";
 
   const accent =
     "relative before:absolute before:inset-0 before:-z-10 before:rounded-full before:bg-gradient-to-r before:from-ink/95 before:via-[#4c172f]/60 before:to-ink/95";

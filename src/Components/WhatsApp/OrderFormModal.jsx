@@ -14,7 +14,7 @@ import OrderConfirmation from "../Checkout/OrderConfirmation";
 import OrderProductPreview from "../Checkout/OrderProductPreview";
 
 const fieldClass =
-  "box-border w-full min-w-0 max-w-full rounded-lg border border-ink/15 bg-white px-3 py-2.5 text-base text-ink outline-none transition placeholder:text-muted/55 focus:border-ink-soft focus:ring-1 focus:ring-ink-soft/20 sm:py-2 sm:text-sm";
+  "box-border w-full min-w-0 max-w-full  border border-ink/15 bg-white px-3 py-2.5 text-base text-ink outline-none transition placeholder:text-muted/55 focus:border-ink-soft focus:ring-1 focus:ring-ink-soft/20 sm:py-2 sm:text-sm";
 
 const INDIAN_STATES = [
   "Andaman and Nicobar Islands",
@@ -405,8 +405,8 @@ export default function OrderFormModal({
       data-lenis-prevent={isPage ? undefined : true}
       className={`w-full bg-mist ${
         isPage
-          ? "overflow-visible rounded-2xl border border-line shadow-[0_16px_48px_rgba(17, 17, 17,0.08)]"
-          : "relative z-10 flex h-[100dvh] max-h-[100dvh] flex-col overflow-hidden max-sm:fixed max-sm:inset-0 sm:h-auto sm:max-h-[min(90dvh,680px)] sm:max-w-md sm:rounded-2xl sm:border sm:border-line sm:shadow-[0_24px_80px_rgba(17, 17, 17,0.35)]"
+          ? "overflow-visible  border border-line "
+          : "relative z-10 flex h-[100dvh] max-h-[100dvh] flex-col overflow-hidden max-sm:fixed max-sm:inset-0 sm:h-auto sm:max-h-[min(90dvh,680px)] sm:max-w-md  sm:border sm:border-line "
       }`}
     >
             <div className="flex shrink-0 items-center justify-between gap-3 border-b border-line px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-5 sm:py-3">
@@ -467,13 +467,13 @@ export default function OrderFormModal({
                     />
 
                     {isEnquiry && (
-                      <p className="rounded-lg border border-line bg-ink/[0.05] px-3 py-2 text-[11px] leading-snug text-body">
+                      <p className="border border-line bg-ink/[0.05] px-3 py-2 text-[11px] leading-snug text-body">
                         Made to order — our team will confirm availability and delivery timeline.
                       </p>
                     )}
 
                     {isCart && stockWarnings.length > 0 && (
-                      <div className="rounded-lg border border-amber-200/80 bg-amber-50 px-3 py-2 text-[11px] leading-snug text-amber-950">
+                      <div className="border border-amber-200/80 bg-amber-50 px-3 py-2 text-[11px] leading-snug text-amber-950">
                         {stockWarnings.map((w) => (
                           <p key={w}>{w}</p>
                         ))}
@@ -488,9 +488,9 @@ export default function OrderFormModal({
                         <div className="flex flex-col gap-2.5">
                           {/* Razorpay Online Option */}
                           <label
-                            className={`relative flex min-w-0 cursor-pointer items-start gap-2.5 rounded-xl border p-4.5 transition w-full ${
+                            className={`relative flex min-w-0 cursor-pointer items-start gap-2.5  border p-4.5 transition w-full ${
                               paymentMethod === 'online'
-                                ? "border-ink bg-ink/[0.05] ring-2 ring-ink/20 shadow-sm"
+                                ? "border-ink bg-ink/[0.05] ring-2 ring-ink/20 "
                                 : "border-ink/12 bg-white hover:border-ink/25"
                             }`}
                           >
@@ -528,9 +528,9 @@ export default function OrderFormModal({
 
                           {/* Cash on Delivery Option */}
                           <label
-                            className={`flex min-w-0 cursor-pointer items-start gap-2.5 rounded-lg border p-3 transition w-full ${
+                            className={`flex min-w-0 cursor-pointer items-start gap-2.5  border p-3 transition w-full ${
                               paymentMethod === 'cod'
-                                ? "border-amber-700 bg-amber-50/20 opacity-100 shadow-sm"
+                                ? "border-amber-700 bg-amber-50/20 opacity-100 "
                                 : "border-ink/12 bg-gray-50/50 opacity-60 hover:opacity-80"
                             }`}
                           >
@@ -714,7 +714,7 @@ export default function OrderFormModal({
                           type="button"
                           onClick={handleUseLocation}
                           disabled={locationStatus === "loading"}
-                          className="tap-target shrink-0 rounded-lg border border-ink/15 bg-ink/5 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.08em] text-ink transition hover:bg-ink/10 disabled:opacity-60 sm:px-3.5 sm:text-[11px]"
+                          className="tap-target shrink-0 border border-ink/15 bg-ink/5 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.08em] text-ink transition hover:bg-ink/10 disabled:opacity-60 sm:px-3.5 sm:text-[11px]"
                           title="Share GPS location"
                         >
                           {locationStatus === "loading"
@@ -740,7 +740,7 @@ export default function OrderFormModal({
                     </div>
 
                     {submitError && (
-                      <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-[11px] leading-snug text-red-800">
+                      <p className="border border-red-200 bg-red-50 px-3 py-2 text-[11px] leading-snug text-red-800">
                         {submitError}
                       </p>
                     )}
@@ -748,14 +748,14 @@ export default function OrderFormModal({
 
                   <div className="shrink-0 border-t border-line bg-mist px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-5">
                     {paymentMethod === "online" && !isEnquiry ? (
-                      <p className="mb-3 rounded-lg border border-line bg-mist px-3 py-2 text-center text-[11px] leading-snug text-body">
+                      <p className="mb-3 border border-line bg-mist px-3 py-2 text-center text-[11px] leading-snug text-body">
                         <span className="font-semibold text-ink">Next step:</span> scan the UPI QR and upload your payment screenshot.
                       </p>
                     ) : null}
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="tap-target inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border border-line bg-ink px-4 text-[11px] font-bold uppercase tracking-[0.1em] text-white shadow-[0_8px_24px_rgba(42,7,24,0.35)] transition hover:bg-ink disabled:cursor-not-allowed disabled:opacity-60 sm:h-12 sm:text-xs"
+                      className="tap-target inline-flex h-11 w-full items-center justify-center gap-2 border border-line bg-ink px-4 text-[11px] font-bold uppercase tracking-[0.1em] text-white transition hover:bg-ink disabled:cursor-not-allowed disabled:opacity-60 sm:h-12 sm:text-xs"
                     >
                       <OrderIcon />
                       <span className="truncate">{submitLabel}</span>

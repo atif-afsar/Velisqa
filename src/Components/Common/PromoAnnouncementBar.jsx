@@ -29,7 +29,7 @@ export default function PromoAnnouncementBar() {
       aria-label="Store highlights"
     >
       <Link to="/collections" className="truncate text-[0.6875rem] font-medium uppercase tracking-[0.16em] hover:text-white/80">
-        <span className="md:hidden">{MESSAGES[0]}</span>
+        <span className="md:hidden">Free shipping on prepaid orders</span>
         <span className="hidden md:inline">
           {MESSAGES.map((m, i) => (
             <span key={m}>

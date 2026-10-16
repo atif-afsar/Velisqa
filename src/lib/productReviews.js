@@ -1,4 +1,3 @@
-import { isCloudinaryUploadConfigured, uploadImageToCloudinary } from './cloudinaryUpload'
 import { supabase } from './supabaseClient'
 
 export const REVIEW_STATUSES = ['pending', 'approved', 'rejected', 'reported']
@@ -189,6 +188,8 @@ export async function fetchReviewViewerState(productId, userId) {
 
 export async function uploadReviewImages(files) {
   if (!files.length) return []
+  // Loaded on demand: only reviewers attaching photos need the upload client.
+  const { isCloudinaryUploadConfigured, uploadImageToCloudinary } = await import('./cloudinaryUpload')
   if (!isCloudinaryUploadConfigured()) {
     throw new Error('Review image uploads are temporarily unavailable. Submit your review without a photo.')
   }

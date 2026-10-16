@@ -40,7 +40,7 @@ export default function SearchResults() {
     <>
       <SEOHead title={title} description={description} canonicalPath="/search" noindex />
 
-      <main className="page-offset-nav min-h-[70vh] bg-paper text-ink">
+      <main className="page-offset-nav min-h-svh bg-paper text-ink">
         <header className="container-lux pb-8 pt-8 text-center sm:pt-12">
           <p className="eyebrow text-muted">Search</p>
           <h1 className="type-display mt-4">{query ? `“${query}”` : 'Search jewellery'}</h1>

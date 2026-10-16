@@ -18,7 +18,7 @@ export default function OrderReviewLinks({ order, items = [], className = '' }) 
   if (!reviewItems.length) return null
 
   return (
-    <div className={`rounded-xl border border-line bg-paper px-4 py-4 sm:px-5 ${className}`}>
+    <div className={` border border-line bg-paper px-4 py-4 sm:px-5 ${className}`}>
       <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted">Customer reviews</p>
       <p className="mt-1 font-serif text-lg text-ink">Share your experience</p>
       <p className="mt-1 text-sm leading-relaxed text-body">
@@ -32,7 +32,7 @@ export default function OrderReviewLinks({ order, items = [], className = '' }) 
             <Link
               key={productId}
               to={`/product/${productId}#product-reviews`}
-              className="inline-flex min-h-9 items-center rounded-full border border-ink/20 bg-white px-4 text-[11px] font-semibold uppercase tracking-[0.08em] text-ink transition hover:border-ink/35 hover:bg-white"
+              className="inline-flex min-h-9 items-center border border-ink/20 bg-white px-4 text-[11px] font-semibold uppercase tracking-[0.08em] text-ink transition hover:border-ink/35 hover:bg-white"
             >
               Review {label}
             </Link>

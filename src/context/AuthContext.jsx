@@ -1,7 +1,9 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import SignInRequiredModal from '../Components/Auth/SignInRequiredModal'
+import { createContext, lazy, Suspense, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { savePostSignInIntent } from '../lib/postSignIn'
 import { supabase } from '../lib/supabaseClient'
+
+// Loaded only when sign-in is required (keeps the auth form out of the initial bundle).
+const SignInRequiredModal = lazy(() => import('../Components/Auth/SignInRequiredModal'))
 
 const AuthContext = createContext(null)
 
@@ -125,7 +127,11 @@ export function AuthProvider({ children }) {
   return (
     <AuthContext.Provider value={value}>
       {children}
-      <SignInRequiredModal open={signInOpen} onClose={closeSignInModal} />
+      {signInOpen && (
+        <Suspense fallback={null}>
+          <SignInRequiredModal open={signInOpen} onClose={closeSignInModal} />
+        </Suspense>
+      )}
     </AuthContext.Provider>
   )
 }

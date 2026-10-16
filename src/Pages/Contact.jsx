@@ -99,7 +99,7 @@ export default function Contact() {
             <aside className="lg:sticky lg:top-24 lg:self-start">
               <nav
                 aria-label="Help and policies"
-                className="rounded-2xl border border-line bg-white/60 p-4 shadow-[0_12px_40px_rgba(17, 17, 17,0.06)] backdrop-blur-sm sm:p-5"
+                className="border border-line bg-white/60 p-4 sm:p-5"
               >
                 <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.22em] text-muted">
                   Help & Policies
@@ -111,9 +111,9 @@ export default function Contact() {
                       <li key={item.key}>
                         <Link
                           to={item.path}
-                          className={`tap-target block rounded-lg px-3 py-2.5 text-xs font-bold tracking-wide transition ${
+                          className={`tap-target block  px-3 py-2.5 text-xs font-bold tracking-wide transition ${
                             active
-                              ? "bg-ink text-white shadow-sm"
+                              ? "bg-ink text-white "
                               : "text-body hover:bg-mist hover:text-ink"
                           }`}
                           aria-current={active ? "page" : undefined}
@@ -132,7 +132,7 @@ export default function Contact() {
                 {CONTACT_CHANNELS.map((channel) => (
                   <article
                     key={channel.id}
-                    className="rounded-2xl border border-muted/10 bg-white/50 p-5 shadow-[0_8px_32px_rgba(17, 17, 17,0.04)] sm:p-6"
+                    className="border border-muted/10 bg-white/50 p-5 sm:p-6"
                   >
                     <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted">
                       {channel.label}
@@ -147,7 +147,7 @@ export default function Contact() {
 
               <motion.section
                 variants={fade}
-                className="rounded-2xl border border-muted/10 bg-white/50 p-5 shadow-[0_8px_32px_rgba(17, 17, 17,0.04)] sm:p-7 md:p-8"
+                className="border border-muted/10 bg-white/50 p-5 sm:p-7 md:p-8"
               >
                 <h2 className="font-serif text-xl font-bold text-ink sm:text-2xl">
                   Flagship Salon — Mumbai
@@ -187,7 +187,7 @@ export default function Contact() {
 
               <motion.section
                 variants={fade}
-                className="rounded-2xl border border-muted/10 bg-white/50 p-5 shadow-[0_8px_32px_rgba(17, 17, 17,0.04)] sm:p-7 md:p-8"
+                className="border border-muted/10 bg-white/50 p-5 sm:p-7 md:p-8"
               >
                 <h2 className="font-serif text-xl font-bold text-ink sm:text-2xl">Social</h2>
                 <ul className="mt-4 space-y-3">
@@ -213,7 +213,7 @@ export default function Contact() {
 
               <motion.section
                 variants={fade}
-                className="rounded-2xl border border-muted/10 bg-white/50 p-5 shadow-[0_8px_32px_rgba(17, 17, 17,0.04)] sm:p-7 md:p-8"
+                className="border border-muted/10 bg-white/50 p-5 sm:p-7 md:p-8"
               >
                 <h2 className="font-serif text-xl font-bold text-ink sm:text-2xl">
                   Ordering & payments
@@ -240,7 +240,7 @@ export default function Contact() {
 
               <motion.div
                 variants={fade}
-                className="flex flex-col items-stretch justify-between gap-4 rounded-2xl border border-line bg-gradient-to-br from-ink to-[#4c172f] p-6 text-white sm:flex-row sm:items-center sm:p-8"
+                className="flex flex-col items-stretch justify-between gap-4 border border-line bg-gradient-to-br from-ink to-[#4c172f] p-6 text-white sm:flex-row sm:items-center sm:p-8"
               >
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted">

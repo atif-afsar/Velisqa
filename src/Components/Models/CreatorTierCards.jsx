@@ -43,14 +43,14 @@ export default function CreatorTierCards() {
             key={tier.id}
             custom={index}
             variants={cardVariants}
-            className={`group relative flex flex-col overflow-hidden rounded-2xl border p-6 transition-shadow duration-300 hover:shadow-[0_24px_48px_-12px_rgba(17, 17, 17,0.12)] ${
+            className={`group relative flex flex-col overflow-hidden  border p-6 transition-shadow duration-300  ${
               tier.featured
-                ? "border-line bg-gradient-to-b from-paper to-mist shadow-[0_16px_40px_-12px_rgba(17, 17, 17,0.2)] lg:scale-[1.02]"
+                ? "border-line bg-gradient-to-b from-paper to-mist  lg:scale-[1.02]"
                 : "border-ink/8 bg-paper"
             }`}
           >
             {tier.featured && (
-              <span className="absolute right-4 top-4 rounded-full bg-mist px-2.5 py-0.5 text-[0.58rem] font-semibold uppercase tracking-[0.14em] text-ink">
+              <span className="absolute right-4 top-4 bg-mist px-2.5 py-0.5 text-[0.58rem] font-semibold uppercase tracking-[0.14em] text-ink">
                 Popular
               </span>
             )}

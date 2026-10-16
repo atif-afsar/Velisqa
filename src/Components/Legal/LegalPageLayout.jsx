@@ -47,7 +47,7 @@ export default function LegalPageLayout({ page }) {
           variants={{ visible: { transition: { staggerChildren: 0.08 } } }}
         >
           <aside className="lg:sticky lg:top-24 lg:self-start">
-            <nav aria-label="Legal pages" className="rounded-2xl border border-line bg-white/60 p-4 shadow-[0_12px_40px_rgba(17, 17, 17,0.06)] backdrop-blur-sm sm:p-5">
+            <nav aria-label="Legal pages" className="border border-line bg-white/60 p-4 sm:p-5">
               <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.22em] text-muted">
                 Legal
               </p>
@@ -58,9 +58,9 @@ export default function LegalPageLayout({ page }) {
                     <li key={item.key}>
                       <Link
                         to={item.path}
-                        className={`tap-target block rounded-lg px-3 py-2.5 text-xs font-bold tracking-wide transition ${
+                        className={`tap-target block  px-3 py-2.5 text-xs font-bold tracking-wide transition ${
                           active
-                            ? "bg-ink text-white shadow-sm"
+                            ? "bg-ink text-white "
                             : "text-body hover:bg-mist hover:text-ink"
                         }`}
                         aria-current={active ? "page" : undefined}
@@ -81,7 +81,7 @@ export default function LegalPageLayout({ page }) {
                   key={section.id}
                   id={section.id}
                   variants={fade}
-                  className="scroll-mt-28 rounded-2xl border border-muted/10 bg-white/50 p-5 shadow-[0_8px_32px_rgba(17, 17, 17,0.04)] sm:p-7 md:p-8"
+                  className="scroll-mt-28 border border-muted/10 bg-white/50 p-5 sm:p-7 md:p-8"
                 >
                   <motion.div className="mb-4 flex items-center gap-3">
                     <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ink text-[11px] font-bold text-white">
@@ -107,7 +107,7 @@ export default function LegalPageLayout({ page }) {
 
             <motion.div
               variants={fade}
-              className="mt-10 flex flex-col items-stretch justify-between gap-4 rounded-2xl border border-line bg-gradient-to-br from-ink to-[#4c172f] p-6 text-white sm:flex-row sm:items-center sm:p-8"
+              className="mt-10 flex flex-col items-stretch justify-between gap-4 border border-line bg-gradient-to-br from-ink to-[#4c172f] p-6 text-white sm:flex-row sm:items-center sm:p-8"
             >
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted">
@@ -120,13 +120,13 @@ export default function LegalPageLayout({ page }) {
               <div className="flex flex-col gap-3 sm:flex-row">
                 <Link
                   to="/order"
-                  className="tap-target inline-flex shrink-0 items-center justify-center rounded-full border border-line bg-transparent px-6 py-3 text-[11px] font-bold uppercase tracking-[0.16em] text-muted transition hover:bg-ink hover:text-ink sm:text-xs"
+                  className="tap-target inline-flex shrink-0 items-center justify-center border border-line bg-transparent px-6 py-3 text-[11px] font-bold uppercase tracking-[0.16em] text-muted transition hover:bg-ink hover:text-ink sm:text-xs"
                 >
                   Order on WhatsApp
                 </Link>
                 <Link
                   to="/contact"
-                  className="tap-target inline-flex shrink-0 items-center justify-center rounded-full border border-line bg-transparent px-6 py-3 text-[11px] font-bold uppercase tracking-[0.16em] text-white/85 transition hover:border-line hover:text-accent-ink sm:text-xs"
+                  className="tap-target inline-flex shrink-0 items-center justify-center border border-line bg-transparent px-6 py-3 text-[11px] font-bold uppercase tracking-[0.16em] text-white/85 transition hover:border-line hover:text-accent-ink sm:text-xs"
                 >
                   All contact details
                 </Link>

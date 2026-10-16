@@ -1,440 +1,156 @@
-import { Link } from "react-router-dom";
-import { motion } from "../../lib/motion";
+import { Link } from 'react-router-dom'
+import Picture from '../UI/Picture'
+import { ArrowRightIcon } from '../UI/Icons'
+import { FOUNDERS } from '../../data/founders'
 
-/* ─── animation ──────────────────────────────────────────── */
-const fade = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] },
-  },
-};
+const CRAFT = [
+  ['01', 'Design', 'Clean lines and considered proportions — pieces that look as right in five years as they do today.'],
+  ['02', 'Materials', 'Premium alloy bases, gold- and silver-tone plating and precision-set AD stones and crystal accents.'],
+  ['03', 'Finish', 'Every piece is checked before it ships and packed gift-ready, so it arrives the way it should.'],
+]
 
-const stagger = {
-  visible: { transition: { staggerChildren: 0.1 } },
-};
-
-/* ─── data ───────────────────────────────────────────────── */
 const VALUES = [
-  {
-    title: "Timeless Elegance",
-    desc: "Designed to transcend trends — jewellery that looks just as stunning years from now as it does today.",
-  },
-  {
-    title: "Uncompromising Quality",
-    desc: "Premium alloy bases, gold-tone plating, and precision-set AD stones — finished to a standard that speaks for itself.",
-  },
-  {
-    title: "Accessible Luxury",
-    desc: "Beautiful design and superior craft, without the premium-only price tag. Jewellery for every woman.",
-  },
-  {
-    title: "Personal Connection",
-    desc: "From WhatsApp concierge to handwritten notes — every interaction feels personal, not transactional.",
-  },
-];
+  ['Timeless', 'Designed to outlast trends.'],
+  ['Accessible', 'Beautiful design without a premium-only price.'],
+  ['Honest', 'Real prices, real reviews, clear policies.'],
+  ['Personal', 'Every order handled with care.'],
+]
 
-/* ─── component ──────────────────────────────────────────── */
+/** "Our story" — the About page. */
 export default function AboutContent() {
   return (
     <main className="page-offset-nav bg-paper text-ink">
-      {/* ══════════ 1. HERO — light, text-based, minimal ══════════ */}
-      <motion.section
-        className="px-4 pb-16 pt-12 sm:px-6 sm:pb-20 sm:pt-16 md:pb-24 md:pt-20"
-        initial="hidden"
-        animate="visible"
-        variants={stagger}
-      >
-        <div className="container-stitch">
-          <motion.div variants={fade} className="mx-auto max-w-3xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-muted">
-              Our Story
-            </p>
-            <h1 className="mt-4 font-serif text-4xl font-bold text-ink sm:text-5xl md:text-6xl">
-              About Velisqa
-            </h1>
-            <div className="mx-auto mt-6 h-px w-16 bg-mist" />
-            <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-body">
-              A modern jewellery brand from India, crafting premium fashion
-              jewellery that feels timeless, personal, and relevant.
-            </p>
-          </motion.div>
+      <header className="container-lux py-16 text-center lg:py-24">
+        <p className="eyebrow text-muted">Our story</p>
+        <h1 className="type-display mx-auto mt-5 max-w-3xl">Modern jewellery, made personal</h1>
+        <p className="mx-auto mt-6 max-w-xl text-[0.95rem] leading-relaxed text-body">
+          Velisqa is a jewellery brand from India creating pieces that feel timeless, personal and relevant — for
+          every moment, every milestone, every story.
+        </p>
+      </header>
 
-          {/* Hero image — light, airy */}
-          <motion.div
-            variants={fade}
-            className="mx-auto mt-12 max-w-5xl overflow-hidden rounded-2xl"
-          >
-            <img
-              src="/images/about-hero.jpg"
-              alt="Velisqa minimal jewellery collection — necklace, rings and earrings on marble"
-              width="1920"
-              height="1080"
-              loading="eager"
-              fetchPriority="high"
-              className="w-full object-cover"
-              decoding="async"
-            />
-          </motion.div>
+      <div className="container-lux">
+        <div className="relative aspect-[4/3] overflow-hidden bg-mist sm:aspect-[16/8]">
+          <Picture slot="about-hero" alt="Gold rings and fine chains arranged on white marble" sizes="(min-width: 1440px) 1440px, 100vw" priority className="absolute inset-0" />
         </div>
-      </motion.section>
-
-      {/* ══════════ 2. WHO WE ARE — text + image side by side ══════════ */}
-      <motion.section
-        className="px-4 py-16 sm:px-6 sm:py-20"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={stagger}
-      >
-        <div className="container-stitch grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-          <motion.div variants={fade}>
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-muted">
-              Who We Are
-            </p>
-            <h2 className="mt-3 font-serif text-2xl font-bold text-ink sm:text-3xl">
-              A Modern Jewellery Brand from India
-            </h2>
-            <p className="mt-5 text-[15px] leading-[1.8] text-body">
-              Velisqa was born from a simple belief — that premium fashion
-              jewellery should be elegant, accessible, and deeply personal.
-              Founded in Aligarh, Uttar Pradesh, we set out to create a brand
-              that speaks to today&apos;s generation without losing the timeless
-              charm that makes jewellery special.
-            </p>
-            <p className="mt-4 text-[15px] leading-[1.8] text-body">
-              Every piece is crafted with precision — from hand-selected AD
-              stones and crystal accents to polished gold-tone plating that
-              catches the light beautifully. We create pieces that feel right
-              for every moment, every milestone, every story.
-            </p>
-            <p className="mt-5 text-xs font-semibold uppercase tracking-[0.2em] text-muted">
-              Established 2026 · Aligarh, India
-            </p>
-          </motion.div>
-
-          <motion.div variants={fade} className="overflow-hidden rounded-2xl">
-            <img
-              src="/images/about-story.jpg"
-              alt="Velisqa pendant necklace on linen — minimal jewellery"
-              loading="lazy"
-              width="800"
-              height="600"
-              className="w-full object-cover"
-              decoding="async"
-            />
-          </motion.div>
-        </div>
-      </motion.section>
-
-      {/* thin divider */}
-      <div className="container-stitch">
-        <div className="h-px w-full bg-ink/6" />
       </div>
 
-      {/* ══════════ 3. OUR MISSION — image + text reversed ══════════ */}
-      <motion.section
-        className="px-4 py-16 sm:px-6 sm:py-20"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={stagger}
-      >
-        <div className="container-stitch grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-          <motion.div
-            variants={fade}
-            className="order-2 overflow-hidden rounded-2xl lg:order-1"
-          >
-            <img
-              src="/images/about-mission.jpg"
-              alt="Jewellery craft workspace with gold chains and tools"
-              loading="lazy"
-              width="800"
-              height="600"
-              className="w-full object-cover"
-              decoding="async"
-            />
-          </motion.div>
-
-          <motion.div variants={fade} className="order-1 lg:order-2">
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-muted">
-              Our Mission
-            </p>
-            <h2 className="mt-3 font-serif text-2xl font-bold text-ink sm:text-3xl">
-              Making Premium Jewellery Accessible
-            </h2>
-            <p className="mt-5 text-[15px] leading-[1.8] text-body">
-              We believe you shouldn&apos;t have to choose between quality and
-              affordability. From statement necklaces for your wedding reception
-              to minimal everyday rings — Velisqa is designed for women who want
-              jewellery that moves with their life.
-            </p>
-            <blockquote className="mt-5 border-l-2 border-line pl-5">
-              <p className="text-[15px] italic leading-relaxed text-ink/70">
-                &ldquo;Jewellery that feels timeless, personal, and
-                relevant.&rdquo;
-              </p>
-            </blockquote>
-          </motion.div>
-        </div>
-      </motion.section>
-
-      {/* thin divider */}
-      <div className="container-stitch">
-        <div className="h-px w-full bg-ink/6" />
-      </div>
-
-      {/* ══════════ 4. OUR VISION — soft bg, centered ══════════ */}
-      <motion.section
-        className="bg-[#f5f0ea] px-4 py-16 sm:px-6 sm:py-20"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={stagger}
-      >
-        <motion.div
-          variants={fade}
-          className="container-stitch mx-auto max-w-2xl text-center"
-        >
-          <p className="text-xs font-bold uppercase tracking-[0.25em] text-muted">
-            Our Vision
-          </p>
-          <h2 className="mt-3 font-serif text-2xl font-bold text-ink sm:text-3xl">
-            To Become India&apos;s Most Loved Modern Jewellery Brand
+      {/* Who we are */}
+      <section aria-labelledby="who-heading" className="container-lux grid items-center gap-10 py-20 md:grid-cols-2 lg:gap-20 lg:py-28">
+        <div className="max-w-xl">
+          <p className="eyebrow text-muted">Who we are</p>
+          <h2 id="who-heading" className="type-section mt-3">
+            Born in Aligarh, made for today
           </h2>
-          <p className="mt-5 text-[15px] leading-[1.8] text-body">
-            We envision a world where every woman can own jewellery that makes
-            her feel special — without compromise. Contemporary design,
-            artisanal quality, and genuine care defining the jewellery experience
-            in India.
-          </p>
-        </motion.div>
-      </motion.section>
-
-      {/* ══════════ 5. VALUES — clean cards ══════════ */}
-      <motion.section
-        className="px-4 py-16 sm:px-6 sm:py-20"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.15 }}
-        variants={stagger}
-      >
-        <div className="container-stitch">
-          <motion.div variants={fade} className="text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-muted">
-              What We Stand For
+          <div className="mt-6 space-y-4 text-[0.95rem] leading-relaxed text-body">
+            <p>
+              Velisqa was born from a simple belief: premium fashion jewellery should be elegant, accessible and deeply
+              personal. Founded in Aligarh, Uttar Pradesh, we set out to build a brand that speaks to today’s generation
+              without losing the timeless charm that makes jewellery special.
             </p>
-            <h2 className="mt-3 font-serif text-2xl font-bold text-ink sm:text-3xl">
-              Our Values
-            </h2>
-          </motion.div>
-
-          <motion.div
-            variants={stagger}
-            className="mx-auto mt-10 grid max-w-4xl gap-4 sm:grid-cols-2"
-          >
-            {VALUES.map((v) => (
-              <motion.article
-                key={v.title}
-                variants={fade}
-                className="rounded-xl border border-ink/6 bg-white/60 p-6 transition hover:border-line hover:shadow-[0_4px_20px_rgba(17, 17, 17,0.04)] sm:p-7"
-              >
-                <h3 className="font-serif text-lg font-bold text-ink">
-                  {v.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-body">
-                  {v.desc}
-                </p>
-              </motion.article>
-            ))}
-          </motion.div>
+            <p>
+              From statement necklaces for a wedding reception to minimal everyday rings, Velisqa is designed for women
+              who want jewellery that moves with their life.
+            </p>
+          </div>
+          <p className="eyebrow mt-8 text-muted">Established 2026 · Aligarh, India</p>
         </div>
-      </motion.section>
-
-      {/* thin divider */}
-      <div className="container-stitch">
-        <div className="h-px w-full bg-ink/6" />
-      </div>
-
-      {/* ══════════ 6. FOUNDERS — minimal cards ══════════ */}
-      <motion.section
-        className="px-4 py-16 sm:px-6 sm:py-20"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={stagger}
-      >
-        <div className="container-stitch">
-          <motion.div variants={fade} className="mx-auto max-w-2xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-muted">
-              The People Behind Velisqa
-            </p>
-            <h2 className="mt-3 font-serif text-2xl font-bold text-ink sm:text-3xl">
-              Meet Our Founders
-            </h2>
-            <p className="mt-4 text-[15px] leading-[1.8] text-body">
-              Velisqa was founded by{" "}
-              <strong className="text-ink">Sameer Shameem</strong> and{" "}
-              <strong className="text-ink">Atif Afsar</strong> — two
-              people with a shared vision of building a modern jewellery brand
-              that combines timeless elegance with contemporary expression.
-            </p>
-          </motion.div>
-
-          <motion.div
-            variants={stagger}
-            className="mx-auto mt-10 grid max-w-xl gap-4 sm:grid-cols-2"
-          >
-            {[
-              {
-                name: "Sameer Shameem",
-                portfolio: "https://sameer-portfolio-dun.vercel.app/",
-                linkedin:
-                  "https://www.linkedin.com/in/sameer-shameem-4309bb340",
-              },
-              {
-                name: "Atif Afsar",
-                portfolio: "https://portfolio-rgzt.vercel.app/",
-                linkedin:
-                  "https://www.linkedin.com/in/atif-afsar-64903b33a?originalSubdomain=in",
-              },
-            ].map((f) => (
-              <motion.div
-                key={f.name}
-                variants={fade}
-                className="rounded-xl border border-ink/6 bg-white/60 p-6 text-center transition hover:border-line"
-              >
-                <h3 className="font-serif text-lg font-bold text-ink">
-                  {f.name}
-                </h3>
-                <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted">
-                  Founding Leader
-                </p>
-                <div className="mt-4 flex items-center justify-center gap-4">
-                  <a
-                    href={f.portfolio}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-xs font-bold text-ink transition hover:text-accent-ink"
-                  >
-                    Portfolio →
-                  </a>
-                  <a
-                    href={f.linkedin}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-xs font-bold text-muted transition hover:text-ink"
-                  >
-                    LinkedIn ↗
-                  </a>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          <motion.div variants={fade} className="mt-6 text-center">
-            <Link
-              to="/founders"
-              className="text-sm font-semibold text-ink transition hover:text-accent-ink"
-            >
-              Learn more about our founders →
-            </Link>
-          </motion.div>
+        <div className="relative aspect-[4/5] overflow-hidden bg-mist">
+          <Picture slot="about-story" alt="Gold bracelet resting on soft white fabric" sizes="(min-width: 768px) 46vw, 100vw" className="absolute inset-0" />
         </div>
-      </motion.section>
+      </section>
 
-      {/* ══════════ 7. WHAT MAKES US DIFFERENT — numbered ══════════ */}
-      <motion.section
-        className="bg-[#f5f0ea] px-4 py-16 sm:px-6 sm:py-20"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={stagger}
-      >
-        <div className="container-stitch">
-          <motion.div variants={fade} className="mx-auto max-w-2xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-muted">
-              Why Velisqa
-            </p>
-            <h2 className="mt-3 font-serif text-2xl font-bold text-ink sm:text-3xl">
-              What Makes Us Different
-            </h2>
-          </motion.div>
-
-          <motion.div
-            variants={stagger}
-            className="mx-auto mt-10 grid max-w-3xl gap-8 sm:grid-cols-3"
-          >
-            {[
-              {
-                num: "01",
-                title: "Curated Collections",
-                desc: "Limited batches so your piece feels as unique as you are.",
-              },
-              {
-                num: "02",
-                title: "WhatsApp Concierge",
-                desc: "Styling advice, order tracking, and personal assistance in one chat.",
-              },
-              {
-                num: "03",
-                title: "Crafted in India",
-                desc: "Designed and crafted locally, supporting artisans and fair-wage manufacturing.",
-              },
-            ].map((item) => (
-              <motion.div key={item.num} variants={fade} className="text-center">
-                <span className="font-serif text-3xl text-muted">
-                  {item.num}
-                </span>
-                <h3 className="mt-2 text-[11px] font-bold uppercase tracking-[0.2em] text-ink">
-                  {item.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-body">
-                  {item.desc}
-                </p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </motion.section>
-
-      {/* ══════════ 8. CTA — clean, light ══════════ */}
-      <motion.section
-        className="px-4 py-16 sm:px-6 sm:py-20"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
-        variants={stagger}
-      >
-        <motion.div
-          variants={fade}
-          className="container-stitch mx-auto max-w-2xl text-center"
-        >
-          <h2 className="font-serif text-2xl font-bold text-ink sm:text-3xl">
-            Ready to Discover Velisqa?
+      {/* Craft */}
+      <section aria-labelledby="craft-heading" className="border-y border-line bg-mist py-20 lg:py-28">
+        <div className="container-lux">
+          <p className="eyebrow text-muted">How we make it</p>
+          <h2 id="craft-heading" className="type-section mt-3 max-w-2xl">
+            Considered at every step
           </h2>
-          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-body">
-            Explore our collections and find the piece that tells your story.
+          <ol className="mt-12 grid gap-px bg-line md:grid-cols-3">
+            {CRAFT.map(([num, title, text]) => (
+              <li key={num} className="bg-mist p-8 lg:p-10">
+                <span className="text-xs text-accent-ink">{num}</span>
+                <h3 className="mt-4 font-serif text-3xl text-ink">{title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-body">{text}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* Mission */}
+      <section aria-labelledby="mission-heading" className="container-lux grid items-center gap-10 py-20 md:grid-cols-2 lg:gap-20 lg:py-28">
+        <div className="relative aspect-[4/5] overflow-hidden bg-mist md:order-1">
+          <Picture slot="about-mission" alt="Jewellery and tools laid out on a bright studio desk" sizes="(min-width: 768px) 46vw, 100vw" className="absolute inset-0" />
+        </div>
+        <div className="max-w-xl md:order-2">
+          <p className="eyebrow text-muted">Our mission</p>
+          <h2 id="mission-heading" className="type-section mt-3">
+            Premium jewellery, without compromise
+          </h2>
+          <p className="mt-6 text-[0.95rem] leading-relaxed text-body">
+            You shouldn’t have to choose between quality and affordability. We want every woman to own jewellery that
+            makes her feel special — contemporary design, quality finishing and genuine care, at a fair price.
           </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link
-              to="/collections"
-              className="inline-flex items-center gap-2 bg-ink px-7 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white transition hover:bg-ink"
-            >
-              Explore Collections →
-            </Link>
-            <Link
-              to="/contact"
-              className="inline-flex items-center gap-2 border border-ink/15 px-7 py-3 text-xs font-bold uppercase tracking-[0.16em] text-ink transition hover:border-ink/30"
-            >
-              Contact Us
+          <blockquote className="type-quote mt-8 border-l border-accent pl-6 text-ink">
+            “To become India’s most loved modern jewellery brand.”
+          </blockquote>
+          <dl className="mt-10 grid grid-cols-2 gap-x-6 gap-y-6">
+            {VALUES.map(([term, desc]) => (
+              <div key={term}>
+                <dt className="eyebrow text-ink">{term}</dt>
+                <dd className="mt-1.5 text-sm text-body">{desc}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
+
+      {/* Founders teaser */}
+      <section aria-labelledby="founders-heading" className="border-t border-line py-20 lg:py-28">
+        <div className="container-lux">
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <p className="eyebrow text-muted">The people behind Velisqa</p>
+              <h2 id="founders-heading" className="type-section mt-3">
+                Meet the founders
+              </h2>
+            </div>
+            <Link to="/founders" className="btn btn-link">
+              Read their story
             </Link>
           </div>
-        </motion.div>
-      </motion.section>
+          <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:gap-10">
+            {FOUNDERS.map((f) => (
+              <li key={f.id}>
+                <Link to="/founders" className="group block">
+                  <span className="relative block aspect-[4/5] overflow-hidden bg-mist">
+                    <Picture slot={f.slot} alt={f.alt} sizes="(min-width: 640px) 46vw, 100vw" className="absolute inset-0" imgClassName="img-zoom" objectPosition="50% 30%" />
+                  </span>
+                  <span className="mt-5 flex items-center justify-between">
+                    <span>
+                      <span className="block font-serif text-2xl text-ink">{f.name}</span>
+                      <span className="mt-1 block text-sm text-muted">{f.role}</span>
+                    </span>
+                    <ArrowRightIcon size={18} className="text-muted transition-transform group-hover:translate-x-1 group-hover:text-accent-ink" />
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
 
-      {/* ══════════ FOOTER ══════════ */}
+      <section className="bg-ink py-20 text-center text-white lg:py-24">
+        <div className="container-lux">
+          <h2 className="type-section text-white">Find your signature piece</h2>
+          <p className="mx-auto mt-4 max-w-md text-white/80">Necklaces, earrings, rings, bracelets and bangles — free shipping on prepaid orders.</p>
+          <Link to="/collections" className="btn btn-light mt-10">
+            Shop the collection
+          </Link>
+        </div>
+      </section>
     </main>
-  );
+  )
 }

@@ -51,7 +51,7 @@ export default function Wishlist() {
   const missingCount = wishlistCount - products.length
 
   return (
-    <main className="page-offset-nav bg-paper text-ink">
+    <main className="page-offset-nav min-h-svh bg-paper text-ink">
       <SEOHead
         title="Wishlist | Velisqa"
         description="Your saved Velisqa jewellery pieces — add to bag or continue shopping."
@@ -73,7 +73,7 @@ export default function Wishlist() {
             {Array.from({ length: Math.min(wishlistCount, 4) }, (_, index) => (
               <div
                 key={`wishlist-skeleton-${index}`}
-                className="aspect-[4/5] animate-pulse rounded-lg bg-[#e8e2db]"
+                className="aspect-[4/5] animate-pulse bg-[#e8e2db]"
                 aria-hidden
               />
             ))}
@@ -85,7 +85,7 @@ export default function Wishlist() {
             <p className="text-sm text-body">Your wishlist is empty.</p>
             <Link
               to="/collections"
-              className="tap-target rounded-full bg-ink px-8 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white transition hover:bg-ink"
+              className="tap-target bg-ink px-8 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white transition hover:bg-ink"
             >
               Explore collections
             </Link>

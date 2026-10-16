@@ -142,13 +142,13 @@ export default function ManualPayment() {
       />
       <main className="page-offset-nav min-h-screen bg-mist pb-28 text-ink sm:px-6 sm:py-14 sm:pb-14">
         {/* Sticky amount bar */}
-        <div className="sticky top-[calc(var(--announcement-height)+var(--nav-height,0px))] z-30 border-b border-line bg-paper/95 px-4 py-3 backdrop-blur-md sm:static sm:border-0 sm:bg-transparent sm:px-0 sm:py-0 sm:backdrop-blur-none">
+        <div className="sticky top-[calc(var(--announcement-height)+var(--nav-height,0px))] z-30 border-b border-line bg-paper/95 px-4 py-3 sm:static sm:border-0 sm:bg-transparent sm:px-0 sm:py-0">
           <div className="container-stitch mx-auto flex max-w-4xl items-center justify-between gap-3">
             <div className="min-w-0">
               <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-muted">Pay exactly</p>
               <p className="font-serif text-2xl font-semibold text-ink sm:text-4xl">{formatInr(order.grandTotal)}</p>
             </div>
-            <div className="shrink-0 rounded-xl bg-mist px-3 py-2 text-right">
+            <div className="shrink-0 bg-mist px-3 py-2 text-right">
               <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-muted">Order</p>
               <p className="max-w-[9rem] truncate font-mono text-[10px] font-semibold text-ink sm:max-w-none sm:text-[11px]">
                 {order.orderRef}
@@ -167,7 +167,7 @@ export default function ManualPayment() {
 
           <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-8">
             {/* Pay action column */}
-            <section className="order-1 flex flex-col items-center justify-center rounded-2xl border border-line bg-white p-6 shadow-[0_14px_44px_rgba(17, 17, 17,0.06)] sm:p-10 lg:col-start-1 lg:row-start-1">
+            <section className="order-1 flex flex-col items-center justify-center border border-line bg-white p-6 sm:p-10 lg:col-start-1 lg:row-start-1">
               {initializing ? (
                 <div className="flex flex-col items-center py-6">
                   <div className="h-10 w-10 animate-spin rounded-full border-2 border-ink border-t-transparent" />
@@ -191,14 +191,14 @@ export default function ManualPayment() {
                   </p>
 
                   {paymentError && (
-                    <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-800">
+                    <div className="mt-4 border border-red-200 bg-red-50 p-3 text-xs text-red-800">
                       <strong>Payment Error:</strong> {paymentError}
                     </div>
                   )}
 
                   <button
                     onClick={() => void startRazorpayCheckout()}
-                    className="mt-6 flex min-h-[52px] w-full items-center justify-center rounded-full bg-ink px-6 text-sm font-bold uppercase tracking-[0.08em] text-white transition hover:bg-ink active:scale-[0.98]"
+                    className="mt-6 flex min-h-[52px] w-full items-center justify-center bg-ink px-6 text-sm font-bold uppercase tracking-[0.08em] text-white transition hover:bg-ink active:scale-[0.98]"
                   >
                     Pay Now — {formatInr(order.grandTotal)}
                   </button>

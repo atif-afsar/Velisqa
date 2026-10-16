@@ -10,7 +10,7 @@ export default function CheckoutStepIndicator({ showPayment = true }) {
   return (
     <nav
       aria-label="Checkout progress"
-      className="flex items-center justify-center gap-2 rounded-xl border border-line bg-white/60 px-3 py-2.5"
+      className="flex items-center justify-center gap-2 border border-line bg-white/60 px-3 py-2.5"
     >
       {steps.map((step, index) => (
         <div key={step.id} className="flex items-center gap-2">

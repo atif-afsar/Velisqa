@@ -65,7 +65,7 @@ export default function SignInRequiredModal({ open, onClose }) {
             aria-modal="true"
             aria-labelledby={titleId}
             data-lenis-prevent
-            className="relative z-10 flex max-h-[min(92dvh,100%)] w-full max-w-md flex-col overflow-hidden rounded-t-2xl border border-line bg-mist shadow-[0_24px_80px_rgba(17, 17, 17,0.35)] sm:max-h-[min(88vh,720px)] sm:rounded-2xl"
+            className="relative z-10 flex max-h-[min(92dvh,100%)] w-full max-w-md flex-col overflow-hidden border border-line bg-mist sm:max-h-[min(88vh,720px)]"
             initial={{ y: '100%', opacity: 0.9 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: '100%', opacity: 0 }}

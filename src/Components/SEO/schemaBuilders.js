@@ -166,22 +166,22 @@ export function buildFoundersPageSchema() {
     "@type": "Person",
     name: "Sameer Shameem",
     url: "https://sameer-portfolio-dun.vercel.app/",
-    jobTitle: "Founding Leader",
-    worksFor: { "@id": `${SITE_URL}/#organization` },
+        worksFor: { "@id": `${SITE_URL}/#organization` },
     sameAs: ["https://www.linkedin.com/in/sameer-shameem-4309bb340"],
-    image: `${SITE_URL}/images/sameer-shameem.jpg`,
+    image: `${SITE_URL}/media/founder-sameer-shameem-1023.webp`,
+    jobTitle: "Co-founder",
   };
 
   const atif = {
     "@type": "Person",
     name: "Atif Afsar",
     url: "https://portfolio-rgzt.vercel.app/",
-    jobTitle: "Founding Leader",
-    worksFor: { "@id": `${SITE_URL}/#organization` },
+        worksFor: { "@id": `${SITE_URL}/#organization` },
     sameAs: [
       "https://www.linkedin.com/in/atif-afsar-64903b33a?originalSubdomain=in",
     ],
-    image: `${SITE_URL}/images/atif-afsar.jpg`,
+    image: `${SITE_URL}/media/founder-atif-afsar-1024.webp`,
+    jobTitle: "Co-founder",
   };
 
   return {

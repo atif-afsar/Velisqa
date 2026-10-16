@@ -28,7 +28,7 @@ export default function OrderConfirmation({
           initial={{ scale: 0.6, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.08, type: 'spring', stiffness: 260, damping: 18 }}
-          className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#2d6a4f] to-[#1b4332] shadow-[0_12px_32px_rgba(45,106,79,0.35)]"
+          className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#2d6a4f] to-[#1b4332]"
           aria-hidden
         >
           {isOnline ? (
@@ -76,7 +76,7 @@ export default function OrderConfirmation({
         </p>
 
         {(orderRef || productName || total != null) && (
-          <div className="mx-auto mt-5 max-w-xs rounded-xl border border-line bg-white/70 px-4 py-3 text-left shadow-sm">
+          <div className="mx-auto mt-5 max-w-xs border border-line bg-white/70 px-4 py-3 text-left">
             {orderRef && (
               <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted">
                 Order reference
@@ -110,7 +110,7 @@ export default function OrderConfirmation({
           <Link
             to={trackUrl}
             onClick={onClose}
-            className="tap-target inline-flex h-11 w-full items-center justify-center rounded-full border border-line bg-ink px-4 text-[11px] font-bold uppercase tracking-[0.1em] text-white shadow-[0_8px_24px_rgba(42,7,24,0.35)] transition hover:bg-ink sm:h-12 sm:text-xs"
+            className="tap-target inline-flex h-11 w-full items-center justify-center border border-line bg-ink px-4 text-[11px] font-bold uppercase tracking-[0.1em] text-white transition hover:bg-ink sm:h-12 sm:text-xs"
           >
             Track order
           </Link>
@@ -118,7 +118,7 @@ export default function OrderConfirmation({
           <button
             type="button"
             onClick={onClose}
-            className="tap-target inline-flex h-11 w-full items-center justify-center rounded-full border border-line bg-ink px-4 text-[11px] font-bold uppercase tracking-[0.1em] text-white shadow-[0_8px_24px_rgba(42,7,24,0.35)] transition hover:bg-ink sm:h-12 sm:text-xs"
+            className="tap-target inline-flex h-11 w-full items-center justify-center border border-line bg-ink px-4 text-[11px] font-bold uppercase tracking-[0.1em] text-white transition hover:bg-ink sm:h-12 sm:text-xs"
           >
             Continue shopping
           </button>

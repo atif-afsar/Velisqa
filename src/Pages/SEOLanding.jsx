@@ -52,7 +52,7 @@ export default function SEOLanding() {
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
               to="/collections"
-              className="tap-target inline-flex items-center justify-center rounded-full bg-ink px-7 py-3 type-button text-white transition hover:bg-ink"
+              className="tap-target inline-flex items-center justify-center bg-ink px-7 py-3 type-button text-white transition hover:bg-ink"
             >
               Explore Collections
             </Link>

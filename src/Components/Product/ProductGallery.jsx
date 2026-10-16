@@ -116,7 +116,11 @@ function Lightbox({ images, alt, start, onClose }) {
  * - Desktop: editorial two-column image grid.
  * - Any image opens a full-screen zoom viewer.
  */
+// Only the visible layout's first image is high priority; the hidden one stays lazy (not downloaded).
+const isDesktopViewport = () => typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches
+
 export default function ProductGallery({ images, alt, badges }) {
+  const [desktop] = useState(isDesktopViewport)
   const [active, setActive] = useState(0)
   const [viewer, setViewer] = useState(null)
   const trackRef = useRef(null)
@@ -154,7 +158,7 @@ export default function ProductGallery({ images, alt, badges }) {
               className="relative aspect-[4/5] w-full shrink-0 snap-center bg-mist"
               aria-label={`Open image ${i + 1} of ${count} full screen`}
             >
-              <GalleryImage src={src} alt={i === 0 ? alt : ''} priority={i === 0} sizes="100vw" />
+              <GalleryImage src={src} alt={i === 0 ? alt : ''} priority={i === 0 && !desktop} sizes="100vw" />
             </button>
           ))}
         </div>
@@ -180,7 +184,7 @@ export default function ProductGallery({ images, alt, badges }) {
             <GalleryImage
               src={src}
               alt={i === 0 ? alt : ''}
-              priority={i === 0}
+              priority={i === 0 && desktop}
               sizes={count > 1 ? '(min-width: 1024px) 28vw, 100vw' : '(min-width: 1024px) 55vw, 100vw'}
               className="img-zoom"
             />

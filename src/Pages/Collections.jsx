@@ -52,7 +52,7 @@ export default function Collections() {
         image={head.image}
         schema={head.schema}
       />
-      <main className="page-offset-nav bg-paper">
+      <main className="page-offset-nav min-h-svh bg-paper">
         <header className="container-lux pb-8 pt-8 text-center sm:pt-12 lg:pb-10">
           <nav aria-label="Breadcrumb" className="text-xs text-muted">
             <ol className="flex flex-wrap items-center justify-center gap-2">

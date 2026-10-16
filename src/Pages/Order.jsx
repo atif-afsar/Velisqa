@@ -30,7 +30,7 @@ export default function Order() {
             </WhatsAppCTA>
             <Link
               to="/collections"
-              className="tap-target inline-flex items-center justify-center rounded-full border border-ink px-8 py-4 type-button text-ink transition hover:bg-ink/5"
+              className="tap-target inline-flex items-center justify-center border border-ink px-8 py-4 type-button text-ink transition hover:bg-ink/5"
             >
               Browse Collections
             </Link>

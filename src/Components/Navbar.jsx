@@ -1,14 +1,16 @@
-import { useCallback, useEffect, useId, useRef, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useId, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import CartNavLink from './Cart/CartNavLink'
 import WishlistNavLink from './Wishlist/WishlistNavLink'
 import AccountNavMenu from './Nav/AccountNavMenu'
-import SearchDialog from './Search/SearchDialog'
 import Drawer from './UI/Drawer'
-import { ChevronDownIcon, ChevronRightIcon, MenuIcon, SearchIcon, WhatsAppIcon } from './UI/Icons'
+import { ChevronDownIcon, ChevronRightIcon, LockIcon, MenuIcon, SearchIcon, WhatsAppIcon } from './UI/Icons'
 import { useAuth } from '../context/AuthContext'
 import { SHOP_CATEGORIES, categoryPath } from '../data/shopCategories'
 import { createWhatsAppLink } from './WhatsApp/whatsapp'
+
+// Loaded on first open — keeps ~10 KB of search UI out of the initial bundle.
+const SearchDialog = lazy(() => import('./Search/SearchDialog'))
 
 const DISCOVER_LINKS = [
   { label: 'New arrivals', to: '/collections?sort=newest' },
@@ -207,6 +209,24 @@ function MobileMenu({ open, onClose, onSearch }) {
   )
 }
 
+/** Distraction-free header for checkout and payment pages. */
+function CheckoutHeader() {
+  return (
+    <header className="fixed inset-x-0 top-[var(--announcement-height)] z-50 border-b border-line bg-paper">
+      <div className="container-lux grid h-[var(--nav-bar-height)] grid-cols-[1fr_auto_1fr] items-center">
+        <Link to="/cart" className="inline-flex min-h-11 items-center text-xs uppercase tracking-[0.14em] text-muted hover:text-ink">
+          ← <span className="ml-2 hidden sm:inline">Back to bag</span>
+        </Link>
+        <Logo />
+        <p className="flex items-center justify-end gap-2 text-xs uppercase tracking-[0.14em] text-body">
+          <LockIcon size={15} className="text-accent-ink" />
+          <span className="hidden sm:inline">Secure checkout</span>
+        </p>
+      </div>
+    </header>
+  )
+}
+
 function AdminHeader() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-paper">
@@ -251,6 +271,7 @@ export default function Navbar() {
   useEffect(() => () => window.clearTimeout(hoverTimer.current), [])
 
   if (pathname.startsWith('/admin')) return <AdminHeader />
+  if (pathname === '/checkout' || pathname.startsWith('/pay/')) return <CheckoutHeader />
 
   const openMegaSoon = () => {
     window.clearTimeout(hoverTimer.current)
@@ -327,7 +348,11 @@ export default function Navbar() {
 
       <MegaMenu id={megaId} open={megaOpen} onClose={closeMega} onMouseEnter={openMegaSoon} onMouseLeave={closeMegaSoon} />
       <MobileMenu open={menuOpen} onClose={closeMenu} onSearch={() => setSearchOpen(true)} />
-      {searchOpen && <SearchDialog onClose={() => setSearchOpen(false)} />}
+      {searchOpen && (
+        <Suspense fallback={null}>
+          <SearchDialog onClose={() => setSearchOpen(false)} />
+        </Suspense>
+      )}
     </header>
   )
 }

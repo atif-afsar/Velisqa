@@ -119,14 +119,14 @@ export default function OrderTracking() {
             <button
               type="button"
               onClick={() => void handleRefreshAll()}
-              className="rounded-full border border-ink/20 px-4 py-2 text-xs font-semibold text-ink"
+              className="border border-ink/20 px-4 py-2 text-xs font-semibold text-ink"
             >
               Refresh status
             </button>
             {user && (
               <Link
                 to="/account/orders"
-                className="rounded-full border border-ink/20 px-4 py-2 text-xs font-semibold text-ink"
+                className="border border-ink/20 px-4 py-2 text-xs font-semibold text-ink"
               >
                 My orders
               </Link>
@@ -134,7 +134,7 @@ export default function OrderTracking() {
           </div>
 
           {isCancelled && (
-            <div className="mt-6 rounded-xl border border-ink/15 bg-mist p-4 text-sm text-body">
+            <div className="mt-6 border border-ink/15 bg-mist p-4 text-sm text-body">
               <p className="font-semibold text-ink">This order was cancelled</p>
               <p className="mt-1 leading-relaxed">
                 Your order is no longer being processed. If you already paid online and need help, contact Velisqa support.
@@ -143,19 +143,19 @@ export default function OrderTracking() {
           )}
 
           {cancelMessage && (
-            <div className="mt-6 rounded-xl border border-[#2d6a4f]/25 bg-[#edf7f1] p-4 text-sm text-[#1f4334]">
+            <div className="mt-6 border border-[#2d6a4f]/25 bg-[#edf7f1] p-4 text-sm text-[#1f4334]">
               {cancelMessage}
             </div>
           )}
 
           {cancelError && (
-            <div className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-900">
+            <div className="mt-6 border border-red-200 bg-red-50 p-4 text-sm text-red-900">
               {cancelError}
             </div>
           )}
 
           {order.paymentStatus === 'rejected' && !isCancelled && (
-            <div className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-900">
+            <div className="mt-6 border border-red-200 bg-red-50 p-4 text-sm text-red-900">
               <p className="font-semibold">Payment proof was not approved</p>
               <p className="mt-1">{order.rejectionReason || 'Please submit a clearer payment proof.'}</p>
               <Link
@@ -167,7 +167,7 @@ export default function OrderTracking() {
             </div>
           )}
 
-          <section className="mt-6 rounded-2xl border border-line bg-white/70 p-5 shadow-[0_14px_44px_rgba(17, 17, 17,0.06)] sm:p-7">
+          <section className="mt-6 border border-line bg-white/70 p-5 sm:p-7">
             <div className="grid gap-5 sm:grid-cols-2">
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">Payment</p>
@@ -190,7 +190,7 @@ export default function OrderTracking() {
             </ol>
 
             {awaitingDispatch && (
-              <div className="mt-6 rounded-xl border border-line bg-mist p-4 text-sm text-body">
+              <div className="mt-6 border border-line bg-mist p-4 text-sm text-body">
                 <p className="font-semibold text-ink">Preparing your dispatch</p>
                 <p className="mt-1 leading-relaxed">
                   {isCodOrder(order)
@@ -201,7 +201,7 @@ export default function OrderTracking() {
             )}
 
             {(order.awbNumber || trackingUrl) && !isCancelled && (
-              <div className="mt-6 rounded-xl bg-mist p-4 text-sm text-body">
+              <div className="mt-6 bg-mist p-4 text-sm text-body">
                 <p className="font-semibold text-ink">Shipment details</p>
                 {order.courierName && <p className="mt-2">Courier: <strong>{order.courierName}</strong></p>}
                 {order.awbNumber && <p className="mt-1">AWB: <strong className="font-mono">{order.awbNumber}</strong></p>}
@@ -219,7 +219,7 @@ export default function OrderTracking() {
             )}
 
             {trackingEnabled && (
-              <div className="mt-6 rounded-xl border border-[#2d6a4f]/15 bg-[#f7fbf8] p-4 text-sm text-body">
+              <div className="mt-6 border border-[#2d6a4f]/15 bg-[#f7fbf8] p-4 text-sm text-body">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <p className="font-semibold text-ink">Live parcel updates</p>
                   {trackingLoading && <span className="text-xs text-muted">Fetching scans…</span>}
@@ -267,14 +267,14 @@ export default function OrderTracking() {
           </section>
 
           {showCancel && (
-            <section className="mt-6 rounded-2xl border border-ink/10 bg-white/70 p-5 sm:p-6">
+            <section className="mt-6 border border-ink/10 bg-white/70 p-5 sm:p-6">
               <p className="font-semibold text-ink">Need to cancel?</p>
               <p className="mt-2 text-sm leading-relaxed text-body">
                 You can cancel before delivery if the parcel has not left for your address yet.
                 {order.awbNumber ? ' If pickup already happened, contact us on WhatsApp.' : ''}
               </p>
               {cancelConfirmOpen ? (
-                <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-950">
+                <div className="mt-4 border border-red-200 bg-red-50 p-4 text-sm text-red-950">
                   <p className="font-semibold">
                     {order.awbNumber
                       ? 'Cancel this order?'
@@ -290,7 +290,7 @@ export default function OrderTracking() {
                       type="button"
                       disabled={cancelBusy}
                       onClick={() => setCancelConfirmOpen(false)}
-                      className="min-h-10 rounded-full border border-ink/20 px-5 text-xs font-bold uppercase tracking-[0.08em] text-ink disabled:opacity-50"
+                      className="min-h-10 border border-ink/20 px-5 text-xs font-bold uppercase tracking-[0.08em] text-ink disabled:opacity-50"
                     >
                       Keep order
                     </button>
@@ -298,7 +298,7 @@ export default function OrderTracking() {
                       type="button"
                       disabled={cancelBusy}
                       onClick={() => void confirmCancel()}
-                      className="min-h-10 rounded-full border border-red-400 bg-red-800 px-5 text-xs font-bold uppercase tracking-[0.08em] text-white disabled:opacity-50"
+                      className="min-h-10 border border-red-400 bg-red-800 px-5 text-xs font-bold uppercase tracking-[0.08em] text-white disabled:opacity-50"
                     >
                       {cancelBusy ? 'Cancelling…' : 'Yes, cancel order'}
                     </button>
@@ -309,7 +309,7 @@ export default function OrderTracking() {
                   type="button"
                   disabled={cancelBusy}
                   onClick={() => setCancelConfirmOpen(true)}
-                  className="mt-4 rounded-full border border-red-300 px-5 py-2.5 text-xs font-bold uppercase tracking-[0.08em] text-red-800 disabled:opacity-50"
+                  className="mt-4 border border-red-300 px-5 py-2.5 text-xs font-bold uppercase tracking-[0.08em] text-red-800 disabled:opacity-50"
                 >
                   Cancel order
                 </button>

@@ -64,19 +64,19 @@ export default function ManualPaymentConfirmation() {
   if (error || !order) {
     return (
       <main className="page-offset-nav min-h-[65vh] bg-mist px-4 py-16 text-center">
-        <div className="mx-auto max-w-md rounded-2xl border border-line bg-white p-8 shadow-sm">
+        <div className="mx-auto max-w-md border border-line bg-white p-8">
           <h1 className="font-serif text-2xl font-bold text-ink">Order Link Unavailable</h1>
           <p className="mt-3 text-sm text-body">{error || 'We could not retrieve details for this order.'}</p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Link
               to="/"
-              className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-ink px-6 text-xs font-bold uppercase tracking-[0.1em] text-white hover:bg-ink"
+              className="inline-flex min-h-[44px] items-center justify-center bg-ink px-6 text-xs font-bold uppercase tracking-[0.1em] text-white hover:bg-ink"
             >
               Return Home
             </Link>
             <Link
               to="/collections"
-              className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-ink/30 px-6 text-xs font-bold uppercase tracking-[0.1em] text-ink hover:bg-ink/5"
+              className="inline-flex min-h-[44px] items-center justify-center border border-ink/30 px-6 text-xs font-bold uppercase tracking-[0.1em] text-ink hover:bg-ink/5"
             >
               Browse Shop
             </Link>
@@ -104,14 +104,14 @@ export default function ManualPaymentConfirmation() {
         <div className="mx-auto max-w-3xl space-y-8">
           
           {/* Main Success Card */}
-          <div className="overflow-hidden rounded-3xl border border-line bg-white p-6 shadow-md sm:p-10">
+          <div className="overflow-hidden border border-line bg-white p-6 sm:p-10">
             {/* Header / Celebration */}
             <div className="text-center space-y-3">
-              <div className="mx-auto relative flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-tr from-[#2d6a4f] to-[#52b788] text-white text-4xl font-bold shadow-lg shadow-[#2d6a4f]/20">
+              <div className="mx-auto relative flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-tr from-[#2d6a4f] to-[#52b788] text-white text-4xl font-bold shadow-[#2d6a4f]/20">
                 <span>✓</span>
               </div>
               <div className="pt-2">
-                <span className="inline-block rounded-full bg-[#edf7f1] px-3.5 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-[#2d6a4f] border border-[#2d6a4f]/20">
+                <span className="inline-block bg-[#edf7f1] px-3.5 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-[#2d6a4f] border border-[#2d6a4f]/20">
                   Order Successfully Placed
                 </span>
               </div>
@@ -124,13 +124,13 @@ export default function ManualPaymentConfirmation() {
             </div>
 
             {/* Order Reference Pill */}
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-2 rounded-2xl bg-mist p-4 text-center border border-line">
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-2 bg-mist p-4 text-center border border-line">
               <span className="text-xs font-semibold text-muted">Order Reference:</span>
               <span className="font-mono text-base font-bold text-ink">{order.orderRef}</span>
               <button
                 type="button"
                 onClick={handleCopyRef}
-                className="ml-2 rounded-full border border-ink/20 bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-[0.08em] text-ink hover:bg-ink hover:text-white transition"
+                className="ml-2 border border-ink/20 bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-[0.08em] text-ink hover:bg-ink hover:text-white transition"
               >
                 {copied ? 'Copied!' : 'Copy'}
               </button>
@@ -143,7 +143,7 @@ export default function ManualPaymentConfirmation() {
               </h3>
               <div className="grid grid-cols-4 gap-2 text-center text-xs">
                 <div className="space-y-1.5">
-                  <div className="mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-[#2d6a4f] text-white font-bold text-xs shadow-sm">
+                  <div className="mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-[#2d6a4f] text-white font-bold text-xs">
                     ✓
                   </div>
                   <p className="font-bold text-[#1b4332] text-[11px]">Placed</p>
@@ -185,10 +185,10 @@ export default function ManualPaymentConfirmation() {
                       <img
                         src={item.imageUrl}
                         alt={item.name}
-                        className="h-16 w-14 shrink-0 rounded-xl bg-mist object-cover border border-line shadow-sm"
+                        className="h-16 w-14 shrink-0 bg-mist object-cover border border-line"
                       />
                     ) : (
-                      <div className="h-16 w-14 shrink-0 rounded-xl bg-mist flex items-center justify-center text-xs text-muted border">
+                      <div className="h-16 w-14 shrink-0 bg-mist flex items-center justify-center text-xs text-muted border">
                         Jewellery
                       </div>
                     )}
@@ -205,7 +205,7 @@ export default function ManualPaymentConfirmation() {
             </div>
 
             {/* Payment & Estimated Delivery Status */}
-            <div className="mt-6 grid gap-4 rounded-2xl bg-paper p-5 border border-line sm:grid-cols-2 text-xs">
+            <div className="mt-6 grid gap-4 bg-paper p-5 border border-line sm:grid-cols-2 text-xs">
               <div className="space-y-1">
                 <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted">Payment Status</span>
                 <p className="font-semibold text-emerald-800 flex items-center gap-1.5 text-sm">
@@ -223,13 +223,13 @@ export default function ManualPaymentConfirmation() {
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center border-t border-line pt-6">
               <Link
                 to={orderPrivateUrl('/orders', order.orderRef, accessToken)}
-                className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-ink px-8 text-xs font-bold uppercase tracking-[0.12em] text-white hover:bg-ink transition shadow-sm"
+                className="inline-flex min-h-[48px] items-center justify-center bg-ink px-8 text-xs font-bold uppercase tracking-[0.12em] text-white hover:bg-ink transition"
               >
                 Track My Order →
               </Link>
               <Link
                 to="/collections"
-                className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-ink/25 bg-white px-8 text-xs font-bold uppercase tracking-[0.12em] text-ink hover:bg-ink/5 transition"
+                className="inline-flex min-h-[48px] items-center justify-center border border-ink/25 bg-white px-8 text-xs font-bold uppercase tracking-[0.12em] text-ink hover:bg-ink/5 transition"
               >
                 Continue Shopping
               </Link>
@@ -237,7 +237,7 @@ export default function ManualPaymentConfirmation() {
                 href={whatsappHelpUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-[#25D366]/10 border border-[#25D366]/30 px-6 text-xs font-bold uppercase tracking-[0.1em] text-[#128C7E] hover:bg-[#25D366]/20 transition"
+                className="inline-flex min-h-[48px] items-center justify-center bg-[#25D366]/10 border border-[#25D366]/30 px-6 text-xs font-bold uppercase tracking-[0.1em] text-[#128C7E] hover:bg-[#25D366]/20 transition"
               >
                 WhatsApp Concierge
               </a>
@@ -264,9 +264,9 @@ export default function ManualPaymentConfirmation() {
                 <Link
                   key={cat.label}
                   to={categoryPath(cat)}
-                  className="group flex flex-col items-center rounded-2xl border border-line bg-white p-3 text-center shadow-sm hover:border-ink/40 hover:shadow-md transition duration-300"
+                  className="group flex flex-col items-center border border-line bg-white p-3 text-center hover:border-ink/40 transition duration-300"
                 >
-                  <div className="aspect-square w-full overflow-hidden rounded-xl bg-mist">
+                  <div className="aspect-square w-full overflow-hidden bg-mist">
                     <img
                       src={cat.image(300)}
                       alt={cat.label}
@@ -286,7 +286,7 @@ export default function ManualPaymentConfirmation() {
           </section>
 
           {/* Quick Return to Home Footer Banner */}
-          <div className="rounded-2xl border border-line bg-gradient-to-r from-ink to-[#511330] p-6 text-center text-white shadow-sm sm:p-8">
+          <div className="border border-line bg-gradient-to-r from-ink to-[#511330] p-6 text-center text-white sm:p-8">
             <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted">Velisqa Luxury</p>
             <h3 className="font-serif text-2xl font-semibold mt-1">Discover Handcrafted Elegance</h3>
             <p className="mx-auto mt-2 max-w-md text-xs text-white/80 leading-relaxed">
@@ -295,7 +295,7 @@ export default function ManualPaymentConfirmation() {
             <div className="mt-5">
               <Link
                 to="/"
-                className="inline-flex min-h-[42px] items-center justify-center rounded-full bg-white px-7 text-xs font-bold uppercase tracking-[0.1em] text-ink hover:bg-paper transition shadow-sm"
+                className="inline-flex min-h-[42px] items-center justify-center bg-white px-7 text-xs font-bold uppercase tracking-[0.1em] text-ink hover:bg-paper transition"
               >
                 Back to Home
               </Link>

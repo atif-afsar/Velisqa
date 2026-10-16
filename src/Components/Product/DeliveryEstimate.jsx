@@ -27,7 +27,7 @@ export default function DeliveryEstimate() {
   const [pincode, setPincode] = useState(readSavedPincode)
   const [status, setStatus] = useState('idle') // idle | checking | ok | invalid
   const [place, setPlace] = useState('')
-  const estimate = useMemo(deliveryWindow, [])
+  const estimate = useMemo(() => deliveryWindow(), [])
 
   async function check(pin) {
     if (!/^\d{6}$/.test(pin)) {

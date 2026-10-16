@@ -20,6 +20,9 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { createElement } from 'react'
+import { renderToString } from 'react-dom/server'
+import { StaticRouter } from 'react-router'
 import { createServer, loadEnv } from 'vite'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -40,6 +43,9 @@ try {
   const { displayProductName } = await load('/src/lib/productDisplay.js')
   const { formatInr } = await load('/src/lib/promoPricing.js')
   const { legalPages } = await load('/src/Components/Legal/legalContent.js')
+  const { buildImageSrcSet, buildImageUrl } = await load('/src/lib/imageCdn.js')
+  const { getPrimaryImageUrl, getProductImageUrls } = await load('/src/lib/productImages.js')
+  const { default: Hero } = await load('/src/Components/Home/Hero.jsx')
   const media = JSON.parse(fs.readFileSync(path.join(ROOT, 'src/data/media.json'), 'utf8'))
 
   const template = fs.readFileSync(path.join(DIST, 'index.html'), 'utf8')
@@ -96,13 +102,15 @@ try {
   }
 
   /** Replace the template's generic SEO tags with route-specific ones. */
-  function page(head, noscript = '') {
+  function page(head, noscript = '', rootHtml = '') {
     let html = template
       .replace(/\s*<title>[\s\S]*?<\/title>/, '')
       .replace(/\s*<meta\s+(name|property)="(description|keywords|robots|og:[^"]+|twitter:[^"]+)"[\s\S]*?\/>/g, '')
       .replace(/\s*<link rel="canonical"[^>]*\/>/, '')
     html = html.replace('</head>', `${renderHead(head)}\n  </head>`)
     if (noscript) html = html.replace('<div id="root"></div>', `<noscript>${noscript}</noscript>\n    <div id="root"></div>`)
+    // Static first paint; React replaces it with identical markup when it mounts.
+    if (rootHtml) html = html.replace('<div id="root"></div>', `<div id="root">${rootHtml}</div>`)
     return html
   }
 
@@ -118,6 +126,23 @@ try {
     sitemap.push({ loc: `${SITE_URL}${loc}`, priority, changefreq, images })
   const crumbs = (...items) => schemas.buildBreadcrumbSchema([{ name: 'Home', path: '/' }, ...items])
 
+  /** <link rel=preload> for a page's LCP image, built with the same helpers the components use. */
+  function preloadImage(src, widths, sizes, opts = {}) {
+    if (!src) return ''
+    const set = buildImageSrcSet(src, widths, opts)
+    return set
+      ? `<link rel="preload" as="image" imagesrcset="${esc(set)}" imagesizes="${sizes}" fetchpriority="high" />`
+      : `<link rel="preload" as="image" href="${esc(buildImageUrl(src, { width: 1080, ...opts }))}" fetchpriority="high" />`
+  }
+  // Must match ProductCard / ProductImage defaults and ProductGallery.
+  const CARD_SIZES = '(min-width: 1280px) 22vw, (min-width: 1024px) 28vw, (min-width: 768px) 30vw, 46vw'
+  const cardPreload = (p) => (p ? preloadImage(getPrimaryImageUrl(p), [360, 480, 600, 800], CARD_SIZES, { quality: 72 }) : '')
+  const galleryPreload = (p) => {
+    const imgs = getProductImageUrls(p)
+    if (!imgs.length) return ''
+    return preloadImage(imgs[0], [480, 720, 960, 1280, 1600], imgs.length > 1 ? '(min-width: 1024px) 28vw, 100vw' : '(min-width: 1024px) 55vw, 100vw')
+  }
+
   // ── Client-only shell (cart, checkout, account, admin…) ──────────────────
   fs.writeFileSync(
     path.join(DIST, 'app.html'),
@@ -130,21 +155,24 @@ try {
   )
 
   // ── Home (with hero preload) ─────────────────────────────────────────────
-  const heroPreload = ['campaign-hero-b', 'campaign-hero-desktop']
-    .map((slot, i) => {
-      const entry = media[slot]
-      if (!entry) return ''
-      const set = entry.widths.map((w) => `/media/${slot}-${w}.avif ${w}w`).join(', ')
-      const mq = i === 0 ? '(max-width: 1023px)' : '(min-width: 1024px)'
-      return `<link rel="preload" as="image" type="image/avif" imagesrcset="${set}" imagesizes="100vw" media="${mq}" fetchpriority="high" />`
-    })
-    .join('\n    ')
+  // Homepage LCP image — must match Components/Home/Hero.jsx.
+  const heroPreload = (() => {
+    const slot = 'campaign-hero-b'
+    const entry = media[slot]
+    if (!entry) return ''
+    const set = entry.widths.map((w) => `/media/${slot}-${w}.avif ${w}w`).join(', ')
+    return `<link rel="preload" as="image" type="image/avif" imagesrcset="${set}" imagesizes="(min-width: 1024px) 50vw, 100vw" fetchpriority="high" />`
+  })()
   const homeLinks = SHOP_CATEGORIES.map((c) => `<li><a href="/collections/${c.slug}">${esc(c.label)}</a></li>`).join('')
   write(
     '/',
     page(
       { ...pageSeo.home, canonicalPath: '/', extraHead: heroPreload },
-      `<h1>Velisqa Jewellery — modern jewellery for women</h1><p>${esc(pageSeo.home.description)}</p><ul>${homeLinks}</ul>`,
+      `<p>${esc(pageSeo.home.description)}</p><ul>${homeLinks}</ul>`,
+      // The real Hero component, rendered at build time, so the LCP image paints before JS loads.
+      renderToString(
+        createElement(StaticRouter, { location: '/' }, createElement('main', { className: 'page-offset-nav bg-paper text-ink' }, createElement(Hero))),
+      ),
     ),
   )
   addUrl('/', { priority: '1.0', changefreq: 'daily' })
@@ -189,13 +217,13 @@ try {
       .map((p) => `<li><a href="${productPath(p)}">${esc(displayProductName(p.name))}</a> — ${esc(formatInr(p.price))}</li>`)
       .join('')}</ul>`
   {
-    const head = collectionHead(null, products)
+    const head = { ...collectionHead(null, products), extraHead: cardPreload(products[0]) }
     write('/collections', page(head, `<h1>${esc(head.heading)}</h1><p>${esc(head.intro)}</p>${listing(products)}`))
     addUrl('/collections', { priority: '0.95', changefreq: 'daily' })
   }
   for (const category of SHOP_CATEGORIES) {
     const scoped = products.filter((p) => normalizeProductCategory(p.category) === category.category)
-    const head = collectionHead(category, scoped)
+    const head = { ...collectionHead(category, scoped), extraHead: cardPreload(scoped[0]) }
     write(head.canonicalPath, page(head, `<h1>${esc(head.heading)}</h1><p>${esc(head.intro)}</p>${listing(scoped)}`))
     addUrl(head.canonicalPath, { priority: '0.9', changefreq: 'daily' })
   }
@@ -206,7 +234,7 @@ try {
     write(
       head.canonicalPath,
       page(
-        { ...head, description: head.metaDescription },
+        { ...head, description: head.metaDescription, extraHead: galleryPreload(product) },
         `<h1>${esc(head.name)}</h1><p>${esc(formatInr(product.price))}</p><p>${esc(head.description)}</p>` +
           (head.shopCategory ? `<p><a href="/collections/${head.shopCategory.slug}">More ${esc(head.shopCategory.label.toLowerCase())}</a></p>` : ''),
       ),

@@ -12,8 +12,9 @@ import { analytics } from './lib/analytics'
 import { captureAttribution } from './lib/attribution'
 import ConsentBanner from './Components/Common/ConsentBanner'
 import SiteFooter from './Components/SiteFooter'
+// Eager: the homepage HTML ships a prerendered hero, so its component must render on the first pass.
+import Home from './Pages/Home'
 
-const Home = lazy(() => import('./Pages/Home'))
 const About = lazy(() => import('./Pages/About'))
 const Collections = lazy(() => import('./Pages/Collections'))
 const Models = lazy(() => import('./Pages/Models'))
@@ -78,7 +79,7 @@ function App() {
       <MiniCartDrawer />
       <CartToast />
       <WishlistToast />
-      <Suspense fallback={<div className="min-h-[60vh] bg-paper" aria-label="Loading page" />}>
+      <Suspense fallback={<div className="min-h-svh bg-paper" aria-label="Loading page" />}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />

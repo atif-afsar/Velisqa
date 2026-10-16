@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import SEOHead from '../Components/SEO/SEOHead'
 import Field from '../Components/UI/Field'
 import CouponField from '../Components/Cart/CouponField'
-import { ChevronDownIcon, LockIcon } from '../Components/UI/Icons'
+import { ChevronDownIcon, LockIcon, ReturnIcon, TruckIcon } from '../Components/UI/Icons'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 import { useCoupon } from '../hooks/useCoupon'
@@ -55,13 +55,16 @@ function Section({ step, title, children }) {
   )
 }
 
-function PaymentOption({ value, current, onChange, title, hint }) {
+function PaymentOption({ value, current, onChange, title, hint, badge }) {
   const selected = current === value
   return (
     <label className={`flex cursor-pointer items-start gap-4 border p-4 transition-colors ${selected ? 'border-ink' : 'border-line hover:border-line-strong'}`}>
-      <input type="radio" name="payment" value={value} checked={selected} onChange={() => onChange(value)} className="mt-1 h-[18px] w-[18px] accent-ink" />
-      <span>
-        <span className="block text-sm font-medium text-ink">{title}</span>
+      <input type="radio" name="payment" value={value} checked={selected} onChange={() => onChange(value)} className="mt-1 h-[18px] w-[18px] shrink-0 accent-ink" />
+      <span className="min-w-0">
+        <span className="flex flex-wrap items-center gap-2 text-sm font-medium text-ink">
+          {title}
+          {badge && <span className="badge badge-accent">{badge}</span>}
+        </span>
         <span className="mt-1 block text-xs leading-relaxed text-muted">{hint}</span>
       </span>
     </label>
@@ -86,7 +89,7 @@ export default function Checkout() {
   const lines = items.filter((l) => !isFreeGiftItem(l))
   const gift = items.find(isFreeGiftItem)
   const totals = computeCheckoutTotals({ subtotal: eligibleSubtotal, couponDiscount: coupon.discount, giftWrap, paymentMethod })
-  const estimate = useMemo(deliveryWindow, [])
+  const estimate = useMemo(() => deliveryWindow(), [])
 
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }))
 
@@ -319,6 +322,9 @@ export default function Checkout() {
 
   const payLabel = submitting || (paymentMethod === 'cod' ? `Place order · ${formatInr(totals.total)}` : `Pay ${formatInr(totals.total)}`)
   const blocked = Boolean(submitting) || syncing || stockIssues.length > 0
+  // What paying online saves versus cash on delivery (COD fee + GST).
+  const codTotals = computeCheckoutTotals({ subtotal: eligibleSubtotal, couponDiscount: coupon.discount, giftWrap, paymentMethod: 'cod' })
+  const prepaidSaving = codTotals.codFee + codTotals.codGst
 
   const summary = (
     <div>
@@ -399,14 +405,14 @@ export default function Checkout() {
   return (
     <>
       <SEOHead title="Secure Checkout | Velisqa" description="Complete your Velisqa order securely." canonicalPath="/checkout" noindex />
-      <main className="page-offset-nav bg-paper text-ink">
+      <main className="page-offset-nav min-h-svh bg-paper text-ink">
         <div className="container-lux pb-28 pt-8 lg:pb-20 lg:pt-12">
-          <div className="flex items-center justify-between">
-            <h1 className="type-display text-[clamp(2rem,3vw,2.75rem)]">Checkout</h1>
-            <Link to="/cart" className="btn btn-link">
-              Back to bag
-            </Link>
-          </div>
+          <h1 className="type-display text-[clamp(2rem,3vw,2.75rem)]">Checkout</h1>
+          <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-xs text-muted" aria-label="Why shop with Velisqa">
+            <li>Free shipping on prepaid orders</li>
+            <li>5-day returns</li>
+            <li>Delivery {estimate}</li>
+          </ul>
 
           {/* Mobile summary toggle */}
           <div className="mt-6 border-y border-line lg:hidden">
@@ -453,6 +459,7 @@ export default function Checkout() {
                   <Field label="Full name" autoComplete="name" required value={form.name} onChange={set('name')} error={errors.name} className="sm:col-span-2" />
                   <Field
                     label="Pincode"
+                    className="sm:col-span-2"
                     inputMode="numeric"
                     autoComplete="postal-code"
                     maxLength={6}
@@ -462,7 +469,6 @@ export default function Checkout() {
                     error={errors.pincode}
                     hint={pincodeStatus === 'checking' ? 'Checking…' : pincodeStatus === 'ok' && form.city ? `Delivering to ${form.city}, ${form.state}` : undefined}
                   />
-                  <Field label="City" autoComplete="address-level2" value={form.city} onChange={set('city')} />
                   <Field
                     as="textarea"
                     rows={3}
@@ -475,14 +481,27 @@ export default function Checkout() {
                     hint="House / flat number, street, area, landmark"
                     className="sm:col-span-2"
                   />
+                  <Field label="City" autoComplete="address-level2" value={form.city} onChange={set('city')} />
                   <Field label="State" autoComplete="address-level1" value={form.state} onChange={set('state')} />
-                  <Field label="Delivery notes (optional)" value={form.notes} onChange={set('notes')} />
                 </div>
+                <details className="mt-5 group">
+                  <summary className="inline-flex min-h-11 cursor-pointer list-none items-center text-sm text-body underline underline-offset-4 hover:text-ink [&::-webkit-details-marker]:hidden">
+                    Add delivery notes (optional)
+                  </summary>
+                  <Field label="Delivery notes" value={form.notes} onChange={set('notes')} className="mt-2" hint="e.g. landmark or a preferred delivery time" />
+                </details>
               </Section>
 
               <Section step="3" title="Payment">
                 <div className="space-y-3" role="radiogroup" aria-label="Payment method">
-                  <PaymentOption value="online" current={paymentMethod} onChange={setPaymentMethod} title="Pay online — UPI, cards, net banking" hint="Secured by Razorpay. Free shipping." />
+                  <PaymentOption
+                    value="online"
+                    current={paymentMethod}
+                    onChange={setPaymentMethod}
+                    title="Pay online"
+                    badge={prepaidSaving > 0 ? `Save ${formatInr(prepaidSaving)}` : 'Recommended'}
+                    hint="UPI (GPay, PhonePe, Paytm), cards, net banking and wallets — secured by Razorpay. Free shipping."
+                  />
                   <PaymentOption
                     value="cod"
                     current={paymentMethod}
@@ -504,7 +523,21 @@ export default function Checkout() {
                   <LockIcon size={16} />
                   {payLabel}
                 </button>
-                <p className="mt-3 text-center text-xs text-muted">
+                <ul className="mt-4 grid grid-cols-3 gap-2 text-center text-xs text-body">
+                  <li className="flex flex-col items-center gap-1.5">
+                    <LockIcon size={16} className="text-accent-ink" />
+                    Secure payment
+                  </li>
+                  <li className="flex flex-col items-center gap-1.5">
+                    <TruckIcon size={16} className="text-accent-ink" />
+                    Tracked delivery
+                  </li>
+                  <li className="flex flex-col items-center gap-1.5">
+                    <ReturnIcon size={16} className="text-accent-ink" />
+                    5-day returns
+                  </li>
+                </ul>
+                <p className="mt-4 text-center text-xs text-muted">
                   By placing your order you agree to our{' '}
                   <Link to="/terms" className="underline">
                     terms

@@ -7,7 +7,7 @@ import {
   getCheckoutGrandTotal,
 } from '../../lib/cartStock'
 
-function PreviewImage({ src, alt, className = 'h-10 w-10 rounded-md' }) {
+function PreviewImage({ src, alt, className = 'h-10 w-10 ' }) {
   if (!src) {
     return (
       <div
@@ -93,7 +93,7 @@ export default function OrderProductPreview({
     const hiddenCount = cartItems.length - visibleItems.length
 
     return (
-      <div className="rounded-lg border border-line bg-white/70 px-2.5 py-2">
+      <div className="border border-line bg-white/70 px-2.5 py-2">
         <p className="mb-1.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-muted">
           Your bag · {pieceCount} pc{pieceCount === 1 ? '' : 's'}
         </p>
@@ -124,12 +124,12 @@ export default function OrderProductPreview({
   const subtotal = productPrice != null && Number(productPrice) > 0 ? Number(productPrice) : 0
 
   return (
-    <div className="rounded-lg border border-line bg-white/70 px-2.5 py-2">
+    <div className="border border-line bg-white/70 px-2.5 py-2">
       <div className="flex items-center gap-2.5">
         <PreviewImage
           src={productImage}
           alt={productName || 'Product'}
-          className="h-11 w-11 rounded-md sm:h-12 sm:w-12"
+          className="h-11 w-11 sm:h-12 sm:w-12"
         />
         <div className="min-w-0 flex-1">
           <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-muted">

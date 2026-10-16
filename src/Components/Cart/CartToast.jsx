@@ -16,7 +16,7 @@ export default function CartToast() {
       aria-live="polite"
     >
       <div
-        className={`pointer-events-auto flex w-full max-w-sm flex-col gap-2 rounded-xl border px-4 py-3 shadow-[0_16px_48px_rgba(17, 17, 17,0.2)] sm:flex-row sm:items-center sm:gap-3 ${
+        className={`pointer-events-auto flex w-full max-w-sm flex-col gap-2  border px-4 py-3  sm:flex-row sm:items-center sm:gap-3 ${
           isError
             ? 'border-red-200/80 bg-red-50 text-red-950'
             : 'border-line bg-mist text-ink'
@@ -27,7 +27,7 @@ export default function CartToast() {
           <Link
             to="/cart"
             onClick={dismissToast}
-            className="shrink-0 rounded-full bg-ink px-3 py-1.5 text-center text-[10px] font-bold uppercase tracking-[0.1em] text-white transition hover:bg-ink"
+            className="shrink-0 bg-ink px-3 py-1.5 text-center text-[10px] font-bold uppercase tracking-[0.1em] text-white transition hover:bg-ink"
           >
             View bag ({itemCount})
           </Link>

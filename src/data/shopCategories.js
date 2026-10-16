@@ -5,8 +5,14 @@
 
 const CLOUDINARY_PRODUCTS = 'https://res.cloudinary.com/dyshhpbhf/image/upload'
 
+/** Packshot on white: trim surrounding whitespace so the piece fills its tile (padding is added in CSS). */
 function tile(publicId) {
-  return (width) => `${CLOUDINARY_PRODUCTS}/f_auto,q_auto,c_fill,ar_4:5,g_center,w_${width}/velisqa/products/${publicId}.png`
+  return (width) => `${CLOUDINARY_PRODUCTS}/e_trim:10/c_pad,ar_4:5,w_${width},b_rgb:ffffff/f_auto,q_auto/velisqa/products/${publicId}.png`
+}
+
+/** Lifestyle photo: fill the tile edge to edge. */
+function photo(publicId) {
+  return (width) => `${CLOUDINARY_PRODUCTS}/c_fill,ar_4:5,g_auto,w_${width}/f_auto,q_auto/velisqa/products/${publicId}.png`
 }
 
 export const SHOP_CATEGORIES = [
@@ -62,7 +68,8 @@ export const SHOP_CATEGORIES = [
     slug: 'bangles',
     category: 'Bangles',
     label: 'Bangles',
-    image: tile('ddcmrnyvxhbyrt7pvrxg'),
+    image: photo('ddcmrnyvxhbyrt7pvrxg'),
+    imageFit: 'cover',
     imageAlt: 'Gold-tone open crossover bangle worn on the wrist',
     intro: 'Sculpted bangles and kadas with a modern line — a single piece that finishes the look.',
     seoTitle: 'Bangles & Kadas for Women',

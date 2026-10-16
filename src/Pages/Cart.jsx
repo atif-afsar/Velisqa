@@ -48,7 +48,7 @@ export default function Cart() {
   return (
     <>
       <SEOHead title="Your Bag | Velisqa" description="Review your bag and check out securely." canonicalPath="/cart" noindex />
-      <main className="page-offset-nav bg-paper text-ink">
+      <main className="page-offset-nav min-h-svh bg-paper text-ink">
         <div className="container-lux pb-20 pt-10 lg:pt-14">
           <h1 className="type-display text-center">Your bag</h1>
 

@@ -47,7 +47,7 @@ function RatingBreakdown({ summary }) {
 
 function ReviewCard({ review, onReport, reportingId }) {
   return (
-    <article className="rounded-xl border border-muted/12 bg-paper p-5">
+    <article className="border border-muted/12 bg-paper p-5">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
           <Stars rating={review.rating} />
@@ -66,7 +66,7 @@ function ReviewCard({ review, onReport, reportingId }) {
         <div className="mt-4 flex flex-wrap gap-2">
           {review.image_urls.map((url) => (
             <a key={url} href={url} target="_blank" rel="noreferrer">
-              <img src={url} alt="Customer review" className="h-20 w-20 rounded-lg object-cover" />
+              <img src={url} alt="Customer review" className="h-20 w-20 object-cover" />
             </a>
           ))}
         </div>
@@ -74,7 +74,7 @@ function ReviewCard({ review, onReport, reportingId }) {
       <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
         <span className="font-semibold text-ink">{review.reviewer_name}</span>
         {review.is_verified_purchase && (
-          <span className="rounded-full bg-[#2d6a4f]/10 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.1em] text-[#2d6a4f]">
+          <span className="bg-[#2d6a4f]/10 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.1em] text-[#2d6a4f]">
             Verified purchase
           </span>
         )}
@@ -95,7 +95,7 @@ function ReviewCard({ review, onReport, reportingId }) {
 
 function PendingReviewCard({ review }) {
   return (
-    <article className="rounded-xl border border-amber-200 bg-amber-50/70 p-5">
+    <article className="border border-amber-200 bg-amber-50/70 p-5">
       <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-amber-900">Your review · Pending moderation</p>
       <div className="mt-2">
         <Stars rating={review.rating} />
@@ -292,8 +292,8 @@ export default function ProductReviews({ product }) {
 
           {loading ? (
             <div className="mt-6 space-y-3">
-              <div className="h-28 animate-pulse rounded-xl bg-mist" />
-              <div className="h-28 animate-pulse rounded-xl bg-mist" />
+              <div className="h-28 animate-pulse bg-mist" />
+              <div className="h-28 animate-pulse bg-mist" />
             </div>
           ) : (
             <div className="mt-6 space-y-4">
@@ -311,7 +311,7 @@ export default function ProductReviews({ product }) {
                   />
                 ))
               ) : !viewerState.ownReview ? (
-                <div className="rounded-xl border border-dashed border-line bg-paper px-5 py-10 text-center">
+                <div className="border border-dashed border-line bg-paper px-5 py-10 text-center">
                   <p className="font-serif text-xl">Be the first to review this piece</p>
                   <p className="mt-2 text-sm text-muted">Reviews are accepted from customers after delivery.</p>
                 </div>
@@ -322,7 +322,7 @@ export default function ProductReviews({ product }) {
                   type="button"
                   onClick={() => void loadMoreReviews()}
                   disabled={loadingMore}
-                  className="w-full rounded-full border border-ink/20 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.1em] text-ink transition hover:bg-white disabled:opacity-60"
+                  className="w-full border border-ink/20 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.1em] text-ink transition hover:bg-white disabled:opacity-60"
                 >
                   {loadingMore ? 'Loading…' : `Load more reviews (${reviews.length} of ${totalReviews})`}
                 </button>
@@ -332,14 +332,14 @@ export default function ProductReviews({ product }) {
         </div>
 
         <aside className="lg:pt-5">
-          <div className="rounded-2xl border border-line bg-paper p-5 sm:p-6">
+          <div className="border border-line bg-paper p-5 sm:p-6">
             <h3 className="font-serif text-xl">Share your experience</h3>
             <p className="mt-2 text-sm leading-relaxed text-muted">
               Only verified buyers with a delivered order can submit a review. Each customer may review a product once.
             </p>
 
-            {error && <p className="mt-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">{error}</p>}
-            {notice && <p className="mt-4 rounded-lg border border-[#2d6a4f]/20 bg-[#edf7f1] px-3 py-2 text-sm text-[#1f4334]">{notice}</p>}
+            {error && <p className="mt-4 border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">{error}</p>}
+            {notice && <p className="mt-4 border border-[#2d6a4f]/20 bg-[#edf7f1] px-3 py-2 text-sm text-[#1f4334]">{notice}</p>}
 
             {!authLoading && !user ? (
               <div className="mt-4">
@@ -347,7 +347,7 @@ export default function ProductReviews({ product }) {
                 <button
                   type="button"
                   onClick={() => requireSignIn(() => {}, { returnTo: `${productPath(product)}#product-reviews` })}
-                  className="mt-4 w-full rounded-full bg-ink px-5 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white"
+                  className="mt-4 w-full bg-ink px-5 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white"
                 >
                   Sign in to review
                 </button>
@@ -389,7 +389,7 @@ export default function ProductReviews({ product }) {
                     onChange={(event) => setForm((current) => ({ ...current, title: event.target.value }))}
                     maxLength={100}
                     required
-                    className="mt-1.5 w-full rounded-lg border border-muted/20 bg-white px-3 py-2.5 text-sm outline-none focus:border-ink/40"
+                    className="mt-1.5 w-full border border-muted/20 bg-white px-3 py-2.5 text-sm outline-none focus:border-ink/40"
                     placeholder="Beautiful everyday piece"
                   />
                 </label>
@@ -402,7 +402,7 @@ export default function ProductReviews({ product }) {
                     maxLength={2000}
                     required
                     rows={5}
-                    className="mt-1.5 w-full resize-y rounded-lg border border-muted/20 bg-white px-3 py-2.5 text-sm outline-none focus:border-ink/40"
+                    className="mt-1.5 w-full resize-y border border-muted/20 bg-white px-3 py-2.5 text-sm outline-none focus:border-ink/40"
                     placeholder="Tell other customers about the finish, fit, and delivery…"
                   />
                 </label>
@@ -424,7 +424,7 @@ export default function ProductReviews({ product }) {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full rounded-full bg-ink px-5 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white disabled:opacity-60"
+                  className="w-full bg-ink px-5 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white disabled:opacity-60"
                 >
                   {submitting ? 'Submitting…' : 'Submit for review'}
                 </button>

@@ -82,7 +82,7 @@ function useProductFromParam(param) {
 
 function Skeleton() {
   return (
-    <main className="page-offset-nav">
+    <main className="page-offset-nav min-h-svh">
       <div className="container-lux grid gap-10 py-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-16">
         <div className="aspect-[4/5] animate-pulse bg-mist" />
         <div className="space-y-4 pt-4">
@@ -243,7 +243,7 @@ export default function ProductDetail() {
         type={head.type}
         schema={head.schema}
       />
-      <main className="page-offset-nav bg-paper text-ink">
+      <main className="page-offset-nav min-h-svh bg-paper text-ink">
         <div className="container-lux pt-4 lg:pt-6">
           <nav aria-label="Breadcrumb" className="hidden text-xs text-muted sm:block">
             <ol className="flex flex-wrap items-center gap-2">
