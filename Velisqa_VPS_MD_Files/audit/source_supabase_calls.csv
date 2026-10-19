@@ -1,0 +1,167 @@
+source_file,line,dependency_type,target,source_excerpt
+src/Pages/AdminAnalytics.jsx,3,supabase_import,yes,import { supabase } from '../lib/supabaseClient'
+src/Pages/AdminAnalytics.jsx,91,db_table,orders,.from('orders')
+src/Pages/AdminCoupons.jsx,4,supabase_import,yes,import { supabase } from '../lib/supabaseClient'
+src/Pages/AdminCoupons.jsx,28,db_table,coupons,.from('coupons')
+src/Pages/AdminCoupons.jsx,70,db_table,coupons,const { error } = await supabase.from('coupons').insert({
+src/Pages/AdminCoupons.jsx,95,db_table,coupons,.from('coupons')
+src/Pages/AdminCoupons.jsx,121,db_table,coupons,.from('coupons')
+src/Pages/AdminDashboard.jsx,5,supabase_import,yes,import { supabase } from '../lib/supabaseClient'
+src/Pages/AdminDashboard.jsx,76,db_table,products,"return supabase.from('products').select('*').order('created_at', { ascending: false })"
+src/Pages/AdminDashboard.jsx,468,db_table,products,"return supabase.from('products').update(payload).eq('id', editingId)"
+src/Pages/AdminDashboard.jsx,470,db_table,products,return supabase.from('products').insert({
+src/Pages/AdminDashboard.jsx,528,db_table,products,.from('products')
+src/Pages/AdminDashboard.jsx,567,db_table,products,"const { error } = await supabase.from('products').update(patch).eq('id', product.id)"
+src/Pages/AdminLogin.jsx,3,supabase_import,yes,import { supabase } from '../lib/supabaseClient'
+src/Pages/AdminLogin.jsx,31,supabase_auth,signInWithPassword,"const { data, error } = await supabase.auth.signInWithPassword({"
+src/Pages/AdminLogin.jsx,49,db_table,profiles,.from('profiles')
+src/Pages/AdminLogin.jsx,55,supabase_auth,signOut,await supabase.auth.signOut()
+src/Pages/AdminOrders.jsx,12,supabase_import,yes,import { supabase } from '../lib/supabaseClient'
+src/Pages/AdminOrders.jsx,25,db_table,orders,.from('orders')
+src/Pages/AdminOrders.jsx,194,edge_invoke,admin-create-shipment,"const { data, error: invokeError } = await invokeEdgeFunction('admin-create-shipment', {"
+src/Pages/AdminOrders.jsx,230,db_table,orders,.from('orders')
+src/Pages/AdminOrders.jsx,268,db_table,orders,.from('orders')
+src/Pages/AdminOrders.jsx,279,db_table,payments,.from('payments')
+src/Pages/AdminOrders.jsx,322,edge_invoke,admin-delete-order,"const { error: invokeError } = await invokeEdgeFunction('admin-delete-order', {"
+src/Pages/AdminOrders.jsx,352,edge_invoke,admin-cancel-order,"const { data, error: invokeError } = await invokeEdgeFunction('admin-cancel-order', {"
+src/Pages/AdminPayments.jsx,5,supabase_import,yes,import { supabase } from '../lib/supabaseClient'
+src/Pages/AdminPayments.jsx,21,db_table,orders,.from('orders')
+src/Pages/AdminPayments.jsx,127,db_table,orders,.from('orders')
+src/Pages/AdminPayments.jsx,139,db_table,payments,.from('payments')
+src/Pages/AdminPayments.jsx,185,edge_invoke,admin-create-shipment,"const { data: shipData, error: shipError } = await invokeEdgeFunction('admin-create-shipment', {"
+src/Pages/AdminPayments.jsx,224,edge_invoke,admin-create-shipment,"const { data, error: shipError } = await invokeEdgeFunction('admin-create-shipment', {"
+src/Pages/AuthCallback.jsx,4,supabase_import,yes,import { supabase } from '../lib/supabaseClient'
+src/Pages/AuthCallback.jsx,31,supabase_auth,getSession,supabase.auth.getSession().then(({ data: { session } }) => {
+src/Pages/AuthCallback.jsx,37,supabase_auth,onAuthStateChange,"} = supabase.auth.onAuthStateChange((_event, session) => {"
+src/Pages/Cart.jsx,11,supabase_import,yes,import { supabase } from '../lib/supabaseClient'
+src/Pages/Cart.jsx,130,db_table,coupons,.from('coupons')
+src/Pages/Cart.jsx,167,db_table,coupons,.from('coupons')
+src/Pages/Checkout.jsx,8,supabase_import,yes,import { supabase } from '../lib/supabaseClient'
+src/Pages/Checkout.jsx,109,db_table,coupons,.from('coupons')
+src/Pages/Checkout.jsx,147,db_table,coupons,.from('coupons')
+src/Pages/Checkout.jsx,275,rpc,create_manual_payment_order,"const { data: orderData, error: orderError } = await supabase.rpc('create_manual_payment_order', {"
+src/Pages/Checkout.jsx,363,edge_invoke,create-razorpay-order,"const { data: razorpayData, error: rzpError } = await invokeEdgeFunction('create-razorpay-order', {"
+src/Pages/Checkout.jsx,401,edge_invoke,verify-razorpay-payment,"const { error: verifyError } = await invokeEdgeFunction('verify-razorpay-payment', {"
+src/Pages/Checkout.jsx,415,db_table,orders,.from('orders')
+src/Pages/ManualPayment.jsx,41,edge_invoke,create-razorpay-order,"const { data, error: initError } = await invokeEdgeFunction('create-razorpay-order', {"
+src/Pages/ManualPayment.jsx,78,edge_invoke,verify-razorpay-payment,"const { error: verifyError } = await invokeEdgeFunction('verify-razorpay-payment', {"
+src/Pages/ProductDetail.jsx,3,supabase_import,yes,import { supabase } from '../lib/supabaseClient'
+src/Pages/ProductDetail.jsx,68,db_table,products,.from('products')
+src/Pages/ProductDetail.jsx,116,db_table,products,"const { data, error } = await supabase.from('products').select('*').eq('id', id).maybeSingle()"
+src/Pages/Wishlist.jsx,3,supabase_import,yes,import { supabase } from '../lib/supabaseClient'
+src/Pages/Wishlist.jsx,29,db_table,products,.from('products')
+src/context/AuthContext.jsx,4,supabase_import,yes,import { supabase } from '../lib/supabaseClient'
+src/context/AuthContext.jsx,17,db_table,profiles,"const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single()"
+src/context/AuthContext.jsx,33,supabase_auth,getSession,} = await supabase.auth.getSession()
+src/context/AuthContext.jsx,52,supabase_auth,onAuthStateChange,"} = supabase.auth.onAuthStateChange((_event, session) => {"
+src/context/AuthContext.jsx,105,supabase_auth,signOut,await supabase.auth.signOut()
+src/context/CartContext.jsx,11,supabase_import,yes,import { supabase } from '../lib/supabaseClient'
+src/context/CartContext.jsx,177,db_table,products,"const run = (columns) => supabase.from('products').select(columns).in('id', ids)"
+src/hooks/useAdminInbox.js,3,supabase_import,yes,import { supabase } from '../lib/supabaseClient'
+src/hooks/useAdminInbox.js,109,supabase_realtime,removeChannel,void supabase.removeChannel(channel)
+src/hooks/useEmailAuthForm.js,2,supabase_import,yes,import { supabase } from '../lib/supabaseClient'
+src/hooks/useEmailAuthForm.js,26,supabase_auth,signUp,const { error } = await supabase.auth.signUp({
+src/hooks/useEmailAuthForm.js,45,supabase_auth,signInWithPassword,const { error } = await supabase.auth.signInWithPassword({
+src/hooks/useHomeShopPreload.js,9,supabase_import,yes,import { supabase } from '../lib/supabaseClient'
+src/hooks/usePrivateOrder.js,3,supabase_import,yes,import { supabase } from '../lib/supabaseClient'
+src/hooks/usePrivateOrder.js,23,supabase_auth,getSession,const { data: { session } } = await supabase.auth.getSession()
+src/hooks/usePrivateOrder.js,40,supabase_auth,getSession,const { data: { session } } = await supabase.auth.getSession()
+src/hooks/useProducts.js,9,supabase_import,yes,import { supabase } from '../lib/supabaseClient'
+src/lib/adminInbox.js,1,supabase_import,yes,import { supabase } from './supabaseClient'
+src/lib/adminInbox.js,23,db_table,orders,.from('orders')
+src/lib/adminInbox.js,56,db_table,orders,.from('orders')
+src/lib/adminInbox.js,61,db_table,orders,.from('orders')
+src/lib/adminInbox.js,75,db_table,orders,.from('orders')
+src/lib/adminInbox.js,80,db_table,orders,.from('orders')
+src/lib/adminInbox.js,91,db_table,orders,.from('orders')
+src/lib/adminInbox.js,105,db_table,product_reviews,.from('product_reviews')
+src/lib/adminInbox.js,109,db_table,order_returns,.from('order_returns')
+src/lib/analytics.js,389,edge_invoke,meta-conversions,"await invokeEdgeFunction('meta-conversions', {"
+src/lib/auth.js,1,supabase_import,yes,import { supabase } from './supabaseClient'
+src/lib/auth.js,16,supabase_auth,signInWithOAuth,const { error } = await supabase.auth.signInWithOAuth({
+src/lib/imageCdn.js,21,supabase_env,VITE_SUPABASE_IMAGE_TRANSFORM,String(import.meta.env.VITE_SUPABASE_IMAGE_TRANSFORM ?? '').toLowerCase() === 'true'
+src/lib/invokeEdgeFunction.js,1,supabase_import,yes,import { supabase } from './supabaseClient'
+src/lib/manualPayments.js,1,supabase_import,yes,import { supabase } from './supabaseClient'
+src/lib/manualPayments.js,15,rpc,create_manual_payment_order,"const { data, error } = await supabase.rpc('create_manual_payment_order', {"
+src/lib/manualPayments.js,42,rpc,get_manual_payment_order,"const { data, error } = await supabase.rpc('get_manual_payment_order', {"
+src/lib/manualPayments.js,58,edge_invoke,customer-cancel-order,"return invokeEdgeFunction('customer-cancel-order', { orderRef, accessToken })"
+src/lib/manualPayments.js,62,edge_invoke,order-live-tracking,"return invokeEdgeFunction('order-live-tracking', { orderRef, accessToken })"
+src/lib/myOrders.js,1,supabase_import,yes,import { supabase } from './supabaseClient'
+src/lib/myOrders.js,77,db_table,orders,.from('orders')
+src/lib/myOrders.js,90,db_table,orders,.from('orders')
+src/lib/orderReturns.js,1,supabase_import,yes,import { supabase } from './supabaseClient'
+src/lib/orderReturns.js,40,rpc,can_request_order_return,"const { data, error } = await supabase.rpc('can_request_order_return', { p_order_id: orderId })"
+src/lib/orderReturns.js,47,db_table,order_returns,.from('order_returns')
+src/lib/orderReturns.js,75,rpc,submit_order_return,"const { data, error } = await supabase.rpc('submit_order_return', {"
+src/lib/orderReturns.js,87,db_table,order_returns,.from('order_returns')
+src/lib/orderReturnsAdmin.js,4,edge_invoke,admin-manage-return,"const { data, error } = await invokeEdgeFunction('admin-manage-return', {"
+src/lib/orderReturnsAdmin.js,13,edge_invoke,admin-manage-return,"const { data, error } = await invokeEdgeFunction('admin-manage-return', payload)"
+src/lib/productOutOfStock.js,6,db_table,products,const { error } = await supabase.from('products').select('out_of_stock').limit(1)
+src/lib/productQuery.js,39,db_table,products,"supabase.from('products').select(columns).order(order.column, { ascending: order.ascending })"
+src/lib/productReviews.js,2,supabase_import,yes,import { supabase } from './supabaseClient'
+src/lib/productReviews.js,31,db_table,product_reviews,.from('product_reviews')
+src/lib/productReviews.js,42,db_table,product_reviews,.from('product_reviews')
+src/lib/productReviews.js,89,db_table,product_reviews,.from('product_reviews')
+src/lib/productReviews.js,165,rpc,can_review_product,"supabase.rpc('can_review_product', { p_product_id: productId }),"
+src/lib/productReviews.js,167,db_table,product_reviews,.from('product_reviews')
+src/lib/productReviews.js,210,rpc,submit_product_review,"const { data, error } = await supabase.rpc('submit_product_review', {"
+src/lib/productReviews.js,224,db_table,product_reviews,.from('product_reviews')
+src/lib/productReviews.js,252,db_table,product_reviews,.from('product_reviews')
+src/lib/productReviews.js,259,rpc,report_product_review,"const { error } = await supabase.rpc('report_product_review', { p_review_id: reviewId })"
+src/lib/productStorage.js,1,supabase_import,yes,import { supabase } from './supabaseClient'
+src/lib/productStorage.js,44,supabase_storage,from,"await supabase.storage.from(PRODUCT_IMAGES_BUCKET).upload(thumbPath, thumb, {"
+src/lib/productStorage.js,55,supabase_storage,from,const { data } = supabase.storage.from(PRODUCT_IMAGES_BUCKET).getPublicUrl(filePath)
+src/lib/seedSignatureCatalog.js,3,supabase_import,yes,import { supabase } from './supabaseClient'
+src/lib/seedSignatureCatalog.js,27,db_table,products,.from('products')
+src/lib/seedSignatureCatalog.js,104,db_table,products,let { error } = await supabase.from('products').insert(insertRow)
+src/lib/seedSignatureCatalog.js,108,db_table,products,;({ error } = await supabase.from('products').insert(legacyRow))
+src/lib/supabaseClient.js,3,supabase_env,VITE_SUPABASE_URL,const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+src/lib/supabaseClient.js,4,supabase_env,VITE_SUPABASE_ANON_KEY,const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+src/lib/supabaseClient.js,8,supabase_env,VITE_SUPABASE_URL,"'[Velisqa] Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env (see src/VELISQA_SUPABASE_AUTH_ADMIN_GUIDE.md).',"
+src/lib/supabaseClient.js,8,supabase_env,VITE_SUPABASE_ANON_KEY,"'[Velisqa] Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env (see src/VELISQA_SUPABASE_AUTH_ADMIN_GUIDE.md).',"
+src/lib/supabaseProject.js,2,supabase_env,VITE_SUPABASE_URL,const url = import.meta.env.VITE_SUPABASE_URL
+src/lib/supabaseProject.js,18,supabase_env,VITE_SUPABASE_URL,"const url = import.meta.env.VITE_SUPABASE_URL?.replace(/\/$/, '')"
+src/lib/supabaseProject.js,19,supabase_env,VITE_SUPABASE_ANON_KEY,const key = import.meta.env.VITE_SUPABASE_ANON_KEY
+src/main.jsx,14,supabase_env,VITE_SUPABASE_URL,const url = import.meta.env.VITE_SUPABASE_URL
+scripts/check-google-provider.mjs,18,supabase_env,VITE_SUPABASE_URL,const url = env.VITE_SUPABASE_URL
+scripts/check-google-provider.mjs,19,supabase_env,VITE_SUPABASE_ANON_KEY,const key = env.VITE_SUPABASE_ANON_KEY
+scripts/check-google-provider.mjs,22,supabase_env,VITE_SUPABASE_URL,console.error('Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY in .env')
+scripts/check-google-provider.mjs,22,supabase_env,VITE_SUPABASE_ANON_KEY,console.error('Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY in .env')
+scripts/check-products.mjs,15,supabase_env,VITE_SUPABASE_URL,"const sb = createClient(env.VITE_SUPABASE_URL, env.VITE_SUPABASE_ANON_KEY)"
+scripts/check-products.mjs,15,supabase_env,VITE_SUPABASE_ANON_KEY,"const sb = createClient(env.VITE_SUPABASE_URL, env.VITE_SUPABASE_ANON_KEY)"
+scripts/check-products.mjs,16,db_table,products,"const { data, error } = await sb.from('products').select('name,category,image_url,price').order('category')"
+scripts/dump-auth-settings.mjs,14,supabase_env,VITE_SUPABASE_URL,"const url = env.VITE_SUPABASE_URL.replace(/\/$/, '')"
+scripts/dump-auth-settings.mjs,15,supabase_env,VITE_SUPABASE_ANON_KEY,const key = env.VITE_SUPABASE_ANON_KEY
+scripts/export-meta-catalog.mjs,20,supabase_env,VITE_SUPABASE_URL,const supabaseUrl = process.env.VITE_SUPABASE_URL || env.VITE_SUPABASE_URL
+scripts/export-meta-catalog.mjs,20,supabase_env,VITE_SUPABASE_URL,const supabaseUrl = process.env.VITE_SUPABASE_URL || env.VITE_SUPABASE_URL
+scripts/export-meta-catalog.mjs,21,supabase_env,VITE_SUPABASE_ANON_KEY,const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || env.VITE_SUPABASE_ANON_KEY
+scripts/export-meta-catalog.mjs,21,supabase_env,VITE_SUPABASE_ANON_KEY,const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || env.VITE_SUPABASE_ANON_KEY
+scripts/export-meta-catalog.mjs,24,supabase_env,VITE_SUPABASE_URL,"console.error('Missing Supabase credentials (VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY)')"
+scripts/export-meta-catalog.mjs,24,supabase_env,VITE_SUPABASE_ANON_KEY,"console.error('Missing Supabase credentials (VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY)')"
+scripts/export-meta-catalog.mjs,30,db_table,products,.from('products')
+scripts/generate-thumbnails.mjs,6,supabase_env,VITE_SUPABASE_URL,* Requires .env with VITE_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.
+scripts/generate-thumbnails.mjs,34,supabase_env,VITE_SUPABASE_URL,const url = env.VITE_SUPABASE_URL
+scripts/generate-thumbnails.mjs,38,supabase_env,VITE_SUPABASE_URL,console.error('Set VITE_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env')
+scripts/generate-thumbnails.mjs,56,db_table,products,.from('products')
+scripts/generate-thumbnails.mjs,85,supabase_storage,from,"const { data: existing } = await supabase.storage.from(BUCKET).list(dir, { search: name, limit: 1 })"
+scripts/generate-thumbnails.mjs,92,supabase_storage,from,"const { data: blob, error: dlErr } = await supabase.storage.from(BUCKET).download(masterPath)"
+scripts/seed-signature-products.mjs,3,supabase_env,VITE_SUPABASE_URL,* Requires .env with VITE_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY
+scripts/seed-signature-products.mjs,29,supabase_env,VITE_SUPABASE_URL,const url = env.VITE_SUPABASE_URL
+scripts/seed-signature-products.mjs,34,supabase_env,VITE_SUPABASE_URL,"'Set VITE_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env, or use Admin → Import default catalogue.',"
+scripts/seed-signature-products.mjs,57,db_table,products,.from('products')
+scripts/seed-signature-products.mjs,71,db_table,product-images,.from('product-images')
+scripts/seed-signature-products.mjs,80,db_table,product-images,const { data } = supabase.storage.from('product-images').getPublicUrl(storagePath)
+scripts/seed-signature-products.mjs,80,supabase_storage,from,const { data } = supabase.storage.from('product-images').getPublicUrl(storagePath)
+scripts/seed-signature-products.mjs,104,db_table,products,const { error } = await supabase.from('products').insert({
+scripts/seed-with-admin-auth.mjs,24,supabase_env,VITE_SUPABASE_URL,const url = env.VITE_SUPABASE_URL
+scripts/seed-with-admin-auth.mjs,25,supabase_env,VITE_SUPABASE_ANON_KEY,const anonKey = env.VITE_SUPABASE_ANON_KEY
+scripts/seed-with-admin-auth.mjs,46,db_table,products,.from('products')
+scripts/seed-with-admin-auth.mjs,60,db_table,product-images,.from('product-images')
+scripts/seed-with-admin-auth.mjs,69,db_table,product-images,const { data } = supabase.storage.from('product-images').getPublicUrl(storagePath)
+scripts/seed-with-admin-auth.mjs,69,supabase_storage,from,const { data } = supabase.storage.from('product-images').getPublicUrl(storagePath)
+scripts/seed-with-admin-auth.mjs,75,supabase_env,VITE_SUPABASE_URL,"'Need VITE_SUPABASE_URL and either SUPABASE_SERVICE_ROLE_KEY or ADMIN_EMAIL + ADMIN_PASSWORD in .env',"
+scripts/seed-with-admin-auth.mjs,83,supabase_auth,signInWithPassword,"const { data: authData, error: authError } = await supabase.auth.signInWithPassword({ email, password })"
+scripts/seed-with-admin-auth.mjs,91,supabase_auth,getUser,const userId = (await supabase.auth.getUser()).data.user?.id ?? 'seed-cli'
+scripts/seed-with-admin-auth.mjs,114,db_table,products,const { error } = await supabase.from('products').insert({
+scripts/test-google-authorize.mjs,14,supabase_env,VITE_SUPABASE_URL,"const base = env.VITE_SUPABASE_URL.replace(/\/$/, '')"
+scripts/test-google-authorize.mjs,15,supabase_env,VITE_SUPABASE_ANON_KEY,const key = env.VITE_SUPABASE_ANON_KEY

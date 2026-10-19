@@ -1,0 +1,14 @@
+function_name,source_file,lines,direct_db_tables,direct_server_env_names
+admin-approve-payment,supabase/functions/admin-approve-payment/index.ts,173,orders;payment_review_logs;payments,
+admin-cancel-order,supabase/functions/admin-cancel-order/index.ts,88,orders,
+admin-create-shipment,supabase/functions/admin-create-shipment/index.ts,143,orders,
+admin-delete-order,supabase/functions/admin-delete-order/index.ts,58,orders,
+admin-manage-return,supabase/functions/admin-manage-return/index.ts,270,order_return_items;order_returns;orders;products,
+admin-reject-payment,supabase/functions/admin-reject-payment/index.ts,49,orders;payment_review_logs,
+create-razorpay-order,supabase/functions/create-razorpay-order/index.ts,114,orders;payments,RAZORPAY_KEY_ID;RAZORPAY_KEY_SECRET;SUPABASE_SERVICE_ROLE_KEY;SUPABASE_URL
+customer-cancel-order,supabase/functions/customer-cancel-order/index.ts,99,orders,SUPABASE_SERVICE_ROLE_KEY;SUPABASE_URL
+meta-conversions,supabase/functions/meta-conversions/index.ts,92,orders,
+nimbuspost-webhook,supabase/functions/nimbuspost-webhook/index.ts,114,orders,NIMBUSPOST_WEBHOOK_SECRET;SUPABASE_SERVICE_ROLE_KEY;SUPABASE_URL
+order-live-tracking,supabase/functions/order-live-tracking/index.ts,53,orders,SUPABASE_SERVICE_ROLE_KEY;SUPABASE_URL
+razorpay-webhook,supabase/functions/razorpay-webhook/index.ts,314,order_status_history;orders;payment_events;payments;refunds,RAZORPAY_WEBHOOK_SECRET;SUPABASE_SERVICE_ROLE_KEY;SUPABASE_URL
+verify-razorpay-payment,supabase/functions/verify-razorpay-payment/index.ts,190,order_status_history;orders;payments,RAZORPAY_KEY_SECRET;SUPABASE_SERVICE_ROLE_KEY;SUPABASE_URL

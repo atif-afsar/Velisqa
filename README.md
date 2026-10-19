@@ -1,16 +1,32 @@
-# React + Vite
+# Velisqa
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Two independently deployed apps:
 
-Currently, two official plugins are available:
+| Folder | What | Deploys to |
+|---|---|---|
+| [`frontend/`](frontend/) | Storefront + admin console (React, Vite, prerendered) | **Vercel** — set *Root Directory* to `frontend` |
+| [`backend/`](backend/) | API (Express + MongoDB) | **Hostinger VPS** — see [`backend/README.md`](backend/README.md) |
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Other folders: `e2e/` (Playwright browser tests, not deployed), `docs/` (migration notes, runbook; `docs/archive/` holds older planning docs), `Velisqa_VPS_MD_Files/` (phase guides).
 
-## React Compiler
+## Tests
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+All test cases are listed in [`docs/testing/TEST_CASES.md`](docs/testing/TEST_CASES.md).
 
-## Expanding the ESLint configuration
+```bash
+cd backend && npm test && npm run test:integration   # API: unit + integration (own temporary DB)
+cd e2e && npm test                                    # browser: storefront, checkout, Razorpay, accounts, admin
+cd backend && npm run check:razorpay                  # optional: your rzp_test_ keys against Razorpay
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+None of the tests touch your real database.
+
+## Local development
+
+```bash
+# 1. API — set MONGODB_URI in backend/.env to your MongoDB (must be a replica set, e.g. Atlas)
+cd backend && npm install && npm run db:indexes && npm run data:import && npm start   # http://localhost:5000
+
+# 2. Storefront
+cd frontend && npm install && npm run dev       # http://localhost:5173
+```

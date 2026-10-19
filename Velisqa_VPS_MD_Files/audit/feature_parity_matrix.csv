@@ -1,0 +1,40 @@
+id,feature,actual_existing_source,target_api_or_service,workstream,status
+AUTH-01,customer email registration/login/logout,src/hooks/useEmailAuthForm.js;src/context/AuthContext.jsx,/auth/register;/auth/login;/auth/logout;/auth/me,auth,NOT_STARTED
+AUTH-02,Google OAuth and redirect restoration,src/lib/auth.js;src/Pages/AuthCallback.jsx;src/lib/postSignIn.js,/auth/google;/auth/google/callback,auth,NOT_STARTED
+AUTH-03,admin login and role enforcement,src/Pages/AdminLogin.jsx;src/Components/AdminRoute.jsx,/auth/login;/auth/me;admin middleware,auth,NOT_STARTED
+CAT-01,product list/detail and image URLs,src/lib/productQuery.js;src/Pages/ProductDetail.jsx;src/context/CatalogContext.jsx,/products;/products/:id,catalog,NOT_STARTED
+CAT-02,search/filter/sort,src/Pages/SearchResults.jsx;src/lib/productSearch.js;src/lib/productFilters.js,/products?search=&filters=,catalog,NOT_STARTED
+CAT-03,product CRUD stock out-of-stock combo,src/Pages/AdminDashboard.jsx,/admin/products CRUD,catalog,NOT_STARTED
+CAT-04,gallery/hover/Cloudinary and Supabase storage migration,src/lib/productStorage.js;src/lib/cloudinaryUpload.js;src/lib/imageCdn.js,/admin/uploads/signature;/admin/uploads/delete,media,NOT_STARTED
+CART-01,persistent cart and wishlist product hydration,src/context/CartContext.jsx;src/context/WishlistContext.jsx,/products/lookup,cart,NOT_STARTED
+CART-02,coupon code validation,src/Pages/Cart.jsx;src/Pages/Checkout.jsx;src/Pages/AdminCoupons.jsx,/coupons/:code/validate,offers,NOT_STARTED
+CART-03,free gift threshold and gift wrap + COD fee,src/lib/cartOffers.js;src/Pages/Checkout.jsx,/checkout/quote;/orders,offers,NOT_STARTED
+ORD-01,create COD order and reserve/reduce stock,src/Pages/Checkout.jsx;src/lib/manualPayments.js,POST /orders,orders,NOT_STARTED
+ORD-02,"create online order, guest private token",src/Pages/Checkout.jsx;src/hooks/usePrivateOrder.js,POST /orders;GET /orders/guest/:ref,orders,NOT_STARTED
+ORD-03,signed-in order history and detail,src/lib/myOrders.js;src/Pages/MyOrders.jsx,GET /orders/mine;GET /orders/mine/:ref,orders,NOT_STARTED
+ORD-04,private order tracking/cancel,src/Pages/OrderTracking.jsx;src/lib/manualPayments.js,/orders/guest/:ref/tracking;/orders/guest/:ref/cancel,orders,NOT_STARTED
+PAY-01,Razorpay create order,supabase/functions/create-razorpay-order/index.ts;src/Pages/ManualPayment.jsx,POST /payments/razorpay/orders,payments,NOT_STARTED
+PAY-02,Razorpay verify,supabase/functions/verify-razorpay-payment/index.ts;src/Pages/Checkout.jsx,POST /payments/razorpay/verify,payments,NOT_STARTED
+PAY-03,Razorpay webhook dedup,supabase/functions/razorpay-webhook/index.ts,POST /webhooks/razorpay,payments,NOT_STARTED
+PAY-04,manual UPI and payment proof if used,supabase/manual-qr-payments.sql;src/Pages/ManualPayment.jsx,/payments/manual/:ref/proof,payments,VERIFY_ACTIVE
+PAY-05,payment approval and rejection + history,src/Pages/AdminPayments.jsx;supabase/functions/admin-approve-payment/index.ts;supabase/functions/admin-reject-payment/index.ts,/admin/payments/:id/approve;/admin/payments/:id/reject,admin-payments,NOT_STARTED
+SHIP-01,NimbusPost create/cancel shipment,supabase/functions/admin-create-shipment/index.ts;supabase/functions/_shared/nimbuspost.ts,/admin/orders/:id/ship,shipping,NOT_STARTED
+SHIP-02,NimbusPost tracking and webhook,supabase/functions/nimbuspost-webhook/index.ts;supabase/functions/order-live-tracking/index.ts,/webhooks/nimbuspost;/orders/guest/:ref/tracking,shipping,NOT_STARTED
+SHIP-03,admin/customer order cancellation,supabase/functions/admin-cancel-order/index.ts;supabase/functions/customer-cancel-order/index.ts,/admin/orders/:id/cancel;/orders/:ref/cancel,orders,NOT_STARTED
+RET-01,customer return eligibility/submit,src/lib/orderReturns.js;supabase/order-returns.sql,/orders/:ref/returns/eligibility;/orders/:ref/returns,returns,NOT_STARTED
+RET-02,admin return approve/reject pickup/QC/refund,src/Pages/AdminReturns.jsx;supabase/functions/admin-manage-return/index.ts,/admin/returns;/admin/returns/:id/actions,returns,NOT_STARTED
+REV-01,reviews read/eligibility/create/report,src/lib/productReviews.js;supabase/product-reviews.sql,/reviews/product/:id;/orders/:ref/reviews;/reviews/:id/report,reviews,NOT_STARTED
+REV-02,reviews admin approve/reject and ratings,src/Pages/AdminReviews.jsx,/admin/reviews;/admin/reviews/:id,reviews,NOT_STARTED
+ADMIN-01,admin inbox counts and order notifications,src/lib/adminInbox.js;src/hooks/useAdminInbox.js,/admin/inbox;/admin/events,admin,NOT_STARTED
+ADMIN-02,admin product page,src/Pages/AdminDashboard.jsx,/admin/products CRUD,admin,NOT_STARTED
+ADMIN-03,admin orders filters pagination and delete,src/Pages/AdminOrders.jsx;supabase/functions/admin-delete-order/index.ts,/admin/orders endpoints,admin,NOT_STARTED
+ADMIN-04,admin payments overview and actions,src/Pages/AdminPayments.jsx,/admin/payments endpoints,admin,NOT_STARTED
+ADMIN-05,admin coupons CRUD/toggle,src/Pages/AdminCoupons.jsx,/admin/coupons endpoints,admin,NOT_STARTED
+ADMIN-06,admin analytics funnel/top products,src/Pages/AdminAnalytics.jsx,/admin/analytics,admin,NOT_STARTED
+MKT-01,Meta CAPI browser/server event dedup,src/lib/analytics.js;supabase/functions/meta-conversions/index.ts,POST /events/meta-conversions,marketing,NOT_STARTED
+MKT-02,order confirmation email,src/lib/orderEmail.js,server notifications/email,notifications,NOT_STARTED
+MKT-03,creator program WhatsApp existing UX,src/lib/creatorApplications.js,none for current UX,non-api,PRESERVE_NO_BACKEND_REQUIRED
+OPS-01,data import users/catalog/orders/payments/history,supabase/**/*.sql;supabase/functions/**,backend/scripts/migrate-supabase.mjs,migration,NOT_STARTED
+OPS-02,Supabase image data migration,src/lib/productStorage.js;supabase bucket,backend/scripts/migrate-images.mjs,migration,NOT_STARTED
+OPS-03,Hostinger readiness and deployment,backend/server.js;DEPLOY.md,Nginx PM2 Mongo Vercel env,deployment,NOT_STARTED
+OPS-04,production security and cutover rollback,all source,tests;runbook;reconciliation,deployment,NOT_STARTED

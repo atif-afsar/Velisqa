@@ -1,0 +1,46 @@
+{
+  "name": "velisqa-api",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Velisqa commerce REST API (Express + MongoDB) for the Hostinger VPS",
+  "type": "module",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "lint": "node scripts/lint.mjs",
+    "test": "node --test --test-concurrency=1 \"tests/unit/**/*.test.js\"",
+    "test:integration": "node --test --test-concurrency=1 --test-timeout=120000 \"tests/integration/**/*.test.js\"",
+    "test:all": "npm run test && npm run test:integration",
+    "db:indexes": "node scripts/ensure-indexes.mjs",
+    "seed": "node scripts/seed.mjs",
+    "admin:create": "node scripts/create-admin.mjs",
+    "migrate:supabase": "node scripts/migrate-supabase.mjs",
+    "migrate:images": "node scripts/migrate-images.mjs",
+    "verify:migration": "node scripts/verify-migration.mjs",
+    "data:export": "node scripts/export-data.mjs",
+    "data:import": "node scripts/import-data.mjs",
+    "check:razorpay": "node scripts/check-razorpay.mjs",
+    "e2e:server": "node scripts/e2e-server.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.135.0",
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.8",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.7.1",
+    "helmet": "^8.3.0",
+    "mongodb": "^6.21.0",
+    "nodemailer": "^10.1.2",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "mongodb-memory-server": "^11.3.0",
+    "supertest": "^7.3.1"
+  }
+}

@@ -1,0 +1,66 @@
+[
+  {
+    "_id": "FESTIVE15",
+    "discount_type": "percentage",
+    "discount_value": {
+      "$numberInt": "25"
+    },
+    "min_subtotal": {
+      "$numberInt": "500"
+    },
+    "active": true,
+    "created_at": {
+      "$date": {
+        "$numberLong": "1786172462911"
+      }
+    }
+  },
+  {
+    "_id": "FREE50",
+    "active": true,
+    "created_at": {
+      "$date": {
+        "$numberLong": "1786172134041"
+      }
+    },
+    "discount_type": "fixed",
+    "discount_value": {
+      "$numberInt": "50"
+    },
+    "min_subtotal": {
+      "$numberInt": "999"
+    }
+  },
+  {
+    "_id": "SAVE10",
+    "active": true,
+    "created_at": {
+      "$date": {
+        "$numberLong": "1786172134041"
+      }
+    },
+    "discount_type": "percentage",
+    "discount_value": {
+      "$numberInt": "10"
+    },
+    "min_subtotal": {
+      "$numberInt": "1999"
+    }
+  },
+  {
+    "_id": "VELISQA5",
+    "active": true,
+    "created_at": {
+      "$date": {
+        "$numberLong": "1786172134041"
+      }
+    },
+    "discount_type": "percentage",
+    "discount_value": {
+      "$numberInt": "5"
+    },
+    "min_subtotal": {
+      "$numberInt": "1499"
+    }
+  }
+]

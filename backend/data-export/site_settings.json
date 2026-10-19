@@ -1,0 +1,21 @@
+[
+  {
+    "_id": "hero",
+    "slides": [
+      {
+        "desktopUrl": "{{API_ORIGIN}}/api/v1/media/site/a6a7f0333aa13016ec3a88f54fac9681.webp",
+        "mobileUrl": null,
+        "focus": "48% 6%",
+        "to": "/collections/necklaces",
+        "label": "Shop now",
+        "alt": "Shop now"
+      }
+    ],
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792397750440"
+      }
+    },
+    "updated_by": "8e247676-2d35-4a47-8234-129a62e3f72b"
+  }
+]

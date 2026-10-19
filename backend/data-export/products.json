@@ -1,0 +1,4611 @@
+[
+  {
+    "_id": "040078e2-d4ca-4009-bfa5-2d50c2cbe7ae",
+    "name": "Ruby Sovereign Ring",
+    "price": {
+      "$numberInt": "419"
+    },
+    "mrp": null,
+    "description": "Bold oval ruby-tone centrepiece with a coronet setting — designed for statement looks and festive outfits. Comfortable gallery height so it does not snag on dupattas.",
+    "category": "Rings",
+    "metal": "Stainless steel",
+    "colour": "Gold",
+    "styles": [
+      "Everyday",
+      "Office"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "6"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/m0vuyormoy4zkdmnthl8.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/m0vuyormoy4zkdmnthl8.png",
+      "{{API_ORIGIN}}/api/v1/media/products/159305f2b86e5a3f23191e7337a9c18e.webp"
+    ],
+    "cloudinary_public_id": "velisqa/products/m0vuyormoy4zkdmnthl8",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/m0vuyormoy4zkdmnthl8",
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "110"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.8"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779341997180"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393899226"
+      }
+    }
+  },
+  {
+    "_id": "050af298-275d-4c6c-b673-14201957fe75",
+    "name": "Star Charm Necklace",
+    "price": {
+      "$numberInt": "549"
+    },
+    "mrp": {
+      "$numberInt": "850"
+    },
+    "description": "Premium gold-plated stainless steel with a smooth, polished finish. The fine-link chain is lightweight and durable, complemented by multiple polished five-point star charms for a clean, elegant look.\n\nMaterial: Stainless Steel\nFinish: Gold Plated\nStyle: Star Charm Chain\nLook: Polished • Minimal • Elegant",
+    "category": "Bracelet",
+    "metal": "Stainless steel",
+    "colour": "Gold",
+    "styles": [
+      "Everyday",
+      "Minimal",
+      "Office"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/wrxhkfaanhbgb54kq474.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/wrxhkfaanhbgb54kq474.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/mnhbabyniieu1koduaeh.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/wrxhkfaanhbgb54kq474",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/wrxhkfaanhbgb54kq474",
+      "velisqa/products/mnhbabyniieu1koduaeh"
+    ],
+    "mock_review_count": {
+      "$numberInt": "37"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.7"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1786653357778"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1786653357778"
+      }
+    }
+  },
+  {
+    "_id": "064e7151-307a-4907-81f1-e6be839e835d",
+    "name": "VELISQA | Floral Pearl Necklace",
+    "price": {
+      "$numberInt": "499"
+    },
+    "mrp": {
+      "$numberInt": "1099"
+    },
+    "description": "Product Description\n\nAdd a delicate touch of floral elegance to your look with the VELISQA Floral Pearl Necklace. Designed with soft blue floral accents, pearl-inspired blooms and polished golden details, this necklace brings together a feminine aesthetic with a modern, effortless feel.\n\nThe graceful floral pattern makes it easy to style with a wide range of outfits, from everyday casual looks and dresses to kurtis, festive outfits and special-occasion wear. Its distinctive combination of blue, pearl and gold-toned details adds a subtle pop of colour while keeping the overall look elegant.\n\nWhether you’re dressing up for a dinner, celebration or date night, or simply adding something special to your everyday style, this necklace is designed to complement your look effortlessly.",
+    "category": "Necklace",
+    "metal": "Gold plated",
+    "colour": "Gold",
+    "styles": [
+      "Office",
+      "Everyday",
+      "Party",
+      "Wedding",
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "3"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/ufmwapc92n8pwqbbvojb.png",
+    "hover_image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787731753/velisqa/products/vmgulaylm6jzzmc7k34l.png",
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/ufmwapc92n8pwqbbvojb.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/ufdbuolqtdwqgn49ifrs.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/vmgulaylm6jzzmc7k34l.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/g3nlltqi8jvbvs9srfui.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/jmlrls3tt8bryazauapm.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787731753/velisqa/products/vmgulaylm6jzzmc7k34l.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/ufmwapc92n8pwqbbvojb",
+    "hover_cloudinary_public_id": "velisqa/products/vmgulaylm6jzzmc7k34l",
+    "gallery_cloudinary_ids": [
+      "velisqa/products/ufmwapc92n8pwqbbvojb",
+      "velisqa/products/ufdbuolqtdwqgn49ifrs",
+      "velisqa/products/vmgulaylm6jzzmc7k34l",
+      "velisqa/products/g3nlltqi8jvbvs9srfui",
+      "velisqa/products/jmlrls3tt8bryazauapm",
+      "velisqa/products/vmgulaylm6jzzmc7k34l"
+    ],
+    "mock_review_count": {
+      "$numberInt": "70"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.8"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1787731762674"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1787731762674"
+      }
+    }
+  },
+  {
+    "_id": "09a91b97-a4c1-4ce7-a710-88a4e3add536",
+    "name": "Celestia Trinity Ring",
+    "price": {
+      "$numberInt": "399"
+    },
+    "mrp": null,
+    "description": "Add a touch of elegance to your everyday style with the Ruby Radiance Ring. Featuring a deep ruby-red centerpiece accented with sparkling stones on a premium gold-tone band, this ring is designed to stand out while remaining effortlessly classy. Perfect for daily wear, parties, gifting, and special occasions.\n\n✨ Premium Finish\n✨ Adjustable Size – Fits Most Finger Sizes\n✨ Lightweight & Comfortable\n✨ Elegant Ruby-Inspired Stone\n✨ Perfect Gift for Her\n✨ Tarnish-Resistant Finish",
+    "category": "Rings",
+    "metal": "Stainless steel",
+    "colour": "Gold",
+    "styles": [
+      "Everyday",
+      "Party",
+      "Wedding",
+      "Traditional"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "2"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/ck40kglyjcusrhfw5joa.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/ck40kglyjcusrhfw5joa.png",
+      "{{API_ORIGIN}}/api/v1/media/products/6e900d0a3500dfb314f9b3b7fbdd5db6.png",
+      "{{API_ORIGIN}}/api/v1/media/products/ccce2252773750465fb21a6dcbfa660e.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/ck40kglyjcusrhfw5joa",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/ck40kglyjcusrhfw5joa",
+      null,
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "42"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.7"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1781116863791"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393905667"
+      }
+    }
+  },
+  {
+    "_id": "0e22cdb3-659d-4445-bd72-780cc6023bcd",
+    "name": "Velisqa Lustre Chain Necklace",
+    "price": {
+      "$numberInt": "399"
+    },
+    "mrp": null,
+    "description": "Sleek chain necklace with polished links and a subtle centre focus — everyday luxury without heaviness. Works with kurtas, co-ords, and western necklines. Anti-tarnish coating for regular wear in humid weather.",
+    "category": "Necklace",
+    "metal": "Stainless steel",
+    "colour": "Silver",
+    "styles": [
+      "Office",
+      "Everyday",
+      "Wedding",
+      "Minimal",
+      "Party"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "5"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/skan97aaye2bwvfrg1ko.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/skan97aaye2bwvfrg1ko.png",
+      "{{API_ORIGIN}}/api/v1/media/products/45fb6bf64b6d17a0426c78ff286c206e.webp"
+    ],
+    "cloudinary_public_id": "velisqa/products/skan97aaye2bwvfrg1ko",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/skan97aaye2bwvfrg1ko",
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "28"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.9"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779341988544"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393907235"
+      }
+    }
+  },
+  {
+    "_id": "0e8d6b33-9bcd-42f6-afe3-d64b96b5f030",
+    "name": "Golden Radiance Necklace",
+    "price": {
+      "$numberInt": "449"
+    },
+    "mrp": null,
+    "description": "Crafted for lovers of minimal elegance, this pendant necklace combines a radiant crystal centerpiece with a durable gold-tone finish for a jewelry piece that feels both delicate and powerful. Its lightweight design makes it comfortable for all-day wear, while the sparkling rectangular stone catches light beautifully from every angle.\n\nProduct Details\n\n* Product Type: Pendant Necklace\n* Pendant Shape: Emerald Cut / Rectangular Cut\n* Chain Type: Snake Chain\n* Material: Premium stainless steel alloy\n* Stone: AAA-grade cubic zirconia\n* Finish: 18K gold-plated high polish\n* Color: Gold & Crystal White\n* Closure Type: Lobster Clasp\n* Adjustable Chain: Yes\n* Skin Friendly: Yes\n* Tarnish Resistant: Yes\n* Style: Minimal Luxury / Elegant Everyday Wear",
+    "category": "Necklace",
+    "metal": "Stainless steel",
+    "colour": "Silver",
+    "styles": [
+      "Minimal",
+      "Office",
+      "Party"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/atljvyryvvtb5gw2ldqe.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/atljvyryvvtb5gw2ldqe.png",
+      "{{API_ORIGIN}}/api/v1/media/products/b825089b109a218e697aedc8bc7fc981.png",
+      "{{API_ORIGIN}}/api/v1/media/products/b22c2422016417f60d17c51fb628fe57.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/atljvyryvvtb5gw2ldqe",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/atljvyryvvtb5gw2ldqe",
+      null,
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "84"
+    },
+    "mock_rating": {
+      "$numberInt": "5"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779563023256"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393910615"
+      }
+    }
+  },
+  {
+    "_id": "1014cdce-ee65-4f68-a82e-1a996d5a33af",
+    "name": "Heritage Charm Bracelet",
+    "price": {
+      "$numberInt": "549"
+    },
+    "mrp": null,
+    "description": "Charm bracelet with miniature motifs and a secure toggle closure — storytelling detail without loud colour. Gift-friendly packaging available on request via WhatsApp.",
+    "category": "Bracelet",
+    "metal": null,
+    "colour": null,
+    "styles": [],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "5"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "{{API_ORIGIN}}/api/v1/media/products/9a3f8cb5eb0f039c070366b159290eda.webp",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "{{API_ORIGIN}}/api/v1/media/products/9a3f8cb5eb0f039c070366b159290eda.webp"
+    ],
+    "cloudinary_public_id": null,
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "42"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.7"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779341993939"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393911344"
+      }
+    }
+  },
+  {
+    "_id": "104f9c30-2564-414b-801c-e933c83d1247",
+    "name": "Crystal Drop Pendant Necklace",
+    "price": {
+      "$numberInt": "469"
+    },
+    "mrp": null,
+    "description": "Delicate, elegant, and effortlessly luxurious — the Crystal Drop Pendant Necklace is designed to bring timeless sparkle to your jewelry collection. Featuring a premium pear-cut stone suspended on a sleek silver-tone snake chain, this necklace delivers a clean luxury aesthetic perfect for everyday elegance and special occasions alike.",
+    "category": "Necklace",
+    "metal": "Stainless steel",
+    "colour": "Silver",
+    "styles": [
+      "Statement",
+      "Minimal",
+      "Everyday",
+      "Party"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/nqujugeoysdzdjv5ewnk.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/nqujugeoysdzdjv5ewnk.png",
+      "{{API_ORIGIN}}/api/v1/media/products/549e6f28a009efb96e8af63158d62f93.png",
+      "{{API_ORIGIN}}/api/v1/media/products/9eeb2ffffd38002a807c7da1cf66a892.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/nqujugeoysdzdjv5ewnk",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/nqujugeoysdzdjv5ewnk",
+      null,
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "110"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.8"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779562188753"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393915408"
+      }
+    }
+  },
+  {
+    "_id": "1281d7cf-4f94-4b8c-b55e-f8cfa2bc2e7f",
+    "name": "Opal Bloom Studs",
+    "price": {
+      "$numberInt": "340"
+    },
+    "mrp": null,
+    "description": "Crafted with luminous opal-inspired crystals and a polished silver-tone finish, the Opal Bloom Studs combine delicate floral beauty with modern luxury styling. Lightweight yet eye-catching, these earrings add effortless sophistication without feeling heavy or excessive.\n\nProduct Details\n\n* Product Type: Stud Earrings\n* Design: Floral / Four-Petal Bloom\n* Stone Shape: Marquise Cut\n* Material: Premium stainless steel alloy\n* Stone: AAA-grade opal-finish cubic zirconia\n* Finish: High-polish silver plating\n* Color: Silver & Soft Opal White\n* Closure Type: Push Back Closure\n* Style: Feminine Luxury / Elegant Minimal\n* Skin Friendly: Yes\n* Tarnish Resistant: Yes\n* Lightweight & Comfortable: Perfect for daily wear",
+    "category": "Earrings",
+    "metal": null,
+    "colour": null,
+    "styles": [],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "{{API_ORIGIN}}/api/v1/media/products/b5abba6e24ed43c83e6e32aab8896403.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "{{API_ORIGIN}}/api/v1/media/products/b5abba6e24ed43c83e6e32aab8896403.png",
+      "{{API_ORIGIN}}/api/v1/media/products/e97c91a15032c758463134b7d55e5e64.png"
+    ],
+    "cloudinary_public_id": null,
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      null,
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "135"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.6"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779565227604"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393917399"
+      }
+    }
+  },
+  {
+    "_id": "1549cf58-8cab-47e3-af09-8c10a2bd6ccb",
+    "name": "Aethelgard Drop Earrings",
+    "price": {
+      "$numberInt": "397"
+    },
+    "mrp": null,
+    "description": "Graceful drop earrings with balanced swing and secure push-back closures. Flattering for round and oval face shapes; popular for mehendi and cocktail events.",
+    "category": "Earrings",
+    "metal": null,
+    "colour": null,
+    "styles": [],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "8"
+    },
+    "out_of_stock": true,
+    "badge": null,
+    "image_url": "{{API_ORIGIN}}/api/v1/media/products/88a6d83a01468b635985fc75e6e29a8c.webp",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "{{API_ORIGIN}}/api/v1/media/products/88a6d83a01468b635985fc75e6e29a8c.webp"
+    ],
+    "cloudinary_public_id": null,
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "65"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.5"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779341999172"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393918186"
+      }
+    }
+  },
+  {
+    "_id": "1978058e-d64c-45eb-b954-9d361ba0f0f8",
+    "name": "Velisqa Silver-Tone Crystal Necklace for Women – Sparkling Round Pendant Chain Necklace",
+    "price": {
+      "$numberInt": "629"
+    },
+    "mrp": {
+      "$numberInt": "1299"
+    },
+    "description": "Bring effortless sparkle to your look with the Velisqa Silver-Tone Crystal Necklace for Women. Featuring multiple round crystal-inspired stones arranged along a delicate necklace design, this piece creates an elegant halo-style effect that catches the light beautifully. Its refined silver-tone finish makes it easy to pair with dresses, party wear, festive outfits and evening looks. A sophisticated jewellery piece for women who want a delicate yet eye-catching statement necklace.\n\nKeywords: silver necklace for women, crystal necklace, necklace for women, pendant necklace, sparkling necklace, party wear jewellery.",
+    "category": "Necklace",
+    "metal": "Stainless steel",
+    "colour": "Silver",
+    "styles": [
+      "Party",
+      "Everyday",
+      "Wedding",
+      "Contemporary",
+      "Traditional"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "3"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787925162/velisqa/products/ob8fkqbt79yth0apkdqu.png",
+    "hover_image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787925164/velisqa/products/idzj0dvcy2mwxh26hd6d.png",
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787925162/velisqa/products/ob8fkqbt79yth0apkdqu.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787925163/velisqa/products/xzf7c3fllox3tmqxonac.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787925164/velisqa/products/idzj0dvcy2mwxh26hd6d.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/ob8fkqbt79yth0apkdqu",
+    "hover_cloudinary_public_id": "velisqa/products/idzj0dvcy2mwxh26hd6d",
+    "gallery_cloudinary_ids": [
+      "velisqa/products/ob8fkqbt79yth0apkdqu",
+      "velisqa/products/xzf7c3fllox3tmqxonac",
+      "velisqa/products/idzj0dvcy2mwxh26hd6d"
+    ],
+    "mock_review_count": {
+      "$numberInt": "156"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.8"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1787925177994"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1787925177994"
+      }
+    }
+  },
+  {
+    "_id": "1af3ccb6-95df-44fe-b825-903a591e6027",
+    "name": "Velisqa Pearl Burst Stud Earrings for Women | Gold-Tone Pearl Cluster Earrings | Elegant Statement Jewelry",
+    "price": {
+      "$numberInt": "699"
+    },
+    "mrp": {
+      "$numberInt": "1300"
+    },
+    "description": "Add a sophisticated touch to your everyday style with these elegant Velisqa Pearl & Crystal Stud Earrings. Featuring lustrous white pearl accents, sparkling crystal details, and a refined gold-tone finish, the design offers a timeless yet contemporary look.\n\nThe earrings feature 925 sterling silver needles, making them a thoughtful choice for comfortable everyday wear. Their elegant design works beautifully with casual outfits, office looks, festive occasions, parties, and special events.\n\nKey Features:\n\n* 925 sterling silver needle\n* White pearl detailing\n* Sparkling crystal accents\n* Elegant gold-tone finish\n* Stylish circular design\n* Suitable for everyday and occasion wear\n* Ideal gift for women and girls",
+    "category": "Earrings",
+    "metal": "Gold plated",
+    "colour": "Gold",
+    "styles": [
+      "Everyday",
+      "Office",
+      "Party",
+      "Wedding",
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "2"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787742130/velisqa/products/hbvh82wvup1bdtkldwj7.png",
+    "hover_image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787742140/velisqa/products/mwnay42imaqz76xcvk2m.png",
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787742130/velisqa/products/hbvh82wvup1bdtkldwj7.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787742140/velisqa/products/mwnay42imaqz76xcvk2m.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787742149/velisqa/products/l0gcsko3zofafeuvjakg.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787742154/velisqa/products/rzpgwc5tqztlgejl4vbh.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/hbvh82wvup1bdtkldwj7",
+    "hover_cloudinary_public_id": "velisqa/products/mwnay42imaqz76xcvk2m",
+    "gallery_cloudinary_ids": [
+      "velisqa/products/hbvh82wvup1bdtkldwj7",
+      "velisqa/products/mwnay42imaqz76xcvk2m",
+      "velisqa/products/l0gcsko3zofafeuvjakg",
+      "velisqa/products/rzpgwc5tqztlgejl4vbh"
+    ],
+    "mock_review_count": {
+      "$numberInt": "133"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.7"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1787742157459"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1787742157459"
+      }
+    }
+  },
+  {
+    "_id": "1d4e3a10-1fea-456c-84ee-a8e675a3a8c2",
+    "name": "Velisqa Gold-Tone Stud Earrings for Women",
+    "price": {
+      "$numberInt": "399"
+    },
+    "mrp": {
+      "$numberInt": "899"
+    },
+    "description": "Elevate your everyday style with Velisqa Gold-Tone Stud Earrings featuring an elegant interwoven knot-inspired design. The layered, rounded structure gives these earrings a sophisticated and dimensional appearance, while the polished finish adds a refined shine. Their versatile design pairs effortlessly with casual outfits, office wear, dresses and occasion looks. A timeless choice for women looking for stylish statement stud earrings with a contemporary aesthetic.\n\nKeywords: gold stud earrings, earrings for women, knot earrings, statement earrings, stylish earrings, women’s jewellery.",
+    "category": "Earrings",
+    "metal": "Stainless steel",
+    "colour": "Gold",
+    "styles": [
+      "Everyday",
+      "Office",
+      "Party",
+      "Wedding",
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "5"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787924701/velisqa/products/z7wzn0och9birql5iguh.png",
+    "hover_image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787924703/velisqa/products/gnrdcamokjv3v5debvkh.png",
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787924701/velisqa/products/z7wzn0och9birql5iguh.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787924703/velisqa/products/gnrdcamokjv3v5debvkh.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787924706/velisqa/products/fjpdxzp6v46rwjrwfies.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/z7wzn0och9birql5iguh",
+    "hover_cloudinary_public_id": "velisqa/products/gnrdcamokjv3v5debvkh",
+    "gallery_cloudinary_ids": [
+      "velisqa/products/z7wzn0och9birql5iguh",
+      "velisqa/products/gnrdcamokjv3v5debvkh",
+      "velisqa/products/fjpdxzp6v46rwjrwfies"
+    ],
+    "mock_review_count": {
+      "$numberInt": "56"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.6"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1787924707070"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1787924707070"
+      }
+    }
+  },
+  {
+    "_id": "1fccabe9-2406-432c-800b-bf1006abe45e",
+    "name": "Celestelle Charm Bracelet",
+    "price": {
+      "$numberInt": "529"
+    },
+    "mrp": null,
+    "description": "Crafted with a sleek gold-tone finish and fine link chain, the Celestelle Charm Bracelet blends colorful sparkle with delicate detailing for a premium designer-inspired look. The butterfly motifs symbolize freedom, beauty, and transformation, making this piece feel both meaningful and stylish.\n\nProduct Details\n\n* Product Type: Charm Bracelet\n* Design: Butterfly & Multicolor Crystal Charm\n* Material: Premium stainless steel alloy\n* Stone: AAA-grade colored cubic zirconia\n* Finish: 18K gold-plated high polish\n* Color: Gold with Blue, Pink, Green & Crystal White accents\n* Chain Type: Fine Link Chain\n* Closure Type: Lobster Clasp\n* Adjustable Chain: Yes\n* Style: Feminine Luxury / Delicate Elegant\n* Skin Friendly: Yes\n* Tarnish Resistant: Yes\n* Lightweight & Comfortable: Perfect for daily wear",
+    "category": "Bracelet",
+    "metal": null,
+    "colour": null,
+    "styles": [],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "0"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "{{API_ORIGIN}}/api/v1/media/products/5d67547e8f0e54dcf792ef18394ae7fd.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "{{API_ORIGIN}}/api/v1/media/products/5d67547e8f0e54dcf792ef18394ae7fd.png",
+      "{{API_ORIGIN}}/api/v1/media/products/b53e42a0d31b4cee1221974a45901df0.png"
+    ],
+    "cloudinary_public_id": null,
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      null,
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "65"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.5"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779565064718"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393921079"
+      }
+    }
+  },
+  {
+    "_id": "2c57e3c5-c7ff-47fc-8de1-bcd178aa818c",
+    "name": "Obsidian Royale Bracelet",
+    "price": {
+      "$numberInt": "600"
+    },
+    "mrp": null,
+    "description": "Designed with a bold geometric silhouette and polished gold-tone finish, the Obsidian Royale Bracelet delivers a high-end luxury feel without excessive detailing. The black centerpiece reflects confidence and elegance, making it perfect for both solo styling and stacked luxury looks.\n\nProduct Details\n\n* Product Type: Statement Bracelet\n* Design: Cuban Link Bracelet with Emerald-Cut Centerpiece\n* Material: Premium stainless steel alloy\n* Center Stone: AAA-grade black cubic zirconia\n* Accent Stones: Micro crystal detailing\n* Finish: 18K gold-plated high polish\n* Color: Gold & Midnight Black\n* Chain Type: Cuban Link Chain\n* Closure Type: Lobster Clasp\n* Adjustable Chain: Yes\n* Style: Luxury Statement / Modern Royal Aesthetic\n* Skin Friendly: Yes\n* Tarnish Resistant: Yes\n* Lightweight Yet Durable: Built for premium daily wear",
+    "category": "Bracelet",
+    "metal": "Stainless steel",
+    "colour": "Gold",
+    "styles": [
+      "Party",
+      "Wedding",
+      "Everyday",
+      "Statement"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/cogdp9ewg3rmua8de98z.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/cogdp9ewg3rmua8de98z.png",
+      "{{API_ORIGIN}}/api/v1/media/products/ca3926d6016bcc58869804b41deaa328.png",
+      "{{API_ORIGIN}}/api/v1/media/products/2f7790c0146818a92b44cd5ac6a5c564.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/cogdp9ewg3rmua8de98z",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/cogdp9ewg3rmua8de98z",
+      null,
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "15"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.2"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779564914260"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393924190"
+      }
+    }
+  },
+  {
+    "_id": "2ccfaf5e-8d74-4144-8d59-5b13c561db35",
+    "name": "Black Stone Pendant Necklace",
+    "price": {
+      "$numberInt": "599"
+    },
+    "mrp": {
+      "$numberInt": "899"
+    },
+    "description": "✦ Bold. Elegant. Timeless.\n\nMake a statement with this sophisticated silver-tone pendant necklace, featuring a deep black rectangular centerpiece surrounded by a sparkling pavé-style halo.\n\n✦ Striking Black Centerpiece\n\nThe faceted black stone creates a dramatic contrast against the bright silver-tone setting, while the surrounding stones add refined brilliance without overpowering the design.\n\n✦ Designed for Effortless Styling\n\nThe clean rectangular silhouette works beautifully with both minimal everyday outfits and elevated evening looks. Wear it alone for a bold finish or layer it with finer chains.\n\nProduct Highlights\n\n* Design: Rectangular black statement pendant\n* Center Stone: Deep black faceted stone\n* Border: Sparkling pavé-style stone detailing\n* Finish: Polished silver tone\n* Chain: Fine-link chain\n* Style: Bold • Elegant • Contemporary\n* Occasions: Everyday • Evening • Party • Gifting",
+    "category": "Necklace",
+    "metal": "Stainless steel",
+    "colour": "Silver",
+    "styles": [
+      "Party",
+      "Wedding",
+      "Traditional",
+      "Statement"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1786654178/velisqa/products/irzl0uomxji0ntxpqywe.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1786654178/velisqa/products/irzl0uomxji0ntxpqywe.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/irzl0uomxji0ntxpqywe",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/irzl0uomxji0ntxpqywe"
+    ],
+    "mock_review_count": {
+      "$numberInt": "56"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.7"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1786654191571"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1786654191571"
+      }
+    }
+  },
+  {
+    "_id": "31d4f228-1e59-4793-8798-4247110cb19b",
+    "name": "Gilded Tennis Bracelet",
+    "price": {
+      "$numberInt": "549"
+    },
+    "mrp": null,
+    "description": "Continuous line of handset stones in a tennis layout — high sparkle for receptions and photoshoots. Secure box clasp with safety latch. Layer two for a bridal wrist stack.",
+    "category": "Bracelet",
+    "metal": null,
+    "colour": null,
+    "styles": [],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "5"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "{{API_ORIGIN}}/api/v1/media/products/31a559464c7b3c27f8fff654bfceaefa.webp",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "{{API_ORIGIN}}/api/v1/media/products/31a559464c7b3c27f8fff654bfceaefa.webp"
+    ],
+    "cloudinary_public_id": null,
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "28"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.9"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779341992382"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393925071"
+      }
+    }
+  },
+  {
+    "_id": "31e8a35c-b708-40d3-b894-a186e629ebdb",
+    "name": "Solstice Choker Necklace",
+    "price": {
+      "$numberInt": "519"
+    },
+    "mrp": null,
+    "description": "Close-fitting choker with art-deco inspired geometry and a champagne-gold tone. Elevates simple outfits instantly — style with open hair and bold earrings. Includes extension-friendly clasp for comfortable fit.",
+    "category": "Necklace",
+    "metal": "Stainless steel",
+    "colour": "Gold",
+    "styles": [
+      "Everyday",
+      "Party",
+      "Office",
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "5"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/moeqviqkeutx96sdkvcd.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/moeqviqkeutx96sdkvcd.png",
+      "{{API_ORIGIN}}/api/v1/media/products/448673c260ccf8074aaa5b46481161eb.webp"
+    ],
+    "cloudinary_public_id": "velisqa/products/moeqviqkeutx96sdkvcd",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/moeqviqkeutx96sdkvcd",
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "135"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.6"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779341990251"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393926276"
+      }
+    }
+  },
+  {
+    "_id": "327bbfff-8f6a-49a0-8848-2ae7e006ffa8",
+    "name": "Midnight Aura Pendant Necklace",
+    "price": {
+      "$numberInt": "489"
+    },
+    "mrp": null,
+    "description": "Bold yet minimal, the Midnight Aura Pendant Necklace is crafted for those who love understated luxury with a dark edge. Featuring a deep black round-cut stone set in a sleek silver-tone four-prong setting, this piece delivers a clean, premium aesthetic that instantly elevates any outfit.",
+    "category": "Necklace",
+    "metal": "Stainless steel",
+    "colour": "Silver",
+    "styles": [
+      "Office",
+      "Party",
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/hxokhkzqd9snqtpgvrb6.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/hxokhkzqd9snqtpgvrb6.png",
+      "{{API_ORIGIN}}/api/v1/media/products/bd8f2a2bc89f0f7586d8c48202ff0de9.png",
+      "{{API_ORIGIN}}/api/v1/media/products/909709ab1638d9e6453080f4cb434e56.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/hxokhkzqd9snqtpgvrb6",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/hxokhkzqd9snqtpgvrb6",
+      null,
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "28"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.9"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779562466596"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393930204"
+      }
+    }
+  },
+  {
+    "_id": "335e89a0-f3e3-4295-a1b3-b99e3ed8df2d",
+    "name": "Pink Crystal Pendant Necklace",
+    "price": {
+      "$numberInt": "499"
+    },
+    "mrp": {
+      "$numberInt": "799"
+    },
+    "description": "✦ A Soft Statement of Elegance\n\nA sophisticated gold-tone pendant necklace featuring a luminous blush-pink cushion-cut centerpiece framed by a halo of sparkling stones. Designed to add a refined pop of colour without looking excessive.\n\n✦ The Centerpiece\n\nThe faceted pink stone catches and reflects light beautifully, while the surrounding pavé-style stones add extra brilliance. The polished gold-tone setting gives the pendant a warm, luxurious finish.\n\n✦ Made to Stand Out\n\nThe classic cushion-shaped silhouette works effortlessly with both minimal and dressed-up looks. Wear it solo for an elegant statement or pair it with delicate chains for a layered aesthetic.\n\nProduct Highlights\n\n* Design: Cushion-cut pink statement pendant\n* Stone: Pink faceted centerpiece\n* Setting: Sparkling pavé-style halo\n* Finish: Polished gold tone\n* Chain: Fine link chain\n* Style: Elegant • Feminine • Contemporary\n* Occasions: Everyday • Date Night • Party • Gifting",
+    "category": "Necklace",
+    "metal": "Stainless steel",
+    "colour": "Gold",
+    "styles": [
+      "Party",
+      "Wedding",
+      "Statement"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": "new",
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1786653890/velisqa/products/ej9neinzouwm0vmumkgb.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1786653890/velisqa/products/ej9neinzouwm0vmumkgb.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/ej9neinzouwm0vmumkgb",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/ej9neinzouwm0vmumkgb"
+    ],
+    "mock_review_count": {
+      "$numberInt": "34"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.6"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1786653891758"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1786653891758"
+      }
+    }
+  },
+  {
+    "_id": "38ac1509-85ec-4ab2-980b-24d2c9d0636f",
+    "name": "Velisqa Ivory Flower Stud Earrings for Women | Elegant Floral Statement Earrings | Minimal Everyday Fashion Jewelry",
+    "price": {
+      "$numberInt": "399"
+    },
+    "mrp": {
+      "$numberInt": "799"
+    },
+    "description": "Bring a soft, feminine touch to your look with the Velisqa Ivory Flower Stud Earrings. Featuring a delicate four-petal floral design with a creamy ivory finish and sleek silver-tone edging, these earrings offer a clean and sophisticated aesthetic.\n\nThe floral silhouette adds a subtle statement while remaining easy to style with everyday outfits, office wear, dresses, and occasion looks.\n\nFeatures:\n\n* Elegant four-petal flower design\n* Creamy ivory-toned finish\n* Silver-tone detailing around the petals\n* Stylish statement stud silhouette\n* Feminine and sophisticated look\n* Suitable for everyday and occasion wear\n* Ideal gift for women and girls",
+    "category": "Earrings",
+    "metal": "Stainless steel",
+    "colour": "Multicolour",
+    "styles": [
+      "Office",
+      "Wedding",
+      "Party",
+      "Minimal",
+      "Everyday"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "5"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787741343/velisqa/products/votog4prymkhfa3rgamx.png",
+    "hover_image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787741345/velisqa/products/sd3jevunmlr1v4ogpktp.png",
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787741343/velisqa/products/votog4prymkhfa3rgamx.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787741345/velisqa/products/sd3jevunmlr1v4ogpktp.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787741347/velisqa/products/lowsrulbf4wxrbqjma00.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787741350/velisqa/products/g0j2noqmst9tjqjzrn69.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787741352/velisqa/products/gridjvyfg8z5rztyjyjl.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/votog4prymkhfa3rgamx",
+    "hover_cloudinary_public_id": "velisqa/products/sd3jevunmlr1v4ogpktp",
+    "gallery_cloudinary_ids": [
+      "velisqa/products/votog4prymkhfa3rgamx",
+      "velisqa/products/sd3jevunmlr1v4ogpktp",
+      "velisqa/products/lowsrulbf4wxrbqjma00",
+      "velisqa/products/g0j2noqmst9tjqjzrn69",
+      "velisqa/products/gridjvyfg8z5rztyjyjl"
+    ],
+    "mock_review_count": {
+      "$numberInt": "89"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.6"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1787741353413"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1787741353413"
+      }
+    }
+  },
+  {
+    "_id": "397cf15e-141d-47cd-b255-9a5274e35ef5",
+    "name": "Tulip Bracelet",
+    "price": {
+      "$numberInt": "399"
+    },
+    "mrp": null,
+    "description": "Add a touch of elegance to your look with our bestselling Tulip Bracelet. Crafted with a premium gold-plated finish and dazzling stones, this bracelet is designed to complement every outfit effortlessly.\n\nWhether you’re dressing up for a special occasion or adding a subtle sparkle to your daily style, the Tulip Bracelet is the perfect choice.\n\n✨ Premium Gold Finish\n✨ Sparkling High-Quality Stones\n✨ Lightweight & Comfortable\n✨ Elegant Floral-Inspired Design\n✨ Perfect for Gifting",
+    "category": "Bracelet",
+    "metal": "Stainless steel",
+    "colour": "Gold",
+    "styles": [
+      "Office",
+      "Party",
+      "Everyday",
+      "Wedding",
+      "Minimal",
+      "Statement"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "10"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/kypxd0uncygdxwz5kjhi.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/kypxd0uncygdxwz5kjhi.png",
+      "{{API_ORIGIN}}/api/v1/media/products/027d0a110bad02afa82ee76d2a97c368.png",
+      "{{API_ORIGIN}}/api/v1/media/products/28000af2d374294cbff74f66fb5f86b2.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/kypxd0uncygdxwz5kjhi",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/kypxd0uncygdxwz5kjhi",
+      null,
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "15"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.2"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1781080804976"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393932068"
+      }
+    }
+  },
+  {
+    "_id": "3dce9ea3-1210-4f58-bc5b-9680eb3c7396",
+    "name": "Silver Pavé Pendant Necklace",
+    "price": {
+      "$numberInt": "589"
+    },
+    "mrp": {
+      "$numberInt": "900"
+    },
+    "description": "A delicate silver-tone necklace designed to add subtle sparkle to your everyday look. The fine chain leads to a rectangular pavé-style pendant, creating a clean, modern statement without looking overdone.\n\n✦ Designed to Catch the Light\n\nThe pendant features a polished rectangular frame filled with closely arranged sparkling stones. Its reflective finish creates an elegant shimmer as it moves, making it easy to style from day to night.\n\n✦ Minimal. Versatile. Effortless.\n\nPair it with a casual tee, office wear, a dress, or evening outfits. The understated silhouette makes it suitable for layering or wearing solo.\n\nProduct Highlights\n\n* Design: Rectangular pavé pendant\n* Finish: Polished silver tone\n* Chain: Fine-link chain\n* Look: Minimal & contemporary\n* Occasion: Everyday • Office • Date Night • Party\n* Ideal for: Personal styling & gifting",
+    "category": "Necklace",
+    "metal": "Stainless steel",
+    "colour": "Silver",
+    "styles": [
+      "Everyday",
+      "Office",
+      "Party",
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": "new",
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/hquuqqnswr76svlghcg5.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/hquuqqnswr76svlghcg5.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/ryotwqh6ulvmiuk44sxr.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/t6j983d3olj6zo3syflv.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/hquuqqnswr76svlghcg5",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/hquuqqnswr76svlghcg5",
+      "velisqa/products/ryotwqh6ulvmiuk44sxr",
+      "velisqa/products/t6j983d3olj6zo3syflv"
+    ],
+    "mock_review_count": {
+      "$numberInt": "56"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.6"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1786653630809"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1786653630809"
+      }
+    }
+  },
+  {
+    "_id": "4053085d-e3e5-42a7-85d4-11b8b3fef634",
+    "name": "Artisan Threader Earrings",
+    "price": {
+      "$numberInt": "299"
+    },
+    "mrp": null,
+    "description": "Threader-style earrings with a linear silhouette — modern, airy, and ideal for contemporary sarees and Indo-western looks. Easy to sanitise and re-thread after events.",
+    "category": "Earrings",
+    "metal": null,
+    "colour": null,
+    "styles": [],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "8"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "{{API_ORIGIN}}/api/v1/media/products/bf3139524f4cdb056fc31864c8d92d79.webp",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "{{API_ORIGIN}}/api/v1/media/products/bf3139524f4cdb056fc31864c8d92d79.webp"
+    ],
+    "cloudinary_public_id": null,
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "28"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.9"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779342002070"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393932815"
+      }
+    }
+  },
+  {
+    "_id": "45fbd92a-f4e3-4c80-866d-0810e35af8ca",
+    "name": "Velisqa Pink Teardrop Pendant Necklace for Women | Double Layer Gold-Tone Chain with Elegant Pink Crystal Pendant | Minimal Fashion Jewellery for Girls",
+    "price": {
+      "$numberInt": "599"
+    },
+    "mrp": {
+      "$numberInt": "899"
+    },
+    "description": "Add a soft touch of colour and elegance to your everyday style with the VELISQA Pink Teardrop Pendant Necklace. Featuring a delicate double-layer design, the necklace combines a fine chain with a sleek snake-style chain and a beautiful pink teardrop pendant.\n\nThe faceted pink pendant catches the light beautifully, while the layered golden design adds a modern, polished finish without looking overly heavy. Its minimal yet distinctive style makes it easy to pair with casual outfits, dresses, kurtis and occasion wear.\n\nPerfect for everyday styling, date nights, dinners, celebrations and gifting, this necklace brings together contemporary design and feminine elegance in one versatile piece.",
+    "category": "Necklace",
+    "metal": "Gold plated",
+    "colour": "Gold",
+    "styles": [
+      "Everyday",
+      "Office",
+      "Party",
+      "Wedding",
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787732084/velisqa/products/ihkylcua35euopwciuvw.png",
+    "hover_image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787732089/velisqa/products/q2spnwvcgzk2ykknit7h.png",
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787732084/velisqa/products/ihkylcua35euopwciuvw.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787732086/velisqa/products/osuflejqv53uaw8kwyxm.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787732087/velisqa/products/yxfjyny3ehqi5wa5cfya.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787732089/velisqa/products/q2spnwvcgzk2ykknit7h.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/ihkylcua35euopwciuvw",
+    "hover_cloudinary_public_id": "velisqa/products/q2spnwvcgzk2ykknit7h",
+    "gallery_cloudinary_ids": [
+      "velisqa/products/ihkylcua35euopwciuvw",
+      "velisqa/products/osuflejqv53uaw8kwyxm",
+      "velisqa/products/yxfjyny3ehqi5wa5cfya",
+      "velisqa/products/q2spnwvcgzk2ykknit7h"
+    ],
+    "mock_review_count": {
+      "$numberInt": "47"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.4"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1787732090006"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1787732090006"
+      }
+    }
+  },
+  {
+    "_id": "4967ebaa-266c-4e80-a38e-1cf6948d7f50",
+    "name": "Luna Bloom Earrings",
+    "price": {
+      "$numberInt": "389"
+    },
+    "mrp": null,
+    "description": "Crafted with smooth high-shine detailing and soft pearl-like petals, the Luna Bloom Earrings reflect elegance without looking overdone. The long-drop design adds movement and sophistication, while the floral centerpiece gives a romantic luxury feel inspired by modern designer jewelry aesthetics.\n\nProduct Details\n\n* Product Type: Drop Earrings\n* Design: Floral Drop Style\n* Material: Premium stainless steel alloy\n* Stone Type: Pearl-finish stones & AAA cubic zirconia\n* Finish: High-polish silver plating\n* Color: Silver & Soft Pearl White\n* Style: Elegant / Feminine Luxury\n* Closure Type: Push Back Closure\n* Skin Friendly: Yes\n* Tarnish Resistant: Yes\n* Lightweight & Comfortable: Suitable for long wear",
+    "category": "Earrings",
+    "metal": null,
+    "colour": null,
+    "styles": [],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "{{API_ORIGIN}}/api/v1/media/products/869254bb42c5fb76068add48482d196b.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "{{API_ORIGIN}}/api/v1/media/products/869254bb42c5fb76068add48482d196b.png",
+      "{{API_ORIGIN}}/api/v1/media/products/cc739b381f7abb417fabd4dcf67f27aa.png"
+    ],
+    "cloudinary_public_id": null,
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      null,
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "110"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.8"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779564419409"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393935106"
+      }
+    }
+  },
+  {
+    "_id": "4fd93065-9e11-4345-a4f8-de07b641a59f",
+    "name": "Rose Bloom Pendant Necklace",
+    "price": {
+      "$numberInt": "294"
+    },
+    "mrp": null,
+    "description": "A timeless symbol of love and elegance\n\nAdd a touch of sophistication to your everyday style with this beautifully crafted Rose Bloom Pendant Necklace. Featuring a radiant ruby-red stone blossom paired with emerald-green leaves, this delicate floral design is perfect for gifting or elevating your own jewelry collection.\n\n⸻",
+    "category": "Necklace",
+    "metal": "Alloy",
+    "colour": "Rose gold",
+    "styles": [
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/xdrm8dln7dypbuvm8pq2.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/xdrm8dln7dypbuvm8pq2.png",
+      "{{API_ORIGIN}}/api/v1/media/products/e00295ff2b1e25f0f608634c1d28e295.png",
+      "{{API_ORIGIN}}/api/v1/media/products/c19b0e7938625220856e30387a2fd4bf.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/xdrm8dln7dypbuvm8pq2",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/xdrm8dln7dypbuvm8pq2",
+      null,
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "15"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.2"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1780572041677"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393937197"
+      }
+    }
+  },
+  {
+    "_id": "50d1c011-1570-41bf-b362-0eff75fa8eb7",
+    "name": "Solitaire Glow Ring",
+    "price": {
+      "$numberInt": "329"
+    },
+    "mrp": null,
+    "description": "Classic solitaire-inspired centre stone on a tapered band — engagement-photo friendly at an accessible price point. High table cut for maximum brilliance under indoor lighting.",
+    "category": "Rings",
+    "metal": null,
+    "colour": null,
+    "styles": [],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "8"
+    },
+    "out_of_stock": true,
+    "badge": null,
+    "image_url": "{{API_ORIGIN}}/api/v1/media/products/9c03bd8222aee1db024283ed52d3b734.webp",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "{{API_ORIGIN}}/api/v1/media/products/9c03bd8222aee1db024283ed52d3b734.webp"
+    ],
+    "cloudinary_public_id": null,
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "84"
+    },
+    "mock_rating": {
+      "$numberInt": "5"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779341996488"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393937910"
+      }
+    }
+  },
+  {
+    "_id": "5481912d-d112-49c2-a983-e687a9693366",
+    "name": "Ballerina Necklace",
+    "price": {
+      "$numberInt": "599"
+    },
+    "mrp": {
+      "$numberInt": "900"
+    },
+    "description": "Velisqa Ballerina Pendant Necklace\n\nAdd an elegant touch to your everyday style with this delicate gold-tone ballerina pendant necklace. Featuring a graceful dancer silhouette adorned with sparkling pavé-style stones, the pendant adds a subtle yet eye-catching statement to any outfit.\n\nKey Features\n\n* Elegant ballerina-inspired pendant design\n* Sparkling stone detailing across the dress\n* Polished gold-tone finish\n* Lightweight and comfortable for everyday wear\n* Delicate chain for a refined, feminine look\n* Perfect for casual outfits, parties, dates, and gifting\n\nStyle: Minimal • Elegant • Feminine\nOccasion: Everyday • Party • Date Night • Gifting",
+    "category": "Necklace",
+    "metal": "Stainless steel",
+    "colour": "Gold",
+    "styles": [
+      "Everyday",
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": "new",
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/t6edat2r59lhfvoq6hvz.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/t6edat2r59lhfvoq6hvz.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/cwg3ait1sljlp2bsbfsd.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/mo262navyavja2y51ikw.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/t6edat2r59lhfvoq6hvz",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/t6edat2r59lhfvoq6hvz",
+      "velisqa/products/cwg3ait1sljlp2bsbfsd",
+      "velisqa/products/mo262navyavja2y51ikw"
+    ],
+    "mock_review_count": {
+      "$numberInt": "18"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.9"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1786652052501"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1786652052501"
+      }
+    }
+  },
+  {
+    "_id": "5bb9f44a-2799-453a-a102-3e7bc0ebc51d",
+    "name": "Velisqa Petite Band Ring",
+    "price": {
+      "$numberInt": "419"
+    },
+    "mrp": null,
+    "description": "Delicate band with micro pavé detailing — perfect as a daily stacker or pinky ring. Available feel in standard women’s sizes; message us on WhatsApp for size guidance before dispatch.",
+    "category": "Rings",
+    "metal": null,
+    "colour": null,
+    "styles": [],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "8"
+    },
+    "out_of_stock": true,
+    "badge": null,
+    "image_url": "{{API_ORIGIN}}/api/v1/media/products/e87034a9542b6534610423902431c456.webp",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "{{API_ORIGIN}}/api/v1/media/products/e87034a9542b6534610423902431c456.webp"
+    ],
+    "cloudinary_public_id": null,
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "84"
+    },
+    "mock_rating": {
+      "$numberInt": "5"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779341995241"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393938642"
+      }
+    }
+  },
+  {
+    "_id": "60a524ef-1b00-431b-a29e-b223f5dc26ab",
+    "name": "Velisqa Golden Floral Stud Earrings for Women | Elegant Round Flower Earrings | Minimal Everyday Fashion Jewelry",
+    "price": {
+      "$numberInt": "449"
+    },
+    "mrp": {
+      "$numberInt": "799"
+    },
+    "description": "Add a soft, elegant touch to your jewellery collection with the Velisqa Golden Floral Stud Earrings. Featuring a beautiful flower-inspired design made with rounded translucent golden-toned petals, these earrings offer a feminine and sophisticated look.\n\nThe classic floral silhouette makes them versatile enough for everyday outfits, office wear, dresses, festive occasions, and special events. Their statement shape adds visual interest while keeping the overall look refined.\n\nFeatures:\n\n* Elegant floral-inspired design\n* Rounded translucent golden-toned detailing\n* Polished gold-tone finish\n* Stylish round stud silhouette\n* Feminine and sophisticated look\n* Suitable for everyday and occasion wear\n* Ideal gifting option for women and girls",
+    "category": "Earrings",
+    "metal": "Gold plated",
+    "colour": "Gold",
+    "styles": [
+      "Everyday",
+      "Office",
+      "Party"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "2"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787741134/velisqa/products/hwkkjziydzlgttrsgjoo.png",
+    "hover_image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787741136/velisqa/products/nrkt9sryxmkk4jlasepf.png",
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787741134/velisqa/products/hwkkjziydzlgttrsgjoo.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787741136/velisqa/products/nrkt9sryxmkk4jlasepf.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787741140/velisqa/products/zck0zfxhriltcmzqmxsg.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/hwkkjziydzlgttrsgjoo",
+    "hover_cloudinary_public_id": "velisqa/products/nrkt9sryxmkk4jlasepf",
+    "gallery_cloudinary_ids": [
+      "velisqa/products/hwkkjziydzlgttrsgjoo",
+      "velisqa/products/nrkt9sryxmkk4jlasepf",
+      "velisqa/products/zck0zfxhriltcmzqmxsg"
+    ],
+    "mock_review_count": {
+      "$numberInt": "78"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.5"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1787741140963"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1787741140963"
+      }
+    }
+  },
+  {
+    "_id": "60c22808-a1cd-4378-8bbc-e0ef859b13e1",
+    "name": "Aurelia Layered Necklace",
+    "price": {
+      "$numberInt": "499"
+    },
+    "mrp": null,
+    "description": "A refined multi-layer artificial necklace with a soft gold finish and delicate spacing between tiers. Ideal for weddings, receptions, and evening wear in Aligarh. Lightweight for all-day comfort; pair with sweetheart or boat-neck blouses.",
+    "category": "Necklace",
+    "metal": "Stainless steel",
+    "colour": "Silver",
+    "styles": [
+      "Party",
+      "Office",
+      "Everyday",
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "5"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1786661951/velisqa/products/x2spwswfwg3md0zpqirx.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1786661951/velisqa/products/x2spwswfwg3md0zpqirx.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/x2spwswfwg3md0zpqirx",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/x2spwswfwg3md0zpqirx"
+    ],
+    "mock_review_count": {
+      "$numberInt": "135"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.6"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779341987923"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1779341987923"
+      }
+    }
+  },
+  {
+    "_id": "68ef6ebb-4579-4741-b354-32575c889584",
+    "name": "Tulip bracelet",
+    "price": {
+      "$numberInt": "549"
+    },
+    "mrp": null,
+    "description": "Crafted with premium precision-cut crystals and a polished gold finish, the Blush Vine Bracelet blends delicate artistry with modern elegance. The flowing vine-inspired silhouette wraps beautifully around the wrist, creating a graceful luxury look perfect for special occasions and elevated everyday styling.\n\nProduct Details\n\n* Product Type: Statement Bracelet\n* Design: Vine-Inspired Crystal Bracelet\n* Stone Shapes: Oval Cut & Marquise Cut\n* Material: Premium stainless steel alloy\n* Stone: AAA-grade cubic zirconia\n* Finish: 18K gold-plated high polish\n* Color: Gold with Blush Pink & Crystal White stones\n* Closure Type: Premium Lock Clasp\n* Style: Feminine Luxury / Romantic Elegant\n* Skin Friendly: Yes\n* Tarnish Resistant: Yes\n* Lightweight Yet Durable: Comfortable for long wear",
+    "category": "Bracelet",
+    "metal": "Stainless steel",
+    "colour": "Gold",
+    "styles": [
+      "Party",
+      "Wedding",
+      "Everyday",
+      "Office",
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/jcee4eym846z1jzvapx7.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/jcee4eym846z1jzvapx7.png",
+      "{{API_ORIGIN}}/api/v1/media/products/9037381cea5b4d634adf26cbe9764f33.png",
+      "{{API_ORIGIN}}/api/v1/media/products/e12a59cac0058c9cc4b289f471dc5630.png",
+      "{{API_ORIGIN}}/api/v1/media/products/912451cf7f103e61b19f4d45f0de7520.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/jcee4eym846z1jzvapx7",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/jcee4eym846z1jzvapx7",
+      null,
+      null,
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "65"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.5"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779566161849"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393943086"
+      }
+    }
+  },
+  {
+    "_id": "6fbd8bd1-0edc-4d05-93a7-b70bd6a1499e",
+    "name": "Velisqa Gold-Tone Bangle Bracelet for Women – Minimalist Open Crossover Statement Bracelet",
+    "price": {
+      "$numberInt": "599"
+    },
+    "mrp": {
+      "$numberInt": "1199"
+    },
+    "description": "Make a refined statement with the Velisqa Gold-Tone Bangle Bracelet for Women. Featuring a sleek open-crossover silhouette with smooth sculpted curves, this bracelet brings a contemporary finish to any outfit. Its clean design makes it easy to wear on its own or stack with other bracelets and bangles. Perfect for everyday styling, parties, dinners, festive occasions and modern ethnic or western looks.",
+    "category": "Bangles",
+    "metal": "Stainless steel",
+    "colour": "Gold",
+    "styles": [
+      "Everyday",
+      "Office",
+      "Party",
+      "Wedding",
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "4"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/fy2kvhjudfdsg1jkmoey.png",
+    "hover_image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/ttajtivmwya1vqvnawyo.png",
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/fy2kvhjudfdsg1jkmoey.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/ttajtivmwya1vqvnawyo.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/m4y12vkqi5md73yfztdx.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/foyscvk2enavkgqgiurt.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/fy2kvhjudfdsg1jkmoey",
+    "hover_cloudinary_public_id": "velisqa/products/ttajtivmwya1vqvnawyo",
+    "gallery_cloudinary_ids": [
+      "velisqa/products/fy2kvhjudfdsg1jkmoey",
+      "velisqa/products/ttajtivmwya1vqvnawyo",
+      "velisqa/products/m4y12vkqi5md73yfztdx",
+      "velisqa/products/foyscvk2enavkgqgiurt"
+    ],
+    "mock_review_count": {
+      "$numberInt": "56"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.7"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1787924860953"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792395258438"
+      }
+    }
+  },
+  {
+    "_id": "70cc5ffe-6d8b-4ffd-8c78-f71a46bc155e",
+    "name": "Rose Bloom Pendant Necklace",
+    "price": {
+      "$numberInt": "294"
+    },
+    "mrp": null,
+    "description": "A timeless symbol of love and elegance\n\nAdd a touch of sophistication to your everyday style with this beautifully crafted Rose Bloom Pendant Necklace. Featuring a radiant ruby-red stone blossom paired with emerald-green leaves, this delicate floral design is perfect for gifting or elevating your own jewelry collection.\n\n⸻",
+    "category": "Necklace",
+    "metal": "Stainless steel",
+    "colour": "Rose gold",
+    "styles": [
+      "Everyday",
+      "Office",
+      "Party"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/qtmtay9ppd7f8bfpsebs.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/qtmtay9ppd7f8bfpsebs.png",
+      "{{API_ORIGIN}}/api/v1/media/products/c6f73ef709af8030a67360f1824b195c.png",
+      "{{API_ORIGIN}}/api/v1/media/products/e1d8b2402c57d01b318a90d71c61e84a.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/qtmtay9ppd7f8bfpsebs",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/qtmtay9ppd7f8bfpsebs",
+      null,
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "65"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.5"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1780572138653"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393946322"
+      }
+    }
+  },
+  {
+    "_id": "72a78387-6f12-4fae-b744-ee3541a31fc4",
+    "name": "Aurelia Bloom Pendant",
+    "price": {
+      "$numberInt": "449"
+    },
+    "mrp": null,
+    "description": "Delicate, graceful, and timeless — the Aurelia Bloom Pendant is crafted to capture the beauty of blooming elegance. Designed with sparkling marquise-cut stones arranged in a floral silhouette, this pendant radiates sophistication with every shine. The luxurious gold finish adds a touch of warmth and femininity, making it the perfect accessory for both everyday elegance and special occasions.\n\nWhether styled solo or layered, this pendant is made for women who carry confidence effortlessly.\n\n✨ Premium Gold Finish\n✨ Floral-Inspired Luxury Design\n✨ High-Quality Sparkling Stones\n✨ Lightweight & Elegant for Daily Wear\n✨ Perfect for Gifting & Special Occasions",
+    "category": "Necklace",
+    "metal": "Stainless steel",
+    "colour": "Gold",
+    "styles": [
+      "Party",
+      "Office",
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "4"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/fbr84r8sjvb8izyi1tzh.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/fbr84r8sjvb8izyi1tzh.png",
+      "{{API_ORIGIN}}/api/v1/media/products/81257ae7057ec6aa39ba4d0f841fe702.webp",
+      "{{API_ORIGIN}}/api/v1/media/products/a70451b18dc47fe87a56b54d48a415e2.webp"
+    ],
+    "cloudinary_public_id": "velisqa/products/fbr84r8sjvb8izyi1tzh",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/fbr84r8sjvb8izyi1tzh",
+      null,
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "135"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.6"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779430729512"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393948941"
+      }
+    }
+  },
+  {
+    "_id": "794f7eec-8fa2-4ff9-aa2f-bcdecf2dfd51",
+    "name": "Velisqa Gold Heart Necklace for Women – Minimalist Open Heart Pendant Chain Necklace",
+    "price": {
+      "$numberInt": "399"
+    },
+    "mrp": {
+      "$numberInt": "799"
+    },
+    "description": "Keep it timeless with this elegant open-heart necklace. The polished heart-shaped pendant features a graceful overlapping detail at its centre, creating a refined symbol of love and connection. A delicate chain completes the minimalist look.\n\nHighlights:\n\n* Classic open-heart pendant\n* Polished gold-tone finish\n* Delicate fine chain\n* Minimal and versatile design\n* Ideal for everyday wear or gifting",
+    "category": "Necklace",
+    "metal": "Stainless steel",
+    "colour": "Gold",
+    "styles": [
+      "Everyday",
+      "Party",
+      "Office",
+      "Wedding",
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787924099/velisqa/products/a4jzbfirvfgjnkx3yv6o.png",
+    "hover_image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787924101/velisqa/products/q9yg1augbwt3vspjn97t.png",
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787924099/velisqa/products/a4jzbfirvfgjnkx3yv6o.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787924101/velisqa/products/q9yg1augbwt3vspjn97t.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787924102/velisqa/products/kaglghgeb2uiimc8f6xs.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787924103/velisqa/products/d1hozjpshe3ssghtyrj8.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/a4jzbfirvfgjnkx3yv6o",
+    "hover_cloudinary_public_id": "velisqa/products/q9yg1augbwt3vspjn97t",
+    "gallery_cloudinary_ids": [
+      "velisqa/products/a4jzbfirvfgjnkx3yv6o",
+      "velisqa/products/q9yg1augbwt3vspjn97t",
+      "velisqa/products/kaglghgeb2uiimc8f6xs",
+      "velisqa/products/d1hozjpshe3ssghtyrj8"
+    ],
+    "mock_review_count": {
+      "$numberInt": "345"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.7"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1787924104012"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1787924104012"
+      }
+    }
+  },
+  {
+    "_id": "79b14cb9-6bbf-46de-9fbb-0ef95aa6e63a",
+    "name": "Minimal Arc Bracelet",
+    "price": {
+      "$numberInt": "549"
+    },
+    "mrp": null,
+    "description": "Open arc bracelet with a brushed outer face and polished inner curve. Easy to slide on; ideal for stacking with cuffs. Suited for college events, brunches, and casual Fridays.",
+    "category": "Bracelet",
+    "metal": null,
+    "colour": null,
+    "styles": [],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "5"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "{{API_ORIGIN}}/api/v1/media/products/858240e718fd5803fe425413d46a6746.webp",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "{{API_ORIGIN}}/api/v1/media/products/858240e718fd5803fe425413d46a6746.webp"
+    ],
+    "cloudinary_public_id": null,
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "135"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.6"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779341994562"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393949611"
+      }
+    }
+  },
+  {
+    "_id": "7adc17a6-49fd-4820-9981-bd78c1e13650",
+    "name": "Regalia Collar Necklace",
+    "price": {
+      "$numberInt": "519"
+    },
+    "mrp": null,
+    "description": "Broad collar-style necklace that frames the neckline like bespoke bridal jewellery. Rich detailing with a balanced weight distribution so it sits flat on the skin. Perfect for sarees, lehengas, and structured blazers.",
+    "category": "Necklace",
+    "metal": "Stainless steel",
+    "colour": "Gold",
+    "styles": [
+      "Office",
+      "Everyday",
+      "Party",
+      "Wedding",
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "5"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/gax2eqmdlnivvfuqz5ti.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/gax2eqmdlnivvfuqz5ti.png",
+      "{{API_ORIGIN}}/api/v1/media/products/1cedac2854c4b29a2d41046c401b7486.webp"
+    ],
+    "cloudinary_public_id": "velisqa/products/gax2eqmdlnivvfuqz5ti",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/gax2eqmdlnivvfuqz5ti",
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "42"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.7"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779341989634"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393950697"
+      }
+    }
+  },
+  {
+    "_id": "7be10c79-b1db-4e2a-a14b-9890dd55d9f3",
+    "name": "Celestia Trinity Ring",
+    "price": {
+      "$numberInt": "389"
+    },
+    "mrp": null,
+    "description": "Add a touch of elegance to your everyday style with the Ruby Radiance Ring. Featuring a deep ruby-red centerpiece accented with sparkling stones on a premium gold-tone band, this ring is designed to stand out while remaining effortlessly classy. Perfect for daily wear, parties, gifting, and special occasions.\n\n✨ Premium Finish\n✨ Adjustable Size – Fits Most Finger Sizes\n✨ Lightweight & Comfortable\n✨ Elegant Ruby-Inspired Stone\n✨ Perfect Gift for Her\n✨ Tarnish-Resistant Finish",
+    "category": "Rings",
+    "metal": "Stainless steel",
+    "colour": "Gold",
+    "styles": [
+      "Party",
+      "Wedding",
+      "Everyday",
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "3"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/thqjb3s9qli2pu2gcdpb.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/thqjb3s9qli2pu2gcdpb.png",
+      "{{API_ORIGIN}}/api/v1/media/products/5b9f136c1a6fdd66ab432a05f9c0540e.png",
+      "{{API_ORIGIN}}/api/v1/media/products/21c0d6fd6a918250a7dabd9737582572.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/thqjb3s9qli2pu2gcdpb",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/thqjb3s9qli2pu2gcdpb",
+      null,
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "65"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.5"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1781116768312"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393953252"
+      }
+    }
+  },
+  {
+    "_id": "81eeaf34-3137-4449-956c-b14b5c3dddf4",
+    "name": "Velisqa Silver Leaf Earrings for Women – Textured Leaf-Shaped Stud Earrings",
+    "price": {
+      "$numberInt": "459"
+    },
+    "mrp": {
+      "$numberInt": "768"
+    },
+    "description": "Inspired by the natural beauty of leaves, these silver-tone stud earrings feature an elongated leaf silhouette with finely textured detailing. Their sleek organic shape adds a subtle statement to both everyday and occasion looks.\n\nHighlights:\n\n* Elegant leaf-inspired design\n* Detailed textured surface\n* Silver-tone finish\n* Stud-style fastening\n* Sophisticated minimalist aesthetic",
+    "category": "Earrings",
+    "metal": "Stainless steel",
+    "colour": "Silver",
+    "styles": [
+      "Minimal",
+      "Everyday",
+      "Office",
+      "Party",
+      "Wedding"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "4"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787924260/velisqa/products/ksgecj8gymxtthpxc2q4.png",
+    "hover_image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787924262/velisqa/products/q86a7oeitnblap7j8m9y.png",
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787924260/velisqa/products/ksgecj8gymxtthpxc2q4.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787924262/velisqa/products/q86a7oeitnblap7j8m9y.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787924264/velisqa/products/e8itkflwgvviwmp2m7yp.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/ksgecj8gymxtthpxc2q4",
+    "hover_cloudinary_public_id": "velisqa/products/q86a7oeitnblap7j8m9y",
+    "gallery_cloudinary_ids": [
+      "velisqa/products/ksgecj8gymxtthpxc2q4",
+      "velisqa/products/q86a7oeitnblap7j8m9y",
+      "velisqa/products/e8itkflwgvviwmp2m7yp"
+    ],
+    "mock_review_count": {
+      "$numberInt": "44"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.6"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1787924265709"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1787924265709"
+      }
+    }
+  },
+  {
+    "_id": "8bf79c81-62cf-4527-b0f1-c92434b2bbd9",
+    "name": "Velisqa Gold Butterfly Necklace for Women – Minimalist Butterfly Pendant Chain Necklace",
+    "price": {
+      "$numberInt": "399"
+    },
+    "mrp": {
+      "$numberInt": "799"
+    },
+    "description": "A delicate expression of transformation and elegance, this butterfly-inspired necklace features an open-frame pendant with gracefully curved detailing. Paired with a fine gold-tone chain, it creates a subtle yet distinctive look for everyday and occasion wear.\n\nHighlights:\n\n* Elegant butterfly-inspired pendant\n* Minimal open-frame design\n* Fine gold-tone chain\n* Lightweight and versatile\n* Perfect for layering or wearing solo",
+    "category": "Necklace",
+    "metal": "Stainless steel",
+    "colour": "Gold",
+    "styles": [
+      "Minimal",
+      "Wedding",
+      "Party",
+      "Office",
+      "Everyday"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787923956/velisqa/products/fadi6eysoeonwdhxn4gw.png",
+    "hover_image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787923963/velisqa/products/teohgqmy1orhujvkcagp.png",
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787923956/velisqa/products/fadi6eysoeonwdhxn4gw.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787923958/velisqa/products/imi8jf6kj6qwzkc42fsj.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787923961/velisqa/products/p05oqkxgdfw8dikigfs0.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787923963/velisqa/products/teohgqmy1orhujvkcagp.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/fadi6eysoeonwdhxn4gw",
+    "hover_cloudinary_public_id": "velisqa/products/teohgqmy1orhujvkcagp",
+    "gallery_cloudinary_ids": [
+      "velisqa/products/fadi6eysoeonwdhxn4gw",
+      "velisqa/products/imi8jf6kj6qwzkc42fsj",
+      "velisqa/products/p05oqkxgdfw8dikigfs0",
+      "velisqa/products/teohgqmy1orhujvkcagp"
+    ],
+    "mock_review_count": {
+      "$numberInt": "234"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.8"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1787923964133"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1787923964133"
+      }
+    }
+  },
+  {
+    "_id": "8c365987-497b-4112-a119-7e872d2f82c9",
+    "name": "Aurora Tennis Bracelet",
+    "price": {
+      "$numberInt": "590"
+    },
+    "mrp": null,
+    "description": "Crafted with precision-cut AAA-grade crystals and a polished silver finish, the Aurora Tennis Bracelet combines delicate femininity with luxury detailing. The adjustable chain ensures a comfortable fit, while the minimalist design makes it perfect for stacking or wearing solo.\n\nProduct Details\n\n* Product Type: Tennis Bracelet\n* Stone Shape: Emerald Cut / Rectangular Cut\n* Material: Premium stainless steel alloy\n* Stone: AAA-grade cubic zirconia\n* Finish: High-polish silver plating\n* Color: Silver & Crystal White\n* Closure Type: Lobster Clasp\n* Adjustable Chain: Yes\n* Style: Minimal Luxury / Elegant\n* Skin Friendly: Yes\n* Tarnish Resistant: Yes\n* Lightweight & Comfortable: Made for daily wear",
+    "category": "Bracelet",
+    "metal": "Stainless steel",
+    "colour": "Silver",
+    "styles": [
+      "Party",
+      "Wedding",
+      "Minimal",
+      "Everyday"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1786691364/velisqa/products/qciaax94eobisslcwyhv.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1786691364/velisqa/products/qciaax94eobisslcwyhv.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/qciaax94eobisslcwyhv",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/qciaax94eobisslcwyhv"
+    ],
+    "mock_review_count": {
+      "$numberInt": "42"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.7"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779564256038"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1779564256038"
+      }
+    }
+  },
+  {
+    "_id": "8d02baac-3219-4040-a052-c999ffc6ec1c",
+    "name": "Velisqa Pearl & Crystal Hoop Stud Earrings for Women | Elegant Gold-Tone Pearl Earrings | Minimal Party & Everyday Jewelry",
+    "price": {
+      "$numberInt": "499"
+    },
+    "mrp": {
+      "$numberInt": "799"
+    },
+    "description": "Add a refined touch to your look with the Velisqa Pearl & Crystal Hoop Stud Earrings. Designed with lustrous white pearl accents, sparkling crystal details, and a delicate gold-tone circular frame, these earrings combine classic elegance with a modern silhouette.\n\nPerfect for elevating everyday outfits, office looks, festive wear, parties, and special occasions.\n\nFeatures:\n\n* Elegant circular hoop-inspired design\n* White pearl detailing\n* Sparkling crystal accents\n* Gold-tone finish\n* Lightweight and easy to style\n* Suitable for everyday and occasion wear\n* Ideal gift for women and girls",
+    "category": "Earrings",
+    "metal": "Gold plated",
+    "colour": "Gold",
+    "styles": [
+      "Everyday",
+      "Office",
+      "Party",
+      "Wedding",
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "2"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787741810/velisqa/products/hyliplwbqokhyoy0rwly.png",
+    "hover_image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787741825/velisqa/products/ynsuphmdqy6g1jgmovxl.png",
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787741810/velisqa/products/hyliplwbqokhyoy0rwly.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787741825/velisqa/products/ynsuphmdqy6g1jgmovxl.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787741837/velisqa/products/j8y9uydgi3fjgfpk5ooz.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/hyliplwbqokhyoy0rwly",
+    "hover_cloudinary_public_id": "velisqa/products/ynsuphmdqy6g1jgmovxl",
+    "gallery_cloudinary_ids": [
+      "velisqa/products/hyliplwbqokhyoy0rwly",
+      "velisqa/products/ynsuphmdqy6g1jgmovxl",
+      "velisqa/products/j8y9uydgi3fjgfpk5ooz"
+    ],
+    "mock_review_count": {
+      "$numberInt": "200"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.6"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1787741838181"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1787741838181"
+      }
+    }
+  },
+  {
+    "_id": "8dc2d5b2-0e57-442a-9131-8dd31a16763f",
+    "name": "Pink Crystal Pendant Necklace",
+    "price": {
+      "$numberInt": "650"
+    },
+    "mrp": {
+      "$numberInt": "1050"
+    },
+    "description": "A Soft Touch of Pink\nThe faceted pink centerpiece catches the light beautifully, creating a delicate sparkle that stands out without looking overpowering.",
+    "category": "Necklace",
+    "metal": "Stainless steel",
+    "colour": "Silver",
+    "styles": [
+      "Party",
+      "Wedding",
+      "Statement",
+      "Traditional"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1786784077/velisqa/products/y3f33kkscfpbstzkwstk.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1786784077/velisqa/products/y3f33kkscfpbstzkwstk.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1786784078/velisqa/products/e7qdfmuhzgdr08ufqcxx.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1786784081/velisqa/products/pf7ur52z0lspsrje3wnh.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/y3f33kkscfpbstzkwstk",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/y3f33kkscfpbstzkwstk",
+      "velisqa/products/e7qdfmuhzgdr08ufqcxx",
+      "velisqa/products/pf7ur52z0lspsrje3wnh"
+    ],
+    "mock_review_count": {
+      "$numberInt": "78"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.8"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1786784081980"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1786784081980"
+      }
+    }
+  },
+  {
+    "_id": "8ee57692-37c4-4c84-b44d-eb99048b44f2",
+    "name": "Velisqa Halo Studs",
+    "price": {
+      "$numberInt": "299"
+    },
+    "mrp": null,
+    "description": "Compact halo studs that add light around the face without pulling the earlobe. Everyday wear with cotton and linen; also works as a second piercing stack.",
+    "category": "Earrings",
+    "metal": null,
+    "colour": null,
+    "styles": [],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "8"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "{{API_ORIGIN}}/api/v1/media/products/c92d1a9a80b20044694ac1d991604d24.webp",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "{{API_ORIGIN}}/api/v1/media/products/c92d1a9a80b20044694ac1d991604d24.webp"
+    ],
+    "cloudinary_public_id": null,
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "65"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.5"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779341999796"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393953975"
+      }
+    }
+  },
+  {
+    "_id": "916193da-7834-48e0-92c6-ea2af7d81664",
+    "name": "Velisqa Golden Bow Pendant Necklace for Women | Elegant Double Bow Drop Necklace | Minimal Fashion Jewelry for Girls",
+    "price": {
+      "$numberInt": "499"
+    },
+    "mrp": {
+      "$numberInt": "799"
+    },
+    "description": "Add a graceful finishing touch to your look with the Velisqa Golden Bow Pendant Necklace. Featuring a delicate gold-tone chain and a stylish double-bow drop design, this necklace brings a feminine and elegant feel to everyday outfits.\n\nThe layered bow detail gives the pendant a subtle statement look while keeping it easy to style. Perfect with dresses, tops, office wear, festive outfits, or as an elegant everyday accessory.\n\nFeatures:\n\n* Elegant double-bow pendant design\n* Gold-tone finish\n* Delicate, lightweight chain\n* Feminine and stylish aesthetic\n* Easy to pair with casual and occasion wear\n* Suitable for everyday styling\n* Ideal gift for women and girls",
+    "category": "Necklace",
+    "metal": "Gold plated",
+    "colour": "Gold",
+    "styles": [
+      "Everyday",
+      "Office",
+      "Party",
+      "Wedding",
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "2"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/t4ufdzitwpxttinjij3o.png",
+    "hover_image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787740523/velisqa/products/tmf7wogemaahjlo7zdc2.png",
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/t4ufdzitwpxttinjij3o.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/tfvmf2uertnj8fa1bh24.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/tmf7wogemaahjlo7zdc2.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/mz2rdsfbdwbbu67v946z.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/tmf7wogemaahjlo7zdc2.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787740523/velisqa/products/tmf7wogemaahjlo7zdc2.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/t4ufdzitwpxttinjij3o",
+    "hover_cloudinary_public_id": "velisqa/products/tmf7wogemaahjlo7zdc2",
+    "gallery_cloudinary_ids": [
+      "velisqa/products/t4ufdzitwpxttinjij3o",
+      "velisqa/products/tfvmf2uertnj8fa1bh24",
+      "velisqa/products/tmf7wogemaahjlo7zdc2",
+      "velisqa/products/mz2rdsfbdwbbu67v946z",
+      "velisqa/products/tmf7wogemaahjlo7zdc2",
+      "velisqa/products/tmf7wogemaahjlo7zdc2"
+    ],
+    "mock_review_count": {
+      "$numberInt": "252"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.5"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1787740524790"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1787740524790"
+      }
+    }
+  },
+  {
+    "_id": "92eda168-7429-4ef3-aa45-1977014224bb",
+    "name": "Sapphire Noir Necklace",
+    "price": {
+      "$numberInt": "599"
+    },
+    "mrp": null,
+    "description": "Crafted for women who love statement elegance without excessive shine, the Sapphire Noir Necklace blends luxury detailing with a clean, modern silhouette. The deep midnight-blue stones paired with polished silver accents create a high-end look perfect for evening wear, special occasions, or elevated everyday styling.\n\nProduct Details\n\n* Product Type: Pendant Necklace\n* Pendant Design: Dual Stone Drop Pendant\n* Stone Shape: Princess Cut & Round Cut\n* Chain Type: Premium Snake Chain\n* Material: High-quality stainless steel alloy\n* Stone: AAA-grade sapphire-blue cubic zirconia\n* Finish: Silver-plated mirror polish\n* Color: Silver & Royal Midnight Blue\n* Closure Type: Lobster Clasp\n* Adjustable Chain: Yes\n* Skin Friendly: Yes\n* Tarnish Resistant: Yes\n* Lightweight & Comfortable: Made for long wear",
+    "category": "Necklace",
+    "metal": "Stainless steel",
+    "colour": "Silver",
+    "styles": [
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/trtv3j38ccsvswzju4ez.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/trtv3j38ccsvswzju4ez.png",
+      "{{API_ORIGIN}}/api/v1/media/products/a279da251d7b8fef670d37aae677c02e.png",
+      "{{API_ORIGIN}}/api/v1/media/products/50ffe6d2287dc15b97cbe20f876216e0.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/trtv3j38ccsvswzju4ez",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/trtv3j38ccsvswzju4ez",
+      null,
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "15"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.2"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779563433820"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393958336"
+      }
+    }
+  },
+  {
+    "_id": "9347d651-7ac7-4623-99c1-ea3b6ebe06d4",
+    "name": "Pink stone pendant",
+    "price": {
+      "$numberInt": "549"
+    },
+    "mrp": {
+      "$numberInt": "899"
+    },
+    "description": "Statement pendant on a fine chain with crystal accents that catch light beautifully in photos and live events. A go-to piece for festive dinners and mehendi functions. Adjustable length friendly for different necklines.",
+    "category": "Necklace",
+    "metal": "Stainless steel",
+    "colour": "Silver",
+    "styles": [
+      "Office",
+      "Party",
+      "Minimal",
+      "Statement",
+      "Everyday"
+    ],
+    "search_keywords": [
+      "Pink stone pendant"
+    ],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/xo297yg1yfwmdwqpithk.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/xo297yg1yfwmdwqpithk.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/ttuf0yd2n5oyjjkwz2cd.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/aw8n9c6gntgbwzinds1f.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/xo297yg1yfwmdwqpithk",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/xo297yg1yfwmdwqpithk",
+      "velisqa/products/ttuf0yd2n5oyjjkwz2cd",
+      "velisqa/products/aw8n9c6gntgbwzinds1f"
+    ],
+    "mock_review_count": {
+      "$numberInt": "0"
+    },
+    "mock_rating": null,
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1786783366199"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1786783366199"
+      }
+    }
+  },
+  {
+    "_id": "94d882a1-bd96-4bb5-98c7-a84b3194fe0b",
+    "name": "Velisqa Gold Pearl Knot Stud Earrings for Women | Elegant Woven Round Earrings | Minimal Everyday Fashion Jewelry",
+    "price": {
+      "$numberInt": "499"
+    },
+    "mrp": {
+      "$numberInt": "999"
+    },
+    "description": "Add a refined touch to your jewellery collection with the Velisqa Gold Pearl Knot Stud Earrings. Featuring an intricate woven gold-tone design surrounding a lustrous pearl centre, these earrings combine classic elegance with a modern minimal aesthetic.\n\nThe compact stud style makes them easy to wear with everyday outfits, office looks, dresses, and festive ensembles. A versatile accessory that also makes an elegant gifting choice.\n\nFeatures:\n\n* Elegant woven knot-inspired design\n* Lustrous pearl centre\n* Gold-tone finish\n* Classic round stud silhouette\n* Minimal yet sophisticated look\n* Suitable for everyday, office and occasion wear\n* Ideal gift for women and girls",
+    "category": "Earrings",
+    "metal": "Gold plated",
+    "colour": "Gold",
+    "styles": [
+      "Office",
+      "Everyday",
+      "Party",
+      "Wedding",
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "5"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787740813/velisqa/products/f9k91rj627iob3ovk1fd.png",
+    "hover_image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787740815/velisqa/products/fy3ypu1vrovhp0cfs6do.png",
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787740813/velisqa/products/f9k91rj627iob3ovk1fd.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787740815/velisqa/products/fy3ypu1vrovhp0cfs6do.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787740817/velisqa/products/ps4yslnywak9xgt3bhhp.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787740821/velisqa/products/lodbmnqvjoq6aqcgmhlo.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787740829/velisqa/products/w8wlfnijob1smknmpfkj.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/f9k91rj627iob3ovk1fd",
+    "hover_cloudinary_public_id": "velisqa/products/fy3ypu1vrovhp0cfs6do",
+    "gallery_cloudinary_ids": [
+      "velisqa/products/f9k91rj627iob3ovk1fd",
+      "velisqa/products/fy3ypu1vrovhp0cfs6do",
+      "velisqa/products/ps4yslnywak9xgt3bhhp",
+      "velisqa/products/lodbmnqvjoq6aqcgmhlo",
+      "velisqa/products/w8wlfnijob1smknmpfkj"
+    ],
+    "mock_review_count": {
+      "$numberInt": "90"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.9"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1787740830281"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1787740830281"
+      }
+    }
+  },
+  {
+    "_id": "9983ac6f-0c4b-4a34-b7e7-3263a92902c5",
+    "name": "Minimal Hoop Earrings",
+    "price": {
+      "$numberInt": "399"
+    },
+    "mrp": null,
+    "description": "Medium hoop with a polished edge and click-lock closure — wardrobe essential for work and weekends. Tarnish-resistant plating; avoid perfume direct contact.",
+    "category": "Earrings",
+    "metal": null,
+    "colour": null,
+    "styles": [],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "8"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "{{API_ORIGIN}}/api/v1/media/products/2bd8d97eaaf9f46fa22043cf34f8ce67.webp",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "{{API_ORIGIN}}/api/v1/media/products/2bd8d97eaaf9f46fa22043cf34f8ce67.webp"
+    ],
+    "cloudinary_public_id": null,
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "84"
+    },
+    "mock_rating": {
+      "$numberInt": "5"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779342003423"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393959076"
+      }
+    }
+  },
+  {
+    "_id": "a0187f38-b0da-4f9b-a611-0a6c5958c92b",
+    "name": "Emerald Grace Ring",
+    "price": {
+      "$numberInt": "599"
+    },
+    "mrp": null,
+    "description": "Elegant simplicity meets timeless charm. The Emerald Grace Ring features a brilliant emerald-green centerpiece set in a delicate geometric gold-tone band. Its minimalist design makes it perfect for everyday wear while adding a refined touch to any outfit.\n\nWhether you’re dressing up for an occasion or elevating your daily look, this ring offers effortless sophistication.\n\n✨ Premium Gold-Tone Finish\n✨ Emerald Green Center Stone\n✨ Lightweight & Comfortable\n✨ Elegant Minimal Design\n✨ Adjustable Fit\n✨ Perfect Gift for Her",
+    "category": "Rings",
+    "metal": "Stainless steel",
+    "colour": "Gold",
+    "styles": [
+      "Office",
+      "Party",
+      "Traditional",
+      "Contemporary"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": "bestseller",
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/r1np0rlbllb54jl0ajlk.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/r1np0rlbllb54jl0ajlk.png",
+      "{{API_ORIGIN}}/api/v1/media/products/db58139c0aa70239cb5b1c16cb947d91.png",
+      "{{API_ORIGIN}}/api/v1/media/products/3ad6aa6f6aad8f5919683ca85e256a40.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/r1np0rlbllb54jl0ajlk",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/r1np0rlbllb54jl0ajlk",
+      null,
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "28"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.9"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1781117119708"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393960848"
+      }
+    }
+  },
+  {
+    "_id": "a32d3316-8c39-4df0-bddd-9eb080967160",
+    "name": "Celestial Pearl Drops",
+    "price": {
+      "$numberInt": "369"
+    },
+    "mrp": null,
+    "description": "Pearl-drop earrings with a celestial top motif — bridal-friendly and photogenic under warm venue lighting. Store separately to avoid scratches on the pearl finish.",
+    "category": "Earrings",
+    "metal": null,
+    "colour": null,
+    "styles": [],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "6"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "{{API_ORIGIN}}/api/v1/media/products/798e8bec04f9d5b91bcd62a288b432d9.webp",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "{{API_ORIGIN}}/api/v1/media/products/798e8bec04f9d5b91bcd62a288b432d9.webp"
+    ],
+    "cloudinary_public_id": null,
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "110"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.8"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779342001305"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393961561"
+      }
+    }
+  },
+  {
+    "_id": "a6492698-d231-40c9-93c7-49a97d7abb4a",
+    "name": "Clovera Shine Necklace",
+    "price": {
+      "$numberInt": "549"
+    },
+    "mrp": null,
+    "description": "Crafted with precision-cut AAA crystals and a sleek silver finish, the Clovera Shine Necklace reflects light beautifully from every angle. The graceful clover-inspired pendant symbolizes beauty, luck, and positivity while maintaining a clean luxury aesthetic loved in modern jewelry trends.\n\nProduct Details\n\n* Product Type: Pendant Necklace\n* Pendant Design: Four-Petal Clover / Floral\n* Chain Type: Delicate Link Chain\n* Material: Premium stainless steel alloy\n* Stone: AAA-grade cubic zirconia\n* Finish: High-polish silver plating\n* Color: Silver & Crystal White\n* Closure Type: Lobster Clasp\n* Adjustable Chain: Yes\n* Style: Feminine Luxury / Minimal Elegant\n* Skin Friendly: Yes\n* Tarnish Resistant: Yes\n* Lightweight & Comfortable: Suitable for daily wear",
+    "category": "Necklace",
+    "metal": "Stainless steel",
+    "colour": "Silver",
+    "styles": [
+      "Everyday",
+      "Office",
+      "Minimal",
+      "Party"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/ualm1ica8ifilx56rh6p.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/ualm1ica8ifilx56rh6p.png",
+      "{{API_ORIGIN}}/api/v1/media/products/14596d9feb3922c32b32c54c3e175b57.png",
+      "{{API_ORIGIN}}/api/v1/media/products/e77e056e7d49617ebf918afd980d12c2.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/ualm1ica8ifilx56rh6p",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/ualm1ica8ifilx56rh6p",
+      null,
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "110"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.8"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779564736077"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393963520"
+      }
+    }
+  },
+  {
+    "_id": "a6f24a34-3afa-42b5-8adb-f5c4418275e7",
+    "name": "Velisqa Gold-Tone Bangle Bracelet for Women – Multi-Loop Twisted Design Statement Bracelet",
+    "price": {
+      "$numberInt": "599"
+    },
+    "mrp": {
+      "$numberInt": "1199"
+    },
+    "description": "Add a sophisticated layer to your jewellery collection with the Velisqa Gold-Tone Multi-Loop Bangle Bracelet. Designed with flowing overlapping bands and a distinctive twisted chain-detail accent, this statement bracelet combines contemporary styling with an elegant gold-tone finish. The sculptural design makes it a standout accessory for parties, festive occasions, dinners and special events, while its versatile look can also complement everyday outfits.",
+    "category": "Bangles",
+    "metal": "Stainless steel",
+    "colour": "Gold",
+    "styles": [
+      "Everyday",
+      "Office",
+      "Wedding",
+      "Statement"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "4"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/rytrgnv17pjep0lyzrnt.png",
+    "hover_image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/ddcmrnyvxhbyrt7pvrxg.png",
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/rytrgnv17pjep0lyzrnt.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/ddcmrnyvxhbyrt7pvrxg.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787925019/velisqa/products/rytrgnv17pjep0lyzrnt.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/rytrgnv17pjep0lyzrnt",
+    "hover_cloudinary_public_id": "velisqa/products/ddcmrnyvxhbyrt7pvrxg",
+    "gallery_cloudinary_ids": [
+      "velisqa/products/rytrgnv17pjep0lyzrnt",
+      "velisqa/products/ddcmrnyvxhbyrt7pvrxg",
+      "velisqa/products/rytrgnv17pjep0lyzrnt"
+    ],
+    "mock_review_count": {
+      "$numberInt": "88"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.8"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1787925019874"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792395216427"
+      }
+    }
+  },
+  {
+    "_id": "a8760ad2-fb01-48df-a707-0574ddc4d34a",
+    "name": "Velisqa Gold Heart Pendant Necklace for Women | Minimal Pearl Heart Necklace | Elegant Everyday Fashion Jewelry",
+    "price": {
+      "$numberInt": "499"
+    },
+    "mrp": {
+      "$numberInt": "899"
+    },
+    "description": "Add a delicate touch of elegance to your everyday look with the Velisqa Gold Heart Pendant Necklace. Featuring a polished gold-tone chain and a classic heart-shaped pendant with a pearly white centre, this necklace offers a timeless and feminine look.\n\nIts minimal design makes it easy to style with casual outfits, office wear, dresses, and festive looks. A simple yet thoughtful accessory for everyday wear or gifting.\n\nFeatures:\n\n* Elegant heart-shaped pendant design\n* Gold-tone finish\n* Pearly white heart centre\n* Minimal and feminine styling\n* Lightweight for comfortable everyday wear\n* Suitable for casual, office and occasion wear\n* Ideal gift for women and girls",
+    "category": "Necklace",
+    "metal": "Gold plated",
+    "colour": "Gold",
+    "styles": [
+      "Everyday",
+      "Office",
+      "Party",
+      "Wedding",
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "3"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787740000/velisqa/products/zivhoabmudfam2v8dc8z.png",
+    "hover_image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787740009/velisqa/products/n1rs8vg2m0dljn1qcsbo.png",
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787740000/velisqa/products/zivhoabmudfam2v8dc8z.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787740002/velisqa/products/g1vgsgsyyttnp1powkgc.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787740007/velisqa/products/gni8i8tamh3gkyewce8h.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787740009/velisqa/products/n1rs8vg2m0dljn1qcsbo.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/zivhoabmudfam2v8dc8z",
+    "hover_cloudinary_public_id": "velisqa/products/n1rs8vg2m0dljn1qcsbo",
+    "gallery_cloudinary_ids": [
+      "velisqa/products/zivhoabmudfam2v8dc8z",
+      "velisqa/products/g1vgsgsyyttnp1powkgc",
+      "velisqa/products/gni8i8tamh3gkyewce8h",
+      "velisqa/products/n1rs8vg2m0dljn1qcsbo"
+    ],
+    "mock_review_count": {
+      "$numberInt": "103"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.7"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1787740010079"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1787740010079"
+      }
+    }
+  },
+  {
+    "_id": "aa3c48fd-63c7-4987-8b3b-491524ede482",
+    "name": "Velisqa Astra Pendant",
+    "price": {
+      "$numberInt": "454"
+    },
+    "mrp": null,
+    "description": "Product Details\n\n* Product Type: Pendant Necklace\n* Pendant Shape: Princess Cut / Square Cut\n* Chain Type: Snake Chain\n* Material: High-quality stainless steel alloy\n* Stone: Premium AAA cubic zirconia\n* Finish: Silver-plated mirror polish\n* Color: Silver & Crystal White\n* Style: Minimal Luxury / Elegant\n* Closure Type: Lobster Clasp\n* Skin Friendly: Yes\n* Tarnish Resistant: Yes\n* Lightweight & Comfortable: Designed for daily wear",
+    "category": "Necklace",
+    "metal": "Stainless steel",
+    "colour": "Silver",
+    "styles": [
+      "Everyday",
+      "Office",
+      "Party",
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/lrizsq8mqmqjmb3zbgc0.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/lrizsq8mqmqjmb3zbgc0.png",
+      "{{API_ORIGIN}}/api/v1/media/products/83b74de862e6cd46e59dff43a1cdad4a.png",
+      "{{API_ORIGIN}}/api/v1/media/products/5459bcc1c797b2e150a358d181c4df42.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/lrizsq8mqmqjmb3zbgc0",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/lrizsq8mqmqjmb3zbgc0",
+      null,
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "42"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.7"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779561921915"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393967199"
+      }
+    }
+  },
+  {
+    "_id": "aa9b3dd9-017b-4066-aa87-5805cb1d45f5",
+    "name": "Amora Heart Bracelet",
+    "price": {
+      "$numberInt": "569"
+    },
+    "mrp": null,
+    "description": "Crafted with a sleek silver-tone finish and refined detailing, the Amora Heart Bracelet symbolizes love, softness, and timeless beauty. The adjustable chain ensures a comfortable fit, while the heart charm adds a delicate romantic touch inspired by modern minimalist jewelry trends.\n\nProduct Details\n\n* Product Type: Chain Bracelet\n* Design: Minimal Heart Charm\n* Material: Premium stainless steel alloy\n* Finish: High-polish silver plating\n* Color: Silver\n* Chain Type: Delicate Link Chain\n* Closure Type: Lobster Clasp\n* Adjustable Chain: Yes\n* Style: Minimal Luxury / Romantic Elegant\n* Skin Friendly: Yes\n* Tarnish Resistant: Yes\n* Lightweight & Comfortable: Perfect for daily wear",
+    "category": "Bracelet",
+    "metal": "Stainless steel",
+    "colour": "Silver",
+    "styles": [
+      "Minimal",
+      "Party",
+      "Everyday",
+      "Office"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/gn1suv7dw4onv1hkxycq.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/gn1suv7dw4onv1hkxycq.png",
+      "{{API_ORIGIN}}/api/v1/media/products/b3066dda2297e2789060ed59657718f8.png",
+      "{{API_ORIGIN}}/api/v1/media/products/3b03d2d7f39b2ff3950e0fbabb5607b0.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/gn1suv7dw4onv1hkxycq",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/gn1suv7dw4onv1hkxycq",
+      null,
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "84"
+    },
+    "mock_rating": {
+      "$numberInt": "5"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779564589667"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393970643"
+      }
+    }
+  },
+  {
+    "_id": "ad2b6c6d-d2d3-452b-b2a0-49456e7bfb4f",
+    "name": "Velisqa Gold-Tone Stud Earrings for Women – Sculpted Floral Statement Earrings",
+    "price": {
+      "$numberInt": "449"
+    },
+    "mrp": {
+      "$numberInt": "899"
+    },
+    "description": "Add a modern touch to your jewellery collection with Velisqa Gold-Tone Stud Earrings for Women. Designed with a sculpted floral-inspired silhouette and a smooth polished finish, these statement earrings create an elegant yet contemporary look. The bold rounded design makes them easy to style with both ethnic and western outfits, while their versatile appearance works beautifully for everyday wear, parties, dinners and special occasions. A stylish jewellery piece for women who love minimal yet distinctive accessories.",
+    "category": "Earrings",
+    "metal": "Stainless steel",
+    "colour": "Gold",
+    "styles": [
+      "Everyday",
+      "Office",
+      "Party",
+      "Minimal",
+      "Statement",
+      "Wedding"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787924519/velisqa/products/is617xzxluorxp1eynb3.png",
+    "hover_image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787924523/velisqa/products/u5pildzq7gmbubtq8ni5.png",
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787924519/velisqa/products/is617xzxluorxp1eynb3.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787924523/velisqa/products/u5pildzq7gmbubtq8ni5.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787924526/velisqa/products/zdfrjwcatpu0vznckxnx.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/is617xzxluorxp1eynb3",
+    "hover_cloudinary_public_id": "velisqa/products/u5pildzq7gmbubtq8ni5",
+    "gallery_cloudinary_ids": [
+      "velisqa/products/is617xzxluorxp1eynb3",
+      "velisqa/products/u5pildzq7gmbubtq8ni5",
+      "velisqa/products/zdfrjwcatpu0vznckxnx"
+    ],
+    "mock_review_count": {
+      "$numberInt": "98"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.6"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1787924527686"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1787924527686"
+      }
+    }
+  },
+  {
+    "_id": "ae5d2461-9411-4a11-8155-cc25bbdfc933",
+    "name": "Celeste Pendant Necklace",
+    "price": {
+      "$numberInt": "499"
+    },
+    "mrp": null,
+    "description": "Statement pendant on a fine chain with crystal accents that catch light beautifully in photos and live events. A go-to piece for festive dinners and mehendi functions. Adjustable length friendly for different necklines.",
+    "category": "Necklace",
+    "metal": "Stainless steel",
+    "colour": "Silver",
+    "styles": [
+      "Minimal",
+      "Party",
+      "Everyday",
+      "Office"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "5"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/nw02ofhornyx2d2unkgp.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/nw02ofhornyx2d2unkgp.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1786783408/velisqa/products/kolssgppezohsv5nhlpe.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1786783409/velisqa/products/mmke9vxqm09xfiblbqnr.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/nw02ofhornyx2d2unkgp",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/nw02ofhornyx2d2unkgp",
+      "velisqa/products/kolssgppezohsv5nhlpe",
+      "velisqa/products/mmke9vxqm09xfiblbqnr"
+    ],
+    "mock_review_count": {
+      "$numberInt": "84"
+    },
+    "mock_rating": {
+      "$numberInt": "5"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779341989121"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1779341989121"
+      }
+    }
+  },
+  {
+    "_id": "aefff4c4-d09a-4fdc-aded-72f482a1b65f",
+    "name": "Celestia Trinity Ring",
+    "price": {
+      "$numberInt": "442"
+    },
+    "mrp": null,
+    "description": "Crafted with a sleek silver-tone finish and high-clarity stones, the Celestia Trinity Ring reflects light beautifully from every angle. Its delicate yet premium design gives a high-end diamond-inspired aesthetic while remaining lightweight and comfortable for daily wear.\n\nProduct Details\n\n* Product Type: Statement Ring\n* Design: Three-Stone Ring\n* Center Stone Shape: Princess Cut\n* Side Stone Shape: Pear Cut\n* Material: Premium stainless steel alloy\n* Stone: AAA-grade cubic zirconia\n* Finish: High-polish silver plating\n* Color: Silver & Crystal White\n* Style: Elegant / Minimal Luxury\n* Skin Friendly: Yes\n* Tarnish Resistant: Yes\n* Lightweight & Comfortable: Suitable for daily wear",
+    "category": "Rings",
+    "metal": "Stainless steel",
+    "colour": "Silver",
+    "styles": [
+      "Party",
+      "Office",
+      "Minimal",
+      "Wedding"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/wmufvv9scdyjmqw0rb1t.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/wmufvv9scdyjmqw0rb1t.png",
+      "{{API_ORIGIN}}/api/v1/media/products/93e13f37956253e32f323a9c74e4b514.png",
+      "{{API_ORIGIN}}/api/v1/media/products/1fbfca10064592e35ff96fde8ad817c3.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/wmufvv9scdyjmqw0rb1t",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/wmufvv9scdyjmqw0rb1t",
+      null,
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "65"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.5"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779563686489"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393973356"
+      }
+    }
+  },
+  {
+    "_id": "b0911b14-8340-45cd-bfb4-63562b9f6043",
+    "name": "Imperial Cocktail Ring",
+    "price": {
+      "$numberInt": "699"
+    },
+    "mrp": null,
+    "description": "Large-format cocktail ring with multi-stone layout and a raised setting for maximum presence. Limited stock — ideal for sangeet, reception, and editorial styling. Inspect with delivery partner on receipt.",
+    "category": "Rings",
+    "metal": "Stainless steel",
+    "colour": "Silver",
+    "styles": [
+      "Wedding",
+      "Party",
+      "Traditional",
+      "Statement"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "3"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/cfhavpe6li3mnggg3oyv.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/cfhavpe6li3mnggg3oyv.png",
+      "{{API_ORIGIN}}/api/v1/media/products/cbf918cf598c08e78f0a497f03dccebe.webp"
+    ],
+    "cloudinary_public_id": "velisqa/products/cfhavpe6li3mnggg3oyv",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/cfhavpe6li3mnggg3oyv",
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "15"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.2"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779341998528"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393975954"
+      }
+    }
+  },
+  {
+    "_id": "b1d9ed25-2789-4429-b196-182c9ecafa9b",
+    "name": "Obsidian Cuff Bracelet",
+    "price": {
+      "$numberInt": "449"
+    },
+    "mrp": null,
+    "description": "Sculpted cuff bracelet with a deep metallic sheen and clean edges — reads as fine jewellery on camera. Flexible fit for most wrist sizes; stack with watches or thin bangles. Wipe dry after wear to preserve finish.",
+    "category": "Bracelet",
+    "metal": null,
+    "colour": null,
+    "styles": [],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "5"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "{{API_ORIGIN}}/api/v1/media/products/f9a508256910df97bd4668e028be798c.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "{{API_ORIGIN}}/api/v1/media/products/f9a508256910df97bd4668e028be798c.png"
+    ],
+    "cloudinary_public_id": null,
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "42"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.7"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779341991163"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393977044"
+      }
+    }
+  },
+  {
+    "_id": "c6d45f0a-0c06-4220-9bd4-c68c9bf2c766",
+    "name": "Pearl Line Bracelet",
+    "price": {
+      "$numberInt": "549"
+    },
+    "mrp": null,
+    "description": "Elegant pearl-effect beads spaced along a fine chain — soft, feminine, and versatile for day to night. Complements pastel and ivory outfits. Store flat in the provided pouch to avoid kinks.",
+    "category": "Bracelet",
+    "metal": null,
+    "colour": null,
+    "styles": [],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "5"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "{{API_ORIGIN}}/api/v1/media/products/923c7b1570e76a80c5fe24d8353c6aa3.webp",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "{{API_ORIGIN}}/api/v1/media/products/923c7b1570e76a80c5fe24d8353c6aa3.webp"
+    ],
+    "cloudinary_public_id": null,
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "28"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.9"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779341993297"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393977697"
+      }
+    }
+  },
+  {
+    "_id": "c6f1176b-6aee-4d52-8cf8-ab057ac0d657",
+    "name": "Velisqa Golden Green Heart Lariat Necklace for Women | Adjustable Minimal Pendant Necklace | Elegant Everyday Fashion Jewelry",
+    "price": {
+      "$numberInt": "549"
+    },
+    "mrp": {
+      "$numberInt": "899"
+    },
+    "description": "Elevate your everyday style with the Velisqa Golden Green Heart Lariat Necklace, designed with a delicate gold-tone chain, an adjustable slider detail, and two faceted green heart-shaped charms. Its elegant drop silhouette adds a subtle statement to both casual and occasion outfits.\n\nThe minimal design makes it easy to pair with dresses, tops, ethnic wear, or office outfits. Lightweight and versatile, this necklace is also a thoughtful choice for birthdays, anniversaries, festive occasions, and gifting.\n\nFeatures:\n\n* Elegant gold-tone lariat necklace design\n* Faceted green heart-shaped charms\n* Adjustable slider for a flexible fit\n* Minimal and feminine aesthetic\n* Suitable for everyday wear and special occasions\n* Stylish gifting option for women and girls",
+    "category": "Necklace",
+    "metal": "Gold plated",
+    "colour": "Gold",
+    "styles": [
+      "Everyday",
+      "Office",
+      "Party",
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "3"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787739753/velisqa/products/luh1hoeytuwprlucoz7w.png",
+    "hover_image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787739770/velisqa/products/vuswncdoujb7z4ltbqmk.png",
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787739753/velisqa/products/luh1hoeytuwprlucoz7w.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787739755/velisqa/products/aeb5rn2zrayc0mgwefm4.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787739765/velisqa/products/mujcre98qb0kwixg339t.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787739770/velisqa/products/vuswncdoujb7z4ltbqmk.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/luh1hoeytuwprlucoz7w",
+    "hover_cloudinary_public_id": "velisqa/products/vuswncdoujb7z4ltbqmk",
+    "gallery_cloudinary_ids": [
+      "velisqa/products/luh1hoeytuwprlucoz7w",
+      "velisqa/products/aeb5rn2zrayc0mgwefm4",
+      "velisqa/products/mujcre98qb0kwixg339t",
+      "velisqa/products/vuswncdoujb7z4ltbqmk"
+    ],
+    "mock_review_count": {
+      "$numberInt": "20"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.2"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1787739772461"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1787739772461"
+      }
+    }
+  },
+  {
+    "_id": "cb2a0828-0eb7-4c41-97df-be5f4195ea9b",
+    "name": "Velisqa Gold Hoop Earrings for Women – Chunky Sculpted U-Shaped Statement Earrings",
+    "price": {
+      "$numberInt": "439"
+    },
+    "mrp": {
+      "$numberInt": "789"
+    },
+    "description": "Make a statement with these sleek sculpted hoop earrings, featuring a smooth, fluid silhouette and polished gold-tone finish. Their contemporary shape adds a sophisticated edge while remaining versatile enough for everyday styling and special occasions.\n\nHighlights:\n\n* Modern sculpted hoop design\n* High-shine gold-tone finish\n* Secure stud-and-back closure\n* Easy to pair with casual or occasion wear\n* Elegant everyday statement piece",
+    "category": "Earrings",
+    "metal": "Stainless steel",
+    "colour": "Gold",
+    "styles": [
+      "Everyday",
+      "Office",
+      "Party",
+      "Wedding",
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "4"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787923800/velisqa/products/jkjvfspqtokyvbiwgoi1.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787923800/velisqa/products/jkjvfspqtokyvbiwgoi1.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/jkjvfspqtokyvbiwgoi1",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/jkjvfspqtokyvbiwgoi1"
+    ],
+    "mock_review_count": {
+      "$numberInt": "78"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.8"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1787923801826"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1787923801826"
+      }
+    }
+  },
+  {
+    "_id": "cc0e642e-d49b-4a87-8491-fa9ec0fa862f",
+    "name": "Velisqa Blue Floral Bow Bracelet for Women | Elegant Gold-Tone Charm Bracelet | Stainless Steel Fashion Jewellery",
+    "price": {
+      "$numberInt": "549"
+    },
+    "mrp": {
+      "$numberInt": "1199"
+    },
+    "description": "Description:\nAdd a touch of feminine charm to your everyday look with this elegant Velisqa floral bracelet. Designed with delicate blue flower motifs, sparkling leaf details and a beautiful blue crystal bow centerpiece, this gold-tone bracelet creates a graceful and eye-catching finish.\n\nPerfect for everyday wear, parties, festive occasions, date nights and gifting, its lightweight design makes it comfortable to wear throughout the day. Pair it with ethnic or western outfits for an effortlessly stylish look.\n\nKey Features:\n\n* Elegant blue floral and bow-inspired design\n* Gold-tone finish for a sophisticated look\n* Lightweight and comfortable for everyday wear\n* Versatile styling for casual, festive and party outfits\n* Perfect gift for women and girls\n* Suitable for birthdays, anniversaries, Rakhi and special occasions",
+    "category": "Bracelet",
+    "metal": "Stainless steel",
+    "colour": "Silver",
+    "styles": [
+      "Office",
+      "Everyday",
+      "Party",
+      "Wedding"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "3"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/asbazgrwdtfra63awrgg.png",
+    "hover_image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787738476/velisqa/products/sfaunirn0y5ia4sopi9b.png",
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/asbazgrwdtfra63awrgg.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/sfaunirn0y5ia4sopi9b.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/by0aj3h1pvq6sm6egkid.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/l68kyucwr23vauaa20tb.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/sfaunirn0y5ia4sopi9b.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787738476/velisqa/products/sfaunirn0y5ia4sopi9b.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/asbazgrwdtfra63awrgg",
+    "hover_cloudinary_public_id": "velisqa/products/sfaunirn0y5ia4sopi9b",
+    "gallery_cloudinary_ids": [
+      "velisqa/products/asbazgrwdtfra63awrgg",
+      "velisqa/products/sfaunirn0y5ia4sopi9b",
+      "velisqa/products/by0aj3h1pvq6sm6egkid",
+      "velisqa/products/l68kyucwr23vauaa20tb",
+      "velisqa/products/sfaunirn0y5ia4sopi9b",
+      "velisqa/products/sfaunirn0y5ia4sopi9b"
+    ],
+    "mock_review_count": {
+      "$numberInt": "89"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.8"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1787738480505"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1787738480505"
+      }
+    }
+  },
+  {
+    "_id": "d4fe01bb-a9f2-408e-9d1b-5eb5a6a352f9",
+    "name": "Sunlit Jhumka Earrings",
+    "price": {
+      "$numberInt": "299"
+    },
+    "mrp": null,
+    "description": "Traditional jhumka form with a lighter build for long hours — festive sound and movement without excessive weight. Gold-tone suitable for yellow and maroon ethnic palettes.",
+    "category": "Earrings",
+    "metal": null,
+    "colour": null,
+    "styles": [],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "8"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "{{API_ORIGIN}}/api/v1/media/products/366b1ec56a89cf2ce3ffd35e5ea422f8.webp",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "{{API_ORIGIN}}/api/v1/media/products/366b1ec56a89cf2ce3ffd35e5ea422f8.webp"
+    ],
+    "cloudinary_public_id": null,
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "42"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.7"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779342000605"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393978338"
+      }
+    }
+  },
+  {
+    "_id": "e60fef1e-f188-4706-8e38-4f3dea444818",
+    "name": "Luna Stackable Ring",
+    "price": {
+      "$numberInt": "1599"
+    },
+    "mrp": null,
+    "description": "Slim stackable ring with a soft curve and light stone accents. Wear three together for a bridal-meets-modern look or solo for minimal office style. Hypoallergenic alloy base.",
+    "category": "Rings",
+    "metal": null,
+    "colour": null,
+    "styles": [],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "5"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "{{API_ORIGIN}}/api/v1/media/products/496491bd5a5ffbff3b927604298f9d6e.webp",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "{{API_ORIGIN}}/api/v1/media/products/496491bd5a5ffbff3b927604298f9d6e.webp"
+    ],
+    "cloudinary_public_id": null,
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "28"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.9"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779341995889"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393979073"
+      }
+    }
+  },
+  {
+    "_id": "e74e3b35-a98e-4c6a-ac57-70987c98bc68",
+    "name": "Velisqa Golden Bow Stud Earrings for Women | Elegant Ribbon Bow Earrings | Minimal Everyday Fashion Jewelry",
+    "price": {
+      "$numberInt": "449"
+    },
+    "mrp": {
+      "$numberInt": "899"
+    },
+    "description": "Add a graceful and feminine touch to your look with the Velisqa Golden Bow Stud Earrings. Designed with a sleek bow-inspired silhouette and polished gold-tone finish, these earrings offer a modern yet timeless style.\n\nTheir elegant shape makes them easy to pair with everyday outfits, office wear, dresses, and festive looks. A versatile jewellery piece for women and girls who prefer understated yet distinctive accessories.\n\nFeatures:\n\n* Elegant bow-inspired design\n* Polished gold-tone finish\n* Stylish stud-style earrings\n* Sleek and feminine silhouette\n* Easy to pair with casual and occasion outfits\n* Suitable for everyday and festive wear\n* Ideal gifting option for women and girls",
+    "category": "Earrings",
+    "metal": "Gold plated",
+    "colour": "Gold",
+    "styles": [
+      "Everyday",
+      "Office",
+      "Party",
+      "Wedding",
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "4"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/ewgbrzyxkhx1lm4iaewq.png",
+    "hover_image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787740962/velisqa/products/sxbnceutm43u3qdmnj5z.png",
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/ewgbrzyxkhx1lm4iaewq.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/sxbnceutm43u3qdmnj5z.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/sawrbvrkkpvypcdjps6v.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/m0olsauobidq0xfmspxi.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787740962/velisqa/products/sxbnceutm43u3qdmnj5z.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/ewgbrzyxkhx1lm4iaewq",
+    "hover_cloudinary_public_id": "velisqa/products/sxbnceutm43u3qdmnj5z",
+    "gallery_cloudinary_ids": [
+      "velisqa/products/ewgbrzyxkhx1lm4iaewq",
+      "velisqa/products/sxbnceutm43u3qdmnj5z",
+      "velisqa/products/sawrbvrkkpvypcdjps6v",
+      "velisqa/products/m0olsauobidq0xfmspxi",
+      "velisqa/products/sxbnceutm43u3qdmnj5z"
+    ],
+    "mock_review_count": {
+      "$numberInt": "201"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.6"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1787740967824"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1787740967824"
+      }
+    }
+  },
+  {
+    "_id": "ef79a9e1-053f-42c4-a551-d22068d5e2c3",
+    "name": "Eternal Spark Solitaire Ring",
+    "price": {
+      "$numberInt": "499"
+    },
+    "mrp": null,
+    "description": "Timeless, elegant, and effortlessly beautiful. The Eternal Spark Solitaire Ring features a brilliant round-cut centerpiece surrounded by a delicate pavé-set band, creating a luxurious look without the luxury price tag. Designed for modern women who love minimal elegance.\n\nPerfect for everyday wear, date nights, anniversaries, gifting, and special occasions.\n\n✨ Premium Gold-Tone Finish\n✨ Brilliant Solitaire Stone\n✨ Adjustable & Comfortable Fit\n✨ Lightweight Daily-Wear Design\n✨ Elegant Gift for Someone Special\n✨ Premium Sparkle & Finish",
+    "category": "Rings",
+    "metal": "Stainless steel",
+    "colour": "Gold",
+    "styles": [
+      "Minimal",
+      "Party",
+      "Traditional"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": "bestseller",
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/ampfickuhreyqt3vvzaz.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/ampfickuhreyqt3vvzaz.png",
+      "{{API_ORIGIN}}/api/v1/media/products/fc35541b96bcad632da5d34601a52d07.png",
+      "{{API_ORIGIN}}/api/v1/media/products/d3955e6038ed22d54b96400e81c5ee64.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/ampfickuhreyqt3vvzaz",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/ampfickuhreyqt3vvzaz",
+      null,
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "110"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.8"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1781117009705"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393982100"
+      }
+    }
+  },
+  {
+    "_id": "f2c0be4e-cdfb-49ab-a9ff-9f8a91c42522",
+    "name": "Celestia Vine Bracelet",
+    "price": {
+      "$numberInt": "449"
+    },
+    "mrp": null,
+    "description": "The Celestia Vine Bracelet is crafted to reflect timeless elegance with a modern touch. Designed with shimmering lavender crystals set in a graceful vine-inspired silver frame, this piece adds effortless luxury to every look. Its soft violet sparkle and refined detailing make it perfect for both everyday elegance and special occasions.\n\nLightweight yet luxurious, Celestia Vine is more than jewellery — it’s a statement of grace, confidence, and modern femininity.",
+    "category": "Bracelet",
+    "metal": null,
+    "colour": null,
+    "styles": [],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "2"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "{{API_ORIGIN}}/api/v1/media/products/1002ff67a9f3a019bf64d42e96b80e98.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "{{API_ORIGIN}}/api/v1/media/products/1002ff67a9f3a019bf64d42e96b80e98.png"
+    ],
+    "cloudinary_public_id": null,
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "15"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.2"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779339716040"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393982847"
+      }
+    }
+  },
+  {
+    "_id": "f59705e8-29f8-48cb-8d86-1349f7b07809",
+    "name": "Velisqa Golden Tulip Pendant Necklace for Women | Elegant Floral Statement Necklace | Minimal Everyday Fashion Jewelry",
+    "price": {
+      "$numberInt": "449"
+    },
+    "mrp": {
+      "$numberInt": "899"
+    },
+    "description": "Add a touch of elegance to your jewellery collection with the Velisqa Golden Tulip Pendant Necklace. Featuring a beautifully sculpted tulip-inspired pendant with a warm golden finish and delicate crystal accents on the leaves, this necklace creates a refined yet eye-catching look.\n\nThe floral design makes it easy to style with dresses, ethnic outfits, office wear, or casual looks. A versatile accessory for everyday wear, special occasions, and gifting.\n\nFeatures:\n\n* Elegant tulip-inspired floral pendant\n* Golden-tone finish\n* Delicate crystal detailing on the leaves\n* Refined and feminine design\n* Lightweight and comfortable for everyday styling\n* Suitable for casual, festive and occasion wear\n* Ideal gift for women and girls",
+    "category": "Necklace",
+    "metal": "Gold plated",
+    "colour": "Gold",
+    "styles": [
+      "Everyday",
+      "Office",
+      "Party",
+      "Wedding",
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "3"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/tmdvtbduzz07i2qvhdsn.png",
+    "hover_image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787740380/velisqa/products/yrox1hlh3q1xhyakzyfy.png",
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/tmdvtbduzz07i2qvhdsn.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/yrox1hlh3q1xhyakzyfy.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/tbe3iqq0oeoa0kjkfpzj.png",
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/v1787740380/velisqa/products/yrox1hlh3q1xhyakzyfy.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/tmdvtbduzz07i2qvhdsn",
+    "hover_cloudinary_public_id": "velisqa/products/yrox1hlh3q1xhyakzyfy",
+    "gallery_cloudinary_ids": [
+      "velisqa/products/tmdvtbduzz07i2qvhdsn",
+      "velisqa/products/yrox1hlh3q1xhyakzyfy",
+      "velisqa/products/tbe3iqq0oeoa0kjkfpzj",
+      "velisqa/products/yrox1hlh3q1xhyakzyfy"
+    ],
+    "mock_review_count": {
+      "$numberInt": "55"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.7"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1787740382678"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1787740382678"
+      }
+    }
+  },
+  {
+    "_id": "f76fe217-db67-43cf-a7e4-fba11ea820a6",
+    "name": "Aurelia Solitaire Ring",
+    "price": {
+      "$numberInt": "430"
+    },
+    "mrp": null,
+    "description": "Designed with a classic four-prong setting, the Aurelia Solitaire Ring highlights the brilliance of the center stone while maintaining a soft, minimal luxury feel. The polished gold finish paired with the sparkling crystal creates a premium high-end look without excessive detailing.\n\nProduct Details\n\n* Product Type: Solitaire Ring\n* Stone Shape: Round Cut\n* Setting Type: Four-Prong Setting\n* Material: Premium stainless steel alloy\n* Stone: AAA-grade cubic zirconia\n* Finish: 18K gold-plated mirror polish\n* Color: Gold & Crystal White\n* Style: Minimal Luxury / Classic Elegant\n* Skin Friendly: Yes\n* Tarnish Resistant: Yes\n* Lightweight & Comfortable: Made for daily wear",
+    "category": "Rings",
+    "metal": "Stainless steel",
+    "colour": "Silver",
+    "styles": [
+      "Everyday",
+      "Office",
+      "Party",
+      "Wedding",
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "1"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/xcz0x5ph6atwmaouyynj.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/xcz0x5ph6atwmaouyynj.png",
+      "{{API_ORIGIN}}/api/v1/media/products/8b4a0b3fdbf6d1ac13ea8d24846f3bfd.png",
+      "{{API_ORIGIN}}/api/v1/media/products/193a81973c6ba15e022898f60b170746.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/xcz0x5ph6atwmaouyynj",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/xcz0x5ph6atwmaouyynj",
+      null,
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "135"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.6"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779563918915"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393985669"
+      }
+    }
+  },
+  {
+    "_id": "fa970738-ee8a-442a-84bf-34bacf4ce8b3",
+    "name": "Velisqa Classic Kada Bracelet",
+    "price": {
+      "$numberInt": "399"
+    },
+    "mrp": null,
+    "description": "Traditional kada silhouette updated with a slimmer profile for modern dressing. Comfortable for long events and daily office wear. Pairs with rings and chain necklaces from the same collection.",
+    "category": "Bracelet",
+    "metal": null,
+    "colour": null,
+    "styles": [],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "5"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "{{API_ORIGIN}}/api/v1/media/products/b17804cd56a2c8d57ef5b03a070ac2d0.webp",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "{{API_ORIGIN}}/api/v1/media/products/b17804cd56a2c8d57ef5b03a070ac2d0.webp"
+    ],
+    "cloudinary_public_id": null,
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "110"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.8"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779341991736"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393986621"
+      }
+    }
+  },
+  {
+    "_id": "fbcf554c-22eb-436d-8161-a5274cc8cb62",
+    "name": "Vintage Crown Ring",
+    "price": {
+      "$numberInt": "419"
+    },
+    "mrp": null,
+    "description": "Vintage-inspired crown shoulders with milgrain edges — heirloom aesthetic in premium artificial finish. Pairs with Aurelia and Regalia necklaces for coordinated bridal sets.",
+    "category": "Rings",
+    "metal": "Stainless steel",
+    "colour": "Gold",
+    "styles": [
+      "Office",
+      "Party",
+      "Wedding",
+      "Statement"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "6"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/cbazjt8rf4xdutmkamft.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/cbazjt8rf4xdutmkamft.png",
+      "{{API_ORIGIN}}/api/v1/media/products/73957c9d8dbdc30fc8aaa96a165bf6c0.webp"
+    ],
+    "cloudinary_public_id": "velisqa/products/cbazjt8rf4xdutmkamft",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/cbazjt8rf4xdutmkamft",
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "15"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.2"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1779341997900"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393987658"
+      }
+    }
+  },
+  {
+    "_id": "fde0909f-0a3a-42ae-8c2a-7b27ca49a556",
+    "name": "Rose Bloom Pendant Necklace",
+    "price": {
+      "$numberInt": "294"
+    },
+    "mrp": null,
+    "description": "✨ A timeless symbol of love and elegance\n\nAdd a touch of sophistication to your everyday style with this beautifully crafted Rose Bloom Pendant Necklace. Featuring a radiant ruby-red stone blossom paired with emerald-green leaves, this delicate floral design is perfect for gifting or elevating your own jewelry collection.\n\n⸻",
+    "category": "Necklace",
+    "metal": "Alloy",
+    "colour": "Rose gold",
+    "styles": [
+      "Minimal"
+    ],
+    "search_keywords": [],
+    "stock": {
+      "$numberInt": "8"
+    },
+    "out_of_stock": false,
+    "badge": null,
+    "image_url": "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/cb5du5tqiane92reqv0p.png",
+    "hover_image_url": null,
+    "gallery_urls": [
+      "https://res.cloudinary.com/dyshhpbhf/image/upload/f_auto,q_auto,w_2000/velisqa/products/cb5du5tqiane92reqv0p.png",
+      "{{API_ORIGIN}}/api/v1/media/products/6fac9ae5d94190f67f3bb25729a779f1.png",
+      "{{API_ORIGIN}}/api/v1/media/products/e034e0d20cccad2dbcca3d75afd43f68.png"
+    ],
+    "cloudinary_public_id": "velisqa/products/cb5du5tqiane92reqv0p",
+    "hover_cloudinary_public_id": null,
+    "gallery_cloudinary_ids": [
+      "velisqa/products/cb5du5tqiane92reqv0p",
+      null,
+      null
+    ],
+    "mock_review_count": {
+      "$numberInt": "135"
+    },
+    "mock_rating": {
+      "$numberDouble": "4.6"
+    },
+    "is_combo": false,
+    "combo_product_ids": [],
+    "rating": null,
+    "review_count": {
+      "$numberInt": "0"
+    },
+    "created_by": "262dfa6a-35b3-4e65-8d79-392cd49ccb44",
+    "created_at": {
+      "$date": {
+        "$numberLong": "1780571228225"
+      }
+    },
+    "updated_at": {
+      "$date": {
+        "$numberLong": "1792393990716"
+      }
+    }
+  }
+]

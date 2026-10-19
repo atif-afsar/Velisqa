@@ -1,0 +1,897 @@
+@import "tailwindcss" source(".");
+
+/* ─── Fonts (self-hosted, subset to Latin + ₹, swap) ─────────────────────── */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("./assets/fonts/inter-var.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("./assets/fonts/inter-var-rupee.woff2") format("woff2");
+  unicode-range: U+20B9;
+}
+@font-face {
+  font-family: "Cormorant Garamond";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./assets/fonts/cormorant-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Cormorant Garamond";
+  font-style: normal;
+  font-weight: 500 700;
+  font-display: swap;
+  src: url("./assets/fonts/cormorant-500.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Cormorant Garamond";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./assets/fonts/cormorant-400-italic.woff2") format("woff2");
+}
+
+/* Metric-matched fallbacks keep layout stable while web fonts swap in. */
+@font-face {
+  font-family: "Inter Fallback";
+  src: local("Arial");
+  ascent-override: 90.2%;
+  descent-override: 22.48%;
+  line-gap-override: 0%;
+  size-adjust: 107.4%;
+}
+@font-face {
+  font-family: "Cormorant Fallback";
+  src: local("Times New Roman");
+  ascent-override: 98%;
+  descent-override: 30%;
+  line-gap-override: 0%;
+  size-adjust: 88%;
+}
+
+/* ─── Design tokens ──────────────────────────────────────────────────────── */
+@theme {
+  --font-sans: "Inter", "Inter Fallback", "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Cormorant Garamond", "Cormorant Fallback", Georgia, serif;
+
+  --color-paper: #ffffff;
+  --color-mist: #fafaf8;
+  --color-ink: #111111;
+  --color-ink-soft: #2b2b2b;
+  --color-body: #3f3f3f;
+  --color-muted: #6b6b6b;
+  --color-line: #eaeaea;
+  --color-line-strong: #d6d6d6;
+  /* Turquoise accent — small details only. accent-ink is the AA-safe text variant. */
+  --color-accent: #1fa79a;
+  --color-accent-ink: #12786e;
+  --color-accent-tint: #e8f6f4;
+  --color-success: #1d6b47;
+  --color-danger: #b42318;
+
+  --ease-lux: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  /* Legacy variable names kept so older components resolve to the new palette. */
+  --font-logo: var(--font-serif);
+  --font-luxury-serif: var(--font-serif);
+  --font-modern-sans: var(--font-sans);
+  --gold: var(--color-accent);
+  --surface: var(--color-paper);
+  --on-surface: var(--color-ink);
+  --type-ease: var(--ease-lux);
+  --luxury-ease: var(--ease-lux);
+
+  --announcement-height: 2.25rem;
+  --nav-bar-height: 4rem;
+  --nav-height: calc(var(--announcement-height) + var(--nav-bar-height));
+  /* Mobile bottom tab bar (0 on desktop and on routes that hide it). */
+  --tabbar-height: calc(3.5rem + env(safe-area-inset-bottom, 0px));
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --announcement-height: 2.25rem;
+    --nav-bar-height: 4.5rem;
+    --tabbar-height: 0px;
+  }
+}
+
+html.no-tabbar {
+  --tabbar-height: 0px;
+}
+
+body {
+  padding-bottom: var(--tabbar-height);
+}
+
+/* ─── Base ───────────────────────────────────────────────────────────────── */
+html {
+  background: var(--color-paper);
+  scroll-padding-top: calc(var(--nav-height) + 0.5rem + env(safe-area-inset-top, 0px));
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+@media (min-width: 768px) {
+  body {
+    font-size: 16px;
+  }
+}
+
+#root {
+  min-height: 100vh;
+  overflow-x: clip;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  max-width: 100%;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+::selection {
+  background: var(--color-ink);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent-ink);
+  outline-offset: 2px;
+}
+
+/* Hardcoded tiny sizes in older components are lifted to a readable floor. */
+.text-\[9px\],
+.text-\[10px\] {
+  font-size: 12px !important;
+}
+.text-\[11px\] {
+  font-size: 12.5px !important;
+}
+@media (min-width: 640px) {
+  .sm\:text-\[10px\] {
+    font-size: 12px !important;
+  }
+  .sm\:text-\[11px\] {
+    font-size: 12.5px !important;
+  }
+}
+
+/* ─── Layout helpers ─────────────────────────────────────────────────────── */
+.page-offset-nav {
+  padding-top: calc(var(--nav-height) + env(safe-area-inset-top, 0px));
+}
+
+.sticky-category-bar {
+  position: sticky;
+  top: calc(var(--nav-height) + env(safe-area-inset-top, 0px));
+}
+
+.container-stitch {
+  width: min(100% - 32px, 1440px);
+  margin-inline: auto;
+}
+@media (min-width: 768px) {
+  .container-stitch {
+    width: min(100% - 64px, 1440px);
+  }
+}
+@media (min-width: 1280px) {
+  .container-stitch {
+    width: min(100% - 112px, 1440px);
+  }
+}
+
+/* Registered as a utility so responsive variants (lg:container-lux) work. */
+@utility container-lux {
+  width: min(100% - 32px, 1440px);
+  margin-inline: auto;
+  @media (min-width: 768px) {
+    width: min(100% - 64px, 1440px);
+  }
+  @media (min-width: 1280px) {
+    width: min(100% - 112px, 1440px);
+  }
+}
+
+.tap-target {
+  min-height: 44px;
+}
+
+.max-w-safe {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.no-overflow-x {
+  overflow-x: hidden !important;
+}
+
+.section-gap,
+.responsive-section {
+  padding-block: clamp(4rem, 8vw, 7.5rem);
+}
+
+.responsive-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Component classes live in the components layer so Tailwind utilities can override them. */
+@layer components {
+  /* ─── Typography scale ───────────────────────────────────────────────────── */
+  .font-logo {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    letter-spacing: 0.32em;
+  }
+
+  .type-hero {
+    font-family: var(--font-serif);
+    font-size: clamp(2.75rem, 6.2vw, 5.75rem);
+    font-weight: 400;
+    line-height: 1.02;
+    letter-spacing: -0.015em;
+  }
+
+  .type-display {
+    font-family: var(--font-serif);
+    font-size: clamp(2.4rem, 5vw, 4.5rem);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+  }
+
+  .type-section {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 3.4vw, 3.25rem);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+
+  .type-card-title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.4rem, 1.2rem + 0.8vw, 2rem);
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .type-quote {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(1.6rem, 2.6vw, 2.75rem);
+    font-weight: 400;
+    line-height: 1.25;
+  }
+
+  .type-body-luxury,
+  .body-stitch {
+    font-family: var(--font-sans);
+    font-size: clamp(0.95rem, 0.9rem + 0.2vw, 1.0625rem);
+    font-weight: 400;
+    line-height: 1.75;
+    color: var(--color-body);
+  }
+
+  .type-label,
+  .label-stitch,
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .type-button {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .type-price,
+  .type-ui {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Legacy decorative classes, neutralised to the new palette. */
+  .text-champagne,
+  .text-soft-gold,
+  .text-gold {
+    color: var(--color-accent-ink);
+  }
+  .bg-plum {
+    background-color: var(--color-ink);
+  }
+  .border-gold {
+    border-color: var(--color-line);
+  }
+  .luxury-text-shadow {
+    text-shadow: none;
+  }
+  .hero-tagline-divider {
+    width: 3rem;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.4;
+  }
+  .flashy-gold-text {
+    color: var(--color-accent-ink);
+  }
+  .animate-badge-glow,
+  .animate-gold-glow {
+    animation: none;
+  }
+  .luxury-arch,
+  .arched-window {
+    overflow: hidden;
+  }
+
+  /* ─── Components ─────────────────────────────────────────────────────────── */
+  .btn {
+    display: inline-flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 0 1.75rem;
+    border: 1px solid transparent;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: background-color 200ms var(--ease-lux), color 200ms var(--ease-lux), border-color 200ms var(--ease-lux), opacity 200ms;
+  }
+  .btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+  .btn-primary {
+    background: var(--color-ink);
+    color: #fff;
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--color-ink-soft);
+  }
+  .btn-secondary {
+    border-color: var(--color-ink);
+    background: transparent;
+    color: var(--color-ink);
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background: var(--color-ink);
+    color: #fff;
+  }
+  .btn-light {
+    background: #fff;
+    color: var(--color-ink);
+  }
+  .btn-light:hover:not(:disabled) {
+    background: var(--color-mist);
+  }
+  .btn-link {
+    min-height: 44px;
+    padding: 0;
+    color: var(--color-ink);
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 calc(50% + 0.8em);
+    background-repeat: no-repeat;
+    background-size: 100% 1px;
+  }
+  .btn-link:hover {
+    color: var(--color-accent-ink);
+  }
+
+  .field {
+    display: block;
+    width: 100%;
+    min-height: 48px;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 0;
+    background: #fff;
+    padding: 0.75rem 0.9rem;
+    color: var(--color-ink);
+    font-size: 16px; /* prevents iOS zoom */
+    transition: border-color 160ms;
+  }
+  .field::placeholder {
+    color: #9a9a9a;
+  }
+  .field:focus {
+    border-color: var(--color-ink);
+    outline: none;
+  }
+  .field-label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 22px;
+    padding: 0 0.5rem;
+    background: #fff;
+    color: var(--color-ink);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .badge-accent {
+    background: var(--color-accent-tint);
+    color: var(--color-accent-ink);
+  }
+
+  .link-underline {
+    background-image: linear-gradient(var(--color-accent), var(--color-accent));
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0% 1px;
+    transition: background-size 300ms var(--ease-lux), color 200ms;
+  }
+  .link-underline:hover,
+  .link-underline[aria-current="page"] {
+    background-size: 100% 1px;
+  }
+
+  /* Product imagery: subtle scale on hover only, swap to second image. */
+  .img-zoom {
+    transition: transform 700ms var(--ease-lux), opacity 400ms var(--ease-lux);
+  }
+  @media (hover: hover) {
+    .group:hover .img-zoom {
+      transform: scale(1.03);
+    }
+  }
+
+  .fade-in {
+    animation: fade-in 500ms var(--ease-lux) both;
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .drawer-in-right {
+    animation: drawer-in-right 320ms var(--ease-lux) both;
+  }
+  @keyframes drawer-in-right {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  .drawer-in-left {
+    animation: drawer-in-left 320ms var(--ease-lux) both;
+  }
+  @keyframes drawer-in-left {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  .drawer-in-bottom {
+    animation: drawer-in-bottom 320ms var(--ease-lux) both;
+  }
+  @keyframes drawer-in-bottom {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+  .pop-in {
+    animation: pop-in 220ms var(--ease-lux) both;
+  }
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Older animation hooks, kept as simple fades. */
+  .text-reveal,
+  .text-reveal-delay,
+  .hero-overlay-fade,
+  .hero-gradient-fade,
+  .hero-title-rise,
+  .hero-divider-rise,
+  .hero-tagline-rise,
+  .offer-progress-card,
+  .free-gift-card,
+  .offer-toast {
+    animation: fade-in 500ms var(--ease-lux) both;
+  }
+  .luxury-hover-text {
+    transition: color 200ms;
+  }
+  .offer-progress-bar-fill {
+    transition: width 350ms var(--ease-lux);
+  }
+  .offer-sparkle-container {
+    position: relative;
+  }
+
+}
+
+/* Infinite ticker (content is duplicated once in the markup). */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 32s linear infinite;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Announcement bar. */
+.promo-marquee-viewport {
+  height: var(--announcement-height, 2.25rem);
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ── Admin console ("maison" theme) ─────────────────────────────────────────
+   Quiet ivory surfaces, ink type, thin gold hairlines, square-ish corners and
+   no heavy shadows. Unlayered so it also refines the existing admin pages. */
+.admin-theme {
+  --admin-gold: #9a7b4f;
+  --admin-line: #ece7de;
+  --admin-ivory: #f6f3ee;
+  font-feature-settings: "tnum" 1;
+}
+.admin-eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #9a9286;
+}
+.admin-btn,
+.admin-btn-ghost,
+.admin-btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 2.25rem;
+  padding: 0.45rem 1rem;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+  transition: background-color 200ms var(--ease-lux), color 200ms var(--ease-lux), border-color 200ms var(--ease-lux);
+}
+.admin-btn { background: var(--color-ink); color: #fff; }
+.admin-btn:hover:not(:disabled) { background: #2b2b2b; }
+.admin-btn-gold { background: var(--admin-gold, #9a7b4f); color: #fff; }
+.admin-btn-gold:hover:not(:disabled) { background: #85693f; }
+.admin-btn-ghost { background: transparent; color: var(--color-ink); border-color: #d9d2c5; }
+.admin-btn-ghost:hover:not(:disabled) { border-color: var(--color-ink); }
+.admin-btn:disabled,
+.admin-btn-ghost:disabled,
+.admin-btn-gold:disabled { opacity: 0.45; cursor: not-allowed; }
+.admin-card {
+  background: #fff;
+  border: 1px solid var(--admin-line, #ece7de);
+  padding: 1.5rem;
+}
+.admin-input {
+  width: 100%;
+  min-height: 2.6rem;
+  padding: 0.55rem 0.8rem;
+  font-size: 14px;
+  background: #fff;
+  border: 1px solid #ddd6ca;
+  outline: none;
+  transition: border-color 150ms;
+}
+.admin-input:focus { border-color: var(--color-ink); }
+.admin-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6f6a60;
+}
+
+/* Harmonise the existing admin pages with the console look. */
+.admin-theme :is(.rounded-2xl, .rounded-xl, .rounded-3xl) { border-radius: 4px; }
+.admin-theme :is([class*="shadow-["], .shadow-sm, .shadow, .shadow-md, .shadow-lg) { box-shadow: none; }
+.admin-theme main section:is(.rounded-2xl, .rounded-xl),
+.admin-theme main article:is(.rounded-2xl, .rounded-xl) { border-color: var(--admin-line, #ece7de); background: #fff; }
+.admin-theme main h2.font-serif { font-weight: 400; letter-spacing: 0.01em; }
+.admin-theme main :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), select, textarea):focus {
+  border-color: var(--color-ink);
+  box-shadow: none;
+}
+.admin-theme main .bg-ink.text-white { letter-spacing: 0.12em; }
+.admin-theme table { font-variant-numeric: tabular-nums; }
+.admin-btn-sm { padding: 0.4rem 0.5rem; letter-spacing: 0.08em; white-space: nowrap; }
+
+/* ── Admin console: unified type + colour system ─────────────────────────────
+   One palette for every admin page: ink & ivory surfaces, champagne gold accent,
+   muted sage for success, oxblood for danger. Inter for UI, Cormorant for headings. */
+.admin-theme {
+  --a-ink: #1a1814;
+  --a-text: #3d3a34;
+  --a-muted: #8a8478;
+  --a-line: #ece7de;
+  --a-ivory: #f6f3ee;
+  --a-gold: #9a7b4f;
+  --a-gold-dark: #6b5530;
+  --a-gold-tint: #f8f3ea;
+  --a-gold-line: #e6d9c2;
+  --a-sage: #4d6b4f;
+  --a-sage-tint: #f1f4ee;
+  --a-sage-line: #d8e1d3;
+  --a-red: #8c2f2f;
+  --a-red-tint: #faf1ef;
+  --a-red-line: #ecd5d0;
+  font-family: var(--font-sans);
+  color: var(--a-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Type */
+.admin-theme .font-serif { font-family: var(--font-serif); font-weight: 400; font-variant-numeric: lining-nums; font-feature-settings: "lnum" 1; }
+.admin-theme main :is(h1, h2, h3).font-serif { color: var(--a-ink); letter-spacing: 0.005em; }
+.admin-theme :is(.font-bold, .font-extrabold, .font-black) { font-weight: 600; }
+.admin-theme .font-semibold { font-weight: 600; }
+.admin-theme .font-mono { font-family: var(--font-sans); font-weight: 600; letter-spacing: 0.06em; }
+.admin-theme main .uppercase { letter-spacing: 0.14em; }
+.admin-theme main :is(button, a, label).uppercase { font-size: 11px; font-weight: 600; }
+.admin-theme main :is(p, li, td, dd, label, span) { font-variant-numeric: tabular-nums lining-nums; }
+.admin-theme .text-ink { color: var(--a-ink); }
+.admin-theme :is(.text-muted, .text-body) { color: var(--a-muted); }
+.admin-theme .text-body { color: var(--a-text); }
+
+/* Shapes: square, quiet buttons (pills stay only for small status chips). */
+.admin-theme main :is(button, a, label, input, select, textarea).rounded-full,
+.admin-theme main :is(button, a, label, input, select, textarea):is(.rounded-xl, .rounded-lg, .rounded-2xl, .rounded-md) { border-radius: 2px; }
+.admin-theme :is(.border-line, .border-muted\/25, .border-muted\/15, .border-muted\/35, [class~="border-[#f0ece4]"]) { border-color: var(--a-line); }
+
+/* Primary actions → ink; secondary solids → gold */
+.admin-theme :is([class~="bg-[#2d6a4f]"], [class~="bg-[#1b4332]"], [class~="bg-[#250514]"], .bg-indigo-700, .bg-indigo-800, .bg-emerald-700, .bg-green-700) { background-color: var(--a-ink); color: #fff; }
+.admin-theme :is(.bg-amber-700, .bg-amber-800) { background-color: var(--a-gold); color: #fff; }
+.admin-theme :is([class~="bg-[#c0392b]"], .bg-red-600, .bg-red-700) { background-color: var(--a-red); color: #fff; }
+
+/* Success / positive → sage */
+.admin-theme :is([class~="bg-[#edf7f1]"], [class~="bg-[#f0f7f4]"], [class~="bg-[#e8f5ef]"], [class~="bg-[#2d6a4f]/10"], .bg-emerald-50, .bg-emerald-100, .bg-green-50, .bg-green-100, .bg-teal-50, .bg-accent-tint) { background-color: var(--a-sage-tint); }
+.admin-theme :is(.bg-emerald-200, .bg-green-200) { background-color: var(--a-sage-line); }
+.admin-theme :is([class~="text-[#2d6a4f]"], [class~="text-[#1f4334]"], [class~="text-[#1b4332]"], [class~="text-[#40916c]"], [class~="text-[#52705f]"], .text-emerald-700, .text-emerald-800, .text-emerald-900, .text-emerald-950, .text-green-700, .text-green-800, .text-accent, .text-accent-ink) { color: var(--a-sage); }
+.admin-theme :is([class~="border-[#2d6a4f]/20"], [class~="border-[#2d6a4f]/25"], .border-emerald-100, .border-emerald-200, .border-emerald-300, .border-green-200) { border-color: var(--a-sage-line); }
+
+/* Warnings / attention → gold */
+.admin-theme :is(.bg-amber-50, .bg-amber-100, [class~="bg-amber-50/60"], [class~="bg-amber-100/70"], .bg-yellow-50, [class~="bg-[#fbf6ec]"]) { background-color: var(--a-gold-tint); }
+.admin-theme :is(.text-amber-700, .text-amber-800, .text-amber-900, .text-amber-950, .text-yellow-800, [class~="text-[#8a6b1f]"], [class~="text-[#8a6d3b]"]) { color: var(--a-gold-dark); }
+.admin-theme :is(.border-amber-200, .border-amber-300, .border-amber-400, [class~="border-amber-300/60"], [class~="border-amber-400/50"], [class~="border-amber-700/30"]) { border-color: var(--a-gold-line); }
+
+/* Danger → oxblood */
+.admin-theme :is(.bg-red-50, .bg-red-100, .bg-rose-50, .bg-pink-50) { background-color: var(--a-red-tint); }
+.admin-theme :is(.text-red-600, .text-red-700, .text-red-800, .text-red-900, .text-red-950, .text-rose-700) { color: var(--a-red); }
+.admin-theme :is(.border-red-100, .border-red-200, .border-red-300, .border-rose-200) { border-color: var(--a-red-line); }
+
+/* Info / neutral (indigo, blue, grey) → ivory + ink */
+.admin-theme :is(.bg-indigo-50, [class~="bg-indigo-50/60"], .bg-indigo-100, [class~="bg-indigo-100/70"], .bg-indigo-200, .bg-blue-50, .bg-gray-50, [class~="bg-gray-50/50"], .bg-gray-100, .bg-gray-200, [class~="bg-[#4285F4]/5"], .bg-mist, [class*="bg-muted/"]) { background-color: var(--a-ivory); }
+.admin-theme :is(.text-indigo-900, .text-indigo-950, .text-blue-600, .text-blue-700, .text-gray-800, [class~="text-[#4285F4]"]) { color: var(--a-ink); }
+.admin-theme :is(.border-indigo-300, .border-indigo-400, [class~="border-indigo-300/60"], [class~="border-indigo-400/50"], .border-gray-300, [class~="border-[#4285F4]/30"]) { border-color: var(--a-line); }
+.admin-theme :is([class*="ring-indigo"], [class*="ring-amber"], [class*="ring-[#2d6a4f]"], .ring-accent) { --tw-ring-color: var(--a-gold-line); }
+
+/* Links inside content read as ink with a gold underline on hover */
+.admin-theme main a:not([class*="bg-"]):not(.admin-btn):not(.admin-btn-ghost):hover { text-decoration-color: var(--a-gold); }
+.admin-theme main :is(input[type="checkbox"], input[type="radio"]) { accent-color: var(--a-ink); }
+.admin-theme [class*="from-ink/5"] { background-image: none; background-color: var(--a-gold-tint); border-color: var(--a-gold-line); }
+.admin-theme main a[class~="bg-[#f0f7f4]"] { background-color: #fff; border-color: var(--a-line); }
+.admin-theme main span.rounded-full.uppercase { white-space: nowrap; border-radius: 2px; }
+.admin-theme main a[class*="hover:-translate-y"]:hover { transform: none; border-color: var(--a-gold-line); }
+
+/* ── Admin console: responsive rules (phones, tablets, desktops) ───────────── */
+/* Grid/flex children may shrink, so a wide table scrolls inside its card instead of pushing it off-screen. */
+.admin-theme main .grid > * { min-width: 0; }
+.admin-theme main .overflow-x-auto { -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+.admin-theme img { max-width: 100%; }
+
+@media (max-width: 639px) {
+  /* 16px stops iOS Safari from zooming into fields. */
+  .admin-theme :is(.admin-input, main input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), main select, main textarea) { font-size: 16px; }
+  /* Comfortable thumb targets. */
+  .admin-theme :is(.admin-btn, .admin-btn-ghost, .admin-btn-gold) { min-height: 2.6rem; }
+  .admin-theme main :is(button, a).uppercase { min-height: 2.5rem; }
+  .admin-theme main :is(.p-6, .sm\:p-6, .p-5) { padding: 1rem; }
+  .admin-theme main h1.font-serif { font-size: 1.9rem; }
+}
+
+/* ══ Admin console — SELLER DASHBOARD THEME (final layer; overrides the earlier admin rules) ══
+   Data-first marketplace-seller look: cool grey canvas, white cards with soft shadow,
+   one rose accent, Inter everywhere with tabular figures. Change the accent here only. */
+.admin-theme {
+  --a-canvas: #f4f5f7;
+  --a-surface: #ffffff;
+  --a-ink: #1f2330;
+  --a-text: #3e4152;
+  --a-text-2: #535766;
+  --a-muted: #7e818c;
+  --a-faint: #bfc0c6;
+  --a-line: #eaeaec;
+  --a-line-strong: #d4d5d9;
+  --a-accent: #d6336c;
+  --a-accent-dark: #ad1f52;
+  --a-accent-tint: #fdeef3;
+  --a-accent-line: #f6c6d6;
+  --a-good: #0a8f6f;
+  --a-good-tint: #e7f6f1;
+  --a-good-line: #b9e3d6;
+  --a-bad: #d1324a;
+  --a-bad-tint: #fdecee;
+  --a-warn: #c2620e;
+  --a-warn-tint: #fff4e8;
+  --a-shadow: 0 1px 2px rgba(31, 35, 48, 0.04), 0 2px 8px rgba(31, 35, 48, 0.04);
+  /* Remap the earlier layer's tokens onto this palette. */
+  --admin-gold: var(--a-accent);
+  --admin-line: var(--a-line);
+  --a-gold: var(--a-accent);
+  --a-gold-dark: var(--a-accent-dark);
+  --a-gold-tint: var(--a-warn-tint);
+  --a-gold-line: #f3d6b8;
+  --a-ivory: var(--a-canvas);
+  --a-sage: var(--a-good);
+  --a-sage-tint: var(--a-good-tint);
+  --a-sage-line: var(--a-good-line);
+  --a-red: var(--a-bad);
+  --a-red-tint: var(--a-bad-tint);
+  --a-red-line: #f3c4cb;
+  background-color: var(--a-canvas) !important;
+  color: var(--a-text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  letter-spacing: 0;
+}
+
+/* Type: one sans family, semibold headings, tabular numbers. The logo keeps its serif. */
+.admin-theme .font-serif { font-family: var(--font-sans); font-weight: 600; letter-spacing: -0.015em; }
+.admin-theme .admin-wordmark { font-family: var(--font-serif); font-weight: 500; letter-spacing: 0.28em; }
+.admin-theme main h1 { font-size: 1.6rem !important; font-weight: 700 !important; letter-spacing: -0.02em; color: var(--a-ink); }
+.admin-theme main :is(h2, h3) { color: var(--a-ink); }
+.admin-theme main h2.font-serif { font-size: 1.05rem; font-weight: 600; }
+.admin-theme * { font-variant-numeric: tabular-nums; }
+.admin-eyebrow { font-size: 12px; font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--a-muted, #7e818c); }
+.admin-label { font-size: 12px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--a-text-2, #535766); }
+.admin-theme main .uppercase { letter-spacing: 0.04em; }
+.admin-theme main :is(th) { font-size: 11.5px; letter-spacing: 0.03em; color: var(--a-muted); font-weight: 600; }
+
+/* Surfaces */
+.admin-theme aside { background: var(--a-surface) !important; border-color: var(--a-line) !important; }
+.admin-card,
+.admin-theme main :is(section, article, div, ul, form).bg-white,
+.admin-theme main :is(section, article, div, ul).border.bg-white {
+  border-color: var(--a-line);
+  border-radius: 10px;
+  box-shadow: var(--a-shadow);
+}
+.admin-theme main :is(.rounded-2xl, .rounded-xl, .rounded-3xl):not(button):not(a):not(span) { border-radius: 10px; }
+.admin-theme main header { border-color: var(--a-line) !important; }
+
+/* Controls */
+.admin-btn, .admin-btn-ghost, .admin-btn-gold {
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.admin-btn { background: var(--a-accent, #d6336c); color: #fff; }
+.admin-btn:hover:not(:disabled) { background: var(--a-accent-dark, #ad1f52); }
+.admin-btn-ghost { background: #fff; color: var(--a-ink, #1f2330); border-color: var(--a-line-strong, #d4d5d9); }
+.admin-btn-ghost:hover:not(:disabled) { border-color: var(--a-ink, #1f2330); }
+.admin-theme main :is(button, a, label, input, select, textarea).rounded-full,
+.admin-theme main :is(button, a, label, input, select, textarea):is(.rounded-xl, .rounded-lg, .rounded-2xl, .rounded-md),
+.admin-theme main :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) { border-radius: 6px; }
+.admin-input { border-radius: 6px; border-color: var(--a-line-strong, #d4d5d9); }
+.admin-input:focus, .admin-theme main :is(input, select, textarea):focus { border-color: var(--a-accent) !important; box-shadow: 0 0 0 3px var(--a-accent-tint) !important; }
+.admin-theme main :is(button, a, label).uppercase { font-size: 12px; font-weight: 700; }
+/* Primary actions in older pages (ink buttons) take the accent. */
+.admin-theme main :is(button, a).bg-ink,
+.admin-theme main :is(button, a)[class~="bg-[#2d6a4f]"],
+.admin-theme main :is(button, a)[class~="bg-[#1b4332]"],
+.admin-theme main :is(button, a):is(.bg-indigo-700, .bg-indigo-800) { background-color: var(--a-accent); border-color: var(--a-accent); color: #fff; }
+.admin-theme main :is(button, a).bg-ink:hover { background-color: var(--a-accent-dark); }
+.admin-theme main span.rounded-full.uppercase { border-radius: 999px; }
+.admin-theme main :is(input[type="checkbox"], input[type="radio"]) { accent-color: var(--a-accent); }
+
+@media (max-width: 639px) {
+  .admin-theme main h1 { font-size: 1.4rem !important; }
+}
