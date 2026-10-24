@@ -15,6 +15,8 @@ Realtime and the 13 Edge Functions. Independent from the Vite frontend (own
 | `npm test` | unit tests |
 | `npm run test:integration` | API tests against a real ephemeral mongod replica set (first run downloads mongod) |
 | `npm run e2e:server` | throwaway API + in-memory DB for the browser tests (`../e2e`, started automatically) |
+| `npm run db:local` | local development MongoDB (replica set, data in `~/.velisqa/mongo`, outside the project) |
+| `npm run check:integrations` | which integrations are on/off from `.env` (never prints values) |
 | `npm run check:razorpay` | live check of your `rzp_test_` keys against Razorpay's test API (refuses live keys) |
 | `npm run data:export` / `npm run data:import [-- --overwrite]` | move products, coupons and banners between MongoDB servers (`data-export/`) |
 | `npm run db:indexes` | create/verify indexes, check transactions are available |

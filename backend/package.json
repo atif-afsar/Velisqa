@@ -24,7 +24,9 @@
     "data:export": "node scripts/export-data.mjs",
     "data:import": "node scripts/import-data.mjs",
     "check:razorpay": "node scripts/check-razorpay.mjs",
-    "e2e:server": "node scripts/e2e-server.mjs"
+    "e2e:server": "node scripts/e2e-server.mjs",
+    "db:local": "node scripts/local-mongo.mjs",
+    "check:integrations": "node scripts/check-integrations.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.135.0",
