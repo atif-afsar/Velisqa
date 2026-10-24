@@ -14,6 +14,7 @@ import { adminRouter } from './routes/admin.js'
 import { authRouter } from './routes/auth.js'
 import { catalogRouter } from './routes/catalog.js'
 import { eventsRouter } from './routes/events.js'
+import { marketingRouter } from './routes/marketing.js'
 import { ordersRouter } from './routes/orders.js'
 import { paymentsRouter } from './routes/payments.js'
 import { returnsRouter } from './routes/returns.js'
@@ -72,6 +73,7 @@ export function createApp() {
   app.use('/api/v1', catalogRouter)
   app.use('/api/v1', reviewsRouter)
   app.use('/api/v1', ordersRouter)
+  app.use('/api/v1', marketingRouter)
   app.use('/api/v1', returnsRouter)
   app.use('/api/v1', paymentsRouter)
   app.use('/api/v1', uploadsRouter)

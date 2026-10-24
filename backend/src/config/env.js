@@ -76,6 +76,14 @@ const schema = z.object({
   SMTP_USER: optional,
   SMTP_PASSWORD: optional,
   EMAIL_FROM: optional,
+  RESEND_API_KEY: optional,
+
+  // Abandoned-checkout recovery: one email with a personal, single-use, expiring coupon.
+  ABANDONED_CART_ENABLED: bool(true),
+  ABANDONED_CART_DELAY_MINUTES: z.coerce.number().int().min(5).max(1440).default(60),
+  ABANDONED_CART_DISCOUNT_PERCENT: z.coerce.number().int().min(1).max(50).default(10),
+  ABANDONED_CART_MIN_SUBTOTAL: z.coerce.number().min(0).default(0),
+  ABANDONED_CART_COUPON_HOURS: z.coerce.number().int().min(1).max(336).default(48),
 
   ANTHROPIC_API_KEY: optional,
   MEDIA_DIR: optional,

@@ -1,6 +1,7 @@
 import { C, getDb } from '../config/db.js'
 import { badRequest, HttpError } from '../lib/errors.js'
 import { roundPaiseToRupee, toPaise, toRupees } from '../lib/money.js'
+import { isCouponRedeemable } from './couponService.js'
 
 /**
  * Port of public.create_manual_payment_order pricing from
@@ -52,7 +53,7 @@ export function computeCouponDiscountPaise(coupon, subtotalPaise) {
  * Authoritative quote. Reads prices/stock from the DB (optionally inside a
  * transaction session) and never trusts client money, gift or stock claims.
  */
-export async function priceCart({ items, couponCode, giftWrap = false, paymentMethod = 'online' }, session) {
+export async function priceCart({ items, couponCode, giftWrap = false, paymentMethod = 'online', customerEmail = null }, session) {
   const lines = aggregateLines(items)
   const db = getDb()
   const opts = session ? { session } : undefined
@@ -88,7 +89,9 @@ export async function priceCart({ items, couponCode, giftWrap = false, paymentMe
   let discountPaise = 0
   const code = String(couponCode || '').trim().toUpperCase()
   if (code) {
-    const coupon = await db.collection(C.coupons).findOne({ _id: code, active: true }, opts)
+    const found = await db.collection(C.coupons).findOne({ _id: code, active: true }, opts)
+    // Expired, already-used and other-shopper (email-bound) codes simply do not apply.
+    const coupon = isCouponRedeemable(found, { email: customerEmail }) ? found : null
     discountPaise = computeCouponDiscountPaise(coupon, subtotalPaise)
     if (coupon && subtotalPaise >= toPaise(coupon.min_subtotal)) appliedCoupon = code
     else discountPaise = 0

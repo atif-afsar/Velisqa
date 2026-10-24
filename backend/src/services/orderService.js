@@ -11,6 +11,7 @@ import { conflict, HttpError, notFound } from '../lib/errors.js'
 import { logger } from '../lib/logger.js'
 import { recordOrderHistory } from './auditService.js'
 import { eventBus, EVENTS } from './eventBus.js'
+import { consumeSingleUseCoupon } from './couponService.js'
 import { priceCart } from './pricingService.js'
 
 const BASE_FILTER = { is_enquiry: { $ne: true }, deleted_at: null }
@@ -97,7 +98,7 @@ export async function createOrder({ customer, items, idempotencyKey, userId }) {
     try {
       const created = await withTransaction(async (session) => {
         const priced = await priceCart(
-          { items, couponCode: customer.couponCode, giftWrap: customer.giftWrap, paymentMethod: customer.paymentMethod },
+          { items, couponCode: customer.couponCode, giftWrap: customer.giftWrap, paymentMethod: customer.paymentMethod, customerEmail: customer.email },
           session,
         )
         const now = new Date()
@@ -142,6 +143,7 @@ export async function createOrder({ customer, items, idempotencyKey, userId }) {
           updated_at: now,
         }
         await db.collection(C.orders).insertOne(order, { session })
+        await consumeSingleUseCoupon(priced.couponCode, orderRef, session)
         await db.collection(C.orderItems).insertMany(
           priced.lines.map((line, index) => ({
             _id: uuid(),

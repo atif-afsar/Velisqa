@@ -11,6 +11,7 @@ import {
 import { conflict, forbidden, HttpError, unauthorized } from '../lib/errors.js'
 import { logger } from '../lib/logger.js'
 import { sendEmail } from '../providers/email.js'
+import { renderPasswordResetEmail } from '../lib/emailTemplates.js'
 
 const SESSION_TOUCH_MS = 5 * 60_000
 const RESET_TTL_MS = 60 * 60_000
@@ -165,11 +166,7 @@ export async function requestPasswordReset(email) {
   })
   const link = `${env.frontendOrigin}/reset-password?token=${encodeURIComponent(token)}`
   try {
-    await sendEmail({
-      to: user.email,
-      subject: 'Reset your Velisqa password',
-      text: `We received a request to reset your Velisqa password.\n\nSet a new password here (valid for 1 hour):\n${link}\n\nIf you did not ask for this, you can ignore this email.`,
-    })
+    await sendEmail({ to: user.email, ...renderPasswordResetEmail({ link }) })
   } catch (error) {
     // The response stays uniform either way; operators see the failure in logs.
     logger.error('Password reset email failed', { error })

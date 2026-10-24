@@ -49,6 +49,7 @@ const quoteSchema = z.object({
   couponCode: optionalText(40),
   giftWrap: z.boolean().optional().default(false),
   paymentMethod: z.enum(['cod', 'online']).optional().default('online'),
+  email: z.union([z.string().trim().max(254).email(), z.literal(''), z.null()]).optional(),
 })
 
 /** Private order proof: header preferred; `?token=` kept for old shared links. */
@@ -58,7 +59,7 @@ export const ordersRouter = Router()
 
 ordersRouter.post('/checkout/quote', async (req, res) => {
   const body = parse(quoteSchema, req.body)
-  ok(res, quoteResponse(await priceCart(body)))
+  ok(res, quoteResponse(await priceCart({ ...body, customerEmail: body.email })))
 })
 
 ordersRouter.post('/orders', checkoutLimiter, async (req, res) => {

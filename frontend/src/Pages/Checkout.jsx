@@ -17,6 +17,7 @@ import { createOrder, createRazorpayPaymentOrder, verifyRazorpayPayment } from '
 import { loadRazorpay, preloadRazorpay } from '../lib/loadRazorpay'
 import { buildOrderEmailPayload, submitOrderEmail } from '../lib/orderEmail'
 import { analytics } from '../lib/analytics'
+import { EMAIL_RE, readLeadEmail, saveCheckoutLead } from '../lib/checkoutLead'
 
 const PINCODE_KEY = 'velisqa:delivery_pincode'
 
@@ -104,8 +105,10 @@ export default function Checkout() {
   const coupon = useCoupon(eligibleSubtotal)
   const [giftWrap, setGiftWrap] = useState(readGiftWrap)
   const [paymentMethod, setPaymentMethod] = useState('online')
-  const [form, setForm] = useState({ phone: '', email: '', name: '', pincode: readSavedPincode(), address: '', city: '', state: '', notes: '' })
+  const [form, setForm] = useState({ phone: '', email: readLeadEmail(), name: '', pincode: readSavedPincode(), address: '', city: '', state: '', notes: '' })
   const [errors, setErrors] = useState({})
+  // Opt-in only (never pre-ticked): lets us email the shopper their bag + an offer if they leave.
+  const [offersConsent, setOffersConsent] = useState(() => Boolean(readLeadEmail()))
   const [pincodeStatus, setPincodeStatus] = useState(null) // null | checking | ok | invalid
   const [submitting, setSubmitting] = useState('')
   const [checkoutError, setCheckoutError] = useState('')
@@ -153,6 +156,15 @@ export default function Checkout() {
     // Track only when the shopper changes payment method.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paymentMethod])
+
+  // With consent, remember the bag once the email looks valid (debounced; best effort).
+  useEffect(() => {
+    const email = form.email.trim()
+    const paidLines = items.filter((l) => !isFreeGiftItem(l))
+    if (!offersConsent || !EMAIL_RE.test(email) || paidLines.length === 0) return undefined
+    const timer = setTimeout(() => void saveCheckoutLead({ email, items: paidLines }), 1500)
+    return () => clearTimeout(timer)
+  }, [offersConsent, form.email, items])
 
   // Prefill from the signed-in profile.
   useEffect(() => {
@@ -512,6 +524,15 @@ export default function Checkout() {
                       hint="For delivery updates on WhatsApp / SMS"
                     />
                     <Field label="Email (optional)" type="email" autoComplete="email" value={form.email} onChange={set('email')} error={errors.email} hint="For your order confirmation" />
+                    <label className="flex cursor-pointer items-start gap-3 text-[13px] leading-relaxed text-body sm:col-span-2">
+                      <input
+                        type="checkbox"
+                        checked={offersConsent}
+                        onChange={(e) => setOffersConsent(e.target.checked)}
+                        className="mt-0.5 h-[18px] w-[18px] shrink-0 accent-ink"
+                      />
+                      <span>Email me my bag and a personal 10% off code if I don’t finish. Unsubscribe anytime.</span>
+                    </label>
                   </div>
                 </Card>
 

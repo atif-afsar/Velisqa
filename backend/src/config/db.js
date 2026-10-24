@@ -26,6 +26,8 @@ export const C = Object.freeze({
   adminAuditLogs: 'admin_audit_logs',
   migrationState: 'migration_state',
   siteSettings: 'site_settings',
+  checkoutLeads: 'checkout_leads',
+  emailSuppressions: 'email_suppressions',
 })
 
 const ACTIVE_RETURN = ['pending', 'approved', 'pickup_scheduled', 'in_transit', 'received', 'qc_passed', 'qc_failed']
@@ -87,6 +89,9 @@ export const INDEXES = {
   [C.webhookEvents]: [{ key: { provider: 1, event_key: 1 }, unique: true }],
   [C.metaEvents]: [{ key: { order_id: 1, event_name: 1 }, unique: true }],
   [C.adminAuditLogs]: [{ key: { created_at: -1 } }, { key: { target_id: 1 } }],
+  [C.checkoutLeads]: [{ key: { email: 1 }, unique: true }, { key: { email_sent_at: 1, last_seen_at: 1 } }],
+  // Coupons issued to one shopper expire on their own; TTL cleans them up a week after expiry.
+  [C.coupons]: [{ key: { delete_after: 1 }, expireAfterSeconds: 0, partialFilterExpression: { delete_after: { $type: 'date' } } }],
 }
 
 let client = null

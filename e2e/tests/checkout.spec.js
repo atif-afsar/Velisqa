@@ -116,3 +116,32 @@ test.describe('Bag and Cash-on-Delivery checkout', () => {
     await expect(page).toHaveURL(/\/checkout/)
   })
 })
+
+test.describe('Abandoned-checkout capture', () => {
+  test('CO-08 the bag is sent to the server only after the shopper opts in', async ({ page, request }) => {
+    await addToBag(page, await productByName(request, 'E2E Solace Stacking Ring'))
+    const leads = []
+    page.on('request', (req) => {
+      if (req.url().endsWith('/checkout/lead') && req.method() === 'POST') leads.push(req.postDataJSON())
+    })
+    await page.goto('/checkout')
+    const email = page.getByRole('textbox', { name: /^Email/ })
+    await email.fill('shopper+lead@example.com')
+    await page.waitForTimeout(2200)
+    expect(leads).toEqual([]) // typed an email but never ticked the box
+
+    const consent = page.getByRole('checkbox', { name: /personal 10% off code/i })
+    await expect(consent).not.toBeChecked()
+    await consent.check()
+    await expect.poll(() => leads.length, { timeout: 8000 }).toBe(1)
+    expect(leads[0]).toMatchObject({ email: 'shopper+lead@example.com', consent: true })
+    expect(leads[0].items).toHaveLength(1)
+    expect(leads[0].items[0].quantity).toBe(1)
+  })
+
+  test('CO-09 a recovery-email link (?coupon=) applies the code at checkout', async ({ page, request }) => {
+    await addToBag(page, await productByName(request, 'E2E Aurelia Layered Necklace'))
+    await page.goto('/checkout?coupon=e2e10')
+    await expect(page.getByText('Coupon E2E10')).toBeVisible()
+  })
+})

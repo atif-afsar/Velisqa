@@ -1,12 +1,23 @@
 import { useCallback, useEffect, useState } from 'react'
 import { clearAppliedCoupon, readAppliedCoupon, saveAppliedCoupon, validateCoupon } from '../lib/coupons'
 
+/** A code from a recovery-email link (/checkout?coupon=COMEBACK-XXXXX) wins over the saved one. */
+function initialCode() {
+  try {
+    const fromLink = new URLSearchParams(window.location.search).get('coupon')
+    if (fromLink && /^[A-Za-z0-9-]{3,40}$/.test(fromLink)) return fromLink.toUpperCase()
+  } catch {
+    /* no window (prerender) */
+  }
+  return readAppliedCoupon()
+}
+
 /**
  * Applied coupon shared by the cart and checkout (persisted in localStorage).
  * Re-validates against the database whenever the subtotal changes.
  */
 export function useCoupon(subtotal) {
-  const [code, setCode] = useState(readAppliedCoupon)
+  const [code, setCode] = useState(initialCode)
   const [discount, setDiscount] = useState(0)
   const [error, setError] = useState('')
   const [checking, setChecking] = useState(false)

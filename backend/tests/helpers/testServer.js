@@ -4,6 +4,12 @@
  * real Express app. Nothing here is mocked except outbound provider HTTP.
  */
 process.env.NODE_ENV = 'test'
+// Must stay above the first top-level await so sibling modules that load env.js see them.
+process.env.RESEND_API_KEY = 're_test_key'
+process.env.EMAIL_FROM = 'Velisqa <no-reply@velisqa.test>'
+// Tests must not depend on whatever real credentials sit in backend/.env (dotenv never overrides these).
+process.env.GOOGLE_CLIENT_ID = ''
+process.env.GOOGLE_CLIENT_SECRET = ''
 process.env.FRONTEND_ORIGIN = 'http://localhost:5173'
 process.env.RAZORPAY_KEY_ID = 'rzp_test_key'
 process.env.RAZORPAY_KEY_SECRET = 'rzp_test_secret'
@@ -23,6 +29,16 @@ const supertest = (await import('supertest')).default
 const { connectDb, closeDb, ensureIndexes, getDb, C } = await import('../../src/config/db.js')
 const { createApp } = await import('../../src/app.js')
 const { hashPassword, uuid } = await import('../../src/lib/crypto.js')
+const { setEmailFetch } = await import('../../src/providers/email.js')
+
+/** Every email the app "sent" through Resend (the HTTP call is stubbed; nothing leaves the machine). */
+export const sentEmails = []
+export const emailBehaviour = { fail: false }
+setEmailFetch(async (_url, options) => {
+  if (emailBehaviour.fail) return { ok: false, status: 422, json: async () => ({ message: 'domain not verified' }) }
+  sentEmails.push(JSON.parse(options.body))
+  return { ok: true, status: 200, json: async () => ({ id: 'email_test' }) }
+})
 
 let replSet = null
 let app = null

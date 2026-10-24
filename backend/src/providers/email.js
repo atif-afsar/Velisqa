@@ -1,11 +1,24 @@
 import nodemailer from 'nodemailer'
 import { env } from '../config/env.js'
+import { ProviderError } from '../lib/errors.js'
 import { logger } from '../lib/logger.js'
+
+const RESEND_URL = 'https://api.resend.com/emails'
+const REQUEST_TIMEOUT_MS = 15_000
 
 let transport = null
 
+// Overridable in tests so no real HTTP call is ever made.
+let fetchImpl = (...args) => fetch(...args)
+export const setEmailFetch = (fn) => {
+  fetchImpl = fn
+}
+
+const hasResend = () => Boolean(env.RESEND_API_KEY && env.EMAIL_FROM)
+const hasSmtp = () => Boolean(env.SMTP_HOST && env.SMTP_USER && env.SMTP_PASSWORD && env.EMAIL_FROM)
+
 export function isEmailConfigured() {
-  return Boolean(env.SMTP_HOST && env.SMTP_USER && env.SMTP_PASSWORD && env.EMAIL_FROM)
+  return hasResend() || hasSmtp()
 }
 
 function getTransport() {
@@ -20,12 +33,36 @@ function getTransport() {
   return transport
 }
 
-/** Sends a transactional email over SMTP (e.g. Hostinger mail). Returns false when SMTP is not configured. */
-export async function sendEmail({ to, subject, text, html }) {
-  if (!isEmailConfigured()) {
-    logger.warn('Email not sent: SMTP is not configured', { subject })
-    return false
+async function sendViaResend({ to, subject, text, html, headers, idempotencyKey }) {
+  const response = await fetchImpl(RESEND_URL, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${env.RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+      ...(idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : {}),
+    },
+    body: JSON.stringify({ from: env.EMAIL_FROM, to: [to], subject, text, html, headers }),
+    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+  })
+  if (!response.ok) {
+    const body = await response.json().catch(() => null)
+    throw new ProviderError(`Resend rejected the email (${response.status}): ${body?.message || body?.name || 'unknown error'}`, 502)
   }
-  await getTransport().sendMail({ from: env.EMAIL_FROM, to, subject, text, html })
-  return true
+}
+
+/**
+ * Sends a transactional/marketing email. Resend (HTTPS API) is used when RESEND_API_KEY is set,
+ * otherwise SMTP. Returns false when no provider is configured.
+ */
+export async function sendEmail({ to, subject, text, html, headers, idempotencyKey }) {
+  if (hasResend()) {
+    await sendViaResend({ to, subject, text, html, headers, idempotencyKey })
+    return true
+  }
+  if (hasSmtp()) {
+    await getTransport().sendMail({ from: env.EMAIL_FROM, to, subject, text, html, headers })
+    return true
+  }
+  logger.warn('Email not sent: no email provider is configured', { subject })
+  return false
 }
