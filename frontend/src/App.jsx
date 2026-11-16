@@ -55,6 +55,7 @@ import {
   MyOrders,
   Founders,
   AdminAnalytics,
+  ReviewRequest,
   NotFound,
 } from './pages'
 
@@ -109,6 +110,7 @@ function App() {
           <Route path="/pay/:orderRef" element={<ManualPayment />} />
           <Route path="/order-confirmation/:orderRef" element={<ManualPaymentConfirmation />} />
           <Route path="/orders/:orderRef" element={<OrderTracking />} />
+          <Route path="/review/:orderRef" element={<ReviewRequest />} />
           <Route
             path="/account/orders"
             element={(

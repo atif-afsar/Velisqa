@@ -57,6 +57,7 @@ export const AdminReturns = lazyPage(() => import('./Pages/AdminReturns'))
 export const MyOrders = lazyPage(() => import('./Pages/MyOrders'))
 export const Founders = lazyPage(() => import('./Pages/Founders'))
 export const AdminAnalytics = lazyPage(() => import('./Pages/AdminAnalytics'))
+export const ReviewRequest = lazyPage(() => import('./Pages/ReviewRequest'))
 export const NotFound = lazyPage(() => import('./Pages/NotFound'))
 
 /** Public, prerendered routes (in App's matching order) whose chunk loads before the first render. */

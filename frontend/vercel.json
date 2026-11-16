@@ -84,7 +84,7 @@
       "destination": "/app"
     },
     {
-      "source": "/(auth|account|admin|pay|order-confirmation|orders|product|collections)/:path*",
+      "source": "/(auth|account|admin|pay|order-confirmation|orders|review|product|collections)/:path*",
       "destination": "/app"
     }
   ],

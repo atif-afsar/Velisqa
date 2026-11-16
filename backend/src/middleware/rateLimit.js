@@ -24,3 +24,4 @@ export const authLimiter = limiter({
 export const checkoutLimiter = limiter({ windowMs: 10 * 60_000, limit: 30, message: 'Too many checkout attempts. Please wait and try again.' })
 
 export const reportLimiter = limiter({ windowMs: 60 * 60_000, limit: 20, message: 'Too many reports. Please try later.' })
+export const reviewLinkLimiter = limiter({ windowMs: 60 * 60_000, limit: 60, message: 'Too many attempts. Please try again later.' })

@@ -255,6 +255,25 @@ export default function ProductReviews({ product }) {
     }
   }
 
+  // No reviews yet and nothing for this shopper to write: a small invitation, not a big empty block.
+  const [formOpen, setFormOpen] = useState(false)
+  if (!loading && !error && aggregateCount === 0 && reviews.length === 0 && !viewerState.ownReview && !viewerState.eligible && !formOpen) {
+    return (
+      <section id="product-reviews" aria-label="Reviews" className="scroll-mt-[calc(var(--nav-height)+1rem)] border-t border-line pt-6 text-sm text-body">
+        <p>
+          Bought this piece?{' '}
+          <button
+            type="button"
+            onClick={() => (user ? setFormOpen(true) : requireSignIn(() => setFormOpen(true), { returnTo: `${productPath(product)}#product-reviews` }))}
+            className="min-h-11 font-medium text-ink underline underline-offset-4 hover:text-accent-ink"
+          >
+            Be the first to review
+          </button>
+        </p>
+      </section>
+    )
+  }
+
   return (
     <section
       id="product-reviews"
@@ -272,9 +291,7 @@ export default function ProductReviews({ product }) {
                 {' · '}
                 {aggregateCount} approved review{aggregateCount === 1 ? '' : 's'}
               </p>
-            ) : (
-              <p className="pb-1 text-sm text-muted">No reviews yet</p>
-            )}
+            ) : null}
           </div>
 
           {summary?.total > 0 && <RatingBreakdown summary={summary} />}

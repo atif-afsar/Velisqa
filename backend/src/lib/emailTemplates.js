@@ -124,3 +124,30 @@ export function renderPasswordResetEmail({ link }) {
   const text = `We received a request to reset your Velisqa password.\n\nSet a new password here (valid for 1 hour):\n${link}\n\nIf you did not ask for this, you can ignore this email.`
   return { subject: 'Reset your Velisqa password', html: layout({ preheader: 'Set a new password for your Velisqa account.', bodyHtml, footerHtml }), text }
 }
+
+/**
+ * Post-delivery review request: one signed link, no login needed.
+ * @param {{ firstName?: string, items: {name: string, imageUrl?: string|null}[], link: string }} data
+ */
+export function renderReviewRequestEmail({ firstName = '', items, link }) {
+  const greeting = firstName ? `Hi ${escapeHtml(firstName)},` : 'Hi,'
+  const rows = items
+    .slice(0, 4)
+    .map(
+      (item) => `<tr>
+        <td width="64" style="padding:8px 0;">${item.imageUrl ? `<img src="${escapeHtml(item.imageUrl)}" width="56" height="70" alt="" style="display:block;object-fit:cover;background:${MIST};">` : ''}</td>
+        <td style="padding:8px 0 8px 14px;font-family:${SANS};font-size:14px;color:${INK};">${escapeHtml(item.name)}</td>
+      </tr>`,
+    )
+    .join('')
+  const bodyHtml = `
+    <tr><td style="padding:34px 28px 8px;text-align:center;">
+      <h1 style="margin:0 0 12px;font-family:${FONT};font-weight:normal;font-size:26px;color:${INK};">How are you liking it?</h1>
+      <p style="margin:0;font-family:${SANS};font-size:15px;line-height:1.7;color:${BODY};">${greeting} your Velisqa order arrived a few days ago. A quick rating helps other shoppers choose — it takes under a minute and you don’t need to sign in.</p>
+    </td></tr>
+    <tr><td style="padding:16px 28px 4px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid ${LINE};border-bottom:1px solid ${LINE};">${rows}</table></td></tr>
+    <tr><td style="padding:24px 28px 30px;">${button(link, 'Rate your pieces')}</td></tr>`
+  const footerHtml = 'You are receiving this because you ordered from velisqa.com. Reviews are checked by our team before they appear.'
+  const text = `${firstName ? `Hi ${firstName},` : 'Hi,'}\n\nYour Velisqa order arrived a few days ago. Rate your pieces here (no sign-in needed):\n${link}\n\nThank you!`
+  return { subject: 'How are you liking your Velisqa pieces?', html: layout({ preheader: 'Rate your order in under a minute — no sign-in needed.', bodyHtml, footerHtml }), text }
+}

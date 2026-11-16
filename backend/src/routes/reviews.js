@@ -1,9 +1,11 @@
 import { Router } from 'express'
 import { z } from 'zod'
 import { requireUser } from '../middleware/auth.js'
-import { reportLimiter } from '../middleware/rateLimit.js'
+import { reportLimiter, reviewLinkLimiter } from '../middleware/rateLimit.js'
 import { ok } from '../middleware/requestContext.js'
 import { parse } from '../middleware/validate.js'
+import { createUploadSignature } from '../providers/cloudinary.js'
+import { assertReviewLink, getReviewRequest, submitReviewsFromRequest } from '../services/reviewRequestService.js'
 import { latestApprovedReviews, listApprovedReviews, reportReview, reviewSummary, submitReview, viewerState } from '../services/reviewService.js'
 
 const pageSchema = z.object({
@@ -49,4 +51,40 @@ reviewsRouter.get('/reviews/latest', async (req, res) => {
 reviewsRouter.post('/reviews/:id/report', requireUser, reportLimiter, async (req, res) => {
   await reportReview(req.params.id, req.auth.user._id)
   ok(res, { reported: true })
+})
+
+// ── Review links from the post-delivery email (no login; signed per order) ──
+
+const requestReviewSchema = z.object({
+  t: z.string().trim().min(10).max(80),
+  reviewerName: z.string().trim().max(80).optional(),
+  reviews: z
+    .array(
+      z.object({
+        productId: z.string().trim().max(64),
+        rating: z.coerce.number().int().min(1).max(5),
+        title: z.string().trim().min(3, 'Title must be 3–100 characters.').max(100, 'Title must be 3–100 characters.'),
+        body: z.string().trim().min(10, 'Review must be 10–2000 characters.').max(2000, 'Review must be 10–2000 characters.'),
+        imageUrls: z.array(imageUrl).max(3).optional().default([]),
+      }),
+    )
+    .min(1, 'Rate at least one piece.')
+    .max(20),
+})
+
+reviewsRouter.get('/review-requests/:orderRef', reviewLinkLimiter, async (req, res) => {
+  const { t } = parse(z.object({ t: z.string().trim().min(10).max(80) }), req.query)
+  ok(res, await getReviewRequest(req.params.orderRef, t))
+})
+
+reviewsRouter.post('/review-requests/:orderRef', reviewLinkLimiter, async (req, res) => {
+  const body = parse(requestReviewSchema, req.body)
+  ok(res, await submitReviewsFromRequest(req.params.orderRef, body.t, body), 201)
+})
+
+/** Signed Cloudinary upload for review photos, authorised by the review link instead of a session. */
+reviewsRouter.post('/review-requests/:orderRef/upload-signature', reviewLinkLimiter, async (req, res) => {
+  const { t } = parse(z.object({ t: z.string().trim().min(10).max(80) }), req.body)
+  await assertReviewLink(req.params.orderRef, t)
+  ok(res, createUploadSignature({ folder: 'velisqa/reviews' }))
 })

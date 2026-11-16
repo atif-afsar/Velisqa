@@ -3,6 +3,7 @@ import { closeDb, connectDb, ensureIndexes, supportsTransactions } from './confi
 import { logger } from './lib/logger.js'
 import { createApp } from './app.js'
 import { startAbandonedCartJob } from './services/marketingService.js'
+import { startReviewRequestJob } from './services/reviewRequestService.js'
 
 async function connectWithRetry(attempts = 10) {
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
@@ -31,6 +32,7 @@ async function main() {
     logger.info('Velisqa API listening', { host: env.HOST, port: env.PORT, env: env.NODE_ENV })
   })
   startAbandonedCartJob()
+  startReviewRequestJob()
   server.keepAliveTimeout = 65_000
   server.headersTimeout = 66_000
 
