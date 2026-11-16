@@ -109,6 +109,17 @@ html.no-tabbar {
   --tabbar-height: 0px;
 }
 
+/* Floating UI sits above the tab bar and any sticky CTA bar (see lib/stickyBar.js). */
+.consent-banner,
+.floating-above-cta {
+  bottom: calc(var(--tabbar-height) + var(--sticky-cta-height, 0px) + 0.75rem);
+}
+@media (min-width: 1024px) {
+  .consent-banner {
+    bottom: 1.5rem;
+  }
+}
+
 body {
   padding-bottom: var(--tabbar-height);
 }

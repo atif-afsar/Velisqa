@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import SEOHead from '../Components/SEO/SEOHead'
 import { SITE_URL } from '../Components/SEO/siteConfig'
@@ -14,7 +14,12 @@ import { findCachedProduct, readProductCatalogCache } from '../lib/productCatalo
 import { getPrerenderData } from '../lib/prerenderData'
 import { fetchProductById, fetchProductIdNames, fetchProductsByIds } from '../lib/productQuery'
 import { getPromoPriceDisplay, formatInr } from '../lib/promoPricing'
-import { displayProductName, getProductBadge, getProductRating, getProductReviewCount } from '../lib/productDisplay'
+import { displayProductName, getProductBadge, getProductRating, getProductReviewCount, productAlt } from '../lib/productDisplay'
+import { parseDescription, productSpecRows, toneLabel } from '../lib/productDescription'
+import { COD_FEE, GIFT_WRAP_FEE } from '../lib/checkoutPricing'
+import { readGiftWrap, saveGiftWrap } from '../lib/coupons'
+import { RETURN_WINDOW_DAYS } from '../lib/orderReturns'
+import { useStickyBarHeight } from '../lib/stickyBar'
 import { isProductUuid, matchProductBySlug, productPath, productSlug } from '../lib/productUrl'
 import { findShopCategoryByName, categoryPath } from '../data/shopCategories'
 import { CART_OFFERS } from '../lib/cartOffers'
@@ -22,11 +27,13 @@ import { analytics } from '../lib/analytics'
 import ProductGallery from '../Components/Product/ProductGallery'
 import ProductReviews from '../Components/Product/ProductReviews'
 import ProductCard from '../Components/Product/ProductCard'
+import ProductOffers from '../Components/Product/ProductOffers'
+import CompleteTheLook from '../Components/Product/CompleteTheLook'
 import ProductWishlistButton from '../Components/Product/ProductWishlistButton'
 import DeliveryEstimate from '../Components/Product/DeliveryEstimate'
 import QuantityStepper from '../Components/Cart/QuantityStepper'
 import BuyNowButton from '../Components/WhatsApp/BuyNowButton'
-import { PlusIcon, ReturnIcon, ShieldIcon, StarIcon, TruckIcon } from '../Components/UI/Icons'
+import { GiftIcon, LockIcon, PlusIcon, ReturnIcon, StarIcon, TruckIcon, WalletIcon } from '../Components/UI/Icons'
 
 /** Resolves /product/:id where :id is a slug ("gold-heart-necklace-064e71") or a legacy UUID. */
 function useProductFromParam(param) {
@@ -118,6 +125,40 @@ function Accordion({ title, children, defaultOpen = false }) {
   )
 }
 
+/** Description as paragraphs + real bullet lists (no raw markdown or emoji bullets). */
+function ProductDescription({ text }) {
+  const blocks = parseDescription(text)
+  return (
+    <div className="space-y-3">
+      {blocks.map((b, i) =>
+        b.type === 'p' ? (
+          <p key={i}>{b.text}</p>
+        ) : (
+          <ul key={i} className="list-disc space-y-1.5 pl-5">
+            {b.items.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        ),
+      )}
+    </div>
+  )
+}
+
+const TRUST = [
+  { icon: TruckIcon, label: 'Free shipping on prepaid' },
+  { icon: WalletIcon, label: `COD available (₹${COD_FEE} fee)` },
+  { icon: ReturnIcon, label: `Easy ${RETURN_WINDOW_DAYS}-day returns` },
+  { icon: LockIcon, label: 'Secure Razorpay payments' },
+]
+
+const CARE_TEXT = 'Keep away from perfume and harsh chemicals. Wipe with a soft dry cloth after wearing. Store in the Velisqa pouch.'
+
+/** Rings described as adjustable need no measuring guide. */
+function isAdjustable(product) {
+  return /adjustable|free[\s-]?size|open ring/i.test(`${product.name} ${product.description || ''}`)
+}
+
 export default function ProductDetail() {
   const { id: param } = useParams()
   const { product, loading, notFound } = useProductFromParam(param)
@@ -125,7 +166,12 @@ export default function ProductDetail() {
   const { addToCart } = useCart()
   const [quantity, setQuantity] = useState(1)
   const [adding, setAdding] = useState(false)
+  const [giftWrap, setGiftWrap] = useState(readGiftWrap)
   const [comboProducts, setComboProducts] = useState([])
+  const [mainCtaVisible, setMainCtaVisible] = useState(true)
+  const mainCtaRef = useRef(null)
+  const stickyRef = useRef(null)
+  const lastViewed = useRef(null)
   // Quantity resets when the shopper moves to another product.
   const [quantityFor, setQuantityFor] = useState(product?.id)
   if (quantityFor !== product?.id) {
@@ -133,9 +179,28 @@ export default function ProductDetail() {
     setQuantity(1)
   }
 
+  // One ViewContent per product (the object is re-created when cache → network; the id is not).
+  const productId = product?.id
   useEffect(() => {
-    if (product?.id) analytics.viewItem(product)
-  }, [product])
+    if (!productId || lastViewed.current === productId) return
+    lastViewed.current = productId
+    analytics.viewItem(product)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productId])
+
+  // The sticky bar only appears once the main Add to bag button has scrolled out of view.
+  useEffect(() => {
+    const el = mainCtaRef.current
+    if (!el || typeof IntersectionObserver === 'undefined') return undefined
+    const io = new IntersectionObserver(([entry]) => setMainCtaVisible(entry.isIntersecting || entry.boundingClientRect.top > 0), {
+      rootMargin: '-64px 0px 0px 0px',
+    })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [productId, loading])
+
+  const soldOutNow = product ? isProductSoldOut(product) : true
+  useStickyBarHeight(stickyRef, Boolean(product) && !soldOutNow && !mainCtaVisible)
 
   useEffect(() => {
     const ids = product?.is_combo ? product.combo_product_ids : null
@@ -162,27 +227,36 @@ export default function ProductDetail() {
     )
   }, [products, product, name])
 
-  // Complete the look: pieces from other categories, in-stock first, same colour/metal preferred.
-  const completeTheLook = useMemo(() => {
+  // Complete the look: in-stock pieces from OTHER categories, same colour first, then shared styles.
+  const lookMatches = useMemo(() => {
     if (!product) return []
     const category = normalizeProductCategory(product.category)
     const variantIds = new Set(variants.map((v) => v.id))
-    const pool = products.filter((p) => p.id !== product.id && !variantIds.has(p.id) && !isProductSoldOut(p))
+    const styles = new Set((product.styles || []).map((s) => String(s).toLowerCase()))
+    const pool = products.filter((p) => p.id !== product.id && !variantIds.has(p.id) && !isProductSoldOut(p) && normalizeProductCategory(p.category) !== category)
     const score = (p) =>
-      (normalizeProductCategory(p.category) !== category ? 4 : 0) +
+      (product.colour && p.colour === product.colour ? 6 : 0) +
       (product.metal && p.metal === product.metal ? 2 : 0) +
-      (product.colour && p.colour === product.colour ? 1 : 0)
+      (p.styles || []).filter((s) => styles.has(String(s).toLowerCase())).length
     const picked = []
-    const seenCategories = new Set()
+    const seen = new Set()
     for (const p of [...pool].sort((a, b) => score(b) - score(a))) {
       const c = normalizeProductCategory(p.category)
-      if (seenCategories.has(c) && picked.length < 3) continue
-      seenCategories.add(c)
+      if (seen.has(c)) continue
+      seen.add(c)
       picked.push(p)
-      if (picked.length === 4) break
+      if (picked.length === 2) break
     }
     return picked
   }, [products, product, variants])
+
+  // You may also like: same category.
+  const similar = useMemo(() => {
+    if (!product) return []
+    const category = normalizeProductCategory(product.category)
+    const exclude = new Set([product.id, ...variants.map((v) => v.id), ...lookMatches.map((p) => p.id)])
+    return products.filter((p) => !exclude.has(p.id) && !isProductSoldOut(p) && normalizeProductCategory(p.category) === category).slice(0, 4)
+  }, [products, product, variants, lookMatches])
 
   if (loading) return <Skeleton />
 
@@ -193,8 +267,8 @@ export default function ProductDetail() {
         <p className="eyebrow text-muted">404</p>
         <h1 className="type-display mt-4 text-ink">This piece has moved on</h1>
         <p className="mx-auto mt-4 max-w-md text-body">It may have sold out or been retired. Explore the latest collection instead.</p>
-        <Link to="/collections" className="btn btn-primary mt-8">
-          Shop the collection
+        <Link to="/collections?sort=best-selling" className="btn btn-primary mt-8">
+          Shop bestsellers
         </Link>
       </main>
     )
@@ -212,10 +286,12 @@ export default function ProductDetail() {
   const { sale, compare, hasPromo, discountPercent } = getPromoPriceDisplay(product)
   const rating = getProductRating(product)
   const reviewCount = getProductReviewCount(product)
+  const hasRating = reviewCount > 0 && rating > 0
   const badge = getProductBadge(product)
   const head = productHead(product)
   const { description, crumbs } = head
-  const sizeGuide = SIZE_GUIDES[category]
+  const sizeGuide = category === 'Rings' && isAdjustable(product) ? null : SIZE_GUIDES[category]
+  const specs = productSpecRows(product)
 
   function handleAdd() {
     if (adding || soldOut) return
@@ -224,11 +300,17 @@ export default function ProductDetail() {
     window.setTimeout(() => setAdding(false), 600)
   }
 
-  const details = [
-    product.metal && ['Finish', product.metal],
-    product.colour && ['Colour', product.colour],
-    Array.isArray(product.styles) && product.styles.length && ['Style', product.styles.join(', ')],
-  ].filter(Boolean)
+  function toggleGiftWrap(on) {
+    setGiftWrap(on)
+    saveGiftWrap(on)
+  }
+
+  const ratingBadge = hasRating ? (
+    <span className="inline-flex items-center gap-1 bg-paper/95 px-2 py-1 text-xs font-medium text-ink shadow-sm">
+      {rating.toFixed(1)} <StarIcon size={11} filled className="text-accent-ink" />
+      <span className="text-muted">· {reviewCount}</span>
+    </span>
+  ) : null
 
   return (
     <>
@@ -241,7 +323,7 @@ export default function ProductDetail() {
         schema={head.schema}
       />
       <main className={`page-offset-nav min-h-svh bg-paper text-ink ${soldOut ? '' : 'pb-[calc(5rem+env(safe-area-inset-bottom))] lg:pb-0'}`}>
-        <div className="container-lux pt-4 lg:pt-6">
+        <div className="container-lux pt-0 sm:pt-4 lg:pt-6">
           <nav aria-label="Breadcrumb" className="hidden text-xs text-muted sm:block">
             <ol className="flex flex-wrap items-center gap-2">
               {crumbs.map((c, i) => (
@@ -261,11 +343,12 @@ export default function ProductDetail() {
             </ol>
           </nav>
 
-          <div className="grid gap-8 pb-16 pt-0 sm:pt-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14 xl:gap-20">
+          <div className="grid gap-4 pb-12 pt-0 sm:gap-8 sm:pt-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14 lg:pb-16 xl:gap-20">
             <ProductGallery
               key={product.id}
               images={images}
-              alt={name}
+              alt={productAlt(product)}
+              overlay={ratingBadge}
               badges={
                 soldOut ? (
                   <span className="badge">Sold out</span>
@@ -279,13 +362,23 @@ export default function ProductDetail() {
 
             <div className="lg:sticky lg:top-[calc(var(--nav-height)+1.5rem)] lg:self-start">
               {shopCategory && (
-                <Link to={categoryPath(shopCategory)} className="eyebrow text-muted hover:text-accent-ink">
+                <Link to={categoryPath(shopCategory)} className="eyebrow hidden text-muted hover:text-accent-ink sm:inline-block">
                   {shopCategory.label}
                 </Link>
               )}
-              <h1 className="type-display mt-3 text-[clamp(2rem,3.2vw,3rem)] text-ink">{name}</h1>
+              <h1 className="type-display line-clamp-2 text-[1.5rem] leading-tight text-ink sm:mt-3 sm:text-[clamp(2rem,3.2vw,3rem)]">{name}</h1>
 
-              <div className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              {hasRating ? (
+                <a href="#product-reviews" className="mt-1.5 inline-flex min-h-8 items-center gap-1.5 text-sm text-body hover:text-ink">
+                  <StarIcon size={14} filled className="text-accent-ink" />
+                  <span className="font-medium text-ink">{rating.toFixed(1)}</span>
+                  <span className="underline underline-offset-2">
+                    {reviewCount} review{reviewCount === 1 ? '' : 's'}
+                  </span>
+                </a>
+              ) : null}
+
+              <div className="mt-2 flex flex-wrap items-baseline gap-x-2.5 gap-y-1 sm:mt-4">
                 <p className="type-price text-2xl font-semibold text-ink">{formatInr(sale)}</p>
                 {hasPromo && (
                   <>
@@ -296,18 +389,41 @@ export default function ProductDetail() {
                     <span className="bg-accent-tint px-2 py-0.5 text-xs font-semibold text-accent-ink">{discountPercent}% off</span>
                   </>
                 )}
+                <span className="basis-full text-xs text-muted sm:basis-auto">Inclusive of all taxes</span>
               </div>
-              <p className="mt-1 text-xs text-muted">Inclusive of all taxes</p>
+              {!soldOut && stock > 0 && stock <= 3 && <p className="mt-1 text-sm font-medium text-accent-ink">Only {stock} left</p>}
 
-              {reviewCount > 0 && rating > 0 && (
-                <a href="#product-reviews" className="mt-3 inline-flex min-h-9 items-center gap-1.5 text-sm text-body hover:text-ink">
-                  <StarIcon size={14} className="text-ink" />
-                  {rating.toFixed(1)} · {reviewCount} review{reviewCount === 1 ? '' : 's'}
-                </a>
+              {/* Main actions — kept on the first screen on phones. */}
+              <div ref={mainCtaRef} className="mt-4 sm:mt-6">
+                {soldOut ? (
+                  <div className="space-y-3">
+                    <p className="text-sm text-body">This piece is currently sold out. Message us and we will tell you when it is back:</p>
+                    <BuyNowButton product={product} productUrl={url} soldOut className="btn btn-primary w-full" />
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex gap-2">
+                      <QuantityStepper value={quantity} max={stock} onChange={(q) => setQuantity(Math.max(1, q))} />
+                      <button type="button" onClick={handleAdd} disabled={adding} className="btn btn-primary min-h-[52px] min-w-0 flex-1 px-3">
+                        {adding ? 'Added to bag' : 'Add to bag'}
+                      </button>
+                      <ProductWishlistButton product={product} size="lg" className="h-[52px] w-[52px] shrink-0 border border-line-strong" />
+                    </div>
+                    <BuyNowButton product={product} productUrl={url} quantity={quantity} variant="outline" className="btn btn-secondary mt-2 min-h-[52px] w-full">
+                      Buy now
+                    </BuyNowButton>
+                  </>
+                )}
+              </div>
+
+              {!soldOut && (
+                <div className="mt-5">
+                  <ProductOffers price={sale} />
+                </div>
               )}
 
               {variants.length > 0 && (
-                <div className="mt-7">
+                <div className="mt-6">
                   <p className="eyebrow text-ink">Also available in</p>
                   <ul className="mt-3 flex flex-wrap gap-2">
                     <li>
@@ -317,10 +433,10 @@ export default function ProductDetail() {
                     </li>
                     {variants.map((v) => (
                       <li key={v.id}>
-                        <Link to={productPath(v)} className="block h-[72px] w-[58px] border border-line bg-mist hover:border-ink" title={v.colour || v.metal || v.name}>
+                        <Link to={productPath(v)} className="block h-[72px] w-[58px] border border-line bg-mist hover:border-ink" title={toneLabel(v.colour) || v.metal || v.name}>
                           <img
                             src={getPrimaryImageUrl(v)}
-                            alt={`${displayProductName(v.name)}${v.colour ? ` in ${v.colour}` : ''} — ${formatInr(v.price)}`}
+                            alt={`${displayProductName(v.name)}${v.colour ? ` in ${toneLabel(v.colour).toLowerCase()}` : ''} — ${formatInr(v.price)}`}
                             loading="lazy"
                             width="58"
                             height="72"
@@ -333,66 +449,53 @@ export default function ProductDetail() {
                 </div>
               )}
 
-              <div className="mt-8">
-                {soldOut ? (
-                  <div className="space-y-3">
-                    <p className="text-sm text-body">This piece is currently sold out. Ask us about restocks:</p>
-                    <BuyNowButton product={product} productUrl={url} soldOut className="btn btn-primary w-full" />
-                  </div>
-                ) : (
-                  <>
-                    <div className="flex items-center justify-between gap-4">
-                      <QuantityStepper value={quantity} max={stock} onChange={(q) => setQuantity(Math.max(1, q))} />
-                      {stock > 0 && stock <= 3 && <p className="text-sm text-accent-ink">Only {stock} left</p>}
-                    </div>
-                    <div className="mt-4 flex gap-2">
-                      <button type="button" onClick={handleAdd} disabled={adding} className="btn btn-primary min-h-[52px] flex-1">
-                        {adding ? 'Added to bag' : 'Add to bag'}
-                      </button>
-                      <ProductWishlistButton product={product} size="lg" className="h-[52px] w-[52px] border border-line-strong" />
-                    </div>
-                    <BuyNowButton product={product} productUrl={url} quantity={quantity} variant="outline" className="btn btn-secondary mt-2 min-h-[52px] w-full">
-                      Buy it now
-                    </BuyNowButton>
-                  </>
-                )}
-              </div>
+              {!soldOut && (
+                <div className="mt-5">
+                  <DeliveryEstimate />
+                </div>
+              )}
 
-              <ul className="mt-6 space-y-2.5 text-sm text-body">
-                <li className="flex items-center gap-3">
-                  <TruckIcon size={18} className="shrink-0 text-ink" /> Free shipping on prepaid orders
-                </li>
-                <li className="flex items-center gap-3">
-                  <ReturnIcon size={18} className="shrink-0 text-ink" /> 5-day returns from My Orders
-                </li>
-                <li className="flex items-center gap-3">
-                  <ShieldIcon size={18} className="shrink-0 text-ink" /> Secure payment via Razorpay, or cash on delivery
-                </li>
+              <ul className="mt-5 grid grid-cols-2 gap-2">
+                {TRUST.map(({ icon: Icon, label }) => (
+                  <li key={label} className="flex items-center gap-2.5 rounded-lg bg-mist px-3 py-3 text-xs leading-snug text-body">
+                    <Icon size={18} className="shrink-0 text-ink" />
+                    {label}
+                  </li>
+                ))}
               </ul>
+
+              {!soldOut && (
+                <label className="mt-4 flex min-h-12 cursor-pointer items-center gap-3 rounded-lg border border-line px-4 text-sm text-body">
+                  <input type="checkbox" checked={giftWrap} onChange={(e) => toggleGiftWrap(e.target.checked)} className="h-[18px] w-[18px] accent-ink" />
+                  <GiftIcon size={18} className="shrink-0 text-ink" />
+                  <span>
+                    Gift wrap this order <span className="text-muted">(+{formatInr(GIFT_WRAP_FEE)}, add a message at checkout)</span>
+                  </span>
+                </label>
+              )}
+
               {!soldOut && Number(product.price) < CART_OFFERS.freeGift.threshold && CART_OFFERS.freeGift.enabled && (
                 <p className="mt-4 bg-accent-tint px-4 py-3 text-sm text-accent-ink">
                   Spend {formatInr(CART_OFFERS.freeGift.threshold)} and choose a complimentary gift at checkout.
                 </p>
               )}
 
-              <div className="mt-8">
-                <DeliveryEstimate />
-              </div>
-
               <div className="mt-6 border-b border-line">
                 <Accordion title="Description" defaultOpen>
-                  <p className="whitespace-pre-line">{description}</p>
-                  {details.length > 0 && (
-                    <dl className="mt-5 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2">
-                      {details.map(([k, v]) => (
+                  <ProductDescription text={description} />
+                </Accordion>
+                {specs.length > 0 && (
+                  <Accordion title="Specifications">
+                    <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2">
+                      {specs.map(([k, v]) => (
                         <div key={k} className="contents">
                           <dt className="text-muted">{k}</dt>
                           <dd className="text-ink">{v}</dd>
                         </div>
                       ))}
                     </dl>
-                  )}
-                </Accordion>
+                  </Accordion>
+                )}
                 {comboProducts.length > 0 && (
                   <Accordion title={`In this set (${comboProducts.length})`} defaultOpen>
                     <ul className="space-y-3">
@@ -408,7 +511,10 @@ export default function ProductDetail() {
                     </ul>
                   </Accordion>
                 )}
-                {PRODUCT_POLICY_SECTIONS.map((section) => (
+                <Accordion title="Care">
+                  <p>{CARE_TEXT}</p>
+                </Accordion>
+                {PRODUCT_POLICY_SECTIONS.filter((s) => s.id !== 'care').map((section) => (
                   <Accordion key={section.id} title={section.title}>
                     <ul className="list-disc space-y-2 pl-5">
                       {section.items.map((item) => (
@@ -431,15 +537,20 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        {completeTheLook.length > 0 && (
-          <section aria-labelledby="ctl-heading" className="border-t border-line py-16 lg:py-24">
+        {!soldOut && <CompleteTheLook key={product.id} product={product} matches={lookMatches} />}
+
+        <div className="container-lux pb-12">
+          <ProductReviews product={product} />
+        </div>
+
+        {similar.length > 0 && (
+          <section aria-labelledby="similar-heading" className="border-t border-line py-12 lg:py-20">
             <div className="container-lux">
-              <p className="eyebrow text-muted">Style it with</p>
-              <h2 id="ctl-heading" className="type-section mt-3 text-ink">
-                Complete the look
+              <h2 id="similar-heading" className="type-section text-ink">
+                You may also like
               </h2>
-              <ul className="mt-10 grid grid-cols-2 gap-x-3 gap-y-10 sm:gap-x-5 lg:grid-cols-4 lg:gap-x-6">
-                {completeTheLook.map((p) => (
+              <ul className="mt-8 grid grid-cols-2 gap-x-3 gap-y-10 sm:gap-x-5 lg:grid-cols-4 lg:gap-x-6">
+                {similar.map((p) => (
                   <li key={p.id}>
                     <ProductCard product={p} />
                   </li>
@@ -449,20 +560,28 @@ export default function ProductDetail() {
           </section>
         )}
 
-        <div className="container-lux pb-20">
-          <ProductReviews product={product} />
-        </div>
-
-        {/* Mobile: add to bag / buy now always within thumb reach */}
+        {/* Phones: price + Buy now + Add to bag, shown once the main buttons scroll away. */}
         {!soldOut && (
-          <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-paper px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] lg:hidden">
-            <div className="grid grid-cols-2 gap-2">
-              <button type="button" onClick={handleAdd} disabled={adding} className="btn btn-secondary min-h-12 px-3">
+          <div
+            ref={stickyRef}
+            aria-hidden={mainCtaVisible}
+            className={`fixed inset-x-0 bottom-0 z-40 border-t border-line bg-paper px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] transition-transform duration-200 lg:hidden ${
+              mainCtaVisible ? 'pointer-events-none translate-y-full' : 'translate-y-0'
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <p className="min-w-0 shrink-0 pr-1 leading-tight">
+                {hasPromo && <s className="block text-[0.6875rem] text-muted">{formatInr(compare)}</s>}
+                <span className="type-price text-base font-semibold text-ink">{formatInr(sale)}</span>
+              </p>
+              <div className="min-w-0 flex-1">
+                <BuyNowButton product={product} productUrl={url} quantity={quantity} variant="outline" className="btn btn-secondary min-h-12 w-full px-2">
+                  Buy now
+                </BuyNowButton>
+              </div>
+              <button type="button" onClick={handleAdd} disabled={adding} tabIndex={mainCtaVisible ? -1 : 0} className="btn btn-primary min-h-12 flex-1 px-2">
                 {adding ? 'Added ✓' : 'Add to bag'}
               </button>
-              <BuyNowButton product={product} productUrl={url} quantity={quantity} className="btn btn-primary min-h-12 w-full px-3">
-                Buy now
-              </BuyNowButton>
             </div>
           </div>
         )}

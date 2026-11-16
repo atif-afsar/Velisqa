@@ -18,7 +18,7 @@ function GalleryImage({ src, alt, priority, sizes, className = '' }) {
       loading={priority ? 'eager' : 'lazy'}
       fetchPriority={priority ? 'high' : undefined}
       decoding={priority ? 'sync' : 'async'}
-      className={`h-full w-full object-cover ${className}`}
+      className={`h-full w-full ${className.includes('object-contain') ? '' : 'object-cover'} ${className}`}
     />
   )
 }
@@ -119,7 +119,7 @@ function Lightbox({ images, alt, start, onClose }) {
 // Only the visible layout's first image is high priority; the hidden one stays lazy (not downloaded).
 const isDesktopViewport = () => typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches
 
-export default function ProductGallery({ images, alt, badges }) {
+export default function ProductGallery({ images, alt, badges, overlay }) {
   const [desktop] = useState(isDesktopViewport)
   const [active, setActive] = useState(0)
   const [viewer, setViewer] = useState(null)
@@ -141,12 +141,12 @@ export default function ProductGallery({ images, alt, badges }) {
     <div className="relative">
       {badges && <div className="pointer-events-none absolute left-3 top-3 z-10 flex gap-2">{badges}</div>}
 
-      {/* Mobile carousel */}
-      <div className="lg:hidden">
+      {/* Mobile carousel: capped at min(125vw, 54vh) so the title, price and Add to bag stay on the first screen. */}
+      <div className="relative -mx-4 sm:mx-0 lg:hidden">
         <div
           ref={trackRef}
           onScroll={onScroll}
-          className="scrollbar-none -mx-4 flex snap-x snap-mandatory overflow-x-auto sm:mx-0"
+          className="scrollbar-none flex h-[min(125vw,54vh)] snap-x snap-mandatory overflow-x-auto bg-mist"
           aria-roledescription="carousel"
           aria-label={`${alt} images`}
         >
@@ -155,20 +155,21 @@ export default function ProductGallery({ images, alt, badges }) {
               key={src}
               type="button"
               onClick={() => setViewer(i)}
-              className="relative aspect-[4/5] w-full shrink-0 snap-center bg-mist"
+              className="relative h-full w-full shrink-0 snap-center"
               aria-label={`Open image ${i + 1} of ${count} full screen`}
             >
-              <GalleryImage src={src} alt={i === 0 ? alt : ''} priority={i === 0 && !desktop} sizes="100vw" />
+              <GalleryImage src={src} alt={i === 0 ? alt : ''} priority={i === 0 && !desktop} sizes="100vw" className="object-contain" />
             </button>
           ))}
         </div>
         {count > 1 && (
-          <div className="mt-4 flex justify-center gap-2" aria-hidden="true">
+          <div className="pointer-events-none absolute inset-x-0 bottom-2.5 flex justify-center gap-1.5" aria-hidden="true">
             {images.map((src, i) => (
-              <span key={src} className={`h-[3px] w-6 transition-colors ${i === active ? 'bg-ink' : 'bg-line'}`} />
+              <span key={src} className={`h-1.5 rounded-full transition-all ${i === active ? 'w-4 bg-ink' : 'w-1.5 bg-ink/25'}`} />
             ))}
           </div>
         )}
+        {overlay && <div className="pointer-events-none absolute bottom-2 left-3">{overlay}</div>}
       </div>
 
       {/* Desktop grid */}
@@ -194,6 +195,8 @@ export default function ProductGallery({ images, alt, badges }) {
           </button>
         ))}
       </div>
+
+      {overlay && <div className="pointer-events-none absolute bottom-3 left-3 hidden lg:block">{overlay}</div>}
 
       {viewer != null && <Lightbox images={images} alt={alt} start={viewer} onClose={() => setViewer(null)} />}
     </div>

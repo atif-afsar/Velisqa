@@ -72,12 +72,12 @@ function normalizeQuality(quality) {
  * - Supabase Pro transforms: on-the-fly resize
  * - Supabase free tier: pre-generated thumbnail for small widths
  */
-export function buildImageUrl(src, { width, height, quality = 'auto', resize = 'cover' } = {}) {
+export function buildImageUrl(src, { width, height, quality = 'auto', resize = 'cover', pad = false } = {}) {
   if (!src) return src
 
   if (isCloudinaryUrl(src)) {
     if (!width) return masterImageUrl(src)
-    return getOptimizedCloudinaryUrl(src, { width, quality: 'auto' })
+    return getOptimizedCloudinaryUrl(src, { width, quality: 'auto', pad })
   }
 
   if (!isSupabaseStorageUrl(src)) return src
@@ -103,11 +103,11 @@ export function buildImageUrl(src, { width, height, quality = 'auto', resize = '
 /**
  * Responsive `srcSet` for Cloudinary or Supabase Pro transforms.
  */
-export function buildImageSrcSet(src, widths, { quality = 'auto', resize = 'cover' } = {}) {
+export function buildImageSrcSet(src, widths, { quality = 'auto', resize = 'cover', pad = false } = {}) {
   if (!Array.isArray(widths) || !widths.length) return ''
 
   if (isCloudinaryUrl(src)) {
-    return buildCloudinarySrcSet(src, widths, { quality: normalizeQuality(quality) })
+    return buildCloudinarySrcSet(src, widths, { quality: normalizeQuality(quality), pad })
   }
 
   if (!TRANSFORM_ENABLED || !isSupabaseStorageUrl(src)) return ''

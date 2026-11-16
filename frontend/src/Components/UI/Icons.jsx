@@ -104,6 +104,13 @@ export const TruckIcon = (p) => (
   </Svg>
 )
 
+export const WalletIcon = (p) => (
+  <Svg {...p}>
+    <path d="M4 7.5h15a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-11a1.5 1.5 0 0 1 1.5-1.5H17" />
+    <path d="M16 13h4" />
+  </Svg>
+)
+
 export const ShieldIcon = (p) => (
   <Svg {...p}>
     <path d="M12 3.5 19 6v5.5c0 4.4-3 7.6-7 9-4-1.4-7-4.6-7-9V6l7-2.5Z" />

@@ -125,6 +125,33 @@ export function CartProvider({ children }) {
     [addToCartInternal],
   )
 
+  /** One tap, several pieces ("Complete the look"): one bag write, one AddToCart event per item. */
+  const addManyToCart = useCallback(
+    (products, { openDrawer = true } = {}) => {
+      let next = items
+      const added = []
+      for (const product of products) {
+        const existing = next.find(isPaidLine(product.id))
+        const currentQty = existing?.quantity ?? 0
+        const check = validateCartQuantity(product.stock, 1, currentQty, { soldOut: isProductSoldOut(product) })
+        if (!check.ok) continue
+        const line = productToCartLine(product, currentQty + 1)
+        next = existing ? next.map((item) => (isPaidLine(product.id)(item) ? { ...item, ...line, quantity: line.quantity } : item)) : [...next, line]
+        added.push(product)
+      }
+      if (!added.length) {
+        showToast('These pieces are already in your bag at the maximum available quantity.', 'error')
+        return { ok: false, added: 0 }
+      }
+      persist(next)
+      setLastAddedProductId(added[added.length - 1].id)
+      if (openDrawer) setIsCartDrawerOpen(true)
+      added.forEach((product) => analytics.addToCart(product, 1))
+      return { ok: true, added: added.length }
+    },
+    [items, persist, showToast],
+  )
+
   const setQuantity = useCallback(
     (productId, quantity) => {
       // Prevent modifying the free gift quantity
@@ -311,6 +338,7 @@ export function CartProvider({ children }) {
       openCartDrawer,
       closeCartDrawer,
       addToCart,
+      addManyToCart,
       setQuantity,
       removeFromCart,
       clearCart,
@@ -337,6 +365,7 @@ export function CartProvider({ children }) {
       openCartDrawer,
       closeCartDrawer,
       addToCart,
+      addManyToCart,
       setQuantity,
       removeFromCart,
       clearCart,

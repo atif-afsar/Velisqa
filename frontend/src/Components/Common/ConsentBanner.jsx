@@ -1,19 +1,17 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { hasConsentDecision, acceptAllConsent, acceptNecessaryOnly } from '../../lib/consent'
 
 /**
- * Super minimal, semi-transparent, non-intrusive cookie consent bar.
- * Designed to look sleek & luxurious without irritating users.
+ * Cookie consent bar.
+ * - Rendered straight away in its final position (no delayed fade over page headings).
+ * - Sits above the tab bar AND any sticky add-to-bag / pay bar (`--sticky-cta-height`), so it never
+ *   covers a call-to-action. Desktop: bottom-left, clear of third-party chat bubbles on the right.
+ * - 13px+ text, 44px tap targets, Accept is the filled primary action.
  */
 export default function ConsentBanner() {
-  const [visible, setVisible] = useState(false)
-
-  useEffect(() => {
-    if (!hasConsentDecision()) {
-      const t = setTimeout(() => setVisible(true), 1500)
-      return () => clearTimeout(t)
-    }
-  }, [])
+  // Read on mount only (client-side); prerendered HTML never contains the banner.
+  const [visible, setVisible] = useState(() => typeof window !== 'undefined' && !hasConsentDecision())
 
   if (!visible) return null
 
@@ -22,47 +20,41 @@ export default function ConsentBanner() {
     setVisible(false)
   }
 
-  const handleNecessary = () => {
+  const handleDecline = () => {
     acceptNecessaryOnly()
     setVisible(false)
   }
 
   return (
     <div
-      className="fixed bottom-[calc(var(--tabbar-height)+0.75rem)] left-3 right-3 z-[9999] sm:left-auto sm:right-6 sm:bottom-6 sm:max-w-md pointer-events-auto"
-      role="dialog"
+      className="consent-banner fixed left-3 right-3 z-[60] sm:right-auto sm:max-w-[26rem] lg:left-6"
+      role="region"
       aria-label="Cookie consent"
     >
-      <div
-        className="flex items-center justify-between gap-3 rounded border border-line bg-ink/85 px-4 py-2.5 shadow-2xl backdrop-blur-md text-white sm:px-5 sm:py-3 transition-all duration-300"
-        style={{ animation: 'fadeInUp 0.3s ease-out' }}
-      >
-        <p className="text-[11px] leading-tight text-white/85 sm:text-xs">
-          We use cookies to improve your experience & ads.
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border border-white/10 bg-ink px-4 py-3 text-white shadow-2xl">
+        <p className="min-w-0 flex-1 basis-56 text-[0.8125rem] leading-snug text-white/90">
+          We use cookies for a better experience and offers.{' '}
+          <Link to="/privacy" className="underline underline-offset-2 hover:text-white">
+            Privacy
+          </Link>
         </p>
-
-        <div className="flex shrink-0 items-center gap-2">
+        <div className="flex shrink-0 items-center gap-1">
           <button
-            onClick={handleNecessary}
-            className="rounded-sm border border-white/20 px-2.5 py-1 text-[10px] font-medium text-white/70 hover:text-white hover:border-white/40 transition-colors sm:text-xs"
+            type="button"
+            onClick={handleDecline}
+            className="min-h-11 px-3 text-[0.8125rem] font-medium text-white/80 underline-offset-4 hover:text-white hover:underline"
           >
             Decline
           </button>
           <button
+            type="button"
             onClick={handleAccept}
-            className="rounded-sm bg-ink px-3.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white hover:bg-ink-soft shadow-sm transition-all sm:text-xs"
+            className="min-h-11 rounded-md bg-white px-5 text-[0.8125rem] font-semibold text-ink transition-colors hover:bg-white/90"
           >
             Accept
           </button>
         </div>
       </div>
-
-      <style>{`
-        @keyframes fadeInUp {
-          from { transform: translateY(12px); opacity: 0; }
-          to   { transform: translateY(0);    opacity: 1; }
-        }
-      `}</style>
     </div>
   )
 }

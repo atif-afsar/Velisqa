@@ -17,6 +17,7 @@ export default function ProductImage({
   sizes,
   responsiveWidths,
   quality = 72,
+  pad = false,
   className = '',
   imgClassName = '',
   ...rest
@@ -37,9 +38,9 @@ export default function ProductImage({
   }
 
   const hasHover = typeof hoverSrc === 'string' && hoverSrc.trim() !== '' && hoverSrc !== src && !hoverFailed
-  const deliveredSrc = failedTransform ? src : buildImageUrl(src, { width, quality })
-  const srcSet = failedTransform || !responsiveWidths ? undefined : buildImageSrcSet(src, responsiveWidths, { quality }) || undefined
-  const hoverSet = hasHover && responsiveWidths ? buildImageSrcSet(hoverSrc, responsiveWidths, { quality }) || undefined : undefined
+  const deliveredSrc = failedTransform ? src : buildImageUrl(src, { width, quality, pad })
+  const srcSet = failedTransform || !responsiveWidths ? undefined : buildImageSrcSet(src, responsiveWidths, { quality, pad }) || undefined
+  const hoverSet = hasHover && responsiveWidths ? buildImageSrcSet(hoverSrc, responsiveWidths, { quality, pad }) || undefined : undefined
   const showHover = hasHover && hovered && hoverReady
 
   return (
@@ -70,7 +71,7 @@ export default function ProductImage({
       />
       {hasHover && hoverWanted && (
         <img
-          src={buildImageUrl(hoverSrc, { width, quality })}
+          src={buildImageUrl(hoverSrc, { width, quality, pad })}
           srcSet={hoverSet}
           sizes={hoverSet ? sizes : undefined}
           alt=""

@@ -69,7 +69,9 @@ export function getOptimizedCloudinaryUrl(imageUrl, options = {}) {
   const publicId = extractCloudinaryPublicId(imageUrl)
   if (!cloudName || !publicId) return imageUrl
 
-  return `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_${quality},w_${width}/${publicId}`
+  // pad: fit the whole piece inside a 4:5 frame on the card background instead of centre-cropping.
+  const sizing = options.pad ? `c_pad,ar_4:5,b_rgb:FAFAF8,w_${width}` : `w_${width}`
+  return `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_${quality},${sizing}/${publicId}`
 }
 
 export function buildCloudinarySrcSet(imageUrl, widths, options = {}) {

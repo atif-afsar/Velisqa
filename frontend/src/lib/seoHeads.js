@@ -11,6 +11,7 @@ import { displayProductName } from './productDisplay'
 import { getPrimaryImageUrl, getProductImageUrls } from './productImages'
 import { productPath } from './productUrl'
 import { formatInr } from './promoPricing'
+import { plainDescription } from './productDescription'
 
 export function productDescription(product) {
   const name = displayProductName(product.name)
@@ -28,7 +29,7 @@ export function productHead(product) {
   const shopCategory = findShopCategoryByName(normalizeProductCategory(product.category))
   const canonicalPath = productPath(product)
   const description = productDescription(product)
-  const flat = description.replace(/\s+/g, ' ')
+  const flat = plainDescription(description).replace(/\s+/g, ' ')
   const crumbs = [
     { name: 'Home', path: '/' },
     { name: shopCategory?.label ?? 'Shop', path: shopCategory ? categoryPath(shopCategory) : '/collections' },
@@ -49,7 +50,7 @@ export function productHead(product) {
         product,
         name,
         images: getProductImageUrls(product),
-        description: description.slice(0, 500),
+        description: flat.slice(0, 500),
         url: `${SITE_URL}${canonicalPath}`,
       }),
       buildBreadcrumbSchema(crumbs),

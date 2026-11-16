@@ -1,4 +1,19 @@
+import { normalizeProductCategory } from './productCategories'
+import { toneLabel } from './productDescription'
+
 /** @typedef {'bestseller' | 'new'} ProductBadgeType */
+
+/** Accessible image description from name + colour + type, e.g. "Gold Heart Necklace, gold-tone". */
+export function productAlt(product) {
+  const name = displayProductName(product?.name)
+  const lower = name.toLowerCase()
+  const tone = toneLabel(product?.colour)
+  const type = normalizeProductCategory(product?.category)
+  const parts = [name]
+  if (tone && !lower.includes(tone.toLowerCase().split('-')[0])) parts.push(tone.toLowerCase())
+  if (type && !lower.includes(type.toLowerCase().replace(/s$/, ''))) parts.push(type.toLowerCase())
+  return parts.join(', ')
+}
 
 const NEW_PRODUCT_DAYS = 30
 const BESTSELLER_REVIEW_THRESHOLD = 80
