@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { CART_OFFERS } from '../../lib/cartOffers'
+import { describeOffer, useOffers } from '../../lib/offers'
 
 const MESSAGES = [
   { text: 'Free shipping on prepaid orders', to: '/shipping-delivery' },
@@ -19,6 +20,9 @@ export default function PromoAnnouncementBar() {
   const { pathname } = useLocation()
   const hidden = pathname.startsWith('/admin')
   const [index, setIndex] = useState(0)
+  const offers = useOffers()
+  // The live offer + its code leads (admin coupons marked "Show on website").
+  const messages = [...offers.slice(0, 1).map((o) => ({ text: `${describeOffer(o)} · use code ${o.code}`, to: '/offers' })), ...MESSAGES]
 
   useEffect(() => {
     const root = document.documentElement
@@ -29,12 +33,12 @@ export default function PromoAnnouncementBar() {
 
   useEffect(() => {
     if (hidden || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined
-    const t = window.setInterval(() => setIndex((i) => (i + 1) % MESSAGES.length), ROTATE_MS)
+    const t = window.setInterval(() => setIndex((i) => i + 1), ROTATE_MS)
     return () => window.clearInterval(t)
   }, [hidden])
 
   if (hidden) return null
-  const current = MESSAGES[index]
+  const current = messages[index % messages.length]
 
   return (
     <div
@@ -45,12 +49,12 @@ export default function PromoAnnouncementBar() {
       <Link
         key={current.text}
         to={current.to}
-        className="fade-in truncate text-[0.6875rem] font-medium uppercase tracking-[0.16em] hover:text-white/80 md:hidden"
+        className="announce-in truncate text-[0.6875rem] font-medium uppercase tracking-[0.16em] hover:text-white/80 md:hidden"
       >
         {current.text}
       </Link>
       <p className="hidden truncate text-[0.6875rem] font-medium uppercase tracking-[0.16em] md:block">
-        {MESSAGES.map((m, i) => (
+        {messages.map((m, i) => (
           <span key={m.text}>
             {i > 0 && <span className="mx-4 text-white/40" aria-hidden="true">·</span>}
             <Link to={m.to} className="hover:text-white/80">

@@ -957,3 +957,21 @@ h3 {
     padding-right: 2.5rem;
   }
 }
+
+/* Announcement rotation: slide in at full contrast (a fade showed grey-on-black text mid-animation). */
+.announce-in {
+  animation: announce-in 280ms var(--ease-lux) both;
+}
+@keyframes announce-in {
+  from {
+    transform: translateY(40%);
+  }
+  to {
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .announce-in {
+    animation: none;
+  }
+}

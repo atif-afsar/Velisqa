@@ -13,7 +13,8 @@ import { isEmailConfigured, sendEmail } from '../providers/email.js'
  * through moderation and are marked "verified purchase".
  */
 export const REVIEW_REQUEST_DELAY_DAYS = 5
-const MAX_AGE_DAYS = 60 // never email about very old orders (e.g. right after this feature ships)
+// Only orders delivered in the last 14 days: no backlog of emails about old orders when this ships.
+const MAX_AGE_DAYS = 14
 const DAY = 86_400_000
 
 const secret = () => env.ORDER_TOKEN_SECRET || env.SESSION_SECRET
@@ -125,8 +126,7 @@ export async function runReviewRequestSweep(now = new Date()) {
       deleted_at: null,
       review_request_sent_at: null,
       customer_email: { $type: 'string', $ne: '' },
-      created_at: { $gte: oldest },
-      $and: [deliveredFilter, { $or: [{ delivered_at: { $lte: due } }, { delivered_at: null, updated_at: { $lte: due } }] }],
+      $and: [deliveredFilter, { $or: [{ delivered_at: { $lte: due, $gte: oldest } }, { delivered_at: null, updated_at: { $lte: due, $gte: oldest } }] }],
     })
     .limit(50)
     .toArray()
