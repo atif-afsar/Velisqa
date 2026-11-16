@@ -18,8 +18,10 @@ import { loadRazorpay, preloadRazorpay } from '../lib/loadRazorpay'
 import { buildOrderEmailPayload, submitOrderEmail } from '../lib/orderEmail'
 import { analytics } from '../lib/analytics'
 import { EMAIL_RE, readLeadEmail, saveCheckoutLead } from '../lib/checkoutLead'
-
-const PINCODE_KEY = 'velisqa:delivery_pincode'
+import { getMetaTrackingContext, setMetaUserData } from '../lib/metaPixel'
+import { getAttribution } from '../lib/attribution'
+import { deliveryByLabel, deliveryWindowLabel, readSavedPincode, savePincode } from '../lib/delivery'
+import { useStickyBarHeight } from '../lib/stickyBar'
 
 /** Input filters applied while typing. */
 const SANITIZE = {
@@ -29,23 +31,7 @@ const SANITIZE = {
   city: (v) => v.replace(/[^\p{L}\s.'-]/gu, '').slice(0, 60),
   state: (v) => v.replace(/[^\p{L}\s.'&-]/gu, '').slice(0, 60),
   notes: (v) => v.slice(0, 200),
-}
-
-function deliveryWindow() {
-  const fmt = { day: 'numeric', month: 'short' }
-  const start = new Date()
-  start.setDate(start.getDate() + 3)
-  const end = new Date()
-  end.setDate(end.getDate() + 5)
-  return `${start.toLocaleDateString('en-IN', fmt)} – ${end.toLocaleDateString('en-IN', fmt)}`
-}
-
-function readSavedPincode() {
-  try {
-    return localStorage.getItem(PINCODE_KEY) || ''
-  } catch {
-    return ''
-  }
+  giftMessage: (v) => v.slice(0, 200),
 }
 
 function isAuthRequiredError(err) {
@@ -105,7 +91,10 @@ export default function Checkout() {
   const coupon = useCoupon(eligibleSubtotal)
   const [giftWrap, setGiftWrap] = useState(readGiftWrap)
   const [paymentMethod, setPaymentMethod] = useState('online')
-  const [form, setForm] = useState({ phone: '', email: readLeadEmail(), name: '', pincode: readSavedPincode(), address: '', city: '', state: '', notes: '' })
+  const [form, setForm] = useState({ phone: '', email: readLeadEmail(), name: '', pincode: readSavedPincode(), address: '', city: '', state: '', notes: '', giftMessage: '' })
+  const [giftReceipt, setGiftReceipt] = useState(false)
+  const payBarRef = useRef(null)
+  const paymentTouched = useRef(false)
   const [errors, setErrors] = useState({})
   // Opt-in only (never pre-ticked): lets us email the shopper their bag + an offer if they leave.
   const [offersConsent, setOffersConsent] = useState(() => Boolean(readLeadEmail()))
@@ -117,10 +106,12 @@ export default function Checkout() {
   // Same submitted payload → same key, so a retried click/network failure cannot create a second order.
   const idempotency = useRef({ fingerprint: '', key: '' })
 
+  useStickyBarHeight(payBarRef, items.length > 0)
   const lines = items.filter((l) => !isFreeGiftItem(l))
   const gift = items.find(isFreeGiftItem)
   const totals = computeCheckoutTotals({ subtotal: eligibleSubtotal, couponDiscount: coupon.discount, giftWrap, paymentMethod })
-  const estimate = useMemo(() => deliveryWindow(), [])
+  const estimate = useMemo(() => deliveryWindowLabel(), [])
+  const deliveryBy = useMemo(() => deliveryByLabel(), [])
 
   // Each field only accepts the characters it can contain.
   const set = (key) => (e) => {
@@ -151,11 +142,36 @@ export default function Checkout() {
   }, [items, totals.total])
 
   useEffect(() => {
-    if (items.length > 0) analytics.addPaymentInfo({ items, total: totals.total }, paymentMethod)
     if (paymentMethod === 'online') preloadRazorpay()
-    // Track only when the shopper changes payment method.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paymentMethod])
+
+  function choosePayment(method) {
+    if (method === paymentMethod) return
+    setPaymentMethod(method)
+    paymentTouched.current = true
+    if (items.length > 0) analytics.addPaymentInfo({ items, total: computeCheckoutTotals({ subtotal: eligibleSubtotal, couponDiscount: coupon.discount, giftWrap, paymentMethod: method }).total }, method)
+  }
+
+  // Fix 2: browser advanced matching once contact details look valid (the pixel hashes them).
+  useEffect(() => {
+    const phoneOk = /^[6-9]\d{9}$/.test(form.phone)
+    const emailOk = EMAIL_RE.test(form.email.trim())
+    if (!phoneOk && !emailOk) return undefined
+    const timer = setTimeout(() => {
+      const [firstName, ...rest] = form.name.trim().split(/\s+/)
+      setMetaUserData({
+        email: emailOk ? form.email.trim() : undefined,
+        phone: phoneOk ? form.phone : undefined,
+        firstName: firstName || undefined,
+        lastName: rest.join(' ') || undefined,
+        city: form.city || undefined,
+        state: form.state || undefined,
+        zip: /^\d{6}$/.test(form.pincode) ? form.pincode : undefined,
+        externalId: user?.id || (phoneOk ? `91${form.phone}` : undefined),
+      })
+    }, 800)
+    return () => clearTimeout(timer)
+  }, [form.phone, form.email, form.name, form.city, form.state, form.pincode, user?.id])
 
   // With consent, remember the bag once the email looks valid (debounced; best effort).
   useEffect(() => {
@@ -200,11 +216,7 @@ export default function Checkout() {
         if (office) {
           setForm((f) => ({ ...f, city: office.District, state: office.State }))
           setPincodeStatus('ok')
-          try {
-            localStorage.setItem(PINCODE_KEY, pin)
-          } catch {
-            /* ignore */
-          }
+          savePincode(pin, `${office.District}, ${office.State}`)
         } else setPincodeStatus('invalid')
       })
       .catch(() => !cancelled && setPincodeStatus('ok'))
@@ -296,6 +308,8 @@ export default function Checkout() {
         paymentMethod,
         couponCode: coupon.code || null,
         giftWrap,
+        giftMessage: giftWrap ? form.giftMessage.trim() || null : null,
+        giftReceipt: giftWrap ? giftReceipt : false,
       }
       const itemPayload = items.map((line) => ({
         productId: line.productId,
@@ -306,7 +320,13 @@ export default function Checkout() {
       if (idempotency.current.fingerprint !== fingerprint) {
         idempotency.current = { fingerprint, key: crypto.randomUUID() }
       }
-      const order = await createOrder({ customer: customerPayload, items: itemPayload, idempotencyKey: idempotency.current.key })
+      if (!paymentTouched.current) analytics.addPaymentInfo({ items, total: totals.total }, paymentMethod)
+      const order = await createOrder({
+        customer: customerPayload,
+        items: itemPayload,
+        idempotencyKey: idempotency.current.key,
+        tracking: getMetaTrackingContext(getAttribution()),
+      })
       const { order_ref: orderRef, access_token: accessToken } = order
       // The server total is authoritative.
       const serverTotal = Number(order.grand_total) || totals.total
@@ -344,10 +364,11 @@ export default function Checkout() {
           finishLocalCart()
           try {
             const { error: verifyError } = await verifyRazorpayPayment({ orderRef, response })
-            // Payment status is set server-side only; the Razorpay webhook confirms the order if this call failed.
-            if (verifyError) console.warn('verify-razorpay-payment:', verifyError)
+            // Payment status is set server-side only; the Razorpay webhook confirms the order if this call failed,
+            // and the server sends the Purchase event then. No browser Purchase without a verified payment.
             emailTeam(orderRef, 'online')
-            trackPurchase(orderRef, serverTotal)
+            if (verifyError) console.warn('verify-razorpay-payment:', verifyError)
+            else trackPurchase(orderRef, serverTotal)
           } finally {
             navigate(`/order-confirmation/${orderRef}?token=${accessToken}`, { replace: true })
           }
@@ -547,7 +568,7 @@ export default function Checkout() {
                       required
                       value={form.pincode}
                       onChange={(e) => {
-                        setForm((f) => ({ ...f, pincode: e.target.value.replace(/D/g, '').slice(0, 6) }))
+                        setForm((f) => ({ ...f, pincode: e.target.value.replace(/\D/g, '').slice(0, 6) }))
                         clearError('pincode')
                       }}
                       error={errors.pincode}
@@ -578,7 +599,7 @@ export default function Checkout() {
               </form>
 
               <Card title="Offers & gift wrap">
-                <CouponField coupon={coupon} />
+                <CouponField coupon={coupon} subtotal={eligibleSubtotal} />
                 <label className="mt-4 flex min-h-11 cursor-pointer items-center gap-3 text-sm text-body">
                   <input
                     type="checkbox"
@@ -590,8 +611,24 @@ export default function Checkout() {
                     className="h-[18px] w-[18px] accent-ink"
                   />
                   <GiftIcon size={18} className="shrink-0 text-ink" />
-                  Gift wrap ({formatInr(GIFT_WRAP_FEE)})
+                  Gift wrap + message card ({formatInr(GIFT_WRAP_FEE)})
                 </label>
+                {giftWrap && (
+                  <div className="mt-2 space-y-3 pl-[30px]">
+                    <Field
+                      as="textarea"
+                      rows={2}
+                      label="Gift message (optional)"
+                      value={form.giftMessage}
+                      onChange={set('giftMessage')}
+                      hint={`${form.giftMessage.length}/200 · printed on the card`}
+                    />
+                    <label className="flex min-h-11 cursor-pointer items-center gap-3 text-sm text-body">
+                      <input type="checkbox" checked={giftReceipt} onChange={(e) => setGiftReceipt(e.target.checked)} className="h-[18px] w-[18px] accent-ink" />
+                      Gift receipt: no prices in the parcel
+                    </label>
+                  </div>
+                )}
               </Card>
 
               <Card step="3" title="Payment method">
@@ -599,7 +636,7 @@ export default function Checkout() {
                   <PaymentOption
                     value="online"
                     current={paymentMethod}
-                    onChange={setPaymentMethod}
+                    onChange={choosePayment}
                     title="UPI, cards & net banking"
                     amount={formatInr(onlineTotals.total)}
                     methods={['GPay', 'PhonePe', 'Paytm', 'Cards', 'Net banking']}
@@ -609,7 +646,7 @@ export default function Checkout() {
                   <PaymentOption
                     value="cod"
                     current={paymentMethod}
-                    onChange={setPaymentMethod}
+                    onChange={choosePayment}
                     title="Cash on delivery"
                     amount={formatInr(codTotals.total)}
                     hint={`Includes ${formatInr(COD_FEE)} COD fee + 2% GST, payable on delivery.`}
@@ -658,13 +695,14 @@ export default function Checkout() {
                 <LockIcon size={16} />
                 {submitting || `${ctaLabel} · ${formatInr(totals.total)}`}
               </button>
-              <p className="mt-3 text-center text-xs text-muted">Estimated delivery {estimate}</p>
+              <p className="mt-3 text-center text-xs text-muted">Delivery by {deliveryBy} · Secured by Razorpay · UPI · Cards · COD</p>
             </aside>
           </div>
         </div>
 
         {/* Phones: total + pay, always in reach */}
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-paper px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] lg:hidden">
+        <div ref={payBarRef} className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-paper px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] lg:hidden">
+          <p className="mb-1.5 text-center text-[0.6875rem] text-muted">Delivery by {deliveryBy} · Secured by Razorpay</p>
           <div className="flex items-center gap-3">
             <button
               type="button"

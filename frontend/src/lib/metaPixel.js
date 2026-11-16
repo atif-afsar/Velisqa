@@ -123,7 +123,7 @@ export function trackMetaViewContent(product) {
 }
 
 /** Track Meta AddToCart. */
-export function trackMetaAddToCart(product, quantity = 1) {
+export function trackMetaAddToCart(product, quantity = 1, eventID) {
   const productId = String(product.item_id || product.id || '')
   if (!isValidCatalogId(productId)) return false
 
@@ -137,11 +137,11 @@ export function trackMetaAddToCart(product, quantity = 1) {
     contents: [{ id: productId, quantity: qty, item_price: price }],
     value: price * qty,
     currency: 'INR',
-  })
+  }, eventID ? { eventID } : {})
 }
 
 /** Track Meta InitiateCheckout. */
-export function trackInitiateCheckout({ value, itemCount, contentIds = [] }) {
+export function trackInitiateCheckout({ value, itemCount, contentIds = [], eventID }) {
   const ids = (contentIds || []).map(String).filter(isValidCatalogId)
   const numValue = Number(value) || 0
   const params = {
@@ -153,7 +153,7 @@ export function trackInitiateCheckout({ value, itemCount, contentIds = [] }) {
   if (numValue > 0) {
     params.value = Number(numValue.toFixed(2))
   }
-  return trackMetaEvent('InitiateCheckout', params)
+  return trackMetaEvent('InitiateCheckout', params, eventID ? { eventID } : {})
 }
 
 /**
@@ -260,3 +260,67 @@ export function trackPaymentProofSubmitted({ orderRef, value }) {
   )
 }
 
+
+// ── Matching & server-event context ──────────────────────────────────────────
+
+function readCookie(name) {
+  if (typeof document === 'undefined') return null
+  const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`))
+  return match ? decodeURIComponent(match[1]) : null
+}
+
+/** `_fbc`, or one built from the landing URL's fbclid (fb.1.<ms>.<fbclid>) when the cookie is missing. */
+export function getFbc(attribution) {
+  const cookie = readCookie('_fbc')
+  if (cookie) return cookie
+  const fbclid = attribution?.fbclid
+  if (!fbclid) return null
+  const ts = Date.parse(attribution.captured_at || '') || Date.now()
+  return `fb.1.${ts}.${fbclid}`
+}
+
+/** Browser identifiers sent with orders and server events so CAPI can match the buyer. */
+export function getMetaTrackingContext(attribution) {
+  return {
+    fbp: readCookie('_fbp') || undefined,
+    fbc: getFbc(attribution) || undefined,
+    test_event_code: getTestEventCode() || undefined,
+    event_source_url: typeof window !== 'undefined' ? window.location.href.slice(0, 500) : undefined,
+  }
+}
+
+/** Unique id shared by a browser event and its server copy (Meta deduplicates on it). */
+export function newMetaEventId(prefix = 'ev') {
+  const rand = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`
+  return `${prefix}_${rand}`
+}
+
+let lastMatchKey = ''
+
+/**
+ * Browser advanced matching. The pixel normalises and hashes these values itself before sending.
+ * Called when checkout contact/address details become valid (and for signed-in shoppers).
+ */
+export function setMetaUserData({ email, phone, firstName, lastName, city, state, zip, externalId } = {}) {
+  const pixel = getFbq()
+  const pixelId = String(import.meta.env.VITE_META_PIXEL_ID || '').trim()
+  if (!pixel || !pixelId) return false
+  const digits = String(phone || '').replace(/\D/g, '')
+  const data = {
+    ...(email ? { em: String(email).trim().toLowerCase() } : {}),
+    ...(digits.length === 10 ? { ph: `91${digits}` } : digits.length === 12 ? { ph: digits } : {}),
+    ...(firstName ? { fn: String(firstName).trim().toLowerCase() } : {}),
+    ...(lastName ? { ln: String(lastName).trim().toLowerCase() } : {}),
+    ...(city ? { ct: String(city).trim().toLowerCase().replace(/\s+/g, '') } : {}),
+    ...(state ? { st: String(state).trim().toLowerCase().replace(/\s+/g, '') } : {}),
+    ...(zip ? { zp: String(zip).trim() } : {}),
+    country: 'in',
+    ...(externalId ? { external_id: String(externalId) } : {}),
+  }
+  if (!data.em && !data.ph) return false
+  const key = JSON.stringify(data)
+  if (key === lastMatchKey) return false
+  lastMatchKey = key
+  pixel('init', pixelId, data)
+  return true
+}

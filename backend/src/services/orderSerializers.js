@@ -3,7 +3,7 @@ import { decryptOrderToken } from '../lib/crypto.js'
 const iso = (value) => (value instanceof Date ? value.toISOString() : value ?? null)
 
 /** Fields hidden from every API response. */
-const INTERNAL = new Set(['access_token_hash', 'access_token_enc', 'idempotency_key', 'idempotency_hash', 'stock_applied', 'deleted_at', 'razorpay_signature'])
+const INTERNAL = new Set(['access_token_hash', 'access_token_enc', 'idempotency_key', 'idempotency_hash', 'stock_applied', 'deleted_at', 'razorpay_signature', 'tracking'])
 
 /** Order row in the snake_case shape PostgREST returned (admin + "my orders"). */
 export function serializeOrderRow(order, items, { includeToken = false } = {}) {

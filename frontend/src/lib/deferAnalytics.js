@@ -12,7 +12,10 @@ import { trackMetaPageView } from './metaPixel'
 
 const GA4_ID = String(import.meta.env.VITE_GA4_MEASUREMENT_ID || '').trim()
 const GTM_ID = String(import.meta.env.VITE_GTM_ID || '').trim()
-const ADS_ID = String(import.meta.env.VITE_GOOGLE_ADS_ID || '').trim()
+// Placeholder values (AW-XXXXXXXXX) are treated as unset so no fake conversion tag ever loads.
+const isPlaceholder = (v) => /X{4,}/i.test(v)
+const RAW_ADS_ID = String(import.meta.env.VITE_GOOGLE_ADS_ID || '').trim()
+const ADS_ID = isPlaceholder(RAW_ADS_ID) ? '' : RAW_ADS_ID
 const META_PIXEL_ID = String(import.meta.env.VITE_META_PIXEL_ID || '').trim()
 // Clarity was previously hard-coded in index.html; keep that project as the default.
 const CLARITY_ID = String(import.meta.env.VITE_CLARITY_ID || 'yf152wy8t4').trim()

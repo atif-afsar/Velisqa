@@ -429,6 +429,16 @@ export default function AdminOrders() {
                         <span className="inline-block mt-2 font-bold text-ink bg-accent-tint px-2.5 py-1 rounded border border-line">
                           🎁 GIFT WRAP REQUIRED (+₹50)
                         </span>
+                        {order.gift_receipt && (
+                          <span className="ml-2 inline-block mt-2 font-bold text-ink bg-amber-50 px-2.5 py-1 rounded border border-amber-200">
+                            Gift receipt: no prices in the parcel
+                          </span>
+                        )}
+                        {order.gift_message && (
+                          <span className="mt-2 block whitespace-pre-line rounded border border-line bg-mist px-2.5 py-1.5 text-ink">
+                            Card message: “{order.gift_message}”
+                          </span>
+                        )}
                       </>
                     )}
                   </p>

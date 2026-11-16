@@ -82,7 +82,7 @@ function aggregateItemQuantities(items) {
   return totals
 }
 
-export async function createOrder({ customer, items, idempotencyKey, userId }) {
+export async function createOrder({ customer, items, idempotencyKey, userId, tracking = null }) {
   const db = getDb()
   const fingerprint = requestFingerprint({ customer, items })
 
@@ -129,6 +129,10 @@ export async function createOrder({ customer, items, idempotencyKey, userId }) {
           coupon_code: priced.couponCode,
           gift_wrap: priced.giftWrap,
           gift_wrap_fee: priced.giftWrapFee,
+          gift_message: priced.giftWrap ? blank(customer.giftMessage) : null,
+          gift_receipt: Boolean(priced.giftWrap && customer.giftReceipt),
+          // Meta CAPI matching data (IP / UA / _fbp / _fbc) captured at order time; used once for Purchase.
+          tracking: tracking || null,
           grand_total: priced.grandTotal,
           order_status: 'placed',
           shipping_status: 'not_shipped',

@@ -25,9 +25,12 @@ import {
   trackMetaSearch,
   trackMetaCompleteRegistration,
   trackMetaContact,
-  getTestEventCode,
+  getMetaTrackingContext,
+  newMetaEventId,
 } from './metaPixel'
 import { api } from './apiClient'
+import { getAttribution } from './attribution'
+import { hasConsent } from './consent'
 
 const IS_DEV = import.meta.env.DEV
 
@@ -185,7 +188,15 @@ export const analytics = {
       value: item.price * item.quantity,
       items: [item],
     })
-    trackMetaAddToCart(item, quantity)
+    const eventId = newMetaEventId('atc')
+    trackMetaAddToCart(item, quantity, eventId)
+    sendMetaServerEvent('AddToCart', eventId, {
+      currency: 'INR',
+      value: item.price * item.quantity,
+      content_type: 'product',
+      content_ids: [String(item.item_id)],
+      contents: [{ id: String(item.item_id), quantity: item.quantity, item_price: item.price }],
+    })
   },
 
   /**
@@ -228,10 +239,20 @@ export const analytics = {
       value: Number(cart.total) || 0,
       items,
     })
+    const eventId = newMetaEventId('ic')
+    const contentIds = cart.items.map((line) => String(line.productId || line.id)).filter((id) => !id.startsWith('VELISQA_FREE_GIFT'))
     metaInitiateCheckout({
       value: cart.total,
       itemCount: cart.items.length,
-      contentIds: cart.items.map((line) => line.productId || line.id),
+      contentIds,
+      eventID: eventId,
+    })
+    sendMetaServerEvent('InitiateCheckout', eventId, {
+      currency: 'INR',
+      value: Number(cart.total) || 0,
+      content_type: 'product',
+      content_ids: contentIds,
+      num_items: cart.items.reduce((n, line) => n + (Number(line.quantity) || 1), 0),
     })
   },
 
@@ -383,16 +404,31 @@ export const analytics = {
 
 // ── Meta CAPI (server-side) ─────────────────────────────────
 
+/**
+ * Server copy of a browser event (same event_id, so Meta deduplicates). Only with advertising
+ * consent; the server adds the IP and user agent. Best effort: never blocks the shopper.
+ */
+function sendMetaServerEvent(eventName, eventId, customData) {
+  if (typeof window === 'undefined' || !hasConsent('advertising')) return
+  api
+    .post('/events/meta-conversions', {
+      event_name: eventName,
+      event_id: eventId,
+      custom_data: customData,
+      ...getMetaTrackingContext(getAttribution()),
+    })
+    .catch(() => {})
+}
+
 async function sendMetaCAPI(order) {
   try {
-    const testCode = getTestEventCode()
+    // Value, items and hashed customer data come from the stored order on the server.
     await api.post('/events/meta-conversions', {
       event_name: 'Purchase',
       event_id: order.transaction_id,
-      event_source_url: window.location.href,
-      test_event_code: testCode || undefined,
+      ...getMetaTrackingContext(getAttribution()),
     })
   } catch {
-    // Meta CAPI is best-effort — don't block the purchase flow
+    // Meta CAPI is best effort and must not block the purchase flow.
   }
 }

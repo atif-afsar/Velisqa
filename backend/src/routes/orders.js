@@ -27,7 +27,20 @@ const customerSchema = z.object({
   paymentMethod: z.enum(['cod', 'online']).optional().default('online'),
   couponCode: optionalText(40),
   giftWrap: z.boolean().optional().default(false),
+  giftMessage: optionalText(200),
+  giftReceipt: z.boolean().optional().default(false),
 })
+
+// Browser identifiers for Meta CAPI matching (never trusted for prices or status).
+const trackingSchema = z
+  .object({
+    fbp: z.string().trim().max(200).optional(),
+    fbc: z.string().trim().max(500).optional(),
+    test_event_code: z.string().trim().max(40).optional(),
+    event_source_url: z.string().trim().max(500).optional(),
+  })
+  .partial()
+  .optional()
 
 // Client prices/images/totals are ignored on purpose: only id, quantity and the gift flag are read.
 const itemSchema = z
@@ -42,6 +55,7 @@ const orderSchema = z.object({
   customer: customerSchema,
   items: z.array(itemSchema).min(1, 'Your bag is empty.').max(50),
   idempotencyKey: z.string().trim().min(8).max(100).optional(),
+  tracking: trackingSchema,
 })
 
 const quoteSchema = z.object({
@@ -65,7 +79,12 @@ ordersRouter.post('/checkout/quote', async (req, res) => {
 ordersRouter.post('/orders', checkoutLimiter, async (req, res) => {
   const body = parse(orderSchema, req.body)
   const idempotencyKey = body.idempotencyKey || req.get('idempotency-key') || undefined
-  const result = await createOrder({ customer: body.customer, items: body.items, idempotencyKey, userId: req.auth?.user?._id })
+  const tracking = {
+    ...(body.tracking || {}),
+    client_ip_address: req.ip || null,
+    client_user_agent: String(req.get('user-agent') || '').slice(0, 500) || null,
+  }
+  const result = await createOrder({ customer: body.customer, items: body.items, idempotencyKey, userId: req.auth?.user?._id, tracking })
   ok(res, result, result.replayed ? 200 : 201)
 })
 

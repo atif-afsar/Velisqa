@@ -16,7 +16,7 @@ const privatePath = (orderRef) => `/orders/private/${encodeURIComponent(orderRef
  * Places an order. The API prices everything from the catalogue; only product
  * ids, quantities and the gift flag are sent. `idempotencyKey` makes retries safe.
  */
-export async function createOrder({ customer, items, idempotencyKey }) {
+export async function createOrder({ customer, items, idempotencyKey, tracking }) {
   const data = await api.post('/orders', {
     customer,
     items: items.map((item) => ({
@@ -25,6 +25,7 @@ export async function createOrder({ customer, items, idempotencyKey }) {
       ...(item.isFreeGift ? { isFreeGift: true } : {}),
     })),
     ...(idempotencyKey ? { idempotencyKey } : {}),
+    ...(tracking ? { tracking } : {}),
   })
   if (!data?.order_ref || !data?.access_token) throw new Error('The order was created without a payment reference.')
   return data
