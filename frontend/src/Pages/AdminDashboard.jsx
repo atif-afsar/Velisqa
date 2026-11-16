@@ -54,6 +54,7 @@ const emptyForm = {
   search_keywords: '',
   stock: '1',
   out_of_stock: false,
+  hidden: false,
   badge: '',
   mock_review_count: '0',
   mock_rating: '',
@@ -216,6 +217,7 @@ export default function AdminDashboard() {
       search_keywords: normalizeTextList(product.search_keywords).join(', '),
       stock: String(product.stock ?? 1),
       out_of_stock: readOutOfStockFromProduct(product, useOosColumn),
+      hidden: Boolean(product.hidden),
       badge: product.badge ?? '',
       mock_review_count: String(product.mock_review_count ?? 0),
       mock_rating: product.mock_rating != null ? String(product.mock_rating) : '',
@@ -325,6 +327,10 @@ export default function AdminDashboard() {
       showFormError('Selling price must be greater than ₹0.')
       return
     }
+    if (mrp == null && !form.hidden) {
+      showFormError('Enter the MRP (the price printed on the pack) to publish, or tick "Hidden" to save a draft.')
+      return
+    }
     if (mrp != null && (!Number.isFinite(mrp) || mrp < price)) {
       showFormError('MRP must be equal to or greater than the selling price.')
       return
@@ -390,6 +396,7 @@ export default function AdminDashboard() {
         name: form.name.trim(),
         price,
         mrp,
+        hidden: Boolean(form.hidden),
         description: form.description.trim() || null,
         category: normalizeProductCategory(form.category),
         metal: form.metal,
@@ -828,9 +835,9 @@ export default function AdminDashboard() {
                   step="0.01"
                   value={form.mrp}
                   onChange={(e) => setForm((f) => ({ ...f, mrp: e.target.value }))}
-                  placeholder="Leave empty when not discounted"
+                  placeholder="Price printed on the pack"
                 />
-                <p className="mt-1 text-xs text-muted">Must not be lower than the selling price.</p>
+                <p className="mt-1 text-xs text-muted">Required to publish. Use the same MRP as on Myntra / Amazon. Not lower than the selling price.</p>
               </label>
 
               <label className="block w-full max-w-full min-w-0 box-border">
@@ -861,6 +868,22 @@ export default function AdminDashboard() {
                   </span>
                   Shoppers see “Out of stock” and “Enquire this product” on the website. Stock count
                   above is kept for your records.
+                </span>
+              </label>
+
+              <label className="flex items-start gap-3 rounded-xl border border-muted/20 bg-paper p-3 sm:px-4 sm:py-3 sm:col-span-2 w-full max-w-full min-w-0 box-border overflow-hidden">
+                <input
+                  type="checkbox"
+                  className="mt-1 h-4 w-4 shrink-0 accent-ink"
+                  checked={form.hidden}
+                  onChange={(e) => setForm((f) => ({ ...f, hidden: e.target.checked }))}
+                />
+                <span className="text-xs sm:text-sm leading-relaxed text-body min-w-0 flex-1">
+                  <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
+                    Hidden (unpublished)
+                  </span>
+                  Not shown anywhere on the website, search, feeds or checkout. Use it for drafts, retired styles and
+                  duplicates merged into another listing.
                 </span>
               </label>
 
@@ -1361,6 +1384,14 @@ export default function AdminDashboard() {
                         {product.is_combo && (
                           <span className="rounded bg-mist border border-line text-[9px] font-bold uppercase tracking-wider text-[#8a6b1f] px-1.5 py-0.5">
                             Combo
+                          </span>
+                        )}
+                        {product.hidden && (
+                          <span className="rounded bg-gray-100 text-[9px] font-bold uppercase tracking-wider text-gray-700 px-1.5 py-0.5">Hidden</span>
+                        )}
+                        {!product.hidden && product.mrp == null && (
+                          <span className="rounded bg-amber-50 border border-amber-200 text-[9px] font-bold uppercase tracking-wider text-amber-900 px-1.5 py-0.5" title="Add the MRP so the card shows MRP + % off">
+                            No MRP
                           </span>
                         )}
                       </div>

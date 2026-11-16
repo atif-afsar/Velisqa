@@ -10,6 +10,8 @@ const emptyForm = {
   discount_value: '',
   min_subtotal: '0',
   active: true,
+  show_on_site: false,
+  label: '',
 }
 
 export default function AdminCoupons() {
@@ -67,6 +69,8 @@ export default function AdminCoupons() {
         discount_value: value,
         min_subtotal: Number(form.min_subtotal || 0),
         active: form.active,
+        show_on_site: form.show_on_site,
+        label: form.label.trim() || null,
       })
 
       setNotice(`Coupon "${code}" created successfully!`)
@@ -88,6 +92,18 @@ export default function AdminCoupons() {
       fetchCoupons()
     } catch (err) {
       setError(err.message || 'Failed to update status.')
+    }
+  }
+
+  async function handleToggleSite(coupon) {
+    setError('')
+    setNotice('')
+    try {
+      await updateAdminCoupon(coupon.code, { show_on_site: !coupon.show_on_site })
+      setNotice(coupon.show_on_site ? `"${coupon.code}" is no longer advertised on the website.` : `"${coupon.code}" now shows on product cards, product pages, the bag and checkout.`)
+      fetchCoupons()
+    } catch (err) {
+      setError(err.message || 'Failed to update coupon.')
     }
   }
 
@@ -142,6 +158,7 @@ export default function AdminCoupons() {
                     <th className="pb-3 pr-2">Discount</th>
                     <th className="pb-3 pr-2">Min Order</th>
                     <th className="pb-3 pr-2 text-center">Status</th>
+                    <th className="pb-3 pr-2 text-center">On website</th>
                     <th className="pb-3 text-right">Actions</th>
                   </tr>
                 </thead>
@@ -168,6 +185,22 @@ export default function AdminCoupons() {
                         >
                           {coupon.active ? 'Active' : 'Inactive'}
                         </button>
+                      </td>
+                      <td className="py-3.5 pr-2 text-center">
+                        {coupon.single_use ? (
+                          <span className="text-[10px] text-muted">Personal</span>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => handleToggleSite(coupon)}
+                            title={coupon.label || ''}
+                            className={`rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider transition ${
+                              coupon.show_on_site ? 'bg-accent-tint text-accent-ink hover:opacity-80' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                            }`}
+                          >
+                            {coupon.show_on_site ? 'Shown' : 'Hidden'}
+                          </button>
+                        )}
                       </td>
                       <td className="py-3.5 text-right">
                         <button
@@ -263,6 +296,31 @@ export default function AdminCoupons() {
                 className="h-4 w-4 rounded border-gray-300 text-ink focus:ring-ink"
               />
               <span>Enable this coupon immediately</span>
+            </label>
+
+            <label className="flex items-start gap-2.5 pt-1 cursor-pointer text-xs font-semibold text-body">
+              <input
+                type="checkbox"
+                checked={form.show_on_site}
+                onChange={(e) => setForm((f) => ({ ...f, show_on_site: e.target.checked }))}
+                className="mt-0.5 h-4 w-4 rounded border-gray-300 text-ink focus:ring-ink"
+              />
+              <span>
+                Show on website
+                <span className="block font-normal text-muted">Advertised as "Get it for ₹X with code" on product cards and pages, and listed with an Apply button in the bag and checkout.</span>
+              </span>
+            </label>
+
+            <label className="block">
+              <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-muted">Short label (optional)</span>
+              <input
+                type="text"
+                maxLength={80}
+                placeholder="e.g. 10% off your first order"
+                value={form.label}
+                onChange={(e) => setForm((f) => ({ ...f, label: e.target.value }))}
+                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-xs"
+              />
             </label>
 
             <button

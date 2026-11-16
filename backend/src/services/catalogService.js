@@ -1,6 +1,6 @@
 import { C, getDb } from '../config/db.js'
 import { uuid } from '../lib/crypto.js'
-import { notFound } from '../lib/errors.js'
+import { badRequest, conflict, notFound } from '../lib/errors.js'
 import { normalizeRupees } from '../lib/money.js'
 
 const PUBLIC_HIDDEN = new Set(['created_by', 'mock_rating', 'mock_review_count'])
@@ -37,8 +37,11 @@ const SORTS = {
 
 const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
+/** Hidden (unpublished) products never reach the storefront, search, feeds or checkout. */
+const PUBLISHED = { hidden: { $ne: true } }
+
 export async function listProducts({ search, category, sort = 'newest', limit, offset = 0, fields } = {}) {
-  const filter = {}
+  const filter = { ...PUBLISHED }
   if (category) filter.category = { $regex: `^${escapeRegex(category)}$`, $options: 'i' }
   if (search) {
     const pattern = { $regex: escapeRegex(search.slice(0, 80)), $options: 'i' }
@@ -56,14 +59,14 @@ export async function listProducts({ search, category, sort = 'newest', limit, o
 }
 
 export async function getProduct(id, { admin = false } = {}) {
-  const doc = await getDb().collection(C.products).findOne({ _id: String(id) })
+  const doc = await getDb().collection(C.products).findOne({ _id: String(id), ...(admin ? {} : PUBLISHED) })
   if (!doc) throw notFound('Product not found.')
   return serializeProduct(doc, { admin })
 }
 
 export async function lookupProducts(ids) {
   const unique = [...new Set(ids.map(String))].slice(0, 200)
-  const docs = await getDb().collection(C.products).find({ _id: { $in: unique } }).toArray()
+  const docs = await getDb().collection(C.products).find({ _id: { $in: unique }, ...PUBLISHED }).toArray()
   return docs.map((doc) => serializeProduct(doc))
 }
 
@@ -98,8 +101,42 @@ function productFields(input) {
   assign('mock_review_count', input.mock_review_count)
   assign('mock_rating', input.mock_rating)
   assign('is_combo', input.is_combo)
+  assign('hidden', input.hidden)
   assign('combo_product_ids', input.combo_product_ids)
   return out
+}
+
+const normName = (name) => String(name || '').trim().toLowerCase().replace(/\s+/g, ' ')
+const nameRegex = (name) => ({ $regex: `^\\s*${escapeRegex(normName(name)).replace(/ /g, '\\s+')}\\s*$`, $options: 'i' })
+
+/**
+ * Catalogue hygiene (P0-4): a published product needs a unique name, a category and an MRP
+ * (so every card can show MRP + % off). Hidden drafts may be incomplete.
+ * `existing` is the stored product for updates.
+ */
+export async function assertPublishable(input, existing = null) {
+  const merged = { ...(existing || {}), ...Object.fromEntries(Object.entries(input).filter(([, v]) => v !== undefined)) }
+  if (merged.hidden) return
+  const problems = []
+  if (!String(merged.category || '').trim()) problems.push('choose a category')
+  if (merged.mrp == null || !(Number(merged.mrp) > 0)) {
+    // Existing products without an MRP can still be edited (stock, images…) — only new ones, or
+    // edits that clear the MRP, are blocked.
+    if (!existing || input.mrp === null) problems.push('enter the MRP (the price printed on the pack)')
+  }
+  if (problems.length) throw badRequest(`To publish this product, ${problems.join(' and ')}. Or tick "Hidden" to save it as a draft.`)
+  if (input.name !== undefined || !existing) {
+    const clash = await getDb()
+      .collection(C.products)
+      .findOne({ name: nameRegex(merged.name), hidden: { $ne: true }, ...(existing ? { _id: { $ne: existing._id } } : {}) }, { projection: { _id: 1 } })
+    if (clash) throw conflict('Another published product already has this name. Give each product a distinct name (colour + design + type), or merge them as variants.')
+  }
+}
+
+export async function getProductDoc(id) {
+  const doc = await getDb().collection(C.products).findOne({ _id: String(id) })
+  if (!doc) throw notFound('Product not found.')
+  return doc
 }
 
 export async function createProduct(input, actorId) {
@@ -128,6 +165,7 @@ export async function createProduct(input, actorId) {
     mock_rating: null,
     is_combo: false,
     combo_product_ids: [],
+    hidden: false,
     rating: null,
     review_count: 0,
     ...productFields(input),

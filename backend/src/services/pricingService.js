@@ -66,7 +66,7 @@ export async function priceCart({ items, couponCode, giftWrap = false, paymentMe
   for (const line of lines) totals.set(line.productId, (totals.get(line.productId) || 0) + line.qty)
   for (const [productId, qty] of totals) {
     const product = byId.get(productId)
-    if (!product || product.out_of_stock || qty > Math.max(0, Number(product.stock) || 0)) {
+    if (!product || product.hidden || product.out_of_stock || qty > Math.max(0, Number(product.stock) || 0)) {
       throw unavailable('One or more products are unavailable in the requested quantity.')
     }
   }

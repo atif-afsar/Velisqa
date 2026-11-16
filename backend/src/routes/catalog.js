@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { ok } from '../middleware/requestContext.js'
 import { parse } from '../middleware/validate.js'
 import { getProduct, listProducts, lookupProducts } from '../services/catalogService.js'
-import { getActiveCoupon } from '../services/couponService.js'
+import { getActiveCoupon, listPublicOffers } from '../services/couponService.js'
 import { getHeroSlides } from '../services/settingsService.js'
 
 const listSchema = z.object({
@@ -49,6 +49,11 @@ catalogRouter.get('/settings/hero', async (_req, res) => {
   // Revalidate every time (ETag keeps it cheap) so a just-published banner shows immediately.
   res.set('Cache-Control', 'no-cache')
   ok(res, await getHeroSlides())
+})
+
+catalogRouter.get('/offers', async (_req, res) => {
+  res.set('Cache-Control', 'public, max-age=60')
+  ok(res, { offers: await listPublicOffers() })
 })
 
 catalogRouter.get('/coupons/:code', async (req, res) => {

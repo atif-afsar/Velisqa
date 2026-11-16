@@ -6,7 +6,8 @@ import { parse } from '../middleware/validate.js'
 import { adminInbox, analyticsOrders, deleteOrder, listAdminOrders, listAudit, salesSummary } from '../services/adminService.js'
 import { audit } from '../services/auditService.js'
 import { adminCancelOrder } from '../services/cancellationService.js'
-import { createProduct, deleteProduct, listAdminProducts, updateProduct } from '../services/catalogService.js'
+import { assertPublishable, createProduct, deleteProduct, getProductDoc, listAdminProducts, updateProduct } from '../services/catalogService.js'
+import { badRequest } from '../lib/errors.js'
 import { createCoupon, deleteCoupon, listCoupons, updateCoupon } from '../services/couponService.js'
 import { eventBus, EVENTS } from '../services/eventBus.js'
 import { adminApprovePayment, adminRejectPayment } from '../services/paymentService.js'
@@ -73,6 +74,7 @@ const productSchema = z.object({
   mock_rating: z.union([z.coerce.number().min(1).max(5), z.null()]).optional(),
   is_combo: z.boolean().optional(),
   combo_product_ids: z.array(z.string().max(64)).max(20).optional(),
+  hidden: z.boolean().optional(),
 })
 const mrpRule = (value) => value.mrp == null || value.price == null || value.mrp >= value.price
 
@@ -80,6 +82,7 @@ adminRouter.get('/products', async (_req, res) => ok(res, { products: await list
 
 adminRouter.post('/products', async (req, res) => {
   const body = parse(productSchema.refine(mrpRule, 'MRP must be equal to or greater than the selling price.'), req.body)
+  await assertPublishable(body)
   const product = await createProduct(body, req.auth.user._id)
   await audit({ ...actor(req), action: 'product.create', targetType: 'product', targetId: product.id, summary: { name: product.name } })
   ok(res, { product }, 201)
@@ -87,6 +90,11 @@ adminRouter.post('/products', async (req, res) => {
 
 adminRouter.patch('/products/:id', async (req, res) => {
   const body = parse(productSchema.partial().refine(mrpRule, 'MRP must be equal to or greater than the selling price.'), req.body)
+  const existing = await getProductDoc(req.params.id)
+  if (body.mrp === undefined && body.price != null && existing.mrp != null && Number(existing.mrp) < Number(body.price)) {
+    throw badRequest('MRP must be equal to or greater than the selling price.')
+  }
+  await assertPublishable(body, existing)
   const product = await updateProduct(req.params.id, body)
   await audit({ ...actor(req), action: 'product.update', targetType: 'product', targetId: product.id, summary: { fields: Object.keys(body) } })
   ok(res, { product })
@@ -107,6 +115,12 @@ adminRouter.post('/products/bulk', async (req, res) => {
     const parsed = schema.safeParse(raw)
     if (!parsed.success) {
       results.push({ row: index + 1, ok: false, error: parsed.error.issues.map((issue) => `${issue.path.join('.') || 'row'}: ${issue.message}`).join('; ') })
+      continue
+    }
+    try {
+      await assertPublishable(parsed.data)
+    } catch (error) {
+      results.push({ row: index + 1, ok: false, error: error.message })
       continue
     }
     const product = await createProduct(parsed.data, req.auth.user._id)
@@ -192,6 +206,8 @@ const couponSchema = z
     discount_value: z.coerce.number().positive('Discount value must be greater than zero.'),
     min_subtotal: z.coerce.number().min(0).optional().default(0),
     active: z.boolean().optional().default(true),
+    show_on_site: z.boolean().optional().default(false),
+    label: z.union([z.string().trim().max(80), z.null()]).optional(),
   })
   .refine((value) => value.discount_type !== 'percentage' || value.discount_value <= 100, 'Percentage discount cannot exceed 100%.')
 
@@ -208,6 +224,8 @@ adminRouter.patch('/coupons/:code', async (req, res) => {
       discount_type: z.enum(['percentage', 'fixed']).optional(),
       discount_value: z.coerce.number().positive().optional(),
       min_subtotal: z.coerce.number().min(0).optional(),
+      show_on_site: z.boolean().optional(),
+      label: z.union([z.string().trim().max(80), z.null()]).optional(),
     }),
     req.body,
   )

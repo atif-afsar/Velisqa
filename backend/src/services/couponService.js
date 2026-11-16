@@ -14,6 +14,8 @@ export function serializeCoupon(doc) {
     expires_at: doc.expires_at instanceof Date ? doc.expires_at.toISOString() : null,
     single_use: Boolean(doc.single_use),
     used: Boolean(doc.used_at),
+    show_on_site: Boolean(doc.show_on_site),
+    label: doc.label || null,
     created_at: doc.created_at instanceof Date ? doc.created_at.toISOString() : doc.created_at,
   }
 }
@@ -42,18 +44,43 @@ export async function getActiveCoupon(code) {
   return serializeCoupon(doc)
 }
 
+/**
+ * Offers the storefront may advertise (cards, product page, bag, checkout): shared, active,
+ * unexpired codes the admin ticked "Show on website". Personal / single-use codes never appear.
+ */
+export async function listPublicOffers(now = new Date()) {
+  const docs = await getDb()
+    .collection(C.coupons)
+    .find({ active: true, show_on_site: true, single_use: { $ne: true }, email: null })
+    .sort({ created_at: -1 })
+    .limit(10)
+    .toArray()
+  return docs
+    .filter((doc) => !doc.expires_at || doc.expires_at > now)
+    .map((doc) => ({
+      code: doc._id,
+      discount_type: doc.discount_type,
+      discount_value: Number(doc.discount_value),
+      min_subtotal: Number(doc.min_subtotal || 0),
+      label: doc.label || null,
+      expires_at: doc.expires_at instanceof Date ? doc.expires_at.toISOString() : null,
+    }))
+}
+
 export async function listCoupons() {
   const docs = await getDb().collection(C.coupons).find({}).sort({ created_at: -1 }).toArray()
   return docs.map(serializeCoupon)
 }
 
-export async function createCoupon({ code, discount_type, discount_value, min_subtotal = 0, active = true }) {
+export async function createCoupon({ code, discount_type, discount_value, min_subtotal = 0, active = true, show_on_site = false, label = null }) {
   const doc = {
     _id: normalizeCode(code),
     discount_type,
     discount_value: normalizeRupees(discount_value),
     min_subtotal: normalizeRupees(min_subtotal),
     active: Boolean(active),
+    show_on_site: Boolean(show_on_site),
+    label: label ? String(label).trim().slice(0, 80) : null,
     created_at: new Date(),
   }
   try {
@@ -71,6 +98,8 @@ export async function updateCoupon(code, patch) {
   if (patch.discount_type !== undefined) $set.discount_type = patch.discount_type
   if (patch.discount_value !== undefined) $set.discount_value = normalizeRupees(patch.discount_value)
   if (patch.min_subtotal !== undefined) $set.min_subtotal = normalizeRupees(patch.min_subtotal)
+  if (patch.show_on_site !== undefined) $set.show_on_site = Boolean(patch.show_on_site)
+  if (patch.label !== undefined) $set.label = patch.label ? String(patch.label).trim().slice(0, 80) : null
   const doc = await getDb().collection(C.coupons).findOneAndUpdate({ _id: normalizeCode(code) }, { $set }, { returnDocument: 'after' })
   if (!doc) throw notFound('Coupon not found.')
   return serializeCoupon(doc)
