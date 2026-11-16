@@ -6,6 +6,7 @@ import { useProducts } from '../hooks/useProducts'
 import { searchProducts } from '../lib/productSearch'
 import { POPULAR_SEARCHES, rememberSearch } from '../lib/popularSearches'
 import { analytics } from '../lib/analytics'
+import BestsellerFallback from '../Components/Common/BestsellerFallback'
 
 export default function SearchResults() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -62,6 +63,7 @@ export default function SearchResults() {
             <SearchAlternatives onChoose={chooseSearch} compact={query.length >= 2} />
           </section>
         )}
+        {query.length >= 2 && !showResults && <BestsellerFallback whatsappMessage={`Hi Velisqa, I searched for "${query}" on your website. Can you help?`} />}
       </main>
     </>
   )

@@ -9,6 +9,7 @@ import { SHOP_CATEGORIES, categoryPath, findShopCategoryBySlug } from '../data/s
 import { CATEGORY_FAQS } from '../data/categoryFaqs'
 import { buildFaqSchema } from '../Components/SEO/schemaBuilders'
 import FaqSection from '../Components/Common/FaqSection'
+import MobileShopBar from '../Components/Nav/MobileShopBar'
 
 /** /collections and /collections/:slug — editorial header + filterable product grid. */
 export default function Collections() {
@@ -58,8 +59,9 @@ export default function Collections() {
         schema={schema}
       />
       <main className="page-offset-nav min-h-svh bg-paper">
-        <header className="container-lux pb-8 pt-8 text-center sm:pt-12 lg:pb-10">
-          <nav aria-label="Breadcrumb" className="text-xs text-muted">
+        <MobileShopBar compact />
+        <header className="container-lux pb-2 pt-3 text-center sm:pb-6 sm:pt-8 lg:pb-8">
+          <nav aria-label="Breadcrumb" className="hidden text-xs text-muted sm:block">
             <ol className="flex flex-wrap items-center justify-center gap-2">
               {crumbs.map((c, i) => (
                 <li key={c.path} className="flex items-center gap-2">
@@ -77,11 +79,10 @@ export default function Collections() {
               ))}
             </ol>
           </nav>
-          <h1 className="type-display mt-5 text-ink">{title}</h1>
-          <p className="mx-auto mt-4 max-w-xl text-[0.95rem] leading-relaxed text-body">{intro}</p>
+          <h1 className="font-serif text-[1.75rem] leading-tight text-ink sm:mt-4 sm:text-[2.5rem]">{title}</h1>
 
-          <nav aria-label="Categories" className="mt-8">
-            <ul ref={chipsRef} className="scrollbar-none -mx-4 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:flex-wrap sm:justify-center sm:px-0">
+          <nav aria-label="Categories" className="mt-2 sm:mt-6">
+            <ul ref={chipsRef} className="chip-row scrollbar-none -mx-4 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:flex-wrap sm:justify-center sm:px-0">
               {[{ slug: '', label: 'All' }, ...SHOP_CATEGORIES].map((c) => {
                 const active = c.slug ? category?.slug === c.slug : !category
                 return (
@@ -89,7 +90,7 @@ export default function Collections() {
                     <Link
                       to={c.slug ? categoryPath(c) : '/collections'}
                       aria-current={active ? 'page' : undefined}
-                      className={`inline-flex min-h-10 items-center border px-4 text-[0.75rem] font-medium uppercase tracking-[0.14em] transition-colors ${
+                      className={`inline-flex min-h-11 items-center border px-4 text-[0.75rem] font-medium uppercase tracking-[0.14em] transition-colors ${
                         active ? 'border-ink bg-ink text-white' : 'border-line text-body hover:border-ink hover:text-ink'
                       }`}
                     >
@@ -110,6 +111,10 @@ export default function Collections() {
           hideCategoryFacet={Boolean(category)}
           emptyMessage={category ? `New ${category.label.toLowerCase()} are on their way.` : 'No pieces available yet.'}
         />
+        {/* Collection description below the grid: kept in the HTML for search engines, out of the shopper's way. */}
+        <section aria-label={`About ${title}`} className="container-lux border-t border-line py-10 text-center">
+          <p className="mx-auto max-w-2xl text-[0.95rem] leading-relaxed text-body">{intro}</p>
+        </section>
         {faqs && <FaqSection faqs={faqs} title={`Buying ${category.label.toLowerCase()}`} className="border-t border-line bg-mist" />}
       </main>
     </>

@@ -16,14 +16,27 @@ const SearchDialog = lazy(() => import('./Search/SearchDialog'))
 const DISCOVER_LINKS = [
   { label: 'New arrivals', to: '/collections?sort=newest' },
   { label: 'Bestsellers', to: '/collections?sort=best-selling' },
-  { label: 'Gifts under ₹999', to: '/search?q=gifts%20under%20999' },
+  { label: 'Offers', to: '/offers' },
+  { label: 'Gifts under ₹499', to: '/collections?maxPrice=499' },
+  { label: 'Gifts under ₹799', to: '/collections?maxPrice=799' },
+  { label: 'Gifts under ₹999', to: '/collections?maxPrice=999' },
   { label: 'Shop all', to: '/collections' },
+]
+
+/** Shortcuts at the top of the phone menu. */
+const QUICK_LINKS = [
+  { label: 'Offers', to: '/offers' },
+  { label: 'Bestsellers', to: '/collections?sort=best-selling' },
+  { label: 'Gifts', to: '/collections?maxPrice=999' },
+  { label: 'Under ₹399', to: '/collections?maxPrice=399' },
+  { label: 'Under ₹499', to: '/collections?maxPrice=499' },
+  { label: 'New in', to: '/collections?sort=newest' },
 ]
 
 const PRIMARY_LINKS = [
   { label: 'New in', to: '/collections?sort=newest' },
   { label: 'Bestsellers', to: '/collections?sort=best-selling' },
-  { label: 'Our story', to: '/about' },
+  { label: 'Offers', to: '/offers' },
 ]
 
 const SECONDARY_LINKS = [
@@ -141,6 +154,16 @@ function MobileMenu({ open, onClose, onSearch }) {
           Search necklaces, rings, earrings…
         </button>
 
+        <ul className="mt-4 flex flex-wrap gap-2">
+          {QUICK_LINKS.map((l) => (
+            <li key={l.label}>
+              <Link to={l.to} onClick={onClose} className="inline-flex min-h-11 items-center rounded-full border border-line-strong px-4 text-[0.8125rem] font-medium text-ink">
+                {l.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+
         <p className="eyebrow mt-8 text-muted">Shop</p>
         <ul className="mt-2 divide-y divide-line border-y border-line">
           {SHOP_CATEGORIES.map((c) => (
@@ -161,7 +184,7 @@ function MobileMenu({ open, onClose, onSearch }) {
         </ul>
 
         <ul className="mt-6 grid grid-cols-2 gap-x-4">
-          {[...DISCOVER_LINKS.slice(0, 2), ...SECONDARY_LINKS].map((l) => (
+          {SECONDARY_LINKS.map((l) => (
             <li key={l.label}>
               <Link to={l.to} onClick={onClose} className="flex min-h-11 items-center text-sm text-body">
                 {l.label}
@@ -304,7 +327,7 @@ export default function Navbar() {
             <SearchIcon size={20} />
           </IconButton>
 
-          <nav aria-label="Primary" className="hidden items-center gap-8 lg:flex">
+          <nav aria-label="Primary" className="hidden items-center gap-6 lg:flex xl:gap-8">
             <div onMouseEnter={openMegaSoon} onMouseLeave={closeMegaSoon}>
               <button
                 type="button"
@@ -328,7 +351,7 @@ export default function Navbar() {
                   key={l.label}
                   to={l.to}
                   aria-current={active ? 'page' : undefined}
-                  className={`link-underline inline-flex min-h-11 items-center text-[0.8125rem] font-medium uppercase tracking-[0.14em] ${
+                  className={`link-underline inline-flex min-h-11 items-center whitespace-nowrap text-[0.8125rem] font-medium uppercase tracking-[0.14em] ${
                     active ? 'text-ink' : 'text-body hover:text-ink'
                   }`}
                 >

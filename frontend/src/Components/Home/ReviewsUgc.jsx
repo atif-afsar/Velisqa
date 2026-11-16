@@ -5,6 +5,7 @@ import { InstagramIcon, StarIcon } from '../UI/Icons'
 import Picture from '../UI/Picture'
 
 const MIN_REVIEWS = 3
+const HIDE_UNTIL_REAL_CONTENT = true
 
 function Stars({ value }) {
   return (
@@ -60,6 +61,9 @@ export default function ReviewsUgc() {
       </section>
     )
   }
+
+  // No placeholder section: it appears once there are enough real, approved reviews.
+  if (HIDE_UNTIL_REAL_CONTENT) return null
 
   return (
     <section aria-labelledby="ugc-heading" className="responsive-section">

@@ -11,6 +11,8 @@ import { Suspense, useEffect } from 'react'
 import { analytics } from './lib/analytics'
 import { captureAttribution } from './lib/attribution'
 import ConsentBanner from './Components/Common/ConsentBanner'
+import WhatsAppHelp from './Components/WhatsApp/WhatsAppHelp'
+import { UnlockPill } from './Components/Cart/BagBoosters'
 import SiteFooter from './Components/SiteFooter'
 import MobileTabBar from './Components/Nav/MobileTabBar'
 import InactiveTabTitle from './Components/Common/InactiveTabTitle'
@@ -56,6 +58,7 @@ import {
   Founders,
   AdminAnalytics,
   ReviewRequest,
+  Offers,
   NotFound,
 } from './pages'
 
@@ -111,6 +114,7 @@ function App() {
           <Route path="/order-confirmation/:orderRef" element={<ManualPaymentConfirmation />} />
           <Route path="/orders/:orderRef" element={<OrderTracking />} />
           <Route path="/review/:orderRef" element={<ReviewRequest />} />
+          <Route path="/offers" element={<Offers />} />
           <Route
             path="/account/orders"
             element={(
@@ -223,6 +227,8 @@ function App() {
         <>
           <SiteFooter />
           <MobileTabBar />
+          <WhatsAppHelp />
+          <UnlockPill />
           <ConsentBanner />
         </>
       )}

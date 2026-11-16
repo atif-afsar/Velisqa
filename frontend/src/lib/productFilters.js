@@ -1,13 +1,23 @@
 import { isProductSoldOut } from './cartStock'
 import { getProductRating, getProductReviewCount } from './productDisplay'
 
+/** Default sort everywhere: real sales rank (see backend getSalesRanks). */
+export const DEFAULT_SORT = 'best-selling'
+
 export const PRODUCT_SORT_OPTIONS = [
-  { value: 'featured', label: 'Featured' },
+  { value: 'best-selling', label: 'Best selling' },
   { value: 'newest', label: 'Newest' },
   { value: 'price-asc', label: 'Price: low to high' },
   { value: 'price-desc', label: 'Price: high to low' },
   { value: 'rating-desc', label: 'Highest rated' },
-  { value: 'best-selling', label: 'Best selling' },
+  { value: 'featured', label: 'Featured' },
+]
+
+/** Quick price bands (collection filter chips). */
+export const PRICE_BANDS = [
+  { label: 'Under ₹399', minPrice: '', maxPrice: '399' },
+  { label: '₹399 – ₹599', minPrice: '399', maxPrice: '599' },
+  { label: '₹599 – ₹999', minPrice: '599', maxPrice: '999' },
 ]
 
 export const EMPTY_PRODUCT_FILTERS = {
@@ -19,7 +29,7 @@ export const EMPTY_PRODUCT_FILTERS = {
   styles: [],
   inStockOnly: false,
   minRating: '',
-  sort: 'featured',
+  sort: DEFAULT_SORT,
 }
 
 function normalized(value) {
@@ -67,7 +77,10 @@ export function filterAndSortProducts(products, filters = EMPTY_PRODUCT_FILTERS)
         case 'rating-desc':
           return getProductRating(b.product) - getProductRating(a.product)
         case 'best-selling': {
-          // Admin-flagged bestsellers first, then by number of real reviews.
+          // Real sales rank first (1 = most sold), then admin-flagged bestsellers, then reviews.
+          const ra = Number(a.product?.sales_rank) || Infinity
+          const rb = Number(b.product?.sales_rank) || Infinity
+          if (ra !== rb) return ra - rb
           const flagged = Number(b.product?.badge === 'bestseller') - Number(a.product?.badge === 'bestseller')
           if (flagged) return flagged
           return getProductReviewCount(b.product) - getProductReviewCount(a.product) || a.index - b.index
@@ -125,7 +138,7 @@ export function readProductFilters(searchParams, facets = {
   colours: [],
   styles: [],
 }) {
-  const requestedSort = searchParams.get('sort') || 'featured'
+  const requestedSort = searchParams.get('sort') || DEFAULT_SORT
   return {
     minPrice: searchParams.get('minPrice') || '',
     maxPrice: searchParams.get('maxPrice') || '',
@@ -137,7 +150,7 @@ export function readProductFilters(searchParams, facets = {
     minRating: searchParams.get('rating') || '',
     sort: PRODUCT_SORT_OPTIONS.some((option) => option.value === requestedSort)
       ? requestedSort
-      : 'featured',
+      : DEFAULT_SORT,
   }
 }
 
@@ -165,7 +178,7 @@ export function writeProductFilters(searchParams, filters) {
   else next.delete('availability')
   if (filters.minRating !== '') next.set('rating', filters.minRating)
   else next.delete('rating')
-  if (filters.sort && filters.sort !== 'featured') next.set('sort', filters.sort)
+  if (filters.sort && filters.sort !== DEFAULT_SORT) next.set('sort', filters.sort)
   else next.delete('sort')
   return next
 }

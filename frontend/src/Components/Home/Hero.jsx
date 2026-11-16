@@ -2,8 +2,30 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Picture from '../UI/Picture'
 import { ChevronLeftIcon, ChevronRightIcon } from '../UI/Icons'
-import { HERO_BANNER_MEDIA, HERO_INTERVAL_MS, HERO_SLIDES } from '../../data/heroSlides'
+import { HERO_BANNER_MEDIA, HERO_DEFAULT_SUBLINE, HERO_INTERVAL_MS, HERO_SLIDES } from '../../data/heroSlides'
 import { useHeroSlides } from '../../hooks/useHeroSlides'
+import { useProducts } from '../../hooks/useProducts'
+import { isProductSoldOut } from '../../lib/cartStock'
+
+/** Lowest in-stock price, as a real price anchor for the default headline. */
+function useFromPrice() {
+  const { products } = useProducts()
+  const prices = products.filter((p) => !isProductSoldOut(p)).map((p) => Number(p.price)).filter((n) => n > 0)
+  return prices.length ? Math.min(...prices) : null
+}
+
+/** Headline + offer line + button over the banner (admin can override per slide in /admin/hero). */
+function HeroCopy({ slide, fromPrice }) {
+  const headline = slide.headline || (fromPrice ? `Everyday jewellery from ₹${fromPrice.toLocaleString('en-IN')}` : 'Everyday jewellery, made to be worn')
+  const subline = slide.subline || HERO_DEFAULT_SUBLINE
+  return (
+    <span className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col items-start bg-gradient-to-t from-black/55 via-black/20 to-transparent px-5 pb-6 pt-24 text-white md:px-12 md:pb-12 lg:px-16">
+      <p className="max-w-[18ch] font-serif text-[1.875rem] leading-[1.1] md:text-[2.75rem] lg:text-[3.25rem]">{headline}</p>
+      {subline && <span className="mt-2 text-sm text-white/90 md:text-base">{subline}</span>}
+      <span className="mt-4 inline-flex min-h-12 items-center bg-white px-6 text-[0.75rem] font-semibold uppercase tracking-[0.16em] text-ink md:mt-6">{slide.label || 'Shop now'}</span>
+    </span>
+  )
+}
 
 function usePrefersReducedMotion() {
   const [reduced, setReduced] = useState(false)
@@ -54,6 +76,7 @@ export default function Hero() {
   const swiped = useRef(false)
   // Banners set in /admin/hero replace the built-in ones; the built-ins are the fallback.
   const hero = useHeroSlides()
+  const fromPrice = useFromPrice()
   // Until we know whether the admin set banners, show an empty frame — never the old built-ins first.
   const slides = !hero.ready ? [] : hero.slides.length ? hero.slides : HERO_SLIDES
   const intervalMs = hero.slides.length ? hero.intervalSeconds * 1000 : HERO_INTERVAL_MS
@@ -118,7 +141,7 @@ export default function Hero() {
           className={`flex ${drag ? '' : 'transition-transform duration-700 ease-[var(--ease-lux)]'}`}
           style={{ transform: `translate3d(calc(${-index * 100}% + ${drag}px), 0, 0)` }}
         >
-          {count === 0 && <div aria-hidden="true" className="aspect-[4/5] w-full shrink-0 bg-mist md:aspect-[3/1] md:max-h-[760px]" />}
+          {count === 0 && <div aria-hidden="true" className="aspect-[4/5] max-h-[65svh] w-full shrink-0 bg-mist md:aspect-[3/1] md:max-h-[760px]" />}
           {slides.map((s, i) => {
             const active = i === index
             return (
@@ -136,7 +159,7 @@ export default function Hero() {
                   tabIndex={active ? 0 : -1}
                   draggable={false}
                   onClick={(e) => swiped.current && e.preventDefault()}
-                  className="relative block aspect-[4/5] w-full overflow-hidden bg-mist md:aspect-[3/1] md:max-h-[760px]"
+                  className="relative block aspect-[4/5] max-h-[65svh] w-full overflow-hidden bg-mist md:aspect-[3/1] md:max-h-[760px]"
                 >
                   {(i === 0 || loaded) && s.desktopUrl && (
                     // Any upload fits: object-cover crops to this frame around the admin-chosen focus point.
@@ -167,6 +190,7 @@ export default function Hero() {
                       objectPosition={s.focus}
                     />
                   )}
+                  {(i === 0 || loaded) && <HeroCopy slide={s} fromPrice={fromPrice} />}
                 </Link>
               </div>
             )
@@ -195,7 +219,7 @@ export default function Hero() {
       </div>
 
       {/* Dots */}
-      <div className="flex h-9 items-center justify-center gap-1.5 md:h-10">
+      <div className={`flex items-center justify-center gap-1.5 ${count > 1 ? 'h-9 md:h-10' : 'h-2'}`}>
         {count > 1 && slides.map((s, i) => (
           <button
             key={s.banner || `${s.desktopUrl}-${i}`}

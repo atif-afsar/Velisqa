@@ -57,6 +57,11 @@ export function getProductBadge(product) {
     return 'new'
   }
 
+  const rank = Number(product?.sales_rank)
+  if (Number.isFinite(rank) && rank > 0 && rank <= 3) {
+    return 'bestseller'
+  }
+
   if (getProductReviewCount(product) >= BESTSELLER_REVIEW_THRESHOLD) {
     return 'bestseller'
   }

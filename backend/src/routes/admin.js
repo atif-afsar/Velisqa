@@ -150,6 +150,9 @@ const heroSlideSchema = z.object({
   to: z.string().trim().regex(/^\/[^\s]*$/, 'Link must be a site path like /collections/earrings.').max(300).optional().default('/collections'),
   label: z.string().trim().max(80).optional().default('Shop now'),
   alt: z.string().trim().max(200).optional().default('Velisqa jewellery'),
+  // Text over the banner (P0-7). Empty = the storefront default ("Everyday jewellery from ₹<lowest price>").
+  headline: z.string().trim().max(80).optional().default(''),
+  subline: z.string().trim().max(120).optional().default(''),
 })
 
 adminRouter.put('/settings/hero', async (req, res) => {

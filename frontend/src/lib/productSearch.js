@@ -13,6 +13,67 @@ const TOKEN_ALIASES = {
   rings: 'ring',
   sets: 'set',
   styles: 'style',
+  // Synonyms shoppers type (P1-11).
+  chain: 'necklace',
+  chains: 'necklace',
+  neckpiece: 'necklace',
+  choker: 'necklace',
+  chokers: 'necklace',
+  kada: 'bangle',
+  kadas: 'bangle',
+  kangan: 'bangle',
+  studs: 'stud',
+  hoops: 'hoop',
+  jhumki: 'jhumka',
+  jhumkas: 'jhumka',
+  jhumkis: 'jhumka',
+  tops: 'stud',
+  bali: 'hoop',
+  balis: 'hoop',
+  pendants: 'pendant',
+  anguthi: 'ring',
+  silver: 'silver',
+  golden: 'gold',
+}
+
+/** Multi-word phrases rewritten before tokenising ("ear rings" → earring, "rose gold" stays one colour). */
+const PHRASES = [
+  [/\bear\s*rings?\b/g, 'earring'],
+  [/\bfinger\s*rings?\b/g, 'ring'],
+  [/\bhand\s*chains?\b/g, 'bracelet'],
+]
+
+/** Edit distance ≤ 1 (one typo) for tokens of 5+ letters: "neclace" → necklace, "braclet" → bracelet. */
+function withinOneEdit(a, b) {
+  if (a === b) return true
+  const la = a.length
+  const lb = b.length
+  if (Math.abs(la - lb) > 1) return false
+  let i = 0
+  let j = 0
+  let edits = 0
+  while (i < la && j < lb) {
+    if (a[i] === b[j]) {
+      i += 1
+      j += 1
+      continue
+    }
+    edits += 1
+    if (edits > 1) return false
+    if (la > lb) i += 1
+    else if (lb > la) j += 1
+    else {
+      // substitution or adjacent swap
+      if (a[i + 1] === b[j] && a[i] === b[j + 1]) {
+        i += 2
+        j += 2
+        continue
+      }
+      i += 1
+      j += 1
+    }
+  }
+  return edits + (la - i) + (lb - j) <= 1
 }
 
 const INTENT_WORDS = new Set(['gift', 'jewellery', 'under', 'below', 'less', 'than', 'rs', 'inr'])
@@ -22,8 +83,9 @@ function normalizeToken(token) {
 }
 
 export function normalizeSearchText(value) {
-  return String(value ?? '')
-    .toLowerCase()
+  let text = String(value ?? '').toLowerCase()
+  for (const [re, to] of PHRASES) text = text.replace(re, to)
+  return text
     .replace(/₹/g, ' rs ')
     .replace(/[^a-z0-9]+/g, ' ')
     .trim()
@@ -80,6 +142,9 @@ export function scoreProductSearch(product, query) {
       if (field.value === token) tokenScore = Math.max(tokenScore, field.weight * 3)
       else if (field.value.split(' ').includes(token)) tokenScore = Math.max(tokenScore, field.weight * 2)
       else if (field.value.includes(token)) tokenScore = Math.max(tokenScore, field.weight)
+      else if (token.length >= 5 && field.value.split(' ').some((word) => word.length >= 4 && withinOneEdit(word, token))) {
+        tokenScore = Math.max(tokenScore, Math.ceil(field.weight / 2))
+      }
     }
     if (tokenScore === 0) return null
     score += tokenScore

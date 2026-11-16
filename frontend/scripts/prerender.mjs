@@ -229,7 +229,8 @@ try {
     if (adminHero === null) return ''
     if (adminHero.length) {
       const first = adminHero[0]
-      return `<link rel="preload" as="image" href="${first.mobileUrl || first.desktopUrl}" fetchpriority="high" />`
+      if (!first.mobileUrl) return `<link rel="preload" as="image" href="${first.desktopUrl}" fetchpriority="high" />`
+      return `<link rel="preload" as="image" media="not all and ${HERO_BANNER_MEDIA}" href="${first.mobileUrl}" fetchpriority="high" /><link rel="preload" as="image" media="${HERO_BANNER_MEDIA}" href="${first.desktopUrl}" fetchpriority="high" />`
     }
     const { mobile, banner } = HERO_SLIDES[0]
     const link = (slot, mediaQuery) => {

@@ -110,13 +110,55 @@ html.no-tabbar {
 }
 
 /* Floating UI sits above the tab bar and any sticky CTA bar (see lib/stickyBar.js). */
-.consent-banner,
+.floating-above-help {
+  bottom: calc(var(--tabbar-height) + var(--sticky-cta-height, 0px) + 4.25rem);
+}
+@media (min-width: 1024px) {
+  .floating-above-help {
+    bottom: 1.5rem;
+  }
+}
 .floating-above-cta {
   bottom: calc(var(--tabbar-height) + var(--sticky-cta-height, 0px) + 0.75rem);
+}
+/* Product page (phones): the main Add to bag row is on the first screen, so WhatsApp waits for the sticky bar. */
+@media (max-width: 1023px) {
+  html:not(.has-sticky-cta) .whatsapp-on-product {
+    display: none;
+  }
+}
+@media (min-width: 1024px) {
+  .floating-above-cta {
+    bottom: 1.5rem;
+  }
+}
+
+/*
+ * Cookie banner.
+ * Phones/tablets: a strip directly under the header that is part of the header height, so the page
+ * starts below it — it never covers a heading, a button or a sticky CTA bar.
+ * Desktop: small card bottom-left (WhatsApp help sits bottom-right).
+ */
+@media (max-width: 1023px) {
+  html.consent-open {
+    --consent-height: 4.5rem;
+    --nav-height: calc(var(--announcement-height) + var(--nav-bar-height) + var(--consent-height));
+  }
+  .consent-banner {
+    top: calc(var(--announcement-height) + var(--nav-bar-height) + env(safe-area-inset-top, 0px));
+    left: 0;
+    right: 0;
+    height: var(--consent-height, 4.5rem);
+  }
 }
 @media (min-width: 1024px) {
   .consent-banner {
     bottom: 1.5rem;
+    left: 1.5rem;
+    max-width: 26rem;
+  }
+  html.consent-open .unlock-pill {
+    display: none;
   }
 }
 
@@ -905,4 +947,13 @@ h3 {
 
 @media (max-width: 639px) {
   .admin-theme main h1 { font-size: 1.4rem !important; }
+}
+
+/* Horizontal chip rows: fade the right edge on phones so a cut-off chip reads as "more to scroll". */
+@media (max-width: 639px) {
+  .chip-row {
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 2.5rem), transparent);
+    mask-image: linear-gradient(to right, #000 calc(100% - 2.5rem), transparent);
+    padding-right: 2.5rem;
+  }
 }

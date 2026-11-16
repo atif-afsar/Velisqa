@@ -80,7 +80,7 @@
   ],
   "rewrites": [
     {
-      "source": "/(cart|checkout|wishlist|search|login|admin|reset-password)",
+      "source": "/(cart|checkout|wishlist|search|login|admin|reset-password|offers)",
       "destination": "/app"
     },
     {

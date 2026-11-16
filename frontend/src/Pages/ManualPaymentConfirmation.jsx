@@ -266,6 +266,17 @@ export default function ManualPaymentConfirmation() {
                 WhatsApp Concierge
               </a>
             </div>
+            <p className="mt-5 text-center text-sm text-body">
+              Know someone who would love Velisqa?{' '}
+              <a
+                href={`https://wa.me/?text=${encodeURIComponent('I just ordered from Velisqa — modern everyday jewellery. Have a look: https://www.velisqa.com')}`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex min-h-11 items-center font-semibold text-[#128C7E] underline underline-offset-4"
+              >
+                Share on WhatsApp
+              </a>
+            </p>
           </div>
 
           {/* Explore Other Categories Section */}

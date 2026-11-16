@@ -141,12 +141,12 @@ export default function ProductGallery({ images, alt, badges, overlay }) {
     <div className="relative">
       {badges && <div className="pointer-events-none absolute left-3 top-3 z-10 flex gap-2">{badges}</div>}
 
-      {/* Mobile carousel: capped at min(125vw, 54vh) so the title, price and Add to bag stay on the first screen. */}
+      {/* Mobile carousel: capped at min(125vw, 50svh) so the title, price and Add to bag stay on the first screen. */}
       <div className="relative -mx-4 sm:mx-0 lg:hidden">
         <div
           ref={trackRef}
           onScroll={onScroll}
-          className="scrollbar-none flex h-[min(125vw,54vh)] snap-x snap-mandatory overflow-x-auto bg-mist"
+          className="scrollbar-none flex h-[min(125vw,50svh)] snap-x snap-mandatory overflow-x-auto bg-mist"
           aria-roledescription="carousel"
           aria-label={`${alt} images`}
         >

@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { useAuth } from '../../context/AuthContext'
 import { useWishlist } from '../../context/WishlistContext'
-import { GridIcon, HeartIcon, HomeIcon, SearchIcon, UserIcon } from '../UI/Icons'
-import { OPEN_SEARCH_EVENT, isTabBarHidden } from '../../lib/mobileNav'
+import { useCart } from '../../context/CartContext'
+import { BagIcon, GridIcon, HeartIcon, HomeIcon, TagIcon } from '../UI/Icons'
+import { isTabBarHidden } from '../../lib/mobileNav'
 
 function Tab({ to, onClick, active, label, icon: Icon, badge }) {
   const content = (
@@ -34,8 +34,8 @@ function Tab({ to, onClick, active, label, icon: Icon, badge }) {
 /** App-style bottom navigation on phones (hidden from 1024px up). */
 export default function MobileTabBar() {
   const { pathname } = useLocation()
-  const { user } = useAuth()
   const { wishlistCount } = useWishlist()
+  const { itemCount } = useCart()
   const hidden = isTabBarHidden(pathname)
 
   useEffect(() => {
@@ -52,14 +52,9 @@ export default function MobileTabBar() {
       <div className="mx-auto flex max-w-lg">
         <Tab to="/" active={pathname === '/'} label="Home" icon={HomeIcon} />
         <Tab to="/collections" active={pathname.startsWith('/collections')} label="Shop" icon={GridIcon} />
-        <Tab onClick={() => window.dispatchEvent(new Event(OPEN_SEARCH_EVENT))} active={pathname === '/search'} label="Search" icon={SearchIcon} />
+        <Tab to="/offers" active={pathname === '/offers'} label="Offers" icon={TagIcon} />
         <Tab to="/wishlist" active={pathname === '/wishlist'} label="Wishlist" icon={HeartIcon} badge={wishlistCount} />
-        <Tab
-          to={user ? '/account/orders' : '/login'}
-          active={pathname.startsWith('/account') || pathname === '/login'}
-          label={user ? 'Orders' : 'Account'}
-          icon={UserIcon}
-        />
+        <Tab to="/cart" active={pathname === '/cart'} label="Bag" icon={BagIcon} badge={itemCount} />
       </div>
     </nav>
   )

@@ -37,6 +37,41 @@ const SORTS = {
 
 const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
+/**
+ * Sales rank for "Best selling" (1 = most units sold in the last 120 days, cancelled orders and
+ * free gifts excluded). Only the rank is public, never unit counts. Cached for 10 minutes.
+ */
+const SALES_WINDOW_DAYS = 120
+let salesCache = { at: 0, ranks: new Map() }
+export async function getSalesRanks() {
+  if (Date.now() - salesCache.at < 10 * 60_000) return salesCache.ranks
+  try {
+    const since = new Date(Date.now() - SALES_WINDOW_DAYS * 86_400_000)
+    const rows = await getDb()
+      .collection(C.orderItems)
+      .aggregate([
+        { $match: { created_at: { $gte: since }, is_free_gift: { $ne: true } } },
+        { $lookup: { from: C.orders, localField: 'order_id', foreignField: '_id', as: 'order', pipeline: [{ $project: { order_status: 1, payment_method: 1, payment_status: 1, deleted_at: 1, is_enquiry: 1 } }] } },
+        { $unwind: '$order' },
+        {
+          $match: {
+            'order.deleted_at': null,
+            'order.is_enquiry': { $ne: true },
+            'order.order_status': { $nin: ['cancelled', 'rejected'] },
+            $or: [{ 'order.payment_method': 'cod' }, { 'order.payment_status': 'paid' }],
+          },
+        },
+        { $group: { _id: '$product_id', units: { $sum: '$quantity' } } },
+        { $sort: { units: -1, _id: 1 } },
+      ])
+      .toArray()
+    salesCache = { at: Date.now(), ranks: new Map(rows.map((row, index) => [String(row._id), index + 1])) }
+  } catch {
+    salesCache = { at: Date.now(), ranks: salesCache.ranks }
+  }
+  return salesCache.ranks
+}
+
 /** Hidden (unpublished) products never reach the storefront, search, feeds or checkout. */
 const PUBLISHED = { hidden: { $ne: true } }
 
@@ -54,8 +89,11 @@ export async function listProducts({ search, category, sort = 'newest', limit, o
     .sort(SORTS[sort] || SORTS.newest)
     .skip(offset)
   if (limit) cursor.limit(limit)
-  const [docs, total] = await Promise.all([cursor.toArray(), getDb().collection(C.products).countDocuments(filter)])
-  return { products: docs.map((doc) => (projection ? { id: doc._id, name: doc.name } : serializeProduct(doc))), total }
+  const [docs, total, ranks] = await Promise.all([cursor.toArray(), getDb().collection(C.products).countDocuments(filter), projection ? null : getSalesRanks()])
+  return {
+    products: docs.map((doc) => (projection ? { id: doc._id, name: doc.name } : { ...serializeProduct(doc), sales_rank: ranks.get(String(doc._id)) ?? null })),
+    total,
+  }
 }
 
 export async function getProduct(id, { admin = false } = {}) {

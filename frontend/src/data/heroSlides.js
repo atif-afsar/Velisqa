@@ -1,6 +1,9 @@
 /** Homepage hero banner slider — shared by Components/Home/Hero.jsx and the build-time prerender. */
 export const HERO_INTERVAL_MS = 5000
 
+/** Offer line shown under the hero headline unless a slide sets its own (OWNER DECISION: campaign offer). */
+export const HERO_DEFAULT_SUBLINE = 'Free shipping on prepaid orders · Cash on delivery available'
+
 /** Portrait banners below this width, wide banners from it up. */
 export const HERO_BANNER_MEDIA = '(min-width: 768px)'
 
@@ -15,8 +18,8 @@ export const HERO_SLIDES = [
     mobile: 'hero-model-amara',
     banner: 'hero-banner-amara',
     focus: '50% 30%',
-    to: '/collections/earrings',
-    label: 'Shop earrings',
+    to: '/collections?sort=best-selling',
+    label: 'Shop bestsellers',
     alt: 'Model in a warm studio wearing sculpted gold earrings',
   },
   {

@@ -6,7 +6,7 @@ export default function EditorialBlock() {
   return (
     <section aria-labelledby="editorial-heading" className="bg-mist">
       <div className="grid lg:grid-cols-2">
-        <div className="relative aspect-[4/5] overflow-hidden sm:aspect-[4/3] lg:aspect-auto lg:min-h-[760px]">
+        <div className="relative aspect-[4/3] overflow-hidden lg:aspect-auto lg:min-h-[560px]">
           <Picture
             slot="editorial-story"
             alt="Model in profile wearing sculpted gold drop earrings against a grey backdrop"
@@ -15,7 +15,7 @@ export default function EditorialBlock() {
             objectPosition="50% 30%"
           />
         </div>
-        <div className="flex items-center px-6 py-16 sm:px-12 lg:px-20 lg:py-24">
+        <div className="flex items-center px-6 py-12 sm:px-12 lg:px-20 lg:py-16">
           <div className="max-w-md">
             <p className="eyebrow text-muted">Our story</p>
             <h2 id="editorial-heading" className="type-display mt-4 text-ink">

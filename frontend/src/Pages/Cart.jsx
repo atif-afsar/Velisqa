@@ -14,7 +14,11 @@ import { computeCheckoutTotals, GIFT_WRAP_FEE } from '../lib/checkoutPricing'
 import { readGiftWrap, saveGiftWrap } from '../lib/coupons'
 import { displayProductName } from '../lib/productDisplay'
 import { analytics } from '../lib/analytics'
+import { EMPTY_PRODUCT_FILTERS, filterAndSortProducts } from '../lib/productFilters'
 import { LockIcon } from '../Components/UI/Icons'
+import { BagAddOns } from '../Components/Cart/BagBoosters'
+import { deliveryByLabel } from '../lib/delivery'
+import { COD_FEE } from '../lib/checkoutPricing'
 
 export default function Cart() {
   const navigate = useNavigate()
@@ -30,7 +34,8 @@ export default function Cart() {
   const canCheckout = lines.length > 0 && issues.length === 0 && !syncing
   const totals = computeCheckoutTotals({ subtotal: eligibleSubtotal, couponDiscount: coupon.discount, giftWrap })
   const inBag = new Set(items.map((l) => l.productId))
-  const suggestions = products.filter((p) => !isProductSoldOut(p) && !inBag.has(p.id)).slice(0, 4)
+  // Best sellers you don't already have (also shown when the bag is empty).
+  const suggestions = filterAndSortProducts(products.filter((p) => !isProductSoldOut(p) && !inBag.has(p.id)), { ...EMPTY_PRODUCT_FILTERS, sort: 'best-selling' }).slice(0, 4)
 
   useEffect(() => {
     let cancelled = false
@@ -54,10 +59,15 @@ export default function Cart() {
 
           {lines.length === 0 ? (
             <div className="py-16 text-center">
-              <p className="text-body">Your bag is empty.</p>
-              <Link to="/collections" className="btn btn-primary mt-8">
-                Shop the collection
-              </Link>
+              <p className="text-body">Your bag is empty. Start with our bestsellers below, or see what’s on offer.</p>
+              <div className="mt-8 flex flex-wrap justify-center gap-3">
+                <Link to="/collections?sort=best-selling" className="btn btn-primary">
+                  Shop bestsellers
+                </Link>
+                <Link to="/offers" className="btn btn-secondary">
+                  View offers
+                </Link>
+              </div>
             </div>
           ) : (
             <div className="mt-10 grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-16">
@@ -86,12 +96,13 @@ export default function Cart() {
                 <div className="mt-6">
                   <GiftPicker />
                 </div>
+                <BagAddOns />
               </section>
 
               <aside aria-label="Order summary" className="bg-mist p-6 lg:sticky lg:top-[calc(var(--nav-height)+1.5rem)] sm:p-8">
                 <h2 className="eyebrow text-ink">Summary</h2>
                 <div className="mt-6">
-                  <CouponField coupon={coupon} />
+                  <CouponField coupon={coupon} subtotal={eligibleSubtotal} />
                 </div>
                 <label className="mt-5 flex min-h-11 cursor-pointer items-center gap-3 text-sm text-body">
                   <input
@@ -132,7 +143,7 @@ export default function Cart() {
                     <dd className="type-price text-ink">{formatInr(totals.total)}</dd>
                   </div>
                 </dl>
-                <p className="mt-2 text-xs text-muted">Cash on delivery adds a ₹50 fee and 2% GST, shown at checkout.</p>
+                <p className="mt-2 text-xs text-muted">Cash on delivery available: {formatInr(COD_FEE)} fee + 2% GST. Delivery by {deliveryByLabel()}.</p>
 
                 {issues.length > 0 && (
                   <p className="mt-4 text-xs text-danger" role="alert">
@@ -143,7 +154,8 @@ export default function Cart() {
                   <LockIcon size={16} />
                   {syncing ? 'Checking stock…' : 'Secure checkout'}
                 </button>
-                <Link to="/collections" className="btn btn-link mx-auto mt-3 flex w-fit">
+                <p className="mt-3 text-center text-[0.6875rem] text-muted">Secured by Razorpay · UPI · Cards · COD · Easy returns</p>
+                <Link to="/collections" className="btn btn-link mx-auto mt-1 flex w-fit">
                   Continue shopping
                 </Link>
               </aside>
@@ -153,7 +165,7 @@ export default function Cart() {
           {suggestions.length > 0 && (
             <section aria-labelledby="suggest-heading" className="mt-20 border-t border-line pt-14">
               <h2 id="suggest-heading" className="type-section">
-                You may also like
+                {lines.length ? 'You may also like' : 'Bestsellers'}
               </h2>
               <ul className="mt-10 grid grid-cols-2 gap-x-3 gap-y-10 sm:gap-x-5 lg:grid-cols-4 lg:gap-x-6">
                 {suggestions.map((p) => (

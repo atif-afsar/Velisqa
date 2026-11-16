@@ -11,6 +11,7 @@ export function useStickyBarHeight(ref, active = true) {
   useEffect(() => {
     const root = document.documentElement
     const el = ref.current
+    root.classList.toggle('has-sticky-cta', Boolean(active && el))
     if (!active || !el) {
       root.style.setProperty(VAR, '0px')
       return undefined
@@ -28,6 +29,7 @@ export function useStickyBarHeight(ref, active = true) {
       ro?.disconnect()
       window.removeEventListener('resize', update)
       root.style.setProperty(VAR, '0px')
+      root.classList.remove('has-sticky-cta')
     }
   }, [ref, active])
 }

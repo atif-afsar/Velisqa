@@ -28,7 +28,7 @@ function SkeletonCard() {
  * - `tabs`: category chips (All / Necklaces / …) filtering a 2-column grid on phones.
  * - `layout="row"`: a swipeable row on phones, 4-up grid on desktop.
  */
-export default function ProductShowcase({ eyebrow, title, sort = 'best-selling', tabs = false, layout = 'grid', count = 8 }) {
+export default function ProductShowcase({ eyebrow, title, sort = 'best-selling', tabs = false, layout = 'grid', count = 8, excludeTopOf = null }) {
   const { products, loading } = useProducts()
   const [active, setActive] = useState(ALL.slug)
   const baseId = useId()
@@ -40,10 +40,15 @@ export default function ProductShowcase({ eyebrow, title, sort = 'best-selling',
   const category = categories.find((c) => c.slug === active && c !== ALL)
 
   const items = useMemo(() => {
-    const scoped = category ? products.filter((p) => normalizeProductCategory(p.category) === category.category) : products
+    // e.g. New arrivals must not repeat the pieces already shown in Bestsellers.
+    const excluded = excludeTopOf
+      ? new Set(filterAndSortProducts(products.filter((p) => !isProductSoldOut(p)), { ...EMPTY_PRODUCT_FILTERS, sort: excludeTopOf }).slice(0, count).map((p) => p.id))
+      : null
+    const pool = excluded ? products.filter((p) => !excluded.has(p.id)) : products
+    const scoped = category ? pool.filter((p) => normalizeProductCategory(p.category) === category.category) : pool
     const sorted = filterAndSortProducts(scoped, { ...EMPTY_PRODUCT_FILTERS, sort })
     return [...sorted.filter((p) => !isProductSoldOut(p)), ...sorted.filter(isProductSoldOut)].slice(0, count)
-  }, [products, category, sort, count])
+  }, [products, category, sort, count, excludeTopOf])
 
   const viewAll = category ? `${categoryPath(category)}?sort=${sort}` : `/collections?sort=${sort}`
 
@@ -78,7 +83,7 @@ export default function ProductShowcase({ eyebrow, title, sort = 'best-selling',
           <div
             role="tablist"
             aria-label={`${title} by category`}
-            className="scrollbar-none -mx-4 mt-5 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:px-0 lg:mt-8"
+            className="chip-row scrollbar-none -mx-4 mt-5 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:px-0 lg:mt-8"
             onKeyDown={onKeyDown}
           >
             {categories.map((c) => {
@@ -93,7 +98,7 @@ export default function ProductShowcase({ eyebrow, title, sort = 'best-selling',
                   aria-controls={`${baseId}-panel`}
                   tabIndex={selected ? 0 : -1}
                   onClick={() => setActive(c.slug)}
-                  className={`min-h-9 shrink-0 rounded-full border px-4 text-[0.75rem] font-medium uppercase tracking-[0.12em] transition-colors ${
+                  className={`min-h-11 shrink-0 rounded-full border px-4 text-[0.75rem] font-medium uppercase tracking-[0.12em] transition-colors ${
                     selected ? 'border-ink bg-ink text-white' : 'border-line-strong text-ink hover:border-ink'
                   }`}
                 >

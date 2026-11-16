@@ -15,7 +15,7 @@ const LINK_PRESETS = [
 
 const MAX_SLIDES = 8
 const INTERVAL_OPTIONS = [3, 4, 5, 6, 8, 10, 15, 20, 30]
-const emptySlide = () => ({ desktopUrl: '', mobileUrl: '', focus: '50% 50%', to: '/collections', label: 'Shop now', alt: '' })
+const emptySlide = () => ({ desktopUrl: '', mobileUrl: '', focus: '50% 50%', to: '/collections?sort=best-selling', label: 'Shop bestsellers', alt: '', headline: '', subline: '' })
 
 /** Click/tap on the image to choose which point stays visible when it is cropped. */
 function FocusPicker({ src, focus, aspect, onChange, label }) {
@@ -214,6 +214,14 @@ export default function AdminHero() {
                 <label className="block">
                   <span className="admin-label">Image description (SEO)</span>
                   <input className="admin-input" value={slide.alt} maxLength={200} onChange={(e) => update(index, { alt: e.target.value })} placeholder="Model wearing gold hoop earrings" />
+                </label>
+                <label className="block sm:col-span-2">
+                  <span className="admin-label">Headline over the banner</span>
+                  <input className="admin-input" value={slide.headline || ''} maxLength={80} onChange={(e) => update(index, { headline: e.target.value })} placeholder="Everyday jewellery from ₹299 (automatic when empty)" />
+                </label>
+                <label className="block">
+                  <span className="admin-label">Offer line</span>
+                  <input className="admin-input" value={slide.subline || ''} maxLength={120} onChange={(e) => update(index, { subline: e.target.value })} placeholder="Free shipping on prepaid orders" />
                 </label>
               </div>
             </section>
